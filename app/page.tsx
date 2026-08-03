@@ -11,7 +11,7 @@ export default function Home() {
         <p className="text-xs uppercase tracking-[0.2em] text-black/50">
           Moneybee
         </p>
-        <h1 className="mt-2 text-2xl font-medium tracking-tight sm:text-3xl">
+        <h1 className="mt-2 text-2xl font-normal tracking-tight sm:text-3xl">
           Four directions. Choose one.
         </h1>
       </header>

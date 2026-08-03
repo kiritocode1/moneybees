@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Rethink_Sans } from "next/font/google";
+import { Instrument_Serif, Rethink_Sans } from "next/font/google";
 import "./globals.css";
 
 // Project default body face. Individual directions may override this in their
@@ -7,6 +7,13 @@ import "./globals.css";
 const rethinkSans = Rethink_Sans({
   subsets: ["latin"],
   variable: "--font-rethink-sans",
+  display: "swap",
+});
+
+const instrumentSerif = Instrument_Serif({
+  weight: "400",
+  subsets: ["latin"],
+  variable: "--font-instrument-serif",
   display: "swap",
 });
 
@@ -27,7 +34,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${rethinkSans.variable} h-full antialiased`}
+      className={`${rethinkSans.variable} ${instrumentSerif.variable} h-full antialiased`}
     >
       <body className="min-h-full font-sans">{children}</body>
     </html>

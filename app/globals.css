@@ -1,10 +1,10 @@
 @import "tailwindcss";
 
-/* Rethink Sans is the default body face, so `font-sans` resolves to it
-   everywhere. A direction that wants different type overrides it in its own
-   option layout rather than changing this. */
+/* Rethink Sans remains the body face; Instrument Serif gives headings and
+   display copy a warmer editorial voice. */
 @theme inline {
   --font-sans: var(--font-rethink-sans);
+  --font-serif: var(--font-instrument-serif);
   --font-mono: var(--font-rethink-sans);
 }
 
@@ -17,4 +17,9 @@ html {
 
 body {
   min-height: 100svh;
+}
+
+:where(h1, h2, h3, h4, h5, h6) {
+  font-family: var(--font-instrument-serif);
+  font-weight: 400;
 }
