@@ -3,14 +3,27 @@
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import Image from "next/image";
 import { useState } from "react";
+import {
+  ArrowDownRight,
+  ArrowRightUp,
+  ChartBarTrendUp,
+  CloseCircle,
+  HandHeart,
+  Handshake,
+  Menu,
+  MoneyBag,
+  MoneyReceive,
+  Search,
+  Sparkle,
+} from "reicon-react";
 import { EASE_OUT } from "@/lib/ease";
 import "./option-1.css";
 
 const pillars = [
-  ["↻", "Stability", "A steady investment discipline designed to endure changing markets."],
-  ["◇", "Trust", "Clear communication and decisions that can be explained."],
-  ["⌁", "Growth", "Patient ownership of businesses with room to compound."],
-  ["◎", "Insight", "Independent research beyond the most widely covered names."],
+  [MoneyReceive, "Stability", "A steady investment discipline designed to endure changing markets."],
+  [Handshake, "Trust", "Clear communication and decisions that can be explained."],
+  [ChartBarTrendUp, "Growth", "Patient ownership of businesses with room to compound."],
+  [Search, "Insight", "Independent research beyond the most widely covered names."],
 ] as const;
 
 const services = [
@@ -32,25 +45,23 @@ const testimonials = [
     role: "Mumbai",
     quote: "Our clients consistently recognise us for excellence in service, innovation and results. A more perfect rating reflects the trust we have built across borders.",
   },
-  {
-    name: "Investment advisory client",
-    role: "India",
-    quote: "Moneybee takes the time to explain the decision, the risk and what would cause the view to change. That clarity matters as much as the outcome.",
-  },
 ] as const;
 
-function Wordmark({ light = true }: { light?: boolean }) {
+function Wordmark({ light = true, tagline = false }: { light?: boolean; tagline?: boolean }) {
   return (
-    <a className={`ob-wordmark ${light ? "is-light" : ""}`} href="#top" aria-label="Moneybee home">
-      Moneybee <span />
-    </a>
+    <div className="ob-brand-lockup">
+      <a className={`ob-wordmark ${light ? "is-light" : ""}`} href="#top" aria-label="Moneybee home">
+        Moneybee <span />
+      </a>
+      {tagline && <small>Focused on your future</small>}
+    </div>
   );
 }
 
 function CornerLink({ children, href = "#contact" }: { children: React.ReactNode; href?: string }) {
   return (
     <a className="ob-corner-link" href={href}>
-      <i>↗</i>{children}
+      <i><ArrowRightUp size={16} aria-hidden="true" /></i>{children}
     </a>
   );
 }
@@ -63,7 +74,7 @@ export default function Option1() {
     <main id="top" className="option-one ob-site">
       <section className="ob-hero">
         <Image
-          src="https://images.unsplash.com/photo-1497366811353-6870744d04b2?auto=format&fit=crop&w=2200&q=90"
+          src="https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&w=2200&q=90"
           alt="Contemporary office interior"
           fill
           priority
@@ -71,22 +82,15 @@ export default function Option1() {
         />
         <div className="ob-hero-wash" />
         <header className="ob-header">
-          <Wordmark />
-          <nav aria-label="Main navigation">
-            <a href="#services">Services</a>
-            <a href="#values">Values</a>
-            <a href="#clients">Clients</a>
-            <a href="#contact">Contact</a>
-          </nav>
+          <Wordmark tagline />
           <div className="ob-header-actions">
-            <a href="https://www.moneybee.in/register.php" target="_blank" rel="noreferrer">Investor login</a>
             <button
               type="button"
               aria-label={menuOpen ? "Close menu" : "Open menu"}
               aria-expanded={menuOpen}
               onClick={() => setMenuOpen((open) => !open)}
             >
-              <span /><span />
+              {menuOpen ? <CloseCircle size={23} aria-hidden="true" /> : <Menu size={23} aria-hidden="true" />}
             </button>
           </div>
         </header>
@@ -101,7 +105,7 @@ export default function Option1() {
               transition={{ duration: reduceMotion ? 0 : 0.35, ease: EASE_OUT }}
             >
               {["Services", "Values", "Clients", "Contact"].map((item) => (
-                <a key={item} href={`#${item.toLowerCase()}`} onClick={() => setMenuOpen(false)}>{item}<span>↗</span></a>
+                <a key={item} href={`#${item.toLowerCase()}`} onClick={() => setMenuOpen(false)}>{item}<ArrowRightUp size={16} aria-hidden="true" /></a>
               ))}
             </motion.nav>
           )}
@@ -130,15 +134,15 @@ export default function Option1() {
             <p>Global wealth expertise focused on disciplined, long-term outcomes.</p>
           </motion.div>
           <div className="ob-hero-meta">
-            <span>Portfolio Management Services</span>
-            <span>Alternative Investment Fund</span>
-            <span>Mumbai, India</span>
+            <span><i /><b>Since 1979</b><small>Capital-markets experience</small></span>
+            <span><i /><b>Established 2004</b><small>Moneybee Securities</small></span>
+            <span><i /><b>PMS · AIF</b><small>Regulated offerings</small></span>
           </div>
         </div>
-        <CornerLink>Start a private conversation</CornerLink>
+        <CornerLink href="#strategy">Scroll to explore</CornerLink>
       </section>
 
-      <section className="ob-strategy">
+      <section id="strategy" className="ob-strategy">
         <div className="ob-blue-glow" />
         <div className="ob-strategy-title">
           <span>Tailored financial</span>
@@ -157,10 +161,10 @@ export default function Option1() {
       </section>
 
       <section className="ob-pillars" aria-label="Moneybee principles">
-        {pillars.map(([icon, title, copy], index) => (
+        {pillars.map(([Icon, title, copy], index) => (
           <article key={title}>
             <span className="ob-pillar-number">0{index + 1}</span>
-            <i>{icon}</i>
+            <i><Icon size={27} aria-hidden="true" /></i>
             <div><h2>{title}</h2><p>{copy}</p></div>
           </article>
         ))}
@@ -179,7 +183,11 @@ export default function Option1() {
           <p>A private family portfolio designed to protect liquidity while creating room for patient ownership.</p>
           <CornerLink>View the case study</CornerLink>
         </div>
-        <div className="ob-case-index"><span>01</span><span>02</span><span>03</span></div>
+        <div className="ob-case-index">
+          <span><small>2025</small>Family portfolio mandate</span>
+          <span><small>2024</small>Long-term equity portfolio</span>
+          <span><small>2023</small>Private investment advisory</span>
+        </div>
       </section>
 
       <section id="services" className="ob-services">
@@ -198,7 +206,7 @@ export default function Option1() {
           </div>
           <div className="ob-service-list">
             {services.map(([title, number]) => (
-              <a href="#contact" key={title}><span>{title}</span><i>↗</i><small>{number}</small></a>
+              <a href="#contact" key={title}><span>{title}</span><i><ArrowRightUp size={14} aria-hidden="true" /></i><small>{number}</small></a>
             ))}
           </div>
         </div>
@@ -214,7 +222,7 @@ export default function Option1() {
       <section className="ob-guidance">
         <div className="ob-guidance-copy">
           <h2>Trusted financial guidance worldwide, delivering clarity with integrity and discretion.</h2>
-          <a href="#contact">Meet Moneybee <span>↗</span></a>
+          <a href="#contact">Meet Moneybee <ArrowRightUp size={14} aria-hidden="true" /></a>
           <dl>
             <div><dt>500K+ AUM</dt><dd>Managed through a disciplined and measured process.</dd></div>
             <div><dt>50+ Years</dt><dd>Across market cycles and capital-markets experience.</dd></div>
@@ -236,15 +244,15 @@ export default function Option1() {
         <div className="ob-blue-glow ob-blue-glow--values" />
         <p className="ob-values-intro">Long relationships are built through clear principles, not short-term promises.</p>
         <h2>Core values:<br />Integrity &amp; <span><Image src="https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=330&q=85" alt="Moneybee advisor" width={170} height={82} /></span><br />excellence</h2>
-        <p className="ob-values-copy">These values shape our approach to wealth management and every conversation around risk, transparency and long-term outcomes.</p>
+        <div className="ob-values-statement"><p className="ob-values-copy">These values shape our approach to wealth management and every conversation around risk, transparency and long-term outcomes.</p><i><Sparkle size={22} aria-hidden="true" /></i></div>
         <div className="ob-metrics">
           {metrics.map(([label, value, copy]) => (
             <div key={label}><span>{label}</span><strong>{value}</strong><p>{copy}</p></div>
           ))}
         </div>
         <div className="ob-value-cards">
-          <article><i>⌁</i><div><h3>Shaping financial futures</h3><p>Thoughtful structures that bring current priorities and future goals into one plan.</p></div></article>
-          <article><i>♧</i><div><h3>Built on principles</h3><p>Clear reasoning, responsible stewardship and communication that earns confidence.</p></div></article>
+          <article><i><MoneyBag size={46} aria-hidden="true" /></i><div><h3>Shaping financial futures</h3><p>Thoughtful structures that bring current priorities and future goals into one plan.</p></div></article>
+          <article><i><HandHeart size={46} aria-hidden="true" /></i><div><h3>Built on principles</h3><p>Clear reasoning, responsible stewardship and communication that earns confidence.</p></div></article>
         </div>
       </section>
 
@@ -259,6 +267,11 @@ export default function Option1() {
               <p>Private wealth relationship</p>
             </article>
           ))}
+          <article className="ob-global-card">
+            <div><span>95% retention rate</span><small>Trusted relationships</small></div>
+            <blockquote>Serving investors across India with a direct relationship anchored in Mumbai.</blockquote>
+            <p>Moneybee Securities Pvt. Ltd.<br />Mumbai, Maharashtra, India</p>
+          </article>
         </div>
       </section>
 
@@ -270,22 +283,25 @@ export default function Option1() {
           sizes="100vw"
         />
         <div className="ob-results-wash" />
-        <Image className="ob-results-image ob-results-image--left" src="https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=600&q=85" alt="Advisor working" width={380} height={240} />
-        <Image className="ob-results-image ob-results-image--right" src="https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=600&q=85" alt="Moneybee office" width={380} height={240} />
-        <div className="ob-results-content"><p>Investment management that can be explained</p><h2>Results that build trust</h2><span>Disciplined decisions, open communication and a relationship designed for the long term.</span><CornerLink>Start a conversation</CornerLink></div>
+        <Image className="ob-results-image ob-results-image--left" src="https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=800&q=85" alt="Advisor working" width={520} height={300} />
+        <Image className="ob-results-image ob-results-image--top-right" src="https://images.unsplash.com/photo-1521737711867-e3b97375f902?auto=format&fit=crop&w=600&q=85" alt="Advisors reviewing investments" width={350} height={220} />
+        <Image className="ob-results-image ob-results-image--bottom-right" src="https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=900&q=85" alt="Moneybee office" width={650} height={360} />
+        <span className="ob-keep-scrolling">Keep scrolling <ArrowDownRight size={14} aria-hidden="true" /></span>
+        <div className="ob-results-content"><h2>Results that build trust</h2><span>Disciplined decisions, open communication and a relationship designed for the long term.</span><CornerLink>Contact us</CornerLink></div>
       </section>
 
       <footer id="contact" className="ob-footer">
         <div className="ob-footer-top">
-          <Wordmark light={false} />
-          <p>Private investment management<br />for considered capital.</p>
-          <a className="ob-footer-badge" href="mailto:info@moneybee.in">MB</a>
+          <Wordmark light={false} tagline />
+          <div className="ob-footer-quote"><p>“True wealth is built on patience,<br />strategy, and trust.”</p><small>Moneybee</small></div>
+          <a className="ob-footer-badge" href="mailto:info@moneybee.in">99</a>
         </div>
         <div className="ob-footer-grid">
-          <div><span>Visit</span><p>Mumbai, Maharashtra<br />India</p></div>
-          <div><span>Contact</span><a href="mailto:info@moneybee.in">info@moneybee.in</a><a href="tel:+912200000000">+91 22 0000 0000</a></div>
-          <div><span>Explore</span><a href="#services">Services</a><a href="#values">Our values</a><a href="#clients">Client stories</a></div>
+          <div><span>Our approach</span><p>Know the insight.<br />Follow the journey.</p></div>
+          <div><span>Office</span><p>Mumbai, Maharashtra<br />India</p></div>
+          <div><span>Explore</span><a href="#top">Homepage</a><a href="#services">Services</a><a href="#values">Our values</a><a href="#clients">Client stories</a><a href="#contact">Contact</a></div>
           <div><span>Regulatory</span><a href="#contact">Investor Charter</a><a href="#contact">Disclosures</a><a href="#contact">Grievance redressal</a></div>
+          <div><span>Social</span><a href="#contact">LinkedIn</a><a href="#contact">Instagram</a></div>
         </div>
         <div className="ob-footer-bottom"><p>Investments in securities are subject to market risks. Read all related documents carefully before investing.</p><div><a href="#top">Privacy</a><a href="#top">Terms</a><a href="#top">Back to top ↑</a></div></div>
       </footer>
