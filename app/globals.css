@@ -23,3 +23,10 @@ body {
   font-family: var(--font-instrument-serif);
   font-weight: 400;
 }
+
+/* Option 1 is deliberately a single-sans system. Keep this rule unlayered so
+   it wins over the shared editorial heading default without affecting the
+   remaining directions. */
+.option-one :where(h1, h2, h3, h4, h5, h6) {
+  font-family: var(--font-rethink-sans);
+}
