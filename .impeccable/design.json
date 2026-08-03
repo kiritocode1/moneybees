@@ -1,0 +1,68 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-08-03T12:00:00+05:30",
+  "title": "Moneybee Open Research Desk",
+  "extensions": {
+    "colorMeta": {
+      "working-yellow": "A committed working surface and selected state, never decoration.",
+      "highlighted-yellow": "Annotation and active-control emphasis.",
+      "paper": "Primary warm page ground.",
+      "clean-sheet": "Working areas and controls.",
+      "ink": "Primary text, diagrams and actions.",
+      "graphite": "Supporting copy and metadata.",
+      "hairline": "Structural rules and table divisions."
+    },
+    "typographyMeta": {
+      "family": "Libre Franklin",
+      "character": "Sober, open and materially grounded.",
+      "rules": [
+        "Use one display statement in the hero.",
+        "Keep body copy to 70 characters per line.",
+        "Use sentence case for metadata."
+      ]
+    },
+    "shadows": {
+      "paper-lift": "0 24px 60px rgba(23, 24, 19, 0.12)"
+    },
+    "motion": {
+      "quick": "180ms",
+      "standard": "420ms",
+      "entry": "760ms",
+      "easing": "cubic-bezier(0.16, 1, 0.3, 1)",
+      "reducedMotion": "Remove transforms and complete state changes immediately."
+    },
+    "breakpoints": {
+      "compact": "640px",
+      "wide": "1024px",
+      "canvas": "1440px"
+    },
+    "components": {
+      "navigation": {
+        "purpose": "A quiet index with a visible active state and an in-place mobile expansion.",
+        "avoid": "Floating pills, glass surfaces and decorative underlines."
+      },
+      "process-lens": {
+        "purpose": "Four stages share one working surface and update one crop, annotation and sentence.",
+        "transition": "Short mask and crossfade."
+      },
+      "product-comparator": {
+        "purpose": "PMS and AIF share rows so structural differences are directly comparable.",
+        "transition": "One yellow selection field moves while values crossfade."
+      },
+      "performance-methodology-explorer": {
+        "purpose": "Explain benchmark, rolling periods, drawdown and fees without inventing return data.",
+        "disclosure": "Mark the visual as a structure preview awaiting compliance-approved data."
+      },
+      "research-artefacts": {
+        "purpose": "A small stack of published reasoning represented as physical sheets.",
+        "elevation": "Use paper-lift only on the selected sheet."
+      }
+    },
+    "narrative": {
+      "overview": "The interface should feel like reviewing a well-prepared investment file in bright morning light. Evidence is laid out, annotated and compared. The page is calm because the work is legible, not because it is empty. Moneybee yellow behaves like a physical working surface and highlighter, while warm paper and dark ink carry the institutional material.",
+      "workingSurfaceRule": "Yellow must carry a meaningful region or selected state. Never spend it on dots, side stripes or random words.",
+      "oneSentenceRule": "A section may have one headline and one explanatory paragraph before the working surface begins. If it needs more, the design has failed to make the idea visible.",
+      "flatEvidenceRule": "Tables, navigation and process controls never float. If a box needs a shadow to feel important, its hierarchy is wrong."
+    }
+  }
+}
