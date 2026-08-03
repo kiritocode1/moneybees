@@ -7,8 +7,7 @@ import { OptionSwitcher } from "@/components/option-switcher";
 // the scanner compiles it into real CSS.)
 
 export const metadata: Metadata = {
-  title: "Field Notes",
-  description: "Moneybee design direction two: Field Notes.",
+  title: "Option 2",
 };
 
 export default function OptionLayout({
