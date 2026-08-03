@@ -1,21 +1,19 @@
 "use client";
 
-import { AnimatePresence, motion, useReducedMotion } from "motion/react";
+import { motion, useReducedMotion } from "motion/react";
 import Image from "next/image";
-import { useState } from "react";
 import {
   ArrowDownRight,
   ArrowRightUp,
   ChartBarTrendUp,
-  CloseCircle,
   HandHeart,
   Handshake,
-  Menu,
   MoneyBag,
   MoneyReceive,
   Search,
   Sparkle,
 } from "reicon-react";
+import OverlayMenu from "@/components/ui/overlay-menu";
 import { EASE_OUT } from "@/lib/ease";
 import "./option-1.css";
 
@@ -67,11 +65,11 @@ function CornerLink({ children, href = "#contact" }: { children: React.ReactNode
 }
 
 export default function Option1() {
-  const [menuOpen, setMenuOpen] = useState(false);
   const reduceMotion = useReducedMotion();
 
   return (
-    <main id="top" className="option-one ob-site">
+    <OverlayMenu brand={<Wordmark tagline />}>
+      <main id="top" className="option-one ob-site">
       <section className="ob-hero">
         <Image
           src="https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&w=2200&q=90"
@@ -81,35 +79,6 @@ export default function Option1() {
           sizes="100vw"
         />
         <div className="ob-hero-wash" />
-        <header className="ob-header">
-          <Wordmark tagline />
-          <div className="ob-header-actions">
-            <button
-              type="button"
-              aria-label={menuOpen ? "Close menu" : "Open menu"}
-              aria-expanded={menuOpen}
-              onClick={() => setMenuOpen((open) => !open)}
-            >
-              {menuOpen ? <CloseCircle size={23} aria-hidden="true" /> : <Menu size={23} aria-hidden="true" />}
-            </button>
-          </div>
-        </header>
-        <AnimatePresence>
-          {menuOpen && (
-            <motion.nav
-              className="ob-mobile-menu"
-              aria-label="Mobile navigation"
-              initial={reduceMotion ? false : { opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
-              exit={{ opacity: 0, height: 0 }}
-              transition={{ duration: reduceMotion ? 0 : 0.35, ease: EASE_OUT }}
-            >
-              {["Services", "Values", "Clients", "Contact"].map((item) => (
-                <a key={item} href={`#${item.toLowerCase()}`} onClick={() => setMenuOpen(false)}>{item}<ArrowRightUp size={16} aria-hidden="true" /></a>
-              ))}
-            </motion.nav>
-          )}
-        </AnimatePresence>
 
         <div className="ob-hero-content">
           <motion.h1
@@ -170,7 +139,7 @@ export default function Option1() {
         ))}
       </section>
 
-      <section className="ob-case-study">
+      <section id="case-studies" className="ob-case-study">
         <Image
           src="https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=2200&q=90"
           alt="Moneybee office"
@@ -305,6 +274,7 @@ export default function Option1() {
         </div>
         <div className="ob-footer-bottom"><p>Investments in securities are subject to market risks. Read all related documents carefully before investing.</p><div><a href="#top">Privacy</a><a href="#top">Terms</a><a href="#top">Back to top ↑</a></div></div>
       </footer>
-    </main>
+      </main>
+    </OverlayMenu>
   );
 }

@@ -19,17 +19,12 @@
 .ob-hero { position: relative; min-height: 1050px; overflow: hidden; }
 .ob-hero > img { object-fit: cover; object-position: center 42%; }
 .ob-hero-wash { position: absolute; inset: 0; background: linear-gradient(90deg, rgba(5, 20, 57, .9) 0%, rgba(7, 32, 88, .62) 52%, rgba(6, 26, 72, .72) 100%), linear-gradient(to top, var(--blue) 0%, transparent 34%); }
-.ob-header { position: relative; z-index: 5; width: min(100% - 64px, 1480px); height: 84px; margin: 0 auto; display: grid; grid-template-columns: 1fr auto; align-items: center; }
 .ob-brand-lockup { display: flex; align-items: center; gap: 12px; }
 .ob-wordmark { width: max-content; display: inline-flex; align-items: center; gap: 8px; color: #10285f; font-size: 15px; font-weight: 650; letter-spacing: -.04em; text-decoration: none; }
 .ob-wordmark.is-light { color: #fff; }
 .ob-wordmark span { width: 7px; height: 7px; background: #d79a32; }
 .ob-brand-lockup small { color: rgba(255,255,255,.55); font-size: 8px; font-weight: 500; text-transform: uppercase; }
 .ob-footer .ob-brand-lockup small { color: #6b789c; }
-.ob-header-actions { display: flex; justify-content: flex-end; align-items: center; gap: 24px; }
-.ob-header-actions button { width: 42px; height: 42px; display: grid; place-content: center; gap: 6px; border: 0; background: transparent; color: rgba(255,255,255,.75); cursor: pointer; }
-.ob-header-actions button span { width: 22px; height: 1px; background: rgba(255,255,255,.7); }
-.ob-mobile-menu { display: none; }
 .ob-hero-content { position: relative; z-index: 2; width: min(100% - 64px, 1480px); margin: 0 auto; padding-top: 190px; }
 .ob-hero h1, .ob-case-study h2, .ob-results h2 { font-family: var(--font-instrument-serif), Georgia, serif; }
 .ob-hero h1 { max-width: 850px; font-size: clamp(4.5rem, 7vw, 7.4rem); font-weight: 400; line-height: .94; letter-spacing: -.045em; }
@@ -162,13 +157,7 @@
 .ob-footer-bottom a { color: #173064; font-size: 8px; text-decoration: none; }
 
 @media (max-width: 900px) {
-  .ob-header, .ob-hero-content, .ob-case-content { width: calc(100% - 36px); }
-  .ob-header { grid-template-columns: 1fr auto; }
-  .ob-header nav, .ob-header-actions > a { display: none; }
-  .ob-header-actions button { width: 42px; height: 42px; display: grid; place-content: center; gap: 6px; border: 1px solid rgba(255,255,255,.2); background: transparent; }
-  .ob-header-actions button span { width: 17px; height: 1px; background: #fff; }
-  .ob-mobile-menu { position: absolute; z-index: 8; top: 84px; right: 18px; left: 18px; display: block; overflow: hidden; background: #0a2669; }
-  .ob-mobile-menu a { display: flex; justify-content: space-between; padding: 20px; border-bottom: 1px solid var(--line); font-size: 14px; text-decoration: none; }
+  .ob-hero-content, .ob-case-content { width: calc(100% - 36px); }
   .ob-hero { min-height: 760px; }
   .ob-hero-content { padding-top: 120px; }
   .ob-hero h1 { font-size: clamp(3.5rem, 11vw, 6rem); }
