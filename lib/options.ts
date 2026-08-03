@@ -18,8 +18,8 @@ export const OPTIONS: Option[] = [
   {
     n: 1,
     slug: "option-1",
-    label: "Option 1",
-    note: "",
+    label: "The Quiet Ledger",
+    note: "Editorial, assured, and built like an annual report.",
   },
   {
     n: 2,
