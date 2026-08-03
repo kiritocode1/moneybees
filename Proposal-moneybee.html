@@ -1,0 +1,675 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Moneybee, PMS and AIF Website Proposal (MB-01)</title>
+<!-- favicon: Aryan Kathawale mark (aryank.space) -->
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'%3E%3Crect width='120' height='120' fill='black'/%3E%3Cpath d='M49.66 101h-4.43l12.82-34.9h4.36L75.23 101h-4.43L60.36 71.61h-.27L49.66 101zM51.3 87.36h17.86v3.75H51.3v-3.75zm29.37 13.64V66.09h4.23v17.32h.41l15.68-17.32h5.52L91.85 81.84 106.5 101h-5.11L89.26 84.77l-4.36 4.91V101h-4.23z' fill='white'/%3E%3C/svg%3E">
+<style>
+  :root{
+    --ink:#14181c; --strong:#000; --sub:#8b9097; --faint:#aeb3b9;
+    --line:#e7e8ea; --line2:#d8dadd; --track:#eef0f1; --bar:#15181c;
+    --paper:#ffffff; --desk:#eceef0;
+    --honey:#f7b32b; --ivory:#fbf9f4;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    font-family:ui-monospace,"SF Mono","JetBrains Mono","IBM Plex Mono",Menlo,monospace;
+    color:var(--ink); background:var(--desk);
+    -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
+    font-size:13px; line-height:1.62; letter-spacing:-0.1px;
+    -webkit-print-color-adjust:exact; print-color-adjust:exact;
+  }
+  .doc{display:flex;flex-direction:column;align-items:center;gap:26px;padding:34px 16px;}
+  .page{
+    width:210mm; min-height:297mm; background:var(--paper);
+    padding:9mm 19mm; position:relative;
+    box-shadow:0 4px 26px rgba(15,20,30,.14); border-radius:6px;
+  }
+  /* ---- shared type ---- */
+  .muted{color:var(--sub);}
+  .strong{color:var(--strong);font-weight:700;}
+  h1{font-size:27px;line-height:1.1;font-weight:700;color:var(--strong);letter-spacing:-1px;margin:0 0 4px;}
+  .lede{font-size:13px;line-height:1.38;color:var(--ink);max-width:66ch;margin:0 0 7px;}
+  .runhead{font-size:10.5px;letter-spacing:2.4px;text-transform:uppercase;color:var(--sub);margin:0 0 30px;}
+  .sec{margin:0 0 30px;}
+  .sec:last-child{margin-bottom:0;}
+  .sec h2{font-size:18px;font-weight:700;color:var(--strong);margin:0 0 12px;letter-spacing:-0.4px;display:flex;gap:14px;align-items:baseline;}
+  .sec h2 .num{color:var(--faint);font-weight:700;font-size:15px;min-width:22px;}
+  .sec p{margin:0 0 12px;max-width:74ch;}
+  .sec p:last-child{margin-bottom:0;}
+  .blist{list-style:none;margin:2px 0 0;padding:0;}
+  .blist.indent{padding-left:36px;}
+  .blist li{position:relative;padding-left:20px;margin:0 0 8px;max-width:72ch;}
+  .blist li::before{content:"–";position:absolute;left:0;color:var(--faint);}
+  .blist li b{color:var(--strong);font-weight:700;}
+  .note{margin-top:16px;padding-top:14px;border-top:1px solid var(--line);color:var(--ink);font-size:12.5px;max-width:74ch;}
+  .note b{color:var(--strong);}
+  .pull{margin:2px 0 16px;padding:14px 0 14px 18px;border-left:3px solid var(--honey);font-size:14.5px;line-height:1.42;color:var(--strong);font-weight:700;letter-spacing:-0.3px;max-width:66ch;}
+
+  /* ---- cover ---- */
+  .page.cover{
+    background:var(--honey); padding:0; overflow:hidden;
+    display:flex; flex-direction:column;
+  }
+  .cover-mark{margin:auto;width:26mm;}
+  .cover-mark img{display:block;width:100%;height:auto;}
+  .cover-foot{margin:0 19mm 17mm;color:#181206;}
+  .cover-foot .ttl{font-size:23px;font-weight:700;letter-spacing:-1px;line-height:1.14;margin:0 0 20px;max-width:26ch;}
+  .cover-foot .rows{display:flex;gap:30px;flex-wrap:wrap;font-size:11.5px;line-height:1.45;}
+  .cover-foot .k{opacity:.58;display:block;font-size:9.5px;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:4px;}
+  .cover-foot .v{font-weight:700;}
+
+  /* ---- cover masthead ---- */
+  .mast{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px;}
+  .mast img.pf{height:34px;width:auto;display:block;}
+  .prepared{display:flex;align-items:center;gap:12px;text-align:right;}
+  .prepared .lbl{font-size:11px;line-height:1.4;}
+  .prepared .avatar{width:44px;height:44px;flex:none;}
+  .prepared .avatar svg{display:block;width:100%;height:100%;}
+  .meta{display:flex;flex-wrap:wrap;gap:26px;font-size:12px;color:var(--sub);margin:0 0 5px;}
+  .meta b{color:var(--strong);}
+  .rule{border:0;border-top:1px solid var(--line2);margin:4px 0;}
+
+  /* ---- from / to ---- */
+  .party{display:grid;grid-template-columns:1fr 1fr;gap:40px;margin:0 0 10px;line-height:1.45;}
+  .party .hdr{font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--sub);margin:0 0 4px;}
+  .party .name{color:var(--strong);font-weight:700;margin:0 0 1px;}
+  .party .ln{color:var(--ink);}
+
+  /* ---- scope table ---- */
+  .scope-hd{display:flex;justify-content:space-between;font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--sub);border-bottom:1px solid var(--line2);padding-bottom:6px;margin-bottom:2px;}
+  .li{border-bottom:1px solid var(--line);padding:0;}
+  .li-top{display:flex;justify-content:space-between;align-items:baseline;gap:16px;line-height:1.15;}
+  .li-title{color:var(--strong);font-weight:700;font-size:12px;}
+  .li-price{color:var(--strong);font-weight:700;font-size:12px;white-space:nowrap;}
+  .li-desc{color:var(--sub);font-size:10.5px;line-height:1.3;margin-top:1px;max-width:78ch;}
+
+  .totals{margin-left:auto;width:52%;margin-top:4px;}
+  .trow{display:flex;justify-content:space-between;padding:2px 0;border-bottom:1px solid var(--line);}
+  .trow span:first-child{color:var(--sub);}
+  .trow span:last-child{color:var(--strong);font-weight:700;}
+  .trow.tot{border-bottom:0;padding-top:6px;align-items:baseline;}
+  .trow.tot span:first-child{color:var(--sub);font-size:13px;}
+  .trow.tot .big{font-size:14px;font-weight:700;color:var(--strong);letter-spacing:-1.5px;}
+
+  .foot{display:grid;grid-template-columns:1fr 1fr;gap:40px;margin-top:6px;padding-top:6px;border-top:1px solid var(--line2);}
+  .foot .hdr{color:var(--strong);font-weight:700;margin:0 0 8px;font-size:12.5px;}
+  .foot p{margin:0;color:var(--ink);font-size:12.5px;max-width:40ch;}
+
+  /* ---- tables ---- */
+  table.tbl{width:100%;border-collapse:collapse;font-size:12px;margin-top:6px;}
+  table.tbl th{text-align:left;font-size:10.5px;letter-spacing:1px;text-transform:uppercase;color:var(--sub);font-weight:700;border-bottom:1px solid var(--line2);padding:0 14px 9px 0;}
+  table.tbl td{vertical-align:top;padding:11px 14px 11px 0;border-bottom:1px solid var(--line);color:var(--ink);}
+  table.tbl td.k{color:var(--strong);font-weight:700;white-space:nowrap;}
+  table.tbl td.k.wrap{white-space:normal;}
+  table.tbl td:last-child,table.tbl th:last-child{padding-right:0;}
+
+  table.addons{width:100%;border-collapse:collapse;font-size:12.5px;margin-top:14px;}
+  table.addons th{text-align:left;font-size:10.5px;letter-spacing:1px;text-transform:uppercase;color:var(--sub);font-weight:700;border-bottom:1px solid var(--line2);padding:0 14px 9px 0;}
+  table.addons td{vertical-align:top;padding:11px 14px 11px 0;border-bottom:1px solid var(--line);color:var(--ink);}
+  table.addons td.name{color:var(--strong);font-weight:700;width:26%;}
+  table.addons td.price{text-align:right;color:var(--strong);font-weight:700;white-space:nowrap;padding-right:0;width:18%;}
+  table.addons th:last-child{text-align:right;padding-right:0;}
+
+  /* ---- two column compare (products) ---- */
+  .duo{display:grid;grid-template-columns:1fr 1fr;gap:0;margin-top:10px;border-top:1px solid var(--line2);}
+  .duo > div{padding:16px 20px 4px 0;}
+  .duo > div + div{padding-left:26px;border-left:1px solid var(--line);}
+  .duo .dh{color:var(--strong);font-weight:700;font-size:14px;letter-spacing:-0.4px;margin:0 0 3px;}
+  .duo .dmin{color:var(--strong);font-weight:700;font-size:19px;letter-spacing:-1px;margin:0 0 2px;}
+  .duo .dcap{font-size:9.5px;letter-spacing:1.2px;text-transform:uppercase;color:var(--sub);margin:0 0 12px;}
+  .duo .blist li{font-size:12.5px;}
+
+  /* ---- gantt ---- */
+  .gantt{margin-top:8px;}
+  .g-weekhead{display:flex;align-items:flex-end;margin-bottom:18px;}
+  .g-label{width:200px;flex:none;padding-right:16px;font-size:12.5px;color:var(--ink);}
+  .g-track{position:relative;flex:1;}
+  .g-weekhead .g-track{display:flex;}
+  .g-weekhead .g-track > span{flex:1;color:var(--sub);font-size:12px;padding-left:10px;border-left:1px solid var(--line2);}
+  .g-weekhead .g-track > span:first-child{border-left:0;padding-left:0;}
+  .g-phase{font-size:10.5px;letter-spacing:1.6px;text-transform:uppercase;color:var(--sub);margin:17px 0 10px;}
+  .g-row{display:flex;align-items:center;margin-bottom:8px;}
+  .g-row .g-track{height:16px;background:var(--track);border-radius:3px;}
+  .g-bar{position:absolute;top:0;height:16px;background:var(--bar);border-radius:3px;}
+
+  /* ---- comparison bars ---- */
+  .cmp{margin-top:6px;}
+  .cmp-cap{font-size:10.5px;letter-spacing:1.6px;text-transform:uppercase;color:var(--sub);margin:0 0 18px;}
+  .crow{display:flex;align-items:center;margin-bottom:16px;}
+  .crow:last-child{margin-bottom:0;}
+  .c-label{width:200px;flex:none;padding-right:16px;}
+  .c-name{color:var(--strong);font-weight:700;font-size:13px;}
+  .c-sub{color:var(--sub);font-size:11px;}
+  .c-track{position:relative;flex:1;height:22px;background:var(--track);border-radius:3px;}
+  .c-bar{position:absolute;top:0;left:0;height:22px;background:var(--bar);border-radius:3px;min-width:3px;}
+  .c-bar.lite{background:var(--line2);}
+  .c-val{width:132px;flex:none;text-align:right;color:var(--strong);font-weight:700;font-size:14px;letter-spacing:-0.5px;}
+  .c-val small{display:block;color:var(--sub);font-weight:400;font-size:10.5px;letter-spacing:0;margin-top:2px;}
+
+  /* ---- report card ---- */
+  .card{border:1px solid var(--line2);border-radius:8px;padding:18px 20px;margin-top:16px;}
+  .card-hd{display:flex;justify-content:space-between;align-items:baseline;border-bottom:1px solid var(--line);padding-bottom:12px;margin-bottom:16px;}
+  .card-hd .t{color:var(--strong);font-weight:700;font-size:13px;}
+  .card-hd .d{color:var(--sub);font-size:11px;}
+  .tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px;}
+  .tile{border:1px solid var(--line);border-radius:6px;padding:11px 12px;}
+  .tile .lbl{font-size:9.5px;letter-spacing:1px;text-transform:uppercase;color:var(--sub);margin-bottom:6px;}
+  .tile .val{color:var(--strong);font-weight:700;font-size:20px;letter-spacing:-1px;line-height:1;}
+  .tile .delta{font-size:10.5px;color:var(--sub);margin-top:5px;}
+  .card-grid{display:grid;grid-template-columns:1fr 1fr;gap:26px;}
+  .mini-h{font-size:10.5px;letter-spacing:1.4px;text-transform:uppercase;color:var(--sub);margin:0 0 12px;}
+  .spark{display:flex;align-items:flex-end;gap:6px;height:64px;}
+  .spark span{flex:1;background:var(--bar);border-radius:2px 2px 0 0;min-height:3px;}
+  .spark-x{display:flex;gap:6px;margin-top:6px;}
+  .spark-x span{flex:1;text-align:center;font-size:9px;color:var(--faint);}
+  .mrow{display:flex;align-items:center;margin-bottom:11px;font-size:12px;}
+  .mrow:last-child{margin-bottom:0;}
+  .mrow .mk{width:88px;flex:none;color:var(--ink);}
+  .mrow .mt{position:relative;flex:1;height:8px;background:var(--track);border-radius:4px;}
+  .mrow .mb{position:absolute;top:0;left:0;height:8px;background:var(--bar);border-radius:4px;}
+  .mrow .mv{width:58px;flex:none;text-align:right;color:var(--strong);font-weight:700;}
+  .chk{list-style:none;margin:18px 0 0;padding:0;font-size:12.5px;}
+  .chk li{position:relative;padding-left:22px;margin-bottom:9px;color:var(--ink);max-width:74ch;}
+  .chk li:last-child{margin-bottom:0;}
+  .chk li::before{content:"\2713";position:absolute;left:0;color:var(--strong);font-weight:700;}
+  .chk li b{color:var(--strong);}
+
+  @media print{
+    @page{size:A4;margin:0;}
+    body{background:#fff;}
+    .doc{gap:0;padding:0;}
+    .page{box-shadow:none;border-radius:0;margin:0;page-break-after:always;}
+    .page:last-child{page-break-after:auto;}
+  }
+</style>
+</head>
+<body>
+<main class="doc">
+
+  <!-- ============ 1 / COVER ============ -->
+  <section class="page cover">
+    <div class="cover-mark">
+      <img src="data:image/png;base64,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" alt="Moneybee">
+    </div>
+    <div class="cover-foot">
+      <p class="ttl">Portfolio Management &amp; Alternative Investment Fund website</p>
+      <div class="rows">
+        <div><span class="k">Proposal</span><span class="v">MB-01</span></div>
+        <div><span class="k">Prepared for</span><span class="v">Shreyam Shah</span></div>
+        <div><span class="k">Prepared by</span><span class="v">Aryan Kathawale</span></div>
+        <div><span class="k">Date</span><span class="v">02 August 2026</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 2 / EXECUTIVE SUMMARY ============ -->
+  <section class="page">
+    <div class="mast">
+      <img class="pf" src="data:image/png;base64,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" alt="Moneybee">
+      <div class="prepared">
+        <div class="lbl"><span class="muted">Prepared by</span><br><span class="strong">Aryan Kathawale</span></div>
+        <div class="avatar"><svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg"><rect width="120" height="120" fill="#000"/><path d="M49.6591 101H45.2273L58.0455 66.0909H62.4091L75.2273 101H70.7955L60.3636 71.6136H60.0909L49.6591 101ZM51.2955 87.3636H69.1591V91.1136H51.2955V87.3636ZM80.6648 101V66.0909H84.892V83.4091H85.3011L100.983 66.0909H106.506L91.8466 81.8409L106.506 101H101.392L89.2557 84.7727L84.892 89.6818V101H80.6648Z" fill="#fff"/></svg></div>
+      </div>
+    </div>
+
+    <h1>PMS and AIF website</h1>
+    <p class="lede">A proposal for the design, engineering and delivery of a new moneybee.in, scoped to Portfolio Management Services and the Alternative Investment Fund.</p>
+
+    <div class="meta">
+      <span>Proposal No: <b>MB-01</b></span>
+      <span>Issue date: <b>02 Aug 2026</b></span>
+      <span>Valid until: <b>01 Sep 2026</b></span>
+    </div>
+    <hr class="rule">
+
+    <div class="party">
+      <div>
+        <div class="hdr">From</div>
+        <div class="name">Aryan Kathawale</div>
+        <div class="ln">Full-stack Developer</div>
+        <div class="ln">aryank.space</div>
+        <div class="ln">kathawalearyan9@gmail.com</div>
+        <div class="ln">India</div>
+      </div>
+      <div>
+        <div class="hdr">To</div>
+        <div class="name">Moneybee</div>
+        <div class="ln">Attn: Shreyam Shah</div>
+        <div class="ln">moneybee.in</div>
+        <div class="ln">info@moneybee.in</div>
+        <div class="ln">Lower Parel, Mumbai</div>
+      </div>
+    </div>
+
+    <div class="sec" style="margin-top:24px">
+      <h2>Executive summary</h2>
+      <p>Moneybee requires a website that performs in search, presents the firm with the authority its record supports, and allows the investment team to publish research without engineering assistance. This proposal treats the three as a single engagement, on the basis that each depends on the other two.</p>
+      <p>We recommend a purpose-built application on Next.js, deployed to Vercel. It comprises a public site scoped entirely to the two regulated products, and a private administration platform through which Moneybee maintains every part of that site. Search performance is engineered into the build during construction, and the resulting foundation transfers to Moneybee in full at handover, with no continuing retainer attached to it.</p>
+      <table class="tbl">
+        <tbody>
+          <tr><td class="k">Engagement</td><td>Design, engineering and delivery of moneybee.in</td></tr>
+          <tr><td class="k">Scope</td><td>Portfolio Management Services and the Alternative Investment Fund</td></tr>
+          <tr><td class="k">Platform</td><td>Next.js deployed to Vercel, with a private administration platform</td></tr>
+          <tr><td class="k">Duration</td><td>Four weeks from commencement</td></tr>
+          <tr><td class="k">Fee</td><td>&#8377;80,000, exclusive of applicable taxes</td></tr>
+          <tr><td class="k">Post launch</td><td>Thirty days of revisions and twelve months of bug support, included</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ============ 3 / FEE SCHEDULE ============ -->
+  <section class="page">
+    <div class="runhead">Moneybee / Fee schedule</div>
+    <div class="sec">
+      <h2>Fee schedule</h2>
+      <p>The engagement is quoted as a fixed fee. The breakdown below shows how the work is apportioned across the build. The components are delivered as a single system and are not separately severable.</p>
+
+    <div class="scope-hd"><span>Scope of work</span><span>Fee</span></div>
+
+    <div class="li"><div class="li-top"><span class="li-title">Publishing platform and administration dashboard</span><span class="li-price">&#8377;14,000</span></div><div class="li-desc">A private dashboard for research, team, product and performance data, careers and enquiries, with factsheet generation and newsletter distribution built in. The team publishes without engineering assistance.</div></div>
+    <div class="li"><div class="li-top"><span class="li-title">Design system and interface</span><span class="li-price">&#8377;12,000</span></div><div class="li-desc">Typography, colour, spacing and a reusable component library. Responsive across desktop, tablet and mobile.</div></div>
+    <div class="li"><div class="li-top"><span class="li-title">Search architecture and keyword strategy</span><span class="li-price">&#8377;9,000</span></div><div class="li-desc">Keyword research report first, then metadata, structured data, sitemap, clean URLs, GA4 and Search Console. Transfers to Moneybee complete at handover.</div></div>
+    <div class="li"><div class="li-top"><span class="li-title">Frontend engineering</span><span class="li-price">&#8377;9,000</span></div><div class="li-desc">Next.js App Router build, semantic markup, image and font optimisation, server rendered for crawlability.</div></div>
+    <div class="li"><div class="li-top"><span class="li-title">Positioning, information architecture and product structure</span><span class="li-price">&#8377;8,000</span></div><div class="li-desc">Sitemap, navigation, and the separate treatment PMS and AIF each require.</div></div>
+    <div class="li"><div class="li-top"><span class="li-title">Compliance and disclosure architecture</span><span class="li-price">&#8377;7,000</span></div><div class="li-desc">Disclosure centre, Investor Charter, grievance routing, benchmark and fee presentation built for compliance approval.</div></div>
+    <div class="li"><div class="li-top"><span class="li-title">Investor eligibility and enquiry routing</span><span class="li-price">&#8377;4,000</span></div><div class="li-desc">Eligibility is established before an investor enquires, and every enquiry reaches a named person with immediate notification.</div></div>
+    <div class="li"><div class="li-top"><span class="li-title">Performance and Core Web Vitals</span><span class="li-price">&#8377;4,000</span></div><div class="li-desc">PageSpeed above 90 on mobile and desktop, LCP below 2.5 seconds, maintained after launch.</div></div>
+    <div class="li"><div class="li-top"><span class="li-title">Database setup and administration</span><span class="li-price">&#8377;3,000</span></div><div class="li-desc">Schema, managed database, backups and monitoring configured and handed over.</div></div>
+    <div class="li"><div class="li-top"><span class="li-title">Accessibility, WCAG 2.2 AA</span><span class="li-price">&#8377;3,000</span></div><div class="li-desc">Semantic structure, keyboard support, contrast and screen reader testing.</div></div>
+    <div class="li"><div class="li-top"><span class="li-title">Security hardening and firewall</span><span class="li-price">&#8377;3,000</span></div><div class="li-desc">HTTPS throughout, web application firewall, protected administrative access, spam protection, dependency scanning.</div></div>
+    <div class="li"><div class="li-top"><span class="li-title">Testing and quality assurance</span><span class="li-price">&#8377;2,000</span></div><div class="li-desc">Cross device and browser testing, functional and regression passes before launch.</div></div>
+    <div class="li"><div class="li-top"><span class="li-title">Hosting, CI/CD, launch and handover</span><span class="li-price">&#8377;2,000</span></div><div class="li-desc">Deployment, custom domain, SSL, preview builds, credentials handover and a training session.</div></div>
+
+    <div class="totals">
+      <div class="trow"><span>Subtotal</span><span>&#8377;80,000</span></div>
+      <div class="trow"><span>Taxes</span><span>As applicable</span></div>
+      <div class="trow tot"><span>Total</span><span class="big">&#8377;80,000</span></div>
+    </div>
+
+    <div class="foot">
+      <div>
+        <div class="hdr">Payment terms</div>
+        <p>40% on commencement, 30% at design approval, 30% at go live. Payable by UPI or bank transfer.</p>
+      </div>
+      <div>
+        <div class="hdr">Delivery</div>
+        <p>Four weeks from commencement. Optional additions and the Care and Security Plan are set out in sections 14 and 15.</p>
+      </div>
+    </div>
+    </div>
+  </section>
+
+  <!-- ============ 4 / 01 ============ -->
+  <section class="page">
+    <div class="runhead">Moneybee / Context</div>
+    <div class="sec">
+      <h2><span class="num">01</span> Context and objectives</h2>
+      <p>Three conditions define what this website is required to achieve. Each is addressed by an identified component of the build, and each is referenced again in the section that treats it in detail.</p>
+
+      <p><b>Search is where the enquiry begins.</b> An investor considering where to place &#8377;50 lakh or more will ordinarily begin at a search engine. The managers who appear first are not necessarily the strongest; they are the managers whose sites were built with search in mind. Position for terms such as portfolio management services or alternative investment fund India is determined by site structure, page depth, crawlability and the frequency with which a firm publishes. A site of ten brochure pages offers a search engine very little to index, irrespective of the quality of the manager behind it. This is addressed in section 03.</p>
+
+      <p><b>The Fund is recently established.</b> An AIF licensed in 2025 carries no extended performance record. An investor therefore assesses it as they would any new mandate: on the investment process, on the manner in which decisions are explained, and on whether the firm's commentary remains consistent across favourable and unfavourable periods. Evidence of that kind exists only where it has been written down, and it accrues to Moneybee only where it is published on moneybee.in. This is addressed in sections 04 and 05.</p>
+
+      <p><b>The two products serve different investors.</b> SEBI sets the minimum investment at &#8377;50 lakh for portfolio management and &#8377;1 crore for an alternative investment fund. An investor holding &#8377;60 lakh is accordingly eligible for one product and not the other. Where a site does not make that distinction evident, the investor must establish it by telephone, and a proportion of them will not. This is addressed in section 06.</p>
+
+      <div class="note"><b>Why this is a single engagement.</b> Search visibility, research publishing and product structure draw on one foundation. The pages that rank are the pages that explain the products, and the material that persuades an investor is the material that earns the search position. Commissioned separately, each is more expensive and less effective.</div>
+    </div>
+  </section>
+
+  <!-- ============ 5 / 02 ============ -->
+  <section class="page">
+    <div class="runhead">Moneybee / Audience</div>
+    <div class="sec">
+      <h2><span class="num">02</span> The target investor</h2>
+      <p>The site is written for an investor holding &#8377;50 lakh or more in genuinely investible surplus who is deciding where to place it. Such an investor has met other managers and has encountered the standard vocabulary of the industry, market-beating returns, expert fund managers, long-term wealth creation, often enough that it no longer conveys information.</p>
+      <p>The question governing their reading of every page is narrower than performance, and it concerns trust rather than return.</p>
+      <p class="pull">Can this firm be trusted with a meaningful part of my family's wealth?</p>
+      <p>The table below sets out what bears on that question and what does not. The site is ordered so that the left column is answered before the visitor is asked for anything.</p>
+
+      <table class="tbl">
+        <thead><tr><th>What decides it</th><th>What does not</th></tr></thead>
+        <tbody>
+          <tr><td class="k wrap">Downside protection, drawdown management, risk-adjusted returns</td><td>The highest CAGR</td></tr>
+          <tr><td class="k wrap">A disciplined process that survives cycles</td><td>A view on where the market goes next</td></tr>
+          <tr><td class="k wrap">Clear fees, honest reporting, a reason each holding exists</td><td>One exceptional year</td></tr>
+          <tr><td class="k wrap">Alignment: managers with their own money invested, no churn</td><td>Sales enthusiasm</td></tr>
+          <tr><td class="k wrap">After-tax reality: turnover, LTCG, succession</td><td>Gross headline numbers</td></tr>
+          <tr><td class="k wrap">Access to the people making the decisions</td><td>A support ticket</td></tr>
+          <tr><td class="k wrap">Visible regulation, custodian and auditor</td><td>Legal text at the foot of the page</td></tr>
+        </tbody>
+      </table>
+
+      <div class="note"><b>The basis of the firm's credibility.</b> Investors seldom leave a manager on account of returns alone. They leave following poor communication, undisclosed risk, drift from the stated strategy, overpromising, or an inability to explain a decision after the event. Moneybee is positioned to answer each of these, and the supporting material already exists: a career in Indian capital markets beginning in 1979, a firm established in 2004, senior personnel with fifteen, twenty and twenty five years of experience respectively, a transaction record including the sale of Zandu to Emami in 2008 and the Sun Pharmaceuticals public issue in 1995, and a regulatory standing that can be presented prominently. For a fund still establishing its record, this is the evidence an investor weighs in place of a long track record, and it is substantial.</div>
+    </div>
+  </section>
+
+  <!-- ============ 6 / 03 ============ -->
+  <section class="page">
+    <div class="runhead">Moneybee / Search</div>
+    <div class="sec">
+      <h2><span class="num">03</span> Search visibility</h2>
+      <p>Search performance is treated as an engineering discipline and delivered as part of the build. The following components are included.</p>
+      <ul class="blist">
+        <li><b>Keyword research report.</b> Delivered in advance of implementation, a written report identifying the terms worth competing for, the search behaviour of investors and advisors, the relative difficulty of each term, and the page or article that should target it. This was requested in your brief, and it is the correct sequence.</li>
+        <li><b>Per page metadata.</b> Title, description, canonical and Open Graph tags generated from the content model for every page and every article, so that no page can ship without them.</li>
+        <li><b>Structured data.</b> JSON-LD covering Organization, FinancialProduct, Article, Person and JobPosting, enabling a search engine to interpret the nature of the firm, the products offered and the people responsible for them.</li>
+        <li><b>Technical foundation.</b> Sitemap and robots directives generated automatically, canonical URLs, readable slugs, and server rendered HTML, which together render every page fully crawlable.</li>
+        <li><b>Core Web Vitals.</b> Speed is a ranking factor. PageSpeed above 90 on mobile and desktop, and Largest Contentful Paint below 2.5 seconds, are treated as build requirements and verified before launch.</li>
+        <li><b>Measurement.</b> Google Analytics 4 and Google Search Console configured and verified at launch, so that indexing and ranking gaps are visible from the first week of operation.</li>
+        <li><b>Answer engines.</b> As contemplated by your scope statement, semantic HTML, structured data and consistently organised content allow an AI assistant to represent Moneybee accurately when a user asks it about portfolio management in India.</li>
+        <li><b>Transfer of ownership.</b> The keyword report, the metadata model, the structured data and the verified Search Console property transfer to Moneybee at handover. The foundation continues to operate without further payment, and no retainer is attached to it.</li>
+      </ul>
+      <div class="note"><b>A single subject, on a single domain.</b> Every page of the site concerns portfolio management or alternative investments, so each reinforces the same subject and the terms Moneybee wishes to rank for are the terms the site genuinely addresses. The same discipline benefits the design, since a site with one subject can support a six item menu, generous spacing and large type. All published material remains on moneybee.in, since search authority accrues to the domain on which it is published and material hosted elsewhere builds another party's position.</div>
+    </div>
+  </section>
+
+  <!-- ============ 7 / 04 ============ -->
+  <section class="page">
+    <div class="runhead">Moneybee / Publishing</div>
+    <div class="sec">
+      <h2><span class="num">04</span> Research publishing</h2>
+      <p>Investors assess a manager on the quality of its thinking, and search engines rank a site on the quality and consistency of what it publishes. A single activity satisfies both requirements, which is an unusual efficiency and one worth taking.</p>
+      <p class="pull">For the next several years, published research will be the most persuasive evidence available to the Fund.</p>
+      <p>A fund without an extended record is assessed on process, judgement and clarity, and published writing is where each of the three becomes visible. A sector note demonstrates how the firm reasons about a business. A quarterly letter demonstrates how a position was explained before its outcome was known, which is the one form of evidence that cannot be assembled retrospectively.</p>
+      <ul class="blist">
+        <li><b>Sector notes.</b> Short pieces addressing the sectors Moneybee researches directly, including the small and ultra-small capitalisation businesses that receive limited coverage elsewhere. These rank for specific terms and demonstrate depth at the same time.</li>
+        <li><b>Market commentary.</b> Periodic commentary on conditions and positioning, in the firm's own voice, at whatever frequency the team can sustain.</li>
+        <li><b>Investor letters.</b> Quarterly letters published where prospective investors may read them, allowing a reader to consider the reasoning and the outcome together.</li>
+        <li><b>Each piece as an indexed page.</b> Every article receives its own URL, metadata, structured data and social card, generated automatically on publication.</li>
+      </ul>
+      <div class="note"><b>The dependency on tooling.</b> Publishing programmes fail where publishing is difficult. The administration platform described in section 05 is included so that an article is published in minutes, reaches the subscriber list the same day, and requires no one outside the Moneybee team.</div>
+    </div>
+  </section>
+
+  <!-- ============ 8 / 05 ============ -->
+  <section class="page">
+    <div class="runhead">Moneybee / Platform</div>
+    <div class="sec">
+      <h2><span class="num">05</span> The administration platform</h2>
+      <p>A private administration area from which the Moneybee team maintains every element of the site that changes.</p>
+      <ul class="blist">
+        <li><b>Editorial.</b> An editor supporting direct entry or paste, images and charts, live preview, drafts, scheduled publication, tagging, and per article search fields.</li>
+        <li><b>Product and performance data.</b> Returns, benchmark comparisons and fee tables for each product, maintained on whatever cycle compliance approves.</li>
+        <li><b>Factsheet generation.</b> Factsheet documents produced from the performance data already held in the platform, so that a new quarter does not require design work.</li>
+        <li><b>Newsletter.</b> Subscriber management and distribution, so that a letter or market commentary reaches the list on the day of publication.</li>
+        <li><b>Team records, careers and enquiries.</b> Personnel and biographies maintained without engineering assistance, vacancies published and applications collected, and every enquiry progressed through a defined pipeline with immediate notification to the responsible person.</li>
+        <li><b>Search reporting.</b> Rankings, impressions, principal queries and indexed page counts in a single view, so that the team can observe the return on its published material.</li>
+      </ul>
+
+      <div class="card">
+        <div class="card-hd"><span class="t">Monthly search report</span><span class="d">Illustrative &#183; 30-day view</span></div>
+        <div class="tiles">
+          <div class="tile"><div class="lbl">Indexed pages</div><div class="val">64</div><div class="delta">&#9650; 9 this month</div></div>
+          <div class="tile"><div class="lbl">Impressions</div><div class="val">18,204</div><div class="delta">&#9650; 22.4%</div></div>
+          <div class="tile"><div class="lbl">Avg position</div><div class="val">14.2</div><div class="delta">&#9650; 3.1 places</div></div>
+          <div class="tile"><div class="lbl">Enquiries</div><div class="val">11</div><div class="delta">&#9650; 4 new</div></div>
+        </div>
+        <div class="card-grid">
+          <div>
+            <div class="mini-h">Impressions by week</div>
+            <div class="spark">
+              <span style="height:42%"></span><span style="height:58%"></span><span style="height:71%"></span><span style="height:88%"></span>
+            </div>
+            <div class="spark-x"><span>W1</span><span>W2</span><span>W3</span><span>W4</span></div>
+          </div>
+          <div>
+            <div class="mini-h">Core Web Vitals</div>
+            <div class="mrow"><span class="mk">LCP</span><span class="mt"><span class="mb" style="width:24%"></span></span><span class="mv">1.2s</span></div>
+            <div class="mrow"><span class="mk">INP</span><span class="mt"><span class="mb" style="width:18%"></span></span><span class="mv">90ms</span></div>
+            <div class="mrow"><span class="mk">CLS</span><span class="mt"><span class="mb" style="width:12%"></span></span><span class="mv">0.02</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="note"><b>Illustrative figures.</b> The layout is as it will be delivered. The figures are placeholders, included to make the reporting concrete.</div>
+    </div>
+  </section>
+
+  <!-- ============ 9 / 06 ============ -->
+  <section class="page">
+    <div class="runhead">Moneybee / Products</div>
+    <div class="sec">
+      <h2><span class="num">06</span> Product architecture</h2>
+      <p>The two products fall under different regulations, carry different structures and disclosure obligations, and are available to different investors. SEBI sets the minimum investment for each, and that minimum determines the investors to whom each product may be offered at all.</p>
+
+      <div class="duo">
+        <div>
+          <p class="dh">Portfolio Management Services</p>
+          <p class="dmin">&#8377;50 lakh</p>
+          <p class="dcap">Minimum investment, set by SEBI</p>
+          <ul class="blist">
+            <li>Securities held in the investor's own name</li>
+            <li>Portfolio visible holding by holding</li>
+            <li>Discretionary mandate, disclosed fee structure</li>
+            <li>Returns reported against a stated benchmark</li>
+          </ul>
+        </div>
+        <div>
+          <p class="dh">Alternative Investment Fund</p>
+          <p class="dmin">&#8377;1 crore</p>
+          <p class="dcap">Minimum investment, set by SEBI</p>
+          <ul class="blist">
+            <li>Pooled structure with a defined strategy and term</li>
+            <li>Governed by the fund's placement memorandum</li>
+            <li>Different fee and distribution mechanics</li>
+            <li>A narrower, larger set of eligible investors</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="note" style="margin-top:22px"><b>The rationale for separate treatment.</b> An investor holding &#8377;60 lakh qualifies for one product and not the other, and should be able to establish that within seconds, from the site, without a telephone call and without being directed along a path unavailable to them. An investor with several crore may wish to consider both, and should be able to compare them on an equivalent basis. Each product accordingly receives its own pages, its own performance presentation and its own disclosures, and the navigation makes the distinction apparent at the first step.</div>
+    </div>
+  </section>
+
+  <!-- ============ 10 / 07 ============ -->
+  <section class="page">
+    <div class="runhead">Moneybee / Compliance</div>
+    <div class="sec">
+      <h2><span class="num">07</span> Compliance and disclosure</h2>
+      <p>For a SEBI registered manager, the disclosure material is the section of a website that a serious investor reads with the greatest care. Presented properly it contributes more to trust than any statement on the homepage, and this build treats it accordingly.</p>
+      <ul class="blist">
+        <li><b>Investor and Regulatory Centre.</b> A single destination holding the disclosure documents, the placement memorandum, the Investor Charter, complaint data and statutory notices, summarised in a concise footer on every page and accessible from anywhere on the site.</li>
+        <li><b>Registration presented prominently.</b> SEBI registration numbers, category, and exchange or depository memberships set out at full size and high on the page.</li>
+        <li><b>Performance presented analytically.</b> Returns against the appropriate benchmark across standard periods, together with rolling returns, drawdowns and a statement of calculation methodology, so that an advisor may verify the figures rather than accept them.</li>
+        <li><b>Fees in full.</b> Management fee, performance fee, hurdle rate and high water mark presented in a plain table, with the worked example on a &#8377;50 lakh portfolio that regulation requires.</li>
+        <li><b>Grievance procedure.</b> Named principal officer and investor relations contact, the complaint procedure, and links to the SCORES and ODR platforms.</li>
+        <li><b>Structured for approval.</b> Each page carrying regulated content is constructed so that your compliance officer may review it as a single unit, and so that the text may subsequently be amended without engineering assistance.</li>
+      </ul>
+      <div class="note"><b>Sequencing.</b> Compliance review proceeds in parallel with the build. Templates and structure are submitted for approval early, so that final approval concerns content within a layout already agreed. This is what protects the delivery date.</div>
+    </div>
+  </section>
+
+  <!-- ============ 11 / 08 + 09 ============ -->
+  <section class="page">
+    <div class="runhead">Moneybee / Design</div>
+    <div class="sec">
+      <h2><span class="num">08</span> Visual direction and design system</h2>
+      <p>Restrained, confident and quiet: generous spacing, large type and minimal movement. The intention is that a visitor should conclude that this firm has managed capital carefully for a long period before reading a sentence of the copy.</p>
+      <ul class="blist">
+        <li><b>A design system.</b> A single consistent specification of typography, colour, spacing and components, so that every page reads as the work of one firm and each additional page costs hours instead of days.</li>
+        <li><b>Typography as the primary element.</b> One modern typeface used at genuine scale. Long form sections are set editorially, with appropriate measure and leading, because they are written to be read.</li>
+        <li><b>Disciplined use of colour.</b> Black and near black for structure, a warm off white ground, and the Moneybee yellow reserved for accents and a single call to action in any view.</li>
+        <li><b>Component library.</b> Strategy cards, performance tables, article layouts, team profiles, disclosure blocks and enquiry forms, recombined as the site develops.</li>
+        <li><b>Responsive across devices.</b> Desktop, tablet and mobile, with particular attention to mobile, where the majority of first visits arrive.</li>
+        <li><b>A defined motion budget.</b> Restrained hover states, a small loading state on the primary action, and no full page transitions.</li>
+      </ul>
+      <p style="margin-top:10px">One principle governs the whole of it. The larger the sum an investor is considering entrusting to a firm, the less they are persuaded by volume. A site prepared to say less, and to say it exceptionally well, leaves the stronger impression.</p>
+    </div>
+    <div class="sec">
+      <h2><span class="num">09</span> Accessibility</h2>
+      <p>The site is built to the WCAG 2.2 AA standard. This widens the addressable audience, it is appropriate conduct for a regulated firm, and the majority of the same work is rewarded by search engines.</p>
+      <ul class="blist">
+        <li><b>Semantic structure.</b> Correct headings, landmarks and labels, so that assistive technology interprets the site properly.</li>
+        <li><b>Keyboard and screen reader support.</b> Every interactive element operable without a mouse and announced correctly.</li>
+        <li><b>Colour and contrast.</b> Text and controls meeting AA ratios in every state.</li>
+        <li><b>Forms.</b> Clear labels, visible focus states, and informative error messages on every field.</li>
+        <li><b>Verification.</b> Screen reader and keyboard testing conducted before launch, with the results recorded.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ============ 12 / 10 ============ -->
+  <section class="page">
+    <div class="runhead">Moneybee / Technology</div>
+    <div class="sec">
+      <h2><span class="num">10</span> Technology platform</h2>
+      <p>Your comparison document concluded that a content management system such as WordPress suits a firm seeking moderate in-house maintenance, and invited our view.</p>
+      <p>We recommend Next.js, deployed to Vercel. The concerns set out in that document are legitimate concerns regarding a conventionally coded site: manual patching, manual backups, and engineering involvement in every change. They do not arise on this platform, and the table below addresses each in turn.</p>
+      <table class="tbl">
+        <thead><tr><th>Your concern</th><th>On Next.js and Vercel</th></tr></thead>
+        <tbody>
+          <tr><td class="k">Security updates are manual</td><td>No plugin surface to patch, which removes the largest attack vector a WordPress site carries</td></tr>
+          <tr><td class="k">Backups need automating</td><td>Version control is the backup. Every deployment is an immutable version, revertible in one action</td></tr>
+          <tr><td class="k">DDoS and firewall must be added</td><td>Included at the edge, with a web application firewall in front of the site</td></tr>
+          <tr><td class="k">Speed is variable</td><td>Static first rendering achieves the stated PageSpeed and LCP targets considerably more reliably</td></tr>
+          <tr><td class="k">A developer is needed for every change</td><td>Only where a site is built that way. The administration platform in section 05 is the provision that prevents it</td></tr>
+          <tr><td class="k">Host access and ownership</td><td>Repository, domain and hosting transfer to Moneybee, with a handover document and a training session</td></tr>
+        </tbody>
+      </table>
+      <div class="note"><b>The underlying requirement.</b> The question the comparison document raises is whether the Moneybee team can operate the site without us. That is determined by scope rather than by platform, and it is the reason the administration platform is the largest single line in the fee schedule.</div>
+    </div>
+  </section>
+
+  <!-- ============ 13 / 11 + 12 ============ -->
+  <section class="page">
+    <div class="runhead">Moneybee / System</div>
+    <div class="sec">
+      <h2><span class="num">11</span> Performance, security and availability</h2>
+      <p>The site is delivered as a properly architected application, which is what keeps it fast, secure and available. All three contribute to search position.</p>
+      <ul class="blist">
+        <li><b>Performance.</b> PageSpeed above 90 on mobile and desktop and Largest Contentful Paint below 2.5 seconds, measured continuously following launch and reported monthly.</li>
+        <li><b>Security.</b> HTTPS throughout, a web application firewall at the edge, protected administrative access, spam protection on every form, and dependency scanning.</li>
+        <li><b>Backups.</b> Database and content backed up on a defined schedule, with restoration tested on the same schedule.</li>
+        <li><b>Availability.</b> Served from a globally distributed edge network, so that no single machine can take the site offline.</li>
+      </ul>
+      <div class="cmp" style="margin-top:18px">
+        <div class="cmp-cap">Downtime per year, lower is better</div>
+        <div class="crow">
+          <div class="c-label"><div class="c-name">Shared hosting</div><div class="c-sub">Typical single server</div></div>
+          <div class="c-track"><span class="c-bar lite" style="width:91%"></span></div>
+          <div class="c-val">99.5%<small>~43.8 hrs down</small></div>
+        </div>
+        <div class="crow">
+          <div class="c-label"><div class="c-name">Managed host</div><div class="c-sub">Single region</div></div>
+          <div class="c-track"><span class="c-bar lite" style="width:18%"></span></div>
+          <div class="c-val">99.9%<small>~8.8 hrs down</small></div>
+        </div>
+        <div class="crow">
+          <div class="c-label"><div class="c-name">What we deploy</div><div class="c-sub">Edge network, multi-region</div></div>
+          <div class="c-track"><span class="c-bar" style="width:2%"></span></div>
+          <div class="c-val">99.99%<small>~53 min down</small></div>
+        </div>
+      </div>
+    </div>
+    <div class="sec">
+      <h2><span class="num">12</span> Content model</h2>
+      <p>The entities below define the database schema and the structure of the administration platform, and determine the metadata generated for each type of page.</p>
+      <table class="tbl">
+        <thead><tr><th>Entity</th><th>Key fields</th><th>Metadata</th></tr></thead>
+        <tbody>
+          <tr><td class="k">Strategy</td><td>name, slug, type (PMS or AIF), minimum, objective, performance, fees, factsheet</td><td>title, description, OG image, JSON-LD</td></tr>
+          <tr><td class="k">Article</td><td>title, slug, body, cover, author, sector tags, publishedAt</td><td>title, description, OG image, JSON-LD</td></tr>
+          <tr><td class="k">Person</td><td>name, role, biography, credentials, photograph, order</td><td>JSON-LD Person, canonical</td></tr>
+          <tr><td class="k">Disclosure</td><td>title, category, body or document, effective date</td><td>canonical, indexable</td></tr>
+          <tr><td class="k">Enquiry</td><td>name, email, product interest, message, source, status</td><td>internal only, immediate alert</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ============ 14 / 13 ============ -->
+  <section class="page">
+    <div class="runhead">Moneybee / Delivery</div>
+    <div class="sec">
+      <h2><span class="num">13</span> Delivery schedule</h2>
+      <p style="margin-bottom:22px">Four weeks from commencement. Week one covers research and planning, weeks two and three the build, and week four content loading, compliance review, accessibility verification and testing prior to launch.</p>
+
+      <div class="gantt">
+        <div class="g-weekhead">
+          <div class="g-label"></div>
+          <div class="g-track"><span>Week 1</span><span>Week 2</span><span>Week 3</span><span>Week 4</span></div>
+        </div>
+
+        <div class="g-phase">Phase 1 : Research and planning</div>
+        <div class="g-row"><div class="g-label">Keyword research report</div><div class="g-track"><span class="g-bar" style="left:0%;width:14%"></span></div></div>
+        <div class="g-row"><div class="g-label">Information architecture</div><div class="g-track"><span class="g-bar" style="left:5%;width:13%"></span></div></div>
+        <div class="g-row"><div class="g-label">Content model and DB schema</div><div class="g-track"><span class="g-bar" style="left:9%;width:14%"></span></div></div>
+        <div class="g-row"><div class="g-label">Design system and layouts</div><div class="g-track"><span class="g-bar" style="left:13%;width:20%"></span></div></div>
+
+        <div class="g-phase">Phase 2 : Build</div>
+        <div class="g-row"><div class="g-label">Frontend and components</div><div class="g-track"><span class="g-bar" style="left:25%;width:44%"></span></div></div>
+        <div class="g-row"><div class="g-label">Publishing platform and dashboard</div><div class="g-track"><span class="g-bar" style="left:30%;width:38%"></span></div></div>
+        <div class="g-row"><div class="g-label">Strategy and performance pages</div><div class="g-track"><span class="g-bar" style="left:38%;width:24%"></span></div></div>
+        <div class="g-row"><div class="g-label">Search, metadata and structured data</div><div class="g-track"><span class="g-bar" style="left:54%;width:18%"></span></div></div>
+        <div class="g-row"><div class="g-label">Disclosure centre</div><div class="g-track"><span class="g-bar" style="left:58%;width:16%"></span></div></div>
+
+        <div class="g-phase">Phase 3 : Review and launch</div>
+        <div class="g-row"><div class="g-label">Content loading</div><div class="g-track"><span class="g-bar" style="left:72%;width:13%"></span></div></div>
+        <div class="g-row"><div class="g-label">Compliance review and revisions</div><div class="g-track"><span class="g-bar" style="left:70%;width:22%"></span></div></div>
+        <div class="g-row"><div class="g-label">Accessibility audit</div><div class="g-track"><span class="g-bar" style="left:76%;width:13%"></span></div></div>
+        <div class="g-row"><div class="g-label">Performance and Core Web Vitals</div><div class="g-track"><span class="g-bar" style="left:74%;width:12%"></span></div></div>
+        <div class="g-row"><div class="g-label">Cross-device and browser QA</div><div class="g-track"><span class="g-bar" style="left:79%;width:12%"></span></div></div>
+        <div class="g-row"><div class="g-label">Launch, training and handover</div><div class="g-track"><span class="g-bar" style="left:90%;width:10%"></span></div></div>
+      </div>
+      <div class="note"><b>Compliance review proceeds in parallel.</b> Review begins on approved templates in week three, while the build is still in progress. Deferring review until the site is complete is what places a delivery date at risk.</div>
+    </div>
+  </section>
+
+  <!-- ============ 15 / 14 + 15 ============ -->
+  <section class="page">
+    <div class="runhead">Moneybee / Options and support</div>
+    <div class="sec">
+      <h2><span class="num">14</span> Optional additions</h2>
+      <p>Search, research publishing, factsheet generation, newsletter distribution, the disclosure architecture, thirty days of post launch revisions and twelve months of bug support are all comprised within the &#8377;80,000. The search foundation in particular is complete at handover and carries no retainer. The items below constitute separate work and may be commissioned at launch or subsequently.</p>
+      <table class="addons">
+        <thead><tr><th>Addition</th><th>What it provides</th><th>Fee</th></tr></thead>
+        <tbody>
+          <tr><td class="name">Editorial copywriting</td><td>We write the site copy in Moneybee's voice, delivered for compliance review. Investment writing remains yours</td><td class="price">&#8377;12,000</td></tr>
+          <tr><td class="name">Investor portal</td><td>A portal built and owned by Moneybee, with two factor login, holdings and statements</td><td class="price">&#8377;18,000</td></tr>
+          <tr><td class="name">Portal styling</td><td>The existing investor portal wrapped so that it matches the site</td><td class="price">&#8377;6,000</td></tr>
+          <tr><td class="name">AI research assistant</td><td>An assistant trained on published research that answers investor questions and routes to a person</td><td class="price">&#8377;6,000 + usage</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="sec">
+      <h2><span class="num">15</span> Care and Security Plan</h2>
+      <p>A website requires continuing attention after launch. This optional annual plan maintains it in a secure, fast and current condition.</p>
+      <ul class="blist">
+        <li><b>Security.</b> Framework and dependency patching, vulnerability monitoring, SSL and domain renewals, protected administrative access.</li>
+        <li><b>Compliance upkeep.</b> Disclosure, charter and statutory notice updates as SEBI requirements change.</li>
+        <li><b>Availability.</b> Monitoring with alerts and prompt incident response.</li>
+        <li><b>Backups.</b> Regular backups with tested restoration.</li>
+        <li><b>Reporting.</b> A periodic report on traffic, search position, performance and security.</li>
+      </ul>
+      <div class="note"><b>Included with the build.</b> Thirty days of post launch revisions and twelve months of bug support. The plan is charged at &#8377;18,000 per annum thereafter.</div>
+    </div>
+  </section>
+
+  <!-- ============ 16 / ASSUMPTIONS + ACCEPTANCE ============ -->
+  <section class="page">
+    <div class="runhead">Moneybee / Terms</div>
+    <div class="sec">
+      <h2>Assumptions and exclusions</h2>
+      <ul class="blist">
+        <li><b>Copy is supplied by Moneybee.</b> We structure, place and optimise it. Editorial writing is available as an optional addition.</li>
+        <li><b>Performance figures, assets under management and AIF registration particulars are supplied by Moneybee</b> and approved by compliance. Pages are constructed to present them from the first day and to accommodate further periods as they accumulate.</li>
+        <li><b>Compliance review proceeds in parallel with the build</b>, commencing in week three.</li>
+        <li><b>Scope is limited to PMS and AIF.</b> Redirects for retired URLs are included. Moneybee's other business lines fall outside this engagement.</li>
+        <li><b>Investor login</b> links to the existing portal. Construction of a replacement portal is an optional addition.</li>
+        <li><b>Brand artwork</b> is supplied by Moneybee in vector format for print and display use.</li>
+      </ul>
+    </div>
+    <div class="sec">
+      <h2>Acceptance</h2>
+      <p>Written confirmation of the scope set out in this document is sufficient to commence. The first phase begins within two working days of that confirmation.</p>
+      <p>This proposal is valid until 01 September 2026.</p>
+    </div>
+  </section>
+
+</main>
+</body>
+</html>
