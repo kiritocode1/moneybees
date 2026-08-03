@@ -30,3 +30,8 @@ body {
 .option-one :where(h1, h2, h3, h4, h5, h6) {
   font-family: var(--font-rethink-sans);
 }
+
+.option-one-shell,
+.option-one {
+  font-family: var(--font-rethink-sans), "Helvetica Neue", sans-serif;
+}
