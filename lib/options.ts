@@ -19,7 +19,7 @@ export const OPTIONS: Option[] = [
     n: 1,
     slug: "option-1",
     label: "Option 1",
-    note: "A deep-blue wealth advisory direction based directly on the selected reference.",
+    note: "A deep-blue direction on the selected reference, carrying the pure-play PMS and AIF narrative.",
   },
   {
     n: 2,

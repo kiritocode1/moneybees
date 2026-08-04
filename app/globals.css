@@ -4,7 +4,7 @@
    display copy a warmer editorial voice. */
 @theme inline {
   --font-sans: var(--font-rethink-sans);
-  --font-serif: var(--font-instrument-serif);
+  --font-serif: var(--font-instrument-serif), Georgia, serif;
   --font-mono: var(--font-rethink-sans);
 }
 
@@ -19,16 +19,20 @@ body {
   min-height: 100svh;
 }
 
-:where(h1, h2, h3, h4, h5, h6) {
-  font-family: var(--font-instrument-serif);
-  font-weight: 400;
-}
+/* Heading defaults live in the base layer so that Tailwind utilities, which sit
+   in the utilities layer, can override them per element. Unlayered rules would
+   beat every utility regardless of specificity. */
+@layer base {
+  :where(h1, h2, h3, h4, h5, h6) {
+    font-family: var(--font-instrument-serif);
+    font-weight: 400;
+  }
 
-/* Option 1 is deliberately a single-sans system. Keep this rule unlayered so
-   it wins over the shared editorial heading default without affecting the
-   remaining directions. */
-.option-one :where(h1, h2, h3, h4, h5, h6) {
-  font-family: var(--font-rethink-sans);
+  /* Option 1 is deliberately a single-sans system; individual headings opt back
+     into the serif with `font-serif`. */
+  .option-one :where(h1, h2, h3, h4, h5, h6) {
+    font-family: var(--font-rethink-sans);
+  }
 }
 
 .option-one-shell,
