@@ -39,3 +39,20 @@ body {
 .option-one {
   font-family: var(--font-rethink-sans), "Helvetica Neue", sans-serif;
 }
+
+/* OverlayMenu is shared by all four directions and hard-codes a few blues in its
+   own injected stylesheet, which no prop reaches. These overrides are scoped to
+   option 1's shell so the other three are untouched. */
+.option-one-shell .om-root .om-legal a {
+  color: rgba(255, 255, 255, 0.48);
+}
+
+.option-one-shell .om-root .om-secondary-links a {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* The toggler bars are ink so they read against the washed hero. While the
+   curtain is open they sit on near-black, so they have to invert. */
+.option-one-shell .om-root .om-toggler.om-open span {
+  background-color: #ffffff;
+}
