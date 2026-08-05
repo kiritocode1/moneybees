@@ -153,7 +153,7 @@ function Header() {
   const [open, setOpen] = useState(false);
 
   return (
-    <header className="absolute inset-x-3 top-3 z-40 h-14 rounded-[4px] bg-[rgba(243,242,238,.82)] p-1 text-[#2d2b27] backdrop-blur-md md:inset-x-4">
+    <header data-hero-nav className="absolute inset-x-3 top-3 z-40 h-14 rounded-[4px] bg-[rgba(243,242,238,.82)] p-1 text-[#2d2b27] backdrop-blur-md md:inset-x-4">
       <div className="flex h-full items-center">
         <a href="#top" aria-label="Moneybee home" className="ml-4 mr-8 flex items-center text-[#292c2a]">
           <Mark />
@@ -165,7 +165,7 @@ function Header() {
                 <button type="button" className="flex h-full items-center gap-3 px-5 text-[15px]">
                   {label}<span className="mt-[-3px] rotate-45 border-b border-r border-current p-[3px] transition-transform group-hover/nav:rotate-[225deg]" />
                 </button>
-                <div className="pointer-events-none absolute left-0 right-0 top-[52px] translate-y-2 rounded-b-[4px] bg-[#f3f2ee] p-8 opacity-0 shadow-xl transition duration-300 group-hover/nav:pointer-events-auto group-hover/nav:translate-y-0 group-hover/nav:opacity-100">
+                <div className="pointer-events-none invisible absolute left-0 right-0 top-[52px] translate-y-2 rounded-b-[4px] bg-[#f3f2ee] p-8 opacity-0 shadow-xl transition duration-300 group-hover/nav:pointer-events-auto group-hover/nav:visible group-hover/nav:translate-y-0 group-hover/nav:opacity-100">
                   <div className="grid grid-cols-[.8fr_1.2fr_.75fr] gap-10">
                     <div>
                       <p className="text-[28px] font-light">{label === "About" ? "Built around patient capital" : label === "Approach" ? "Research before conviction" : "Ways to invest with us"}</p>
@@ -211,10 +211,10 @@ function Header() {
           </span>
         </button>
       </div>
-      <div className={`absolute inset-x-0 top-[60px] overflow-hidden rounded-[4px] bg-[#292c2a] text-[#f3f2ee] transition-[max-height,opacity] duration-500 md:hidden ${open ? "max-h-[520px] opacity-100" : "pointer-events-none max-h-0 opacity-0"}`}>
+      <div className={`absolute inset-x-0 top-[60px] overflow-hidden rounded-[4px] bg-[#292c2a] text-[#f3f2ee] transition-[max-height,opacity] duration-500 md:hidden ${open ? "visible max-h-[520px] opacity-100" : "pointer-events-none invisible max-h-0 opacity-0"}`}>
         <nav className="space-y-0 p-5">
-          {["About", "Approach", "Offerings", "Perspectives", "Investor login"].map((label, index) => (
-            <a key={label} href={index === 4 ? "https://www.moneybee.in/register.php" : `#${label.toLowerCase()}`} onClick={() => setOpen(false)} className="flex items-center justify-between border-b border-white/10 py-4 text-xl font-light">
+          {[["About", "#about"], ["Approach", "#approach"], ["Offerings", "#stewardship"], ["Perspectives", "#insights"], ["Investor login", "https://www.moneybee.in/register.php"]].map(([label, href]) => (
+            <a key={label} href={href} onClick={() => setOpen(false)} className="flex items-center justify-between border-b border-white/10 py-4 text-xl font-light">
               {label}<span>↗</span>
             </a>
           ))}
@@ -249,7 +249,7 @@ export default function Option2() {
         gsap.to("[data-hero-media]", {
           yPercent: 8,
           ease: "none",
-          scrollTrigger: { trigger: "#top", start: "top top", end: "bottom top", scrub: 1 },
+          scrollTrigger: { trigger: scope, start: "top top", end: "+=900", scrub: 1 },
         });
 
         gsap.utils.toArray<HTMLElement>("[data-reveal]").forEach((element) => {
@@ -295,7 +295,7 @@ export default function Option2() {
   return (
     <main ref={root} id="top" className="option-two overflow-clip bg-[#f3f2ee] text-[#2d2b27]">
       <section className="relative flex min-h-svh p-2" aria-label="Moneybee introduction">
-        <div data-hero-nav><Header /></div>
+        <Header />
         <div className="relative min-h-[calc(100svh-16px)] w-full overflow-hidden rounded-[4px] bg-[#637d65]">
           <video data-hero-media autoPlay loop muted playsInline poster="/option-2/hero-poster.jpg" className="absolute -inset-y-[8%] h-[116%] w-full object-cover">
             <source src="/option-2/hero.mp4" type="video/mp4" />
@@ -306,11 +306,13 @@ export default function Option2() {
               <div data-hero-tag className="mb-5 md:hidden">
                 <span className="inline-flex items-center gap-3 rounded-[4px] bg-white/[.06] px-3 py-2 text-[12px] uppercase tracking-[.18em]"><i className="h-1 w-1 rounded-full bg-[#a9ff12]" /> Built for the long term <i className="h-1 w-1 rounded-full bg-[#a9ff12]" /></span>
               </div>
-              <h1 data-hero-title className="max-w-[900px] text-[clamp(3.2rem,5.55vw,5rem)] font-light leading-[1.1] tracking-[-.035em]">
-                We invest with discipline for long-term outcomes
-              </h1>
-              <div data-hero-tag className="ml-[31%] mt-[-42px] hidden md:block">
-                <span className="inline-flex items-center gap-3 rounded-[4px] bg-white/[.06] px-4 py-3 text-[11px] uppercase tracking-[.18em]"><i className="h-1 w-1 rounded-full bg-[#a9ff12]" /> Built for the long term <i className="h-1 w-1 rounded-full bg-[#a9ff12]" /></span>
+              <div className="relative max-w-[850px]">
+                <h1 data-hero-title className="text-[clamp(3.2rem,5.55vw,5rem)] font-light leading-[1.1] tracking-[-.035em]">
+                  <span className="md:block">We invest with </span>
+                  <span className="md:block">discipline for long-term </span>
+                  <span>outcomes</span>
+                </h1>
+                <span data-hero-tag className="absolute bottom-3 left-[345px] hidden items-center gap-3 rounded-[4px] bg-white/[.06] px-4 py-3 text-[11px] uppercase tracking-[.18em] md:inline-flex"><i className="h-1 w-1 rounded-full bg-[#a9ff12]" /> Built for the long term <i className="h-1 w-1 rounded-full bg-[#a9ff12]" /></span>
               </div>
             </div>
             <p data-hero-copy className="max-w-[340px] text-[15px] leading-6 text-white/90 md:mb-1">Moneybee manages capital through fundamental research, independent thinking, and patient ownership.</p>
@@ -427,15 +429,15 @@ export default function Option2() {
         </div>
       </section>
 
-      <section id="contact" className="flex min-h-svh p-2">
-        <div className="relative min-h-[calc(100svh-16px)] w-full overflow-hidden rounded-[4px] text-white">
-          <Image data-parallax src="/option-2/hero-poster.jpg" alt="Alpine landscape" fill sizes="100vw" className="h-[110%]! object-cover" />
+      <section id="contact" className="flex min-h-[1100px] p-2 md:min-h-svh">
+        <div className="relative min-h-[1084px] w-full overflow-hidden rounded-[4px] text-white md:min-h-[calc(100svh-16px)]">
+          <Image data-parallax src="/option-2/hero-poster.jpg" alt="Alpine landscape" fill sizes="100vw" loading="eager" className="h-[110%]! object-cover" />
           <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(30,33,28,.17),rgba(32,36,24,.48))]" />
           <h2 data-reveal className="absolute left-[4%] top-[8%] max-w-[850px] text-[clamp(3.4rem,6vw,5.5rem)] font-light leading-[1.02]">Build wealth with clarity, patience, and purpose.</h2>
-          <div data-reveal className="absolute bottom-[7%] left-[4%] grid gap-9 sm:grid-cols-3">
-            {[['Office','Mumbai, Maharashtra','India'],['Approach','Fundamental research','Long-term ownership'],['Access','PMS and AIF','Investor portal']].map(([label,a,b])=><div key={label} className="min-w-[210px]"><span className="text-[12px] uppercase">{label}</span><p className="mt-5 text-[20px] leading-8">{a}<br/>{b}</p></div>)}
+          <div data-reveal className="absolute bottom-[5%] left-[4%] right-[4%] grid grid-cols-2 gap-7 md:bottom-[7%] md:right-auto md:grid-cols-3 md:gap-9">
+            {[['Office','Mumbai, Maharashtra','India'],['Approach','Fundamental research','Long-term ownership'],['Access','PMS and AIF','Investor portal']].map(([label,a,b], index)=><div key={label} className={`min-w-0 md:min-w-[210px] ${index===2?"col-span-2 md:col-span-1":""}`}><span className="text-[12px] uppercase">{label}</span><p className="mt-4 text-[17px] leading-7 md:mt-5 md:text-[20px] md:leading-8">{a}<br/>{b}</p></div>)}
           </div>
-          <article data-reveal className="absolute bottom-[7%] right-[4%] flex min-h-[430px] w-[min(90%,350px)] flex-col justify-between rounded-[4px] bg-[linear-gradient(150deg,rgba(167,181,171,.9),rgba(70,83,39,.9))] p-7 backdrop-blur-sm">
+          <article data-reveal className="absolute left-[4%] top-[37%] flex min-h-[380px] w-[92%] flex-col justify-between rounded-[4px] bg-[linear-gradient(150deg,rgba(167,181,171,.9),rgba(70,83,39,.9))] p-7 backdrop-blur-sm md:bottom-[7%] md:left-auto md:right-[4%] md:top-auto md:min-h-[430px] md:w-[min(90%,350px)]">
             <i aria-hidden className="absolute right-3 top-3 h-3 w-3 rounded-[2px] bg-[#637d65]" />
             <h3 className="max-w-[10ch] text-[31px] font-light leading-[1.4]">Let’s start a conversation about your long-term objectives</h3>
             <p className="max-w-[30ch] text-[14px] leading-6">We would like to understand your goals before discussing our approach.</p>
