@@ -68,6 +68,71 @@ body {
   display: none;
 }
 
+@font-face {
+  font-family: "Satoshi Option Two";
+  src: url("/option-2/Satoshi-Light.otf") format("opentype");
+  font-style: normal;
+  font-weight: 300;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Satoshi Option Two";
+  src: url("/option-2/Satoshi-Regular.otf") format("opentype");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Satoshi Option Two";
+  src: url("/option-2/Satoshi-Medium.otf") format("opentype");
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+}
+
+.option-two-shell,
+.option-two {
+  font-family: "Satoshi Option Two", Arial, sans-serif;
+}
+
+.option-two :where(h1, h2, h3, h4, h5, h6) {
+  font-family: "Satoshi Option Two", Arial, sans-serif;
+}
+
+.option-two-track {
+  scrollbar-width: none;
+}
+
+.option-two-track::-webkit-scrollbar {
+  display: none;
+}
+
+.option-two a,
+.option-two button {
+  outline-color: #637d65;
+  outline-offset: 4px;
+}
+
+.option-two a:focus-visible,
+.option-two button:focus-visible,
+.option-two input:focus-visible {
+  outline: 2px solid #637d65;
+  outline-offset: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .option-two *,
+  .option-two *::before,
+  .option-two *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
 /* The chapter stack drops its pin in JS, where it already has to branch. The
    stats panel pins purely in CSS, so it is released here instead. Unlayered on
    purpose: Tailwind's utilities sit in a layer, and a layered `h-[190svh]`

@@ -1,20 +1,14 @@
 import type { Metadata } from "next";
 import { OptionSwitcher } from "@/components/option-switcher";
 
-// Type: inherits Rethink Sans from the root layout. To give this direction its
-// own face, import it here, add its variable class to the wrapper below, and
-// set the family on it. (Avoid writing Tailwind class syntax in comments —
-// the scanner compiles it into real CSS.)
-
 export const metadata: Metadata = {
-  title: "Option 2",
+  title: "Moneybee | Long-term investment management",
+  description: "Moneybee Portfolio Management Services and Alternative Investment Fund.",
 };
 
-export default function OptionLayout({
-  children,
-}: Readonly<{ children: React.ReactNode }>) {
+export default function OptionLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <div className="min-h-svh bg-white text-black">
+    <div className="option-two-shell min-h-svh bg-[#f3f2ee] text-[#2d2b27]">
       {children}
       <OptionSwitcher current="option-2" />
     </div>
