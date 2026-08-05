@@ -147,6 +147,46 @@ function Tag({ children, inverse = false }: { children: React.ReactNode; inverse
   );
 }
 
+function ArrowIcon({ direction = "right" }: { direction?: "left" | "right" | "up" }) {
+  return (
+    <svg
+      aria-hidden="true"
+      viewBox="0 0 16 16"
+      className={`block h-4 w-4 ${direction === "left" ? "rotate-180" : direction === "up" ? "-rotate-90" : ""}`}
+    >
+      <path d="M14 8 8.807 13 7.581 11.819l3.097-2.984H1v-1.67h9.678L7.581 4.181 8.807 3 14 8Z" fill="currentColor" />
+    </svg>
+  );
+}
+
+function RollingText({ children, stagger = true }: { children: string; stagger?: boolean }) {
+  const letters = Array.from(children);
+  const copy = (suffix: string) => (
+    <span aria-hidden="true" className={`option-two-roll-copy ${suffix}`}>
+      {letters.map((letter, index) => (
+        <span key={`${suffix}-${index}`} className="option-two-roll-letter" style={{ "--letter-index": stagger ? index : 0 } as React.CSSProperties}>
+          {letter}
+        </span>
+      ))}
+    </span>
+  );
+
+  return (
+    <span aria-label={children} className="option-two-roll-text">
+      {copy("is-base")}
+      {copy("is-hover")}
+    </span>
+  );
+}
+
+function RollingLink({ children, href, className = "" }: { children: string; href: string; className?: string }) {
+  return (
+    <a href={href} className={`option-two-roll-trigger ${className}`}>
+      <RollingText>{children}</RollingText>
+    </a>
+  );
+}
+
 function ArrowButton({ direction, onClick, disabled }: { direction: "left" | "right"; onClick: () => void; disabled?: boolean }) {
   return (
     <button
@@ -154,9 +194,9 @@ function ArrowButton({ direction, onClick, disabled }: { direction: "left" | "ri
       aria-label={`${direction === "left" ? "Previous" : "Next"} slide`}
       onClick={onClick}
       disabled={disabled}
-      className={`grid h-10 w-10 place-items-center rounded-full text-[20px] transition duration-300 disabled:opacity-30 ${direction === "right" ? "bg-[#637d65] text-white hover:scale-105" : "text-[#637d65] hover:bg-black/5"}`}
+      className={`option-two-circle-control flex h-10 w-10 shrink-0 items-center justify-center rounded-full disabled:opacity-30 ${direction === "right" ? "is-right bg-[#5e745d] text-[#f3f2ee]" : "is-left text-[#5e745d]"}`}
     >
-      {direction === "left" ? "←" : "→"}
+      <ArrowIcon direction={direction} />
     </button>
   );
 }
@@ -165,11 +205,10 @@ function PrimaryButton({ children, href = "#contact", ghost = false }: { childre
   return (
     <a
       href={href}
-      className={`group relative inline-flex h-12 items-center justify-center overflow-hidden rounded-[3px] border px-6 text-[15px] no-underline transition-colors ${ghost ? "border-[#d6d2c8] text-[#2d2b27] hover:border-[#637d65]" : "border-[#637d65] bg-[#637d65] text-white"}`}
+      className={`option-two-swipe-button ${ghost ? "is-secondary h-[50px] border-[#d6d2c8] bg-[#e5e2da] text-[#2d2b27]" : "option-two-roll-trigger is-primary h-12 border-[#5e745d] bg-[#5e745d] text-[#f3f2ee]"}`}
     >
-      <span className="relative z-[2] transition-transform duration-300 group-hover:-translate-y-[150%]">{children}</span>
-      <span aria-hidden className="absolute translate-y-[150%] transition-transform duration-300 group-hover:translate-y-0">{children}</span>
-      {!ghost && <span aria-hidden className="absolute inset-0 origin-bottom scale-y-0 bg-[#292c2a] transition-transform duration-300 group-hover:scale-y-100" />}
+      <span aria-hidden className={`option-two-button-swipe ${ghost ? "bg-[#f3f2ee]" : "bg-[#4b614b]"}`} />
+      <span className="relative z-[2]">{ghost ? children : <RollingText>{String(children)}</RollingText>}</span>
     </a>
   );
 }
@@ -181,10 +220,20 @@ function Header() {
   const navButton = (
     <a
       href="#contact"
-      className="group/button relative flex h-12 w-[128.5px] shrink-0 items-center justify-center overflow-hidden rounded-[4px] bg-[#5e745d] px-6 text-base text-[#f3f2ee]"
+      className="option-two-swipe-button option-two-roll-trigger is-primary h-12 w-[128.5px] shrink-0 border-[#5e745d] bg-[#5e745d] text-base text-[#f3f2ee]"
     >
-      <span className="transition-transform duration-300 group-hover/button:-translate-y-8">Get started</span>
-      <span aria-hidden className="absolute translate-y-8 transition-transform duration-300 group-hover/button:translate-y-0">Get started</span>
+      <span aria-hidden className="option-two-button-swipe bg-[#4b614b]" />
+      <span className="relative z-[2]"><RollingText>Get started</RollingText></span>
+    </a>
+  );
+
+  const dropdownButton = (
+    <a
+      href="#contact"
+      className="option-two-swipe-button option-two-roll-trigger is-primary h-12 w-[128.5px] shrink-0 border-[#5e745d] bg-[#5e745d] text-base text-[#f3f2ee]"
+    >
+      <span aria-hidden className="option-two-button-swipe bg-[#4b614b]" />
+      <span className="relative z-[2]"><RollingText stagger={false}>Get started</RollingText></span>
     </a>
   );
 
@@ -225,7 +274,11 @@ function Header() {
                     <span className={`-mt-1 h-[7px] w-[7px] rotate-45 border-b-2 border-r-2 border-[#767b7b] transition-transform duration-300 ${active ? "rotate-[225deg]" : ""}`} />
                   </span>
                 </button>
-                <div className={`absolute left-0 top-[46.375px] w-[73rem] pt-[14.4px] transition-[opacity,transform,visibility] duration-300 ${active ? "visible translate-y-0 opacity-100" : "pointer-events-none invisible -translate-y-2 opacity-0"}`}>
+                <div
+                  aria-hidden={!active}
+                  className={`absolute left-0 top-[46.375px] w-[73rem] overflow-hidden transition-[height] duration-[400ms] ease-[cubic-bezier(.25,.1,.25,1)] ${active ? "h-[429px]" : "pointer-events-none h-0"}`}
+                >
+                  <div className="pt-[14.4px]">
                   <div className="flex h-[415px] items-center gap-8 rounded-[4px] bg-[rgba(243,242,238,.5)] py-4 backdrop-blur-[40px]">
                     <div className="flex h-[383px] w-[42rem] shrink-0 flex-col gap-4 py-4 pl-6">
                       <div className="flex w-[27rem] flex-col items-start gap-3">
@@ -247,12 +300,13 @@ function Header() {
                       <div className="flex h-[272px] flex-col items-start gap-2 p-6">
                         <p className="w-80 text-2xl leading-9">Long-term investing tailored to your objectives.</p>
                         <p className="text-base leading-6">We build focused portfolios through fundamental research, valuation discipline, and a clear understanding of risk.</p>
-                        <div className="mt-4">{navButton}</div>
+                        <div className="mt-4">{dropdownButton}</div>
                       </div>
                       <div className="relative h-[111px] w-full overflow-hidden">
                         <Image src="/option-2/nav-card.jpg" alt="" fill sizes="448px" className="object-cover" />
                       </div>
                     </div>
+                  </div>
                   </div>
                 </div>
               </div>
@@ -310,8 +364,9 @@ export default function Option2() {
   const root = useRef<HTMLElement>(null);
   const insightTrack = useRef<HTMLDivElement>(null);
   const testimonialTrack = useRef<HTMLDivElement>(null);
-  const tabMedia = useRef<HTMLDivElement>(null);
-  const [activeApproach, setActiveApproach] = useState(2);
+  const approachMedia = useRef<(HTMLDivElement | null)[]>([]);
+  const previousApproach = useRef(0);
+  const [activeApproach, setActiveApproach] = useState(0);
   const [openFaq, setOpenFaq] = useState<number | null>(null);
 
   useEffect(() => {
@@ -365,8 +420,36 @@ export default function Option2() {
   }, []);
 
   useEffect(() => {
-    if (!tabMedia.current || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    gsap.fromTo(tabMedia.current, { autoAlpha: 0.35, scale: 1.04 }, { autoAlpha: 1, scale: 1, duration: 0.8, ease: "power3.out" });
+    const panels = approachMedia.current.filter((panel): panel is HTMLDivElement => Boolean(panel));
+    const next = approachMedia.current[activeApproach];
+    const previous = approachMedia.current[previousApproach.current];
+    if (!next) return;
+
+    if (previousApproach.current === activeApproach || window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      gsap.set(panels, { autoAlpha: 0, y: 0, scale: 1 });
+      gsap.set(next, { autoAlpha: 1 });
+      previousApproach.current = activeApproach;
+      return;
+    }
+
+    const timeline = gsap.timeline();
+    if (previous) {
+      timeline.to(previous, { autoAlpha: 0, y: -10, duration: 0.3, ease: "power2.in" }, 0);
+    }
+    timeline
+      .set(next, { autoAlpha: 1 }, 0.1)
+      .fromTo(next, { autoAlpha: 0, y: 10, scale: 0.98 }, { autoAlpha: 1, y: 0, scale: 1, duration: 0.4, ease: "power2.out" }, 0.15);
+
+    previousApproach.current = activeApproach;
+    return () => {
+      timeline.kill();
+    };
+  }, [activeApproach]);
+
+  useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const timer = window.setTimeout(() => setActiveApproach((current) => (current + 1) % approach.length), 5000);
+    return () => window.clearTimeout(timer);
   }, [activeApproach]);
 
   const shift = (track: React.RefObject<HTMLDivElement | null>, amount: number) => {
@@ -438,8 +521,8 @@ export default function Option2() {
           </div>
           <div ref={insightTrack} data-reveal className="option-two-track mt-16 flex snap-x gap-6 overflow-x-auto pb-2">
             {insights.map((item) => (
-              <article key={item.title} className="flex min-h-[384px] w-[min(86vw,512px)] shrink-0 snap-start flex-col justify-between rounded-[4px] border-t-[7px] border-[#637d65] bg-[#f3f2ee] p-10">
-                <div><h3 className="text-[24px] font-light">{item.title}</h3><p className="mt-7 max-w-[43ch] text-[15px] leading-6">{item.copy}</p><a href="#contact" className="mt-7 inline-block text-[15px]">Read note <span className="ml-3">›</span></a></div>
+              <article key={item.title} className="option-two-insight-card flex min-h-[384px] w-[min(86vw,512px)] shrink-0 snap-start flex-col justify-between rounded-[4px] border-t-[7px] border-[#637d65] bg-[#f3f2ee] p-10">
+                <div><h3 className="text-[24px] font-light">{item.title}</h3><p className="mt-7 max-w-[43ch] text-[15px] leading-6">{item.copy}</p><a href="#contact" className="option-two-read-link mt-7 inline-flex items-center gap-[12.8px] text-[15px]">Read note <span className="option-two-read-arrow"><ArrowIcon /></span></a></div>
                 <div className="flex items-center gap-4 border-t border-black/10 pt-6">
                   <Image src={item.image} alt="" width={56} height={56} className="h-14 w-14 rounded-full object-cover" />
                   <div><strong className="block text-[15px] font-medium">{item.author}</strong><span className="text-[13px] text-black/55">{item.role}</span></div>
@@ -457,19 +540,34 @@ export default function Option2() {
             <div data-reveal><Tag inverse>Investment approach</Tag><h2 className="mt-6 max-w-[570px] text-[clamp(2rem,3vw,2.8rem)] font-light leading-[1.28]">The principles that guide every Moneybee investment decision.</h2></div>
             <div data-stagger className="mt-12 space-y-2">
               {approach.map((item,index)=>(
-                <button key={item.title} type="button" onClick={()=>setActiveApproach(index)} className={`grid w-full grid-cols-[48px_1fr] gap-x-4 rounded-[3px] p-5 text-left transition-colors duration-300 ${activeApproach===index?"bg-[#637d65]":"hover:bg-white/[.035]"}`}>
-                  <span className="mt-1 grid h-7 w-7 rotate-45 place-items-center border-b-2 border-r-2 border-current opacity-80"><i className="h-2 w-2 border-b-2 border-r-2 border-current" /></span>
+                <button key={item.title} type="button" onClick={()=>setActiveApproach(index)} className={`relative grid w-full grid-cols-[48px_1fr] gap-x-4 overflow-hidden rounded-[3px] p-5 text-left transition-[background-color] duration-200 ${activeApproach===index?"bg-[#637d65]":"hover:bg-white/[.035]"}`}>
+                  <span className={`mt-1 grid h-7 w-7 rotate-45 place-items-center border-b-2 border-r-2 border-current transition-opacity duration-200 ${activeApproach===index?"opacity-100":"opacity-20"}`}><i className="h-2 w-2 border-b-2 border-r-2 border-current" /></span>
                   <span><strong className="text-[17px] font-medium">{item.title}</strong><span className="mt-4 block max-w-[43ch] text-[15px] leading-6 text-white/80">{item.copy}</span></span>
+                  <span aria-hidden className="absolute inset-x-0 bottom-0 h-px bg-white/10">
+                    {activeApproach === index && <span key={`progress-${activeApproach}`} className="option-two-tab-progress block h-full bg-[#f3f2ee]" />}
+                  </span>
                 </button>
               ))}
             </div>
           </div>
-          <div ref={tabMedia} className="relative min-h-[520px] overflow-hidden lg:min-h-0">
-            <Image key={approach[activeApproach].image} src={approach[activeApproach].image} alt="" fill sizes="(max-width:1024px) 100vw, 50vw" className="object-cover" />
-            <div className="absolute inset-0 bg-black/10" />
-            <div className="absolute inset-x-0 top-1/2 overflow-hidden -translate-y-1/2 whitespace-nowrap text-[clamp(3.5rem,7vw,7rem)] font-light text-white">
-              <div data-marquee className="flex w-max">{[0,1,2,3].map(n=><span key={n} className="pr-7">{approach[activeApproach].ticker} →</span>)}</div>
-            </div>
+          <div className="relative min-h-[520px] overflow-hidden lg:min-h-0">
+            {approach.map((item, index) => (
+              <div
+                key={item.title}
+                ref={(panel) => { approachMedia.current[index] = panel; }}
+                className={`absolute inset-0 ${index === 0 ? "visible opacity-100" : "invisible opacity-0"}`}
+              >
+                <Image src={item.image} alt="" fill sizes="(max-width:1024px) 100vw, 50vw" className="object-cover" />
+                <div className="absolute inset-0 bg-black/10" />
+                <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 overflow-hidden whitespace-nowrap text-[clamp(3.5rem,7vw,7rem)] font-light text-white">
+                  <div data-marquee className="flex w-max">{[0,1,2,3].map(n=><span key={n} className="pr-7">{item.ticker} →</span>)}</div>
+                </div>
+                <div className="absolute inset-x-6 bottom-6 flex max-w-[36ch] items-start gap-4 text-[15px] leading-6 text-white">
+                  <span className="mt-1 h-10 w-px shrink-0 bg-white" />
+                  <p>{item.copy}</p>
+                </div>
+              </div>
+            ))}
             <span aria-hidden className="absolute right-2 top-2 flex gap-1"><i className="h-3 w-3 rounded-[2px] bg-white" /><i className="h-3 w-3 rounded-[2px] bg-white" /><i className="h-3 w-3 rounded-[2px] bg-white" /></span>
           </div>
         </div>
@@ -563,11 +661,11 @@ export default function Option2() {
               ["Explore",["About","Approach","Insights","Stewardship"]],
               ["Investors",["PMS","AIF","Investor login","Contact"]],
               ["Regulatory",["Disclosures","Investor charter","Grievances","SEBI SCORES"]],
-            ].map(([heading,links])=><div key={heading as string}><h3 className="text-[12px] uppercase">{heading as string}</h3><div className="mt-8 space-y-4">{(links as string[]).map(link=><a key={link} href="#top" className="block text-white/80 hover:text-white">{link}</a>)}</div></div>)}</div>
+            ].map(([heading,links])=><div key={heading as string}><h3 className="text-[12px] uppercase">{heading as string}</h3><div className="mt-8 flex flex-col items-start gap-4">{(links as string[]).map(link=><RollingLink key={link} href="#top" className="text-white/80 transition-colors duration-200 hover:text-white">{link}</RollingLink>)}</div></div>)}</div>
           </div>
-          <div data-reveal className="flex items-end justify-between"><p className="text-[clamp(3.4rem,9vw,8rem)] font-light leading-none tracking-[-.05em]">MONEYBEE®</p><a href="#top" aria-label="Back to top" className="grid h-12 w-12 place-items-center rounded-full bg-[#637d65] text-2xl">↑</a></div>
+          <div data-reveal className="flex items-end justify-between"><p className="text-[clamp(3.4rem,9vw,8rem)] font-light leading-none tracking-[-.05em]">MONEYBEE®</p><a href="#top" aria-label="Back to top" className="option-two-icon-roll-trigger flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[#5e745d] text-[#f3f2ee]"><span className="option-two-icon-roll"><span className="option-two-icon-copy is-base"><ArrowIcon direction="up" /></span><span className="option-two-icon-copy is-hover"><ArrowIcon direction="up" /></span></span></a></div>
         </div>
-        <div className="bg-black px-6 py-7 text-[12px] text-white/75"><div className="mx-auto flex max-w-[1296px] flex-wrap justify-between gap-5"><p>Moneybee Securities Pvt Ltd · Mumbai, Maharashtra, India</p><div className="flex gap-5"><a href="#top">Privacy</a><span className="opacity-30">|</span><a href="#top">Terms</a><span className="opacity-30">|</span><a href="#contact">Contact</a></div></div></div>
+        <div className="bg-black px-6 py-7 text-[12px] text-white/75"><div className="mx-auto flex max-w-[1296px] flex-wrap justify-between gap-5"><p>Moneybee Securities Pvt Ltd · Mumbai, Maharashtra, India</p><div className="flex gap-5"><RollingLink href="#top">Privacy</RollingLink><span className="opacity-30">|</span><RollingLink href="#top">Terms</RollingLink><span className="opacity-30">|</span><RollingLink href="#contact">Contact</RollingLink></div></div></div>
       </footer>
     </main>
   );
