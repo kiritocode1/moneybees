@@ -7,7 +7,32 @@ import { useEffect, useRef, useState } from "react";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const NAV = ["About", "Approach", "Offerings"] as const;
+const NAV_DROPDOWNS = [
+  {
+    label: "Home",
+    title: "Homepage",
+    description: "Choose the direction that best fits your objectives. Each page is designed to make the Moneybee approach clear and comprehensible.",
+    cardPrefix: "Home",
+    images: ["/option-2/nav-home-1.avif", "/option-2/nav-home-2.jpg", "/option-2/nav-home-3.jpg"],
+    hrefs: ["/option-1", "/option-2", "/option-3"],
+  },
+  {
+    label: "About",
+    title: "Our philosophy",
+    description: "Explore the beliefs, responsibilities, and long-term perspective that shape how Moneybee manages client capital.",
+    cardPrefix: "About",
+    images: ["/option-2/nav-about-1.jpg", "/option-2/nav-about-2.jpg", "/option-2/nav-about-3.jpg"],
+    hrefs: ["#about", "#approach", "#stewardship"],
+  },
+  {
+    label: "Contact",
+    title: "Start a conversation",
+    description: "Clear paths for investors to understand the process, discuss their objectives, and connect with the Moneybee team.",
+    cardPrefix: "Contact",
+    images: ["/option-2/nav-contact-1.jpg", "/option-2/nav-contact-2.jpg", "/option-2/nav-contact-3.jpg"],
+    hrefs: ["#contact", "#faq", "https://www.moneybee.in/register.php"],
+  },
+] as const;
 
 const insights = [
   {
@@ -151,49 +176,93 @@ function PrimaryButton({ children, href = "#contact", ghost = false }: { childre
 
 function Header() {
   const [open, setOpen] = useState(false);
+  const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
+
+  const navButton = (
+    <a
+      href="#contact"
+      className="group/button relative flex h-12 w-[128.5px] shrink-0 items-center justify-center overflow-hidden rounded-[4px] bg-[#5e745d] px-6 text-base text-[#f3f2ee]"
+    >
+      <span className="transition-transform duration-300 group-hover/button:-translate-y-8">Get started</span>
+      <span aria-hidden className="absolute translate-y-8 transition-transform duration-300 group-hover/button:translate-y-0">Get started</span>
+    </a>
+  );
 
   return (
-    <header data-hero-nav className="absolute inset-x-3 top-3 z-40 h-14 rounded-[4px] bg-[rgba(243,242,238,.82)] p-1 text-[#2d2b27] backdrop-blur-md md:inset-x-4">
-      <div className="flex h-full items-center">
-        <a href="#top" aria-label="Moneybee home" className="ml-4 mr-8 flex items-center text-[#292c2a]">
-          <Mark />
+    <header
+      data-hero-nav
+      className="absolute inset-x-3 top-3 z-[1000] h-[68px] rounded-[4px] p-1 text-[#2d2b27] min-[992px]:h-14"
+      onMouseLeave={() => setActiveDropdown(null)}
+    >
+      <div aria-hidden className="absolute inset-0 rounded-[4px] bg-[rgba(243,242,238,.55)] backdrop-blur-[15px]" />
+      <div className="relative z-[1] flex h-[60px] items-center pl-4 min-[992px]:h-12">
+        <a href="#top" aria-label="Moneybee home" className="flex h-[29px] w-[39px] items-center pl-[10px] min-[992px]:h-[35px] min-[992px]:w-[35px] min-[992px]:pl-0">
+          <Image src="/option-2/logo.svg" alt="" width={35} height={35} className="h-[29px] w-[29px] min-[992px]:h-[35px] min-[992px]:w-[35px]" />
         </a>
-        <nav className="hidden h-full flex-1 items-center justify-between md:flex">
+        <div className="ml-4 flex h-full flex-1">
+        <nav className="hidden h-full flex-1 items-center justify-between min-[992px]:flex" aria-label="Primary navigation">
           <div className="flex h-full items-center">
-            {NAV.map((label) => (
-              <div key={label} className="group/nav flex h-full items-center">
-                <button type="button" className="flex h-full items-center gap-3 px-5 text-[15px]">
-                  {label}<span className="mt-[-3px] rotate-45 border-b border-r border-current p-[3px] transition-transform group-hover/nav:rotate-[225deg]" />
+            {NAV_DROPDOWNS.map((item) => {
+              const active = activeDropdown === item.label;
+              return (
+              <div
+                key={item.label}
+                className="relative h-full"
+                onMouseEnter={() => setActiveDropdown(item.label)}
+                onFocus={() => setActiveDropdown(item.label)}
+                onBlur={(event) => {
+                  if (!event.currentTarget.contains(event.relatedTarget as Node | null)) setActiveDropdown(null);
+                }}
+              >
+                <button
+                  type="button"
+                  aria-expanded={active}
+                  onClick={() => setActiveDropdown(active ? null : item.label)}
+                  className="flex h-[46.375px] items-center gap-[12.8px] px-4 py-[11.2px] text-base leading-6"
+                >
+                  {item.label}
+                  <span aria-hidden className="grid h-4 w-4 place-items-center">
+                    <span className={`-mt-1 h-[7px] w-[7px] rotate-45 border-b-2 border-r-2 border-[#767b7b] transition-transform duration-300 ${active ? "rotate-[225deg]" : ""}`} />
+                  </span>
                 </button>
-                <div className="pointer-events-none invisible absolute left-0 right-0 top-[52px] translate-y-2 rounded-b-[4px] bg-[#f3f2ee] p-8 opacity-0 shadow-xl transition duration-300 group-hover/nav:pointer-events-auto group-hover/nav:visible group-hover/nav:translate-y-0 group-hover/nav:opacity-100">
-                  <div className="grid grid-cols-[.8fr_1.2fr_.75fr] gap-10">
-                    <div>
-                      <p className="text-[28px] font-light">{label === "About" ? "Built around patient capital" : label === "Approach" ? "Research before conviction" : "Ways to invest with us"}</p>
-                      <p className="mt-5 max-w-[36ch] text-sm leading-6 text-black/55">A clear view of our philosophy, process, and the responsibilities that come with managing long-term capital.</p>
-                    </div>
-                    <div className="grid grid-cols-3 gap-3">
-                      {["01", "02", "03"].map((n, index) => (
-                        <a key={n} href={index === 0 ? "#about" : index === 1 ? "#approach" : "#stewardship"} className="group/card block">
-                          <div className="relative h-36 overflow-hidden rounded-[3px]">
-                            <Image src={["/option-2/feature-left.jpg", "/option-2/feature-right.avif", "/option-2/principle-3.avif"][index]} alt="" fill sizes="220px" className="object-cover transition-transform duration-700 group-hover/card:scale-105" />
+                <div className={`absolute left-0 top-[46.375px] w-[73rem] pt-[14.4px] transition-[opacity,transform,visibility] duration-300 ${active ? "visible translate-y-0 opacity-100" : "pointer-events-none invisible -translate-y-2 opacity-0"}`}>
+                  <div className="flex h-[415px] items-center gap-8 rounded-[4px] bg-[rgba(243,242,238,.5)] py-4 backdrop-blur-[40px]">
+                    <div className="flex h-[383px] w-[42rem] shrink-0 flex-col gap-4 py-4 pl-6">
+                      <div className="flex w-[27rem] flex-col items-start gap-3">
+                        <p className="text-2xl leading-9">{item.title}</p>
+                        <p className="text-base leading-6">{item.description}</p>
+                      </div>
+                      <div className="flex h-[215px] w-[648px] gap-3">
+                        {item.images.map((image, index) => (
+                        <a key={image} href={item.hrefs[index]} className="group/card flex h-[215px] w-52 flex-col items-start gap-[12.8px]">
+                          <div className="relative h-44 w-52 overflow-hidden rounded-[4px] bg-[#e5e2da]">
+                            <Image src={image} alt="" fill sizes="208px" className="object-cover object-top transition-transform duration-700 group-hover/card:scale-[1.02]" />
                           </div>
-                          <span className="mt-2 block text-[10px] uppercase tracking-[.12em]">{label} {n}</span>
+                          <span className="flex h-[26px] items-center rounded-[4px] bg-[#5e745d] px-[9.6px] py-1 text-xs font-medium uppercase leading-[18px] tracking-[1.2px] text-[#f3f2ee]">{item.cardPrefix} #{index + 1}</span>
                         </a>
                       ))}
+                      </div>
                     </div>
-                    <div className="flex flex-col justify-between rounded-[3px] bg-[#e5e2da] p-6">
-                      <p className="text-[20px] leading-[1.25]">Small steps, big outcomes.</p>
-                      <a href="#contact" className="mt-8 text-sm underline decoration-black/20 underline-offset-4">Speak with the team →</a>
+                    <div className="mr-4 flex h-[383px] w-[28rem] shrink-0 flex-col overflow-hidden rounded-[4px] bg-[rgba(102,102,102,.16)]">
+                      <div className="flex h-[272px] flex-col items-start gap-2 p-6">
+                        <p className="w-80 text-2xl leading-9">Long-term investing tailored to your objectives.</p>
+                        <p className="text-base leading-6">We build focused portfolios through fundamental research, valuation discipline, and a clear understanding of risk.</p>
+                        <div className="mt-4">{navButton}</div>
+                      </div>
+                      <div className="relative h-[111px] w-full overflow-hidden">
+                        <Image src="/option-2/nav-card.jpg" alt="" fill sizes="448px" className="object-cover" />
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-            ))}
-            <a href="#insights" className="px-5 text-[15px]">Perspectives</a>
+            )})}
+            <a href="#stewardship" className="flex h-12 items-center py-[11.2px] pl-4 pr-6 text-base leading-6">Pricing</a>
           </div>
-          <div className="flex h-full items-center gap-7">
-            <a href="https://www.moneybee.in/register.php" className="text-[15px]">Investor login</a>
-            <a href="#contact" className="grid h-12 place-items-center rounded-[3px] bg-[#637d65] px-6 text-[15px] text-white">Get started</a>
+          <div className="flex h-full items-center">
+            <a href="#insights" className="flex h-12 items-center py-[11.2px] pl-4 pr-6 text-base leading-6">What&apos;s New</a>
+            <a href="#faq" className="flex h-12 items-center py-[11.2px] pl-4 pr-6 text-base leading-6">Help</a>
+            {navButton}
           </div>
         </nav>
         <button
@@ -201,24 +270,36 @@ function Header() {
           aria-label="Menu"
           aria-expanded={open}
           onClick={() => setOpen((value) => !value)}
-          className="ml-auto mr-3 grid h-10 w-10 place-items-center md:hidden"
+          className="ml-auto grid h-[60px] w-[60px] place-items-center min-[992px]:hidden"
         >
-          <span className="sr-only">Menu</span>
-          <span className="flex w-4 flex-col gap-[3px]">
-            <span className={`h-[2px] w-full bg-current transition ${open ? "translate-y-[5px] rotate-45" : ""}`} />
-            <span className={`h-[2px] w-full bg-current transition ${open ? "opacity-0" : ""}`} />
-            <span className={`h-[2px] w-full bg-current transition ${open ? "-translate-y-[5px] -rotate-45" : ""}`} />
+          <span aria-hidden className="flex w-4 flex-col gap-[3px]">
+            <span className="h-[2px] w-4 bg-current" />
+            <span className="h-[2px] w-4 bg-current" />
+            <span className="h-[2px] w-4 bg-current" />
           </span>
         </button>
+        </div>
       </div>
-      <div className={`absolute inset-x-0 top-[60px] overflow-hidden rounded-[4px] bg-[#292c2a] text-[#f3f2ee] transition-[max-height,opacity] duration-500 md:hidden ${open ? "visible max-h-[520px] opacity-100" : "pointer-events-none invisible max-h-0 opacity-0"}`}>
-        <nav className="space-y-0 p-5">
-          {[["About", "#about"], ["Approach", "#approach"], ["Offerings", "#stewardship"], ["Perspectives", "#insights"], ["Investor login", "https://www.moneybee.in/register.php"]].map(([label, href]) => (
-            <a key={label} href={href} onClick={() => setOpen(false)} className="flex items-center justify-between border-b border-white/10 py-4 text-xl font-light">
-              {label}<span>↗</span>
-            </a>
-          ))}
-          <a href="#contact" onClick={() => setOpen(false)} className="mt-5 flex h-12 items-center justify-center rounded-[3px] bg-[#637d65]">Get started</a>
+      <div className={`absolute inset-x-0 top-[68px] h-[497px] overflow-hidden bg-[#c8c8c8] px-2 py-4 text-[#2d2b27] transition-[opacity,transform,visibility] duration-400 min-[992px]:hidden ${open ? "visible translate-y-0 opacity-100" : "pointer-events-none invisible -translate-y-3 opacity-0"}`}>
+        <nav aria-label="Mobile navigation">
+          <div className="mb-4 flex flex-col gap-4">
+            {NAV_DROPDOWNS.map((item) => (
+              <div key={item.label} className="flex h-[60.75px] items-start justify-center">
+                <a href={item.label === "Home" ? "#top" : item.label === "About" ? "#about" : "#contact"} onClick={() => setOpen(false)} className="flex h-[46.375px] items-center gap-[12.8px] px-4 py-[11.2px] text-base leading-6">
+                  {item.label}
+                  <span aria-hidden className="grid h-4 w-4 place-items-center">
+                    <span className="-mt-1 h-[7px] w-[7px] rotate-45 border-b-2 border-r-2 border-[#767b7b]" />
+                  </span>
+                </a>
+              </div>
+            ))}
+            <a href="#stewardship" onClick={() => setOpen(false)} className="flex h-[46.375px] items-center justify-center px-4 py-[11.2px] text-base leading-6">Pricing</a>
+          </div>
+          <div className="flex flex-col gap-4">
+            <a href="#insights" onClick={() => setOpen(false)} className="flex h-[46.375px] items-center justify-center px-4 py-[11.2px] text-base leading-6">What&apos;s New</a>
+            <a href="#faq" onClick={() => setOpen(false)} className="flex h-[46.375px] items-center justify-center px-4 py-[11.2px] text-base leading-6">Help</a>
+            <a href="#contact" onClick={() => setOpen(false)} className="flex h-12 items-center justify-center rounded-[4px] bg-[#5e745d] px-6 text-base text-[#f3f2ee]">Get started</a>
+          </div>
         </nav>
       </div>
     </header>
