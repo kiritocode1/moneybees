@@ -13,6 +13,11 @@ import {
   Shield,
   TagPrice,
 } from "reicon-react";
+import ChapterStack from "@/components/option-one/chapter-stack";
+import FrameworkRow from "@/components/option-one/framework-row";
+import InterviewCarousel from "@/components/option-one/interview-carousel";
+import PinnedStats from "@/components/option-one/pinned-stats";
+import QuotePanel from "@/components/option-one/quote-panel";
 import OverlayMenu, { type MenuLink } from "@/components/ui/overlay-menu";
 import { EASE_OUT } from "@/lib/ease";
 
@@ -51,6 +56,7 @@ const riskPractices = [
 
 const PRIMARY_LINKS: MenuLink[] = [
   { label: "Home", href: "#top" },
+  { label: "About", href: "#about" },
   { label: "Philosophy", href: "#philosophy" },
   { label: "What we do", href: "#what-we-do" },
   { label: "Performance", href: "#performance" },
@@ -346,6 +352,8 @@ export default function Option1() {
           </motion.div>
         </section>
 
+        <FrameworkRow />
+
         <section
           id="philosophy"
           className="relative flex min-h-[720px] flex-col items-center justify-center overflow-hidden bg-white px-[28px] py-[104px] max-[600px]:min-h-[500px] max-[600px]:py-[76px]"
@@ -441,46 +449,48 @@ export default function Option1() {
           ))}
         </section>
 
-        <section id="desk" className="relative min-h-[740px] overflow-hidden max-[600px]:min-h-[570px]">
-          <SettlingImage className="absolute inset-0">
-            <Image
-              src="https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=2200&q=90"
-              alt="The Moneybee office in Mumbai"
-              fill
-              sizes="100vw"
-              className="object-cover"
-            />
-          </SettlingImage>
-          <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(255,255,255,.93),rgba(255,255,255,.8)_58%,rgba(255,255,255,.9)),linear-gradient(to_top,rgba(255,255,255,.97),transparent_52%)]" />
-          <div className="absolute right-0 bottom-[108px] left-0 z-[2] mx-auto grid w-[min(100%_-_64px,1480px)] grid-cols-[1.5fr_.7fr_auto] items-end gap-[48px] max-[900px]:w-[calc(100%_-_36px)] max-[900px]:grid-cols-1">
-            <RisingHeading
-              lines={["From the", "investment desk"]}
-              className="font-serif text-[clamp(3.2rem,5.2vw,5.6rem)] font-normal leading-[.94] max-[600px]:text-[2.9rem]"
-            />
-            <motion.p
-              {...reveal(0.28)}
-              className="max-w-[340px] text-[11px] leading-[1.5] text-[rgba(17,17,17,.66)]"
+        <PinnedStats />
+
+        {/* The written introduction, held off the left edge so the white space
+            on that side does the work a rule would otherwise have to. Lead
+            paragraph first, then the detail underneath it at reading size. */}
+        <section
+          id="about"
+          className={`bg-white pt-[110px] pb-[130px] ${GUTTER} max-[600px]:px-[22px] max-[600px]:pt-[72px] max-[600px]:pb-[80px]`}
+        >
+          <div className="ml-[42%] max-w-[760px] max-[900px]:ml-0">
+            <motion.h2
+              {...reveal()}
+              className="text-[clamp(1.5rem,2.4vw,2.2rem)] font-[550] leading-[1.16] tracking-[-.03em] text-[#111111]"
             >
-              The clearest evidence of how a manager thinks is what they publish when they are not selling anything.
-            </motion.p>
-            <motion.div {...reveal(0.36)}>
-              <CornerLink href="#desk">Read the latest letter</CornerLink>
+              Moneybee is a pure-play investment manager. A Portfolio Management Service and an Alternative
+              Investment Fund, both run off one research process.
+            </motion.h2>
+            <motion.div
+              {...reveal(0.12)}
+              className="mt-[38px] grid gap-[22px] text-[15px] leading-[1.6] text-[rgba(17,17,17,.76)] max-[600px]:text-[14px]"
+            >
+              <p>
+                We are not a broker and we do not distribute other people&rsquo;s products. The only way the firm earns
+                is by managing money, which puts our incentive and yours on the same side of the table: the quality
+                of the portfolio, not the number of transactions in it.
+              </p>
+              <p>
+                The research is bottom-up and mostly unglamorous. Annual reports, unit economics, and the history of
+                the people running the business. Much of it is spent among small and ultra-small companies, where
+                fewer analysts look and where price and value drift furthest apart.
+              </p>
+              <p>
+                Risk is set out in the same plain terms, while nothing is going wrong. Position sizing, cash levels
+                and turnover are decisions taken before a weak quarter rather than during one.{" "}
+                <a
+                  href="#desk"
+                  className={`text-[#111111] underline underline-offset-[5px] transition-colors duration-200 ease-[ease] hover:text-[#b8862f] ${FOCUS}`}
+                >
+                  Read what the desk publishes.
+                </a>
+              </p>
             </motion.div>
-          </div>
-          <div className="absolute right-[32px] bottom-[22px] left-[32px] z-[2] grid grid-cols-3 gap-[24px] text-[9px] text-[rgba(17,17,17,.6)]">
-            {[
-              ["Quarterly", "Letter to investors"],
-              ["Sector note", "Small and ultra-small caps"],
-              ["Commentary", "What we own and why"],
-            ].map(([label, title]) => (
-              <span
-                key={label}
-                className="flex justify-between gap-[20px] border-b border-b-[rgba(184,134,47,.5)] pb-[14px] uppercase transition-colors duration-300 ease-[ease] hover:border-b-[rgba(184,134,47,.95)]"
-              >
-                <small className="text-[9px] text-[rgba(17,17,17,.78)]">{label}</small>
-                {title}
-              </span>
-            ))}
           </div>
         </section>
 
@@ -614,40 +624,17 @@ export default function Option1() {
           </div>
         </section>
 
-        <section
-          id="performance"
-          className={`relative min-h-[900px] overflow-hidden bg-white pt-[104px] pb-[72px] ${GUTTER} max-[900px]:min-h-0 max-[600px]:px-[20px] max-[600px]:pt-[72px] max-[600px]:pb-[52px]`}
-        >
-          <div className="absolute top-[30px] left-1/2 h-[650px] w-[650px] -translate-x-1/2 rounded-full border border-[rgba(17,17,17,.1)] shadow-[inset_0_0_80px_rgba(184,134,47,.07),0_0_70px_rgba(184,134,47,.05)] before:absolute before:inset-[13%] before:rounded-full before:border before:border-[rgba(17,17,17,.09)] before:content-[''] after:absolute after:inset-[30%] after:rounded-full after:border after:border-[rgba(17,17,17,.09)] after:shadow-[0_0_90px_rgba(184,134,47,.13)] after:content-['']" />
-          <RisingHeading
-            lines={["Returns matter.", "So does the path."]}
-            className="relative z-[2] text-center text-[clamp(4rem,6.5vw,7rem)] font-light leading-none tracking-[-.055em] text-[#111111] max-[600px]:text-[3.6rem]"
-          />
-          <div className="relative z-[2] mt-[72px] grid grid-cols-2 gap-[24px] max-[900px]:mt-[56px] max-[600px]:mt-[48px] max-[600px]:grid-cols-1">
-            <motion.article {...reveal()} className="flex min-h-[452px] flex-col bg-[#f4f4f2] p-[36px] text-[#111111]">
-              <div className="grid grid-cols-[1fr_auto] items-center gap-[20px] text-[9px]">
-                <span>How performance is measured</span>
-                <small className="text-[8px] text-[rgba(17,17,17,.6)]">Methodology</small>
-              </div>
-              <blockquote className="mt-auto max-w-[580px] font-serif text-[clamp(1.5rem,2.4vw,2.6rem)] leading-[1.04]">
-                Time-weighted returns, measured against the benchmark, net of every fee.
-              </blockquote>
-              <p className="mt-[34px] text-[8px] text-[rgba(17,17,17,.6)]">Rolling returns and drawdowns, never a single headline number</p>
-            </motion.article>
-            <motion.article {...reveal(0.08)} className="flex min-h-[452px] flex-col bg-[#f4f4f2] p-[36px] text-[#111111]">
-              <div className="grid grid-cols-[1fr_auto] items-center gap-[20px] text-[9px]">
-                <span>Where the figures live</span>
-                <small className="text-[8px] text-[rgba(17,17,17,.6)]">Reviewed before publication</small>
-              </div>
-              <blockquote className="mt-auto max-w-[620px] font-sans text-[18px] font-[550] leading-[1.25]">
-                Performance is published in the Disclosure Document and the monthly factsheet, after review by our compliance officer. Every figure carries the method used to calculate it and the benchmark it is measured against.
-              </blockquote>
-              <p className="mt-[34px] text-[9px] uppercase leading-[1.55] text-[#111111]">
-                Moneybee Securities Pvt Ltd<br />Mumbai, Maharashtra, India
-              </p>
-            </motion.article>
-          </div>
-        </section>
+        {/* The desk, in three parts: what it believes, then what it publishes
+            and how the figures behind that are produced. The chapter cards carry
+            the content the standalone performance section used to hold. */}
+        <div id="desk">
+          <QuotePanel />
+        </div>
+        <div id="performance">
+          <ChapterStack />
+        </div>
+
+        <InterviewCarousel />
 
         <section className="relative min-h-svh overflow-hidden">
           <SettlingImage className="absolute inset-0">

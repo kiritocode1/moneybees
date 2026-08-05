@@ -56,3 +56,30 @@ body {
 .option-one-shell .om-root .om-toggler.om-open span {
   background-color: #ffffff;
 }
+
+/* The interview carousel is a real horizontal scroller so trackpad, touch and
+   keyboard all keep working; the bar itself is hidden because the arrows and
+   the card running off the right edge already say it scrolls. */
+.option-one-track {
+  scrollbar-width: none;
+}
+
+.option-one-track::-webkit-scrollbar {
+  display: none;
+}
+
+/* The chapter stack drops its pin in JS, where it already has to branch. The
+   stats panel pins purely in CSS, so it is released here instead. Unlayered on
+   purpose: Tailwind's utilities sit in a layer, and a layered `h-[190svh]`
+   loses to an unlayered rule regardless of specificity. */
+@media (prefers-reduced-motion: reduce) {
+  .option-one [data-pinned-track] {
+    height: auto;
+  }
+
+  .option-one [data-pinned-frame] {
+    position: static;
+    height: auto;
+    overflow: visible;
+  }
+}
