@@ -1,20 +1,29 @@
 import type { Metadata } from "next";
+import { Inter_Tight } from "next/font/google";
 import { OptionSwitcher } from "@/components/option-switcher";
+import "./option-three.css";
 
-// Type: inherits Rethink Sans from the root layout. To give this direction its
-// own face, import it here, add its variable class to the wrapper below, and
-// set the family on it. (Avoid writing Tailwind class syntax in comments —
-// the scanner compiles it into real CSS.)
+// The reference is set entirely in Inter Tight. `option-three.css` reads the
+// family through --font-family--font, so pointing that variable at the loaded
+// face is the only wiring needed.
+const interTight = Inter_Tight({
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700"],
+  variable: "--font-inter-tight",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
-  title: "Option 3",
+  title: "Moneybee | Research-led portfolio management",
+  description:
+    "Moneybee manages capital through fundamental research, valuation discipline, and long holding periods.",
 };
 
 export default function OptionLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <div className="min-h-svh bg-white text-black">
+    <div className={`${interTight.variable} option-three bg-white text-black`}>
       {children}
       <OptionSwitcher current="option-3" />
     </div>

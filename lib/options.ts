@@ -31,7 +31,7 @@ export const OPTIONS: Option[] = [
     n: 3,
     slug: "option-3",
     label: "Option 3",
-    note: "",
+    note: "A bright, editorial direction on the third reference: Inter Tight at scale, pastel section colour, and Webflow-faithful motion.",
   },
   {
     n: 4,
