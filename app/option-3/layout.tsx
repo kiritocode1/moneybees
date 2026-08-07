@@ -23,7 +23,7 @@ export default function OptionLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <div className={`${interTight.variable} option-three bg-white text-black`}>
+    <div className={`${interTight.variable} option-three bg-white text-[#272727]`}>
       {children}
       <OptionSwitcher current="option-3" />
     </div>

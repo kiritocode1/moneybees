@@ -328,21 +328,21 @@ export const POSTS = [
     date: "Published on 14 July 2026",
     title: "Why patience is still the most underpriced edge in Indian equities",
     tag: "Philosophy",
-    tone: "#e4d3ff",
+    tone: "#fdefe2",
   },
   {
     image: "/option-3/blog-image-02.avif",
     date: "Published on 2 June 2026",
     title: "Reading beyond the quarter: what a cash flow statement admits",
     tag: "Research",
-    tone: "#f5f7b8",
+    tone: "#edeeef",
   },
   {
     image: "/option-3/blog-image-03.avif",
     date: "Published on 19 May 2026",
     title: "The price of conviction, and when a good company is a bad investment",
     tag: "Valuation",
-    tone: "#f9dbff",
+    tone: "#fbd4b3",
   },
 ] as const;
 

@@ -3519,3 +3519,193 @@
 .option-three .nav-dropdown-list._02 {
   left: 0;
 }
+
+/* ---------------------------------------------------------------------------
+   Moneybee palette.
+
+   The reference is built on a lilac/pink/lime pastel system. Moneybee's brand
+   is four colours — ink #272727, accent #F49340, white, and grey #9EA0A4 — so
+   the pastels have nowhere to land. Rather than rename 3,500 lines of vendored
+   CSS, the brand is declared once as `--mb-*` tokens and the reference's own
+   `--colors--*` names are repointed at them. Everything below that is a rule
+   the repoint alone gets wrong, because a single reference variable was doing
+   two jobs at once (accent fill *and* card wash, say).
+
+   The accent is deliberately used sparingly: buttons, badges, and hovers. Large
+   fields stay ink, white, or a neutral wash, which is the register the brief
+   asks for. Derived values are all tints or shades of the four — no new hues.
+
+   Contrast, checked against WCAG 2.1 AA:
+     ink #272727 on white ............ 15.1:1
+     ink #272727 on accent #F49340 .... 6.6:1   (so type on orange is ink)
+     accent #F49340 on ink ............ 6.6:1
+     white on accent .................. 2.3:1   (never used)
+     grey-text #5B5D61 on white ....... 6.4:1   (body)
+     grey-heading #8B8D91 on white .... 3.3:1   (display type only)
+     brand grey #9EA0A4 on white ...... 2.6:1   (borders and marks only)
+   --------------------------------------------------------------------------- */
+.option-three {
+  /* Brand */
+  --mb-ink: #272727;
+  --mb-accent: #f49340;
+  --mb-white: #ffffff;
+  --mb-grey: #9ea0a4;
+
+  /* Derived — tints and shades of the four above */
+  --mb-ink-deep: #1c1c1c;
+  --mb-grey-text: #5b5d61;
+  --mb-grey-heading: #8b8d91;
+  --mb-surface: #f7f7f8;
+  --mb-surface-deep: #edeeef;
+  --mb-hairline: #e2e3e5;
+  --mb-accent-tint: #fdefe2;
+  --mb-accent-wash: #fbd4b3;
+  --mb-accent-deep: #d78138;
+
+  /* The reference's names, repointed */
+  --colors--black: var(--mb-ink);
+  --colors--white: var(--mb-white);
+  --colors--dark-gray: var(--mb-grey-text);
+  --colors--light-gray: var(--mb-grey);
+  --colors--stroke: var(--mb-hairline);
+  --colors--bg-gray: var(--mb-surface);
+  --colors--light-purple: var(--mb-accent);
+  --colors--light-pink: var(--mb-surface-deep);
+  --colors--light-yellow: var(--mb-accent-tint);
+}
+
+/* The brand grey is right for hairlines, and for type on ink where it reaches
+   7.4:1. On white it manages only 2.6:1 — below AA even at display sizes — so
+   the two places it carries real copy on a light ground (the tail of a two-tone
+   heading, and the rotating circle text) take a darkened step of the same grey.
+   Everywhere else, the footer chiefly, keeps the brand value. */
+.option-three :where(h1, h2, h3, h4, .section-heading) .text-light-gray,
+.option-three .text-style-h2.circle-text {
+  color: var(--mb-grey-heading);
+}
+
+/* Reference literals: 72% black, the menu underline, the input placeholder,
+   and the footer's hairline over ink. */
+.option-three .paragraph-01.cta-subtitle,
+.option-three .paragraph-02.text-dark-gray._02,
+.option-three .about-02-paragraph {
+  color: rgba(39, 39, 39, 0.7);
+}
+
+.option-three .menu-underline {
+  background-color: var(--mb-ink);
+}
+
+.option-three .newsletter-input-filed::placeholder {
+  color: var(--mb-grey-text);
+}
+
+.option-three .footer-copyright-wrap {
+  border-top-color: rgba(158, 160, 164, 0.2);
+}
+
+/* The badge sheen was lime-to-cream. Same gesture, warm neutral. */
+.option-three .badge,
+.option-three .section-badge {
+  background-image: linear-gradient(87deg, var(--mb-accent-tint) 6%, #f4f4f4 52%, #fdf4ea);
+}
+
+/* --- Large fields: neutral, not accent ---------------------------------- */
+
+/* The CTA band was a full-bleed pastel. Ink reads as the close of the page and
+   keeps the accent scarce; the white pill already in the markup sits on it at
+   15:1, so the button needs no change. */
+.option-three .cta {
+  background-color: var(--mb-ink);
+}
+
+.option-three .cta h1,
+.option-three .cta .section-heading {
+  color: var(--mb-white);
+}
+
+.option-three .cta .paragraph-01.cta-subtitle {
+  color: rgba(255, 255, 255, 0.72);
+}
+
+/* Note the heading rules above are deliberately narrow. The badge sitting above
+   the heading keeps its light sheen — it is a light chip on a dark band, not
+   part of the band — so `.tagline` must keep its own ink colour. Whitening
+   everything in `.cta` would erase it. */
+
+/* The service and plan cards were three different pastels. One hue, three
+   steps: neutral, deeper neutral, warm. */
+.option-three .services-card {
+  background-color: var(--mb-surface);
+}
+
+.option-three .services-card._02 {
+  background-color: var(--mb-surface-deep);
+}
+
+.option-three .services-card._03 {
+  background-color: var(--mb-accent-tint);
+}
+
+.option-three .project-large-link,
+.option-three .plan-item.card-02 {
+  background-color: var(--mb-accent-tint);
+}
+
+/* --- Small surfaces: this is where the accent lives --------------------- */
+
+.option-three .growth-badge-wrap {
+  background-color: var(--mb-accent);
+}
+
+.option-three .growth-badge-wrap._02 {
+  background-color: var(--mb-accent-tint);
+}
+
+.option-three .growth-badge-wrap._03 {
+  background-color: var(--mb-surface-deep);
+}
+
+.option-three .plan-badge {
+  background-color: var(--mb-accent);
+}
+
+.option-three .newsletter-submit-button {
+  background-color: var(--mb-accent);
+}
+
+.option-three .newsletter-submit-button:hover {
+  background-color: var(--mb-accent-deep);
+}
+
+/* Footer links resolve to the accent on hover, against ink at 6.6:1. */
+.option-three .footer-menu:hover,
+.option-three .copyright-link:hover {
+  color: var(--mb-accent);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  /* button-02 is the solid ink pill; the reference flipped it to lime. */
+  .option-three .button-02:hover {
+    background-color: var(--mb-accent);
+  }
+}
+
+/* The vendored Webflow reset restates the HTML5 block elements — including
+   `nav` — as `display: block`, and it does so unlayered. Tailwind's utilities
+   live in `@layer utilities`, and an unlayered rule beats any layered one no
+   matter how specific, so the review-only OptionSwitcher lost its `flex` and
+   `justify-center`: its pill stretched from 32px of padding to the full 1440px
+   viewport. Restoring the two properties here, unlayered, puts it back.
+   Scoped to the switcher so nothing else in the reset is disturbed. */
+.option-three nav[aria-label="Design directions"] {
+  display: flex;
+  justify-content: center;
+}
+
+/* Same collision, second casualty: the reset's `a { background-color: #0000 }`
+   stripped the fill off the current-direction pill, leaving white text on the
+   switcher's white bar. */
+.option-three nav[aria-label="Design directions"] a[aria-current="page"] {
+  background-color: var(--mb-ink);
+}
