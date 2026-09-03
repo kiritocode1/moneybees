@@ -9,7 +9,7 @@
 }
 
 /* Otherwise deliberately unopinionated — anything added here is inherited by
-   all four directions, so add sparingly. */
+   all three directions, so add sparingly. */
 
 html {
   -webkit-text-size-adjust: 100%;
@@ -40,9 +40,9 @@ body {
   font-family: var(--font-rethink-sans), "Helvetica Neue", sans-serif;
 }
 
-/* OverlayMenu is shared by all four directions and hard-codes a few blues in its
+/* OverlayMenu is shared by all three directions and hard-codes a few blues in its
    own injected stylesheet, which no prop reaches. These overrides are scoped to
-   option 1's shell so the other three are untouched. */
+   option 1's shell so the other two are untouched. */
 .option-one-shell .om-root .om-legal a {
   color: rgba(255, 255, 255, 0.48);
 }

@@ -12,7 +12,7 @@ export type Option = {
 /**
  * The directions on offer. Each has its own route tree and is designed
  * independently — copy, structure, palette, and type may all diverge.
- * Adding a fifth is one entry here plus its app/<slug>/ folder.
+ * Adding another is one entry here plus its app/<slug>/ folder.
  */
 export const OPTIONS: Option[] = [
   {
@@ -32,12 +32,6 @@ export const OPTIONS: Option[] = [
     slug: "option-3",
     label: "Option 3",
     note: "A bright, editorial direction on the third reference: Inter Tight at scale, pastel section colour, and Webflow-faithful motion.",
-  },
-  {
-    n: 4,
-    slug: "option-4",
-    label: "Option 4",
-    note: "",
   },
 ];
 
