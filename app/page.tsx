@@ -17,7 +17,7 @@ export default function Home() {
       </header>
 
       <main className="flex flex-1 flex-col px-6 py-10 sm:px-10">
-        <ul className="grid flex-1 grid-cols-1 gap-3 sm:grid-cols-2">
+        <ul className="grid flex-1 grid-cols-1 gap-3 sm:grid-cols-3">
           {OPTIONS.map((option) => (
             <li key={option.slug} className="flex">
               <Link
