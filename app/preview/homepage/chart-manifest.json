@@ -1,0 +1,1175 @@
+{
+  "width": 564,
+  "height": 540,
+  "start": 0,
+  "end": 466,
+  "fps": 60,
+  "scale": 1.03,
+  "frames": [
+    {
+      "src": "/preview/moneybee/frames/image_0.png",
+      "start": 0,
+      "end": 2
+    },
+    {
+      "src": "/preview/moneybee/frames/image_1.png",
+      "start": 2,
+      "end": 4
+    },
+    {
+      "src": "/preview/moneybee/frames/image_2.png",
+      "start": 4,
+      "end": 6
+    },
+    {
+      "src": "/preview/moneybee/frames/image_3.png",
+      "start": 6,
+      "end": 8
+    },
+    {
+      "src": "/preview/moneybee/frames/image_4.png",
+      "start": 8,
+      "end": 10
+    },
+    {
+      "src": "/preview/moneybee/frames/image_5.png",
+      "start": 10,
+      "end": 12
+    },
+    {
+      "src": "/preview/moneybee/frames/image_6.png",
+      "start": 12,
+      "end": 14
+    },
+    {
+      "src": "/preview/moneybee/frames/image_7.png",
+      "start": 14,
+      "end": 16
+    },
+    {
+      "src": "/preview/moneybee/frames/image_8.png",
+      "start": 16,
+      "end": 18
+    },
+    {
+      "src": "/preview/moneybee/frames/image_9.png",
+      "start": 18,
+      "end": 20
+    },
+    {
+      "src": "/preview/moneybee/frames/image_10.png",
+      "start": 20,
+      "end": 22
+    },
+    {
+      "src": "/preview/moneybee/frames/image_11.png",
+      "start": 22,
+      "end": 24
+    },
+    {
+      "src": "/preview/moneybee/frames/image_12.png",
+      "start": 24,
+      "end": 26
+    },
+    {
+      "src": "/preview/moneybee/frames/image_13.png",
+      "start": 26,
+      "end": 28
+    },
+    {
+      "src": "/preview/moneybee/frames/image_14.png",
+      "start": 28,
+      "end": 30
+    },
+    {
+      "src": "/preview/moneybee/frames/image_15.png",
+      "start": 30,
+      "end": 32
+    },
+    {
+      "src": "/preview/moneybee/frames/image_16.png",
+      "start": 32,
+      "end": 34
+    },
+    {
+      "src": "/preview/moneybee/frames/image_17.png",
+      "start": 34,
+      "end": 36
+    },
+    {
+      "src": "/preview/moneybee/frames/image_18.png",
+      "start": 36,
+      "end": 38
+    },
+    {
+      "src": "/preview/moneybee/frames/image_19.png",
+      "start": 38,
+      "end": 40
+    },
+    {
+      "src": "/preview/moneybee/frames/image_20.png",
+      "start": 40,
+      "end": 42
+    },
+    {
+      "src": "/preview/moneybee/frames/image_21.png",
+      "start": 42,
+      "end": 44
+    },
+    {
+      "src": "/preview/moneybee/frames/image_22.png",
+      "start": 44,
+      "end": 46
+    },
+    {
+      "src": "/preview/moneybee/frames/image_23.png",
+      "start": 46,
+      "end": 48
+    },
+    {
+      "src": "/preview/moneybee/frames/image_24.png",
+      "start": 48,
+      "end": 50
+    },
+    {
+      "src": "/preview/moneybee/frames/image_25.png",
+      "start": 50,
+      "end": 52
+    },
+    {
+      "src": "/preview/moneybee/frames/image_26.png",
+      "start": 52,
+      "end": 54
+    },
+    {
+      "src": "/preview/moneybee/frames/image_27.png",
+      "start": 54,
+      "end": 56
+    },
+    {
+      "src": "/preview/moneybee/frames/image_28.png",
+      "start": 56,
+      "end": 58
+    },
+    {
+      "src": "/preview/moneybee/frames/image_29.png",
+      "start": 58,
+      "end": 60
+    },
+    {
+      "src": "/preview/moneybee/frames/image_30.png",
+      "start": 60,
+      "end": 62
+    },
+    {
+      "src": "/preview/moneybee/frames/image_31.png",
+      "start": 62,
+      "end": 64
+    },
+    {
+      "src": "/preview/moneybee/frames/image_32.png",
+      "start": 64,
+      "end": 66
+    },
+    {
+      "src": "/preview/moneybee/frames/image_33.png",
+      "start": 66,
+      "end": 68
+    },
+    {
+      "src": "/preview/moneybee/frames/image_34.png",
+      "start": 68,
+      "end": 70
+    },
+    {
+      "src": "/preview/moneybee/frames/image_35.png",
+      "start": 70,
+      "end": 72
+    },
+    {
+      "src": "/preview/moneybee/frames/image_36.png",
+      "start": 72,
+      "end": 74
+    },
+    {
+      "src": "/preview/moneybee/frames/image_37.png",
+      "start": 74,
+      "end": 76
+    },
+    {
+      "src": "/preview/moneybee/frames/image_38.png",
+      "start": 76,
+      "end": 78
+    },
+    {
+      "src": "/preview/moneybee/frames/image_39.png",
+      "start": 78,
+      "end": 80
+    },
+    {
+      "src": "/preview/moneybee/frames/image_40.png",
+      "start": 80,
+      "end": 82
+    },
+    {
+      "src": "/preview/moneybee/frames/image_41.png",
+      "start": 82,
+      "end": 84
+    },
+    {
+      "src": "/preview/moneybee/frames/image_42.png",
+      "start": 84,
+      "end": 86
+    },
+    {
+      "src": "/preview/moneybee/frames/image_43.png",
+      "start": 86,
+      "end": 88
+    },
+    {
+      "src": "/preview/moneybee/frames/image_44.png",
+      "start": 88,
+      "end": 90
+    },
+    {
+      "src": "/preview/moneybee/frames/image_45.png",
+      "start": 90,
+      "end": 92
+    },
+    {
+      "src": "/preview/moneybee/frames/image_46.png",
+      "start": 92,
+      "end": 94
+    },
+    {
+      "src": "/preview/moneybee/frames/image_47.png",
+      "start": 94,
+      "end": 96
+    },
+    {
+      "src": "/preview/moneybee/frames/image_48.png",
+      "start": 96,
+      "end": 98
+    },
+    {
+      "src": "/preview/moneybee/frames/image_49.png",
+      "start": 98,
+      "end": 100
+    },
+    {
+      "src": "/preview/moneybee/frames/image_50.png",
+      "start": 100,
+      "end": 102
+    },
+    {
+      "src": "/preview/moneybee/frames/image_51.png",
+      "start": 102,
+      "end": 104
+    },
+    {
+      "src": "/preview/moneybee/frames/image_52.png",
+      "start": 104,
+      "end": 106
+    },
+    {
+      "src": "/preview/moneybee/frames/image_53.png",
+      "start": 106,
+      "end": 108
+    },
+    {
+      "src": "/preview/moneybee/frames/image_54.png",
+      "start": 108,
+      "end": 110
+    },
+    {
+      "src": "/preview/moneybee/frames/image_55.png",
+      "start": 110,
+      "end": 112
+    },
+    {
+      "src": "/preview/moneybee/frames/image_56.png",
+      "start": 112,
+      "end": 114
+    },
+    {
+      "src": "/preview/moneybee/frames/image_57.png",
+      "start": 114,
+      "end": 116
+    },
+    {
+      "src": "/preview/moneybee/frames/image_58.png",
+      "start": 116,
+      "end": 118
+    },
+    {
+      "src": "/preview/moneybee/frames/image_59.png",
+      "start": 118,
+      "end": 120
+    },
+    {
+      "src": "/preview/moneybee/frames/image_60.png",
+      "start": 120,
+      "end": 122
+    },
+    {
+      "src": "/preview/moneybee/frames/image_61.png",
+      "start": 122,
+      "end": 124
+    },
+    {
+      "src": "/preview/moneybee/frames/image_62.png",
+      "start": 124,
+      "end": 126
+    },
+    {
+      "src": "/preview/moneybee/frames/image_63.png",
+      "start": 126,
+      "end": 128
+    },
+    {
+      "src": "/preview/moneybee/frames/image_64.png",
+      "start": 128,
+      "end": 130
+    },
+    {
+      "src": "/preview/moneybee/frames/image_65.png",
+      "start": 130,
+      "end": 132
+    },
+    {
+      "src": "/preview/moneybee/frames/image_66.png",
+      "start": 132,
+      "end": 134
+    },
+    {
+      "src": "/preview/moneybee/frames/image_67.png",
+      "start": 134,
+      "end": 136
+    },
+    {
+      "src": "/preview/moneybee/frames/image_68.png",
+      "start": 136,
+      "end": 138
+    },
+    {
+      "src": "/preview/moneybee/frames/image_69.png",
+      "start": 138,
+      "end": 140
+    },
+    {
+      "src": "/preview/moneybee/frames/image_70.png",
+      "start": 140,
+      "end": 142
+    },
+    {
+      "src": "/preview/moneybee/frames/image_71.png",
+      "start": 142,
+      "end": 144
+    },
+    {
+      "src": "/preview/moneybee/frames/image_72.png",
+      "start": 144,
+      "end": 146
+    },
+    {
+      "src": "/preview/moneybee/frames/image_73.png",
+      "start": 146,
+      "end": 148
+    },
+    {
+      "src": "/preview/moneybee/frames/image_74.png",
+      "start": 148,
+      "end": 150
+    },
+    {
+      "src": "/preview/moneybee/frames/image_75.png",
+      "start": 150,
+      "end": 152
+    },
+    {
+      "src": "/preview/moneybee/frames/image_76.png",
+      "start": 152,
+      "end": 154
+    },
+    {
+      "src": "/preview/moneybee/frames/image_77.png",
+      "start": 154,
+      "end": 156
+    },
+    {
+      "src": "/preview/moneybee/frames/image_78.png",
+      "start": 156,
+      "end": 158
+    },
+    {
+      "src": "/preview/moneybee/frames/image_79.png",
+      "start": 158,
+      "end": 160
+    },
+    {
+      "src": "/preview/moneybee/frames/image_80.png",
+      "start": 160,
+      "end": 162
+    },
+    {
+      "src": "/preview/moneybee/frames/image_81.png",
+      "start": 162,
+      "end": 164
+    },
+    {
+      "src": "/preview/moneybee/frames/image_82.png",
+      "start": 164,
+      "end": 166
+    },
+    {
+      "src": "/preview/moneybee/frames/image_83.png",
+      "start": 166,
+      "end": 168
+    },
+    {
+      "src": "/preview/moneybee/frames/image_84.png",
+      "start": 168,
+      "end": 170
+    },
+    {
+      "src": "/preview/moneybee/frames/image_85.png",
+      "start": 170,
+      "end": 172
+    },
+    {
+      "src": "/preview/moneybee/frames/image_86.png",
+      "start": 172,
+      "end": 174
+    },
+    {
+      "src": "/preview/moneybee/frames/image_87.png",
+      "start": 174,
+      "end": 176
+    },
+    {
+      "src": "/preview/moneybee/frames/image_88.png",
+      "start": 176,
+      "end": 178
+    },
+    {
+      "src": "/preview/moneybee/frames/image_89.png",
+      "start": 178,
+      "end": 180
+    },
+    {
+      "src": "/preview/moneybee/frames/image_90.png",
+      "start": 180,
+      "end": 182
+    },
+    {
+      "src": "/preview/moneybee/frames/image_91.png",
+      "start": 182,
+      "end": 184
+    },
+    {
+      "src": "/preview/moneybee/frames/image_92.png",
+      "start": 184,
+      "end": 186
+    },
+    {
+      "src": "/preview/moneybee/frames/image_93.png",
+      "start": 186,
+      "end": 188
+    },
+    {
+      "src": "/preview/moneybee/frames/image_94.png",
+      "start": 188,
+      "end": 190
+    },
+    {
+      "src": "/preview/moneybee/frames/image_95.png",
+      "start": 190,
+      "end": 192
+    },
+    {
+      "src": "/preview/moneybee/frames/image_96.png",
+      "start": 192,
+      "end": 194
+    },
+    {
+      "src": "/preview/moneybee/frames/image_97.png",
+      "start": 194,
+      "end": 196
+    },
+    {
+      "src": "/preview/moneybee/frames/image_98.png",
+      "start": 196,
+      "end": 198
+    },
+    {
+      "src": "/preview/moneybee/frames/image_99.png",
+      "start": 198,
+      "end": 200
+    },
+    {
+      "src": "/preview/moneybee/frames/image_100.png",
+      "start": 200,
+      "end": 202
+    },
+    {
+      "src": "/preview/moneybee/frames/image_101.png",
+      "start": 202,
+      "end": 204
+    },
+    {
+      "src": "/preview/moneybee/frames/image_102.png",
+      "start": 204,
+      "end": 206
+    },
+    {
+      "src": "/preview/moneybee/frames/image_103.png",
+      "start": 206,
+      "end": 208
+    },
+    {
+      "src": "/preview/moneybee/frames/image_104.png",
+      "start": 208,
+      "end": 210
+    },
+    {
+      "src": "/preview/moneybee/frames/image_105.png",
+      "start": 210,
+      "end": 212
+    },
+    {
+      "src": "/preview/moneybee/frames/image_106.png",
+      "start": 212,
+      "end": 214
+    },
+    {
+      "src": "/preview/moneybee/frames/image_107.png",
+      "start": 214,
+      "end": 216
+    },
+    {
+      "src": "/preview/moneybee/frames/image_108.png",
+      "start": 216,
+      "end": 218
+    },
+    {
+      "src": "/preview/moneybee/frames/image_109.png",
+      "start": 218,
+      "end": 220
+    },
+    {
+      "src": "/preview/moneybee/frames/image_110.png",
+      "start": 220,
+      "end": 222
+    },
+    {
+      "src": "/preview/moneybee/frames/image_111.png",
+      "start": 222,
+      "end": 224
+    },
+    {
+      "src": "/preview/moneybee/frames/image_112.png",
+      "start": 224,
+      "end": 226
+    },
+    {
+      "src": "/preview/moneybee/frames/image_113.png",
+      "start": 226,
+      "end": 228
+    },
+    {
+      "src": "/preview/moneybee/frames/image_114.png",
+      "start": 228,
+      "end": 230
+    },
+    {
+      "src": "/preview/moneybee/frames/image_115.png",
+      "start": 230,
+      "end": 232
+    },
+    {
+      "src": "/preview/moneybee/frames/image_116.png",
+      "start": 232,
+      "end": 234
+    },
+    {
+      "src": "/preview/moneybee/frames/image_117.png",
+      "start": 234,
+      "end": 236
+    },
+    {
+      "src": "/preview/moneybee/frames/image_118.png",
+      "start": 236,
+      "end": 238
+    },
+    {
+      "src": "/preview/moneybee/frames/image_119.png",
+      "start": 238,
+      "end": 240
+    },
+    {
+      "src": "/preview/moneybee/frames/image_120.png",
+      "start": 240,
+      "end": 242
+    },
+    {
+      "src": "/preview/moneybee/frames/image_121.png",
+      "start": 242,
+      "end": 244
+    },
+    {
+      "src": "/preview/moneybee/frames/image_122.png",
+      "start": 244,
+      "end": 246
+    },
+    {
+      "src": "/preview/moneybee/frames/image_123.png",
+      "start": 246,
+      "end": 248
+    },
+    {
+      "src": "/preview/moneybee/frames/image_124.png",
+      "start": 248,
+      "end": 250
+    },
+    {
+      "src": "/preview/moneybee/frames/image_125.png",
+      "start": 250,
+      "end": 252
+    },
+    {
+      "src": "/preview/moneybee/frames/image_126.png",
+      "start": 252,
+      "end": 254
+    },
+    {
+      "src": "/preview/moneybee/frames/image_127.png",
+      "start": 254,
+      "end": 256
+    },
+    {
+      "src": "/preview/moneybee/frames/image_128.png",
+      "start": 256,
+      "end": 258
+    },
+    {
+      "src": "/preview/moneybee/frames/image_129.png",
+      "start": 258,
+      "end": 260
+    },
+    {
+      "src": "/preview/moneybee/frames/image_130.png",
+      "start": 260,
+      "end": 262
+    },
+    {
+      "src": "/preview/moneybee/frames/image_131.png",
+      "start": 262,
+      "end": 264
+    },
+    {
+      "src": "/preview/moneybee/frames/image_132.png",
+      "start": 264,
+      "end": 266
+    },
+    {
+      "src": "/preview/moneybee/frames/image_133.png",
+      "start": 266,
+      "end": 268
+    },
+    {
+      "src": "/preview/moneybee/frames/image_134.png",
+      "start": 268,
+      "end": 270
+    },
+    {
+      "src": "/preview/moneybee/frames/image_135.png",
+      "start": 270,
+      "end": 272
+    },
+    {
+      "src": "/preview/moneybee/frames/image_136.png",
+      "start": 272,
+      "end": 274
+    },
+    {
+      "src": "/preview/moneybee/frames/image_137.png",
+      "start": 274,
+      "end": 276
+    },
+    {
+      "src": "/preview/moneybee/frames/image_138.png",
+      "start": 276,
+      "end": 278
+    },
+    {
+      "src": "/preview/moneybee/frames/image_139.png",
+      "start": 278,
+      "end": 280
+    },
+    {
+      "src": "/preview/moneybee/frames/image_140.png",
+      "start": 280,
+      "end": 282
+    },
+    {
+      "src": "/preview/moneybee/frames/image_141.png",
+      "start": 282,
+      "end": 284
+    },
+    {
+      "src": "/preview/moneybee/frames/image_142.png",
+      "start": 284,
+      "end": 286
+    },
+    {
+      "src": "/preview/moneybee/frames/image_143.png",
+      "start": 286,
+      "end": 288
+    },
+    {
+      "src": "/preview/moneybee/frames/image_144.png",
+      "start": 288,
+      "end": 290
+    },
+    {
+      "src": "/preview/moneybee/frames/image_145.png",
+      "start": 290,
+      "end": 292
+    },
+    {
+      "src": "/preview/moneybee/frames/image_146.png",
+      "start": 292,
+      "end": 294
+    },
+    {
+      "src": "/preview/moneybee/frames/image_147.png",
+      "start": 294,
+      "end": 296
+    },
+    {
+      "src": "/preview/moneybee/frames/image_148.png",
+      "start": 296,
+      "end": 298
+    },
+    {
+      "src": "/preview/moneybee/frames/image_149.png",
+      "start": 298,
+      "end": 300
+    },
+    {
+      "src": "/preview/moneybee/frames/image_150.png",
+      "start": 300,
+      "end": 302
+    },
+    {
+      "src": "/preview/moneybee/frames/image_151.png",
+      "start": 302,
+      "end": 304
+    },
+    {
+      "src": "/preview/moneybee/frames/image_152.png",
+      "start": 304,
+      "end": 306
+    },
+    {
+      "src": "/preview/moneybee/frames/image_153.png",
+      "start": 306,
+      "end": 308
+    },
+    {
+      "src": "/preview/moneybee/frames/image_154.png",
+      "start": 308,
+      "end": 310
+    },
+    {
+      "src": "/preview/moneybee/frames/image_155.png",
+      "start": 310,
+      "end": 312
+    },
+    {
+      "src": "/preview/moneybee/frames/image_156.png",
+      "start": 312,
+      "end": 314
+    },
+    {
+      "src": "/preview/moneybee/frames/image_157.png",
+      "start": 314,
+      "end": 316
+    },
+    {
+      "src": "/preview/moneybee/frames/image_158.png",
+      "start": 316,
+      "end": 318
+    },
+    {
+      "src": "/preview/moneybee/frames/image_159.png",
+      "start": 318,
+      "end": 320
+    },
+    {
+      "src": "/preview/moneybee/frames/image_160.png",
+      "start": 320,
+      "end": 322
+    },
+    {
+      "src": "/preview/moneybee/frames/image_161.png",
+      "start": 322,
+      "end": 324
+    },
+    {
+      "src": "/preview/moneybee/frames/image_162.png",
+      "start": 324,
+      "end": 326
+    },
+    {
+      "src": "/preview/moneybee/frames/image_163.png",
+      "start": 326,
+      "end": 328
+    },
+    {
+      "src": "/preview/moneybee/frames/image_164.png",
+      "start": 328,
+      "end": 330
+    },
+    {
+      "src": "/preview/moneybee/frames/image_165.png",
+      "start": 330,
+      "end": 332
+    },
+    {
+      "src": "/preview/moneybee/frames/image_166.png",
+      "start": 332,
+      "end": 334
+    },
+    {
+      "src": "/preview/moneybee/frames/image_167.png",
+      "start": 334,
+      "end": 336
+    },
+    {
+      "src": "/preview/moneybee/frames/image_168.png",
+      "start": 336,
+      "end": 338
+    },
+    {
+      "src": "/preview/moneybee/frames/image_169.png",
+      "start": 338,
+      "end": 340
+    },
+    {
+      "src": "/preview/moneybee/frames/image_170.png",
+      "start": 340,
+      "end": 342
+    },
+    {
+      "src": "/preview/moneybee/frames/image_171.png",
+      "start": 342,
+      "end": 344
+    },
+    {
+      "src": "/preview/moneybee/frames/image_172.png",
+      "start": 344,
+      "end": 346
+    },
+    {
+      "src": "/preview/moneybee/frames/image_173.png",
+      "start": 346,
+      "end": 348
+    },
+    {
+      "src": "/preview/moneybee/frames/image_174.png",
+      "start": 348,
+      "end": 350
+    },
+    {
+      "src": "/preview/moneybee/frames/image_175.png",
+      "start": 350,
+      "end": 352
+    },
+    {
+      "src": "/preview/moneybee/frames/image_176.png",
+      "start": 352,
+      "end": 354
+    },
+    {
+      "src": "/preview/moneybee/frames/image_177.png",
+      "start": 354,
+      "end": 356
+    },
+    {
+      "src": "/preview/moneybee/frames/image_178.png",
+      "start": 356,
+      "end": 358
+    },
+    {
+      "src": "/preview/moneybee/frames/image_179.png",
+      "start": 358,
+      "end": 360
+    },
+    {
+      "src": "/preview/moneybee/frames/image_180.png",
+      "start": 360,
+      "end": 362
+    },
+    {
+      "src": "/preview/moneybee/frames/image_181.png",
+      "start": 362,
+      "end": 364
+    },
+    {
+      "src": "/preview/moneybee/frames/image_182.png",
+      "start": 364,
+      "end": 366
+    },
+    {
+      "src": "/preview/moneybee/frames/image_183.png",
+      "start": 366,
+      "end": 368
+    },
+    {
+      "src": "/preview/moneybee/frames/image_184.png",
+      "start": 368,
+      "end": 370
+    },
+    {
+      "src": "/preview/moneybee/frames/image_185.png",
+      "start": 370,
+      "end": 372
+    },
+    {
+      "src": "/preview/moneybee/frames/image_186.png",
+      "start": 372,
+      "end": 374
+    },
+    {
+      "src": "/preview/moneybee/frames/image_187.png",
+      "start": 374,
+      "end": 376
+    },
+    {
+      "src": "/preview/moneybee/frames/image_188.png",
+      "start": 376,
+      "end": 378
+    },
+    {
+      "src": "/preview/moneybee/frames/image_189.png",
+      "start": 378,
+      "end": 380
+    },
+    {
+      "src": "/preview/moneybee/frames/image_190.png",
+      "start": 380,
+      "end": 382
+    },
+    {
+      "src": "/preview/moneybee/frames/image_191.png",
+      "start": 382,
+      "end": 384
+    },
+    {
+      "src": "/preview/moneybee/frames/image_192.png",
+      "start": 384,
+      "end": 386
+    },
+    {
+      "src": "/preview/moneybee/frames/image_193.png",
+      "start": 386,
+      "end": 388
+    },
+    {
+      "src": "/preview/moneybee/frames/image_194.png",
+      "start": 388,
+      "end": 390
+    },
+    {
+      "src": "/preview/moneybee/frames/image_195.png",
+      "start": 390,
+      "end": 392
+    },
+    {
+      "src": "/preview/moneybee/frames/image_196.png",
+      "start": 392,
+      "end": 394
+    },
+    {
+      "src": "/preview/moneybee/frames/image_197.png",
+      "start": 394,
+      "end": 396
+    },
+    {
+      "src": "/preview/moneybee/frames/image_198.png",
+      "start": 396,
+      "end": 398
+    },
+    {
+      "src": "/preview/moneybee/frames/image_199.png",
+      "start": 398,
+      "end": 400
+    },
+    {
+      "src": "/preview/moneybee/frames/image_200.png",
+      "start": 400,
+      "end": 402
+    },
+    {
+      "src": "/preview/moneybee/frames/image_201.png",
+      "start": 402,
+      "end": 404
+    },
+    {
+      "src": "/preview/moneybee/frames/image_202.png",
+      "start": 404,
+      "end": 406
+    },
+    {
+      "src": "/preview/moneybee/frames/image_203.png",
+      "start": 406,
+      "end": 408
+    },
+    {
+      "src": "/preview/moneybee/frames/image_204.png",
+      "start": 408,
+      "end": 410
+    },
+    {
+      "src": "/preview/moneybee/frames/image_205.png",
+      "start": 410,
+      "end": 412
+    },
+    {
+      "src": "/preview/moneybee/frames/image_206.png",
+      "start": 412,
+      "end": 414
+    },
+    {
+      "src": "/preview/moneybee/frames/image_207.png",
+      "start": 414,
+      "end": 416
+    },
+    {
+      "src": "/preview/moneybee/frames/image_208.png",
+      "start": 416,
+      "end": 418
+    },
+    {
+      "src": "/preview/moneybee/frames/image_209.png",
+      "start": 418,
+      "end": 420
+    },
+    {
+      "src": "/preview/moneybee/frames/image_210.png",
+      "start": 420,
+      "end": 422
+    },
+    {
+      "src": "/preview/moneybee/frames/image_211.png",
+      "start": 422,
+      "end": 424
+    },
+    {
+      "src": "/preview/moneybee/frames/image_212.png",
+      "start": 424,
+      "end": 426
+    },
+    {
+      "src": "/preview/moneybee/frames/image_213.png",
+      "start": 426,
+      "end": 428
+    },
+    {
+      "src": "/preview/moneybee/frames/image_214.png",
+      "start": 428,
+      "end": 430
+    },
+    {
+      "src": "/preview/moneybee/frames/image_215.png",
+      "start": 430,
+      "end": 432
+    },
+    {
+      "src": "/preview/moneybee/frames/image_216.png",
+      "start": 432,
+      "end": 434
+    },
+    {
+      "src": "/preview/moneybee/frames/image_217.png",
+      "start": 434,
+      "end": 436
+    },
+    {
+      "src": "/preview/moneybee/frames/image_218.png",
+      "start": 436,
+      "end": 438
+    },
+    {
+      "src": "/preview/moneybee/frames/image_219.png",
+      "start": 438,
+      "end": 440
+    },
+    {
+      "src": "/preview/moneybee/frames/image_220.png",
+      "start": 440,
+      "end": 442
+    },
+    {
+      "src": "/preview/moneybee/frames/image_221.png",
+      "start": 442,
+      "end": 444
+    },
+    {
+      "src": "/preview/moneybee/frames/image_222.png",
+      "start": 444,
+      "end": 446
+    },
+    {
+      "src": "/preview/moneybee/frames/image_223.png",
+      "start": 446,
+      "end": 448
+    },
+    {
+      "src": "/preview/moneybee/frames/image_224.png",
+      "start": 448,
+      "end": 450
+    },
+    {
+      "src": "/preview/moneybee/frames/image_225.png",
+      "start": 450,
+      "end": 452
+    },
+    {
+      "src": "/preview/moneybee/frames/image_226.png",
+      "start": 452,
+      "end": 454
+    },
+    {
+      "src": "/preview/moneybee/frames/image_227.png",
+      "start": 454,
+      "end": 456
+    },
+    {
+      "src": "/preview/moneybee/frames/image_228.png",
+      "start": 456,
+      "end": 458
+    },
+    {
+      "src": "/preview/moneybee/frames/image_229.png",
+      "start": 458,
+      "end": 460
+    },
+    {
+      "src": "/preview/moneybee/frames/image_230.png",
+      "start": 460,
+      "end": 462
+    },
+    {
+      "src": "/preview/moneybee/frames/image_231.png",
+      "start": 462,
+      "end": 464
+    },
+    {
+      "src": "/preview/moneybee/frames/image_232.png",
+      "start": 464,
+      "end": 466
+    }
+  ]
+}
