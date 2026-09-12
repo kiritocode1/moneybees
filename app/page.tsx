@@ -18,7 +18,7 @@ import FrameworkRow from "@/components/option-one/framework-row";
 import InterviewCarousel from "@/components/option-one/interview-carousel";
 import PinnedStats from "@/components/option-one/pinned-stats";
 import QuotePanel from "@/components/option-one/quote-panel";
-import OverlayMenu, { type MenuLink } from "@/components/ui/overlay-menu";
+import SiteNavigation from "@/components/ui/site-navigation";
 import { EASE_OUT } from "@/lib/ease";
 
 /* Shared utility strings. These are whole literal class names so Tailwind's
@@ -53,21 +53,6 @@ const riskPractices = [
   ["Concentration", "Know each holding", "We hold few enough businesses that any one of them can be explained from memory, without notes."],
   ["Turnover", "Trade rarely", "Low turnover keeps costs down and keeps more of the return once tax has been accounted for."],
 ] as const;
-
-const PRIMARY_LINKS: MenuLink[] = [
-  { label: "Home", href: "#top" },
-  { label: "About", href: "#about" },
-  { label: "Philosophy", href: "#philosophy" },
-  { label: "What we do", href: "#what-we-do" },
-  { label: "Performance", href: "#performance" },
-  { label: "Contact", href: "#contact" },
-];
-
-const SECONDARY_LINKS: MenuLink[] = [
-  { label: "From the investment desk", href: "#desk" },
-  { label: "Managing risk", href: "#risk" },
-  { label: "Investor login", href: "https://www.moneybee.in/register.php" },
-];
 
 /**
  * A display heading whose lines rise out of a mask instead of fading in place.
@@ -264,19 +249,7 @@ export default function Option1() {
   });
 
   return (
-    <OverlayMenu
-      brand={<Wordmark tagline />}
-      primaryLinks={PRIMARY_LINKS}
-      secondaryLinks={SECONDARY_LINKS}
-      /* The curtain stays dark on purpose: it is a momentary overlay, and a black
-         one against a white page is the sharpest thing a monochrome palette can
-         do. Only the blue is gone. The toggler bars are ink so they read against
-         the washed hero, and a scoped rule in globals.css flips them to white for
-         as long as the curtain is open. */
-      panelColors={["#9D9EA1", "#000000", "#9D9EA1", "#000000"]}
-      menuColor="#000000"
-      togglerColor="#000000"
-    >
+    <SiteNavigation>
       <main id="top" className="option-one overflow-clip bg-white text-[#000000]">
         <section ref={heroRef} className="relative flex min-h-svh flex-col overflow-hidden">
           <motion.div
@@ -775,6 +748,6 @@ export default function Option1() {
           </div>
         </footer>
       </main>
-    </OverlayMenu>
+    </SiteNavigation>
   );
 }

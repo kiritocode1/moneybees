@@ -20,6 +20,8 @@ export interface OverlayMenuProps {
   panelColors?: [string, string, string, string];
   menuColor?: string;
   togglerColor?: string;
+  visibleLinks?: MenuLink[];
+  showClientLogin?: boolean;
 }
 
 const ASSET_BASE = "https://ui.aryank.space/assets/overlay-menu";
@@ -69,6 +71,8 @@ export default function OverlayMenu({
   panelColors = DEFAULT_PANELS,
   menuColor = "#000000",
   togglerColor = "#ffffff",
+  visibleLinks = [],
+  showClientLogin = false,
 }: OverlayMenuProps) {
   const rootRef = useRef<HTMLDivElement>(null);
   const togglerRef = useRef<HTMLButtonElement>(null);
@@ -226,6 +230,13 @@ export default function OverlayMenu({
             </a>
           )}
         </div>
+        {visibleLinks.length > 0 && (
+          <div className="om-visible-links">
+            {visibleLinks.map((link) => (
+              <a key={link.label} href={link.href} className={link.label === "Contact Us" ? "om-contact" : undefined}>{link.label}</a>
+            ))}
+          </div>
+        )}
         <button
           type="button"
           className="om-toggler"
@@ -265,13 +276,14 @@ export default function OverlayMenu({
           <div className="om-items-col">
             <div className="om-primary-links">
               {primaryLinks.map((link) => (
-                <a key={link.label} href={link.href}>{link.label}</a>
+                <a key={link.label} href={link.href} className={link.label === "Contact Us" ? "om-contact" : undefined}>{link.label}</a>
               ))}
             </div>
             <div className="om-secondary-links">
               {secondaryLinks.map((link) => (
                 <a key={link.label} href={link.href}>{link.label}</a>
               ))}
+              {showClientLogin && <span className="om-login-placeholder" aria-disabled="true">Client Login</span>}
             </div>
           </div>
         </div>
@@ -465,5 +477,47 @@ const styles = `
   .om-root .om-primary-links a {
     font-size: clamp(2.7rem, 12vw, 4.8rem);
   }
+}
+
+.om-root .om-visible-links {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  margin-left: auto;
+  margin-right: 20px;
+  pointer-events: auto;
+}
+.om-root .om-visible-links a {
+  color: #000;
+  font-size: 13px;
+  text-decoration: none;
+}
+.om-root .om-visible-links .om-contact {
+  border-bottom: 2px solid #F9A11B;
+  padding-block: 6px;
+}
+.om-root.om-is-open .om-visible-links { visibility: hidden; pointer-events: none; }
+.om-root.om-is-open .om-brand-link { color: #fff; }
+.om-root.om-is-open .om-brand-tagline { color: #aaa; }
+.om-root .om-nav a:focus-visible,
+.om-root .om-items a:focus-visible,
+.om-root .om-toggler:focus-visible { outline: 2px solid #F9A11B; outline-offset: 5px; }
+.om-root .om-nav a:hover { text-decoration: underline; text-underline-offset: 5px; }
+.om-login-placeholder { display: block; color: #aaa; font-size: clamp(1.25rem, 2vw, 1.75rem); margin-top: 12px; }
+@media (max-width: 1000px) {
+  .om-root .om-items { overflow-y: auto; justify-content: flex-start; padding-top: 110px; }
+  .om-root .om-items-col:nth-child(2) { flex-direction: column; gap: 24px; }
+  .om-root .om-secondary-links { display: block; }
+  .om-root .om-primary-links a { font-size: clamp(28px, 7vw, 46px); }
+  .om-root .om-socials { position: static; }
+}
+@media (max-width: 600px) {
+  .om-root .om-brand-tagline { display: none; }
+  .om-root .om-nav { padding: 12px; }
+  .om-root .om-logo { padding: 8px 4px; }
+  .om-root .om-visible-links { gap: 14px; margin-right: 8px; }
+  .om-root .om-visible-links a { font-size: 11px; white-space: nowrap; }
+  .om-root .om-toggler { padding: 12px 4px 12px 8px; }
+  .om-root .om-toggler span { width: 28px; }
 }
 `;
