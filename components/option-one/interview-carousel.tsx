@@ -3,11 +3,11 @@
 import { motion, useReducedMotion } from "motion/react";
 import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { ArrowLeft, ArrowRight, ArrowRightUp, Play } from "reicon-react";
+import { ArrowLeft, ArrowRight, Play } from "reicon-react";
 import { EASE_OUT } from "@/lib/ease";
 
 const FOCUS =
-  "focus-visible:outline-2 focus-visible:outline-[#b8862f] focus-visible:outline-offset-4";
+  "focus-visible:outline-2 focus-visible:outline-[#F7A11A] focus-visible:outline-offset-4";
 
 /**
  * PLACEHOLDER CONTENT. These are Business Insider's own films, published on the
@@ -46,7 +46,7 @@ function InterviewCard({ interview }: { interview: (typeof INTERVIEWS)[number] }
 
   return (
     <article className="w-[460px] shrink-0 max-[600px]:w-[78vw]">
-      <div className="relative aspect-video overflow-hidden bg-[#e9e9e6]">
+      <div className="relative aspect-video overflow-hidden bg-[#9D9EA1]">
         {playing ? (
           <iframe
             src={`https://www.youtube-nocookie.com/embed/${interview.id}?autoplay=1&rel=0&modestbranding=1`}
@@ -75,26 +75,26 @@ function InterviewCard({ interview }: { interview: (typeof INTERVIEWS)[number] }
             <span className="absolute top-[14px] left-[14px] text-[10px] uppercase tracking-[.1em] text-white drop-shadow-[0_1px_3px_rgba(0,0,0,.6)]">
               {interview.source}
             </span>
-            <span className="absolute bottom-[14px] left-[14px] grid h-[42px] w-[42px] place-items-center bg-[#b8862f] text-white transition-transform duration-300 ease-[ease] group-hover:scale-110">
+            <span className="absolute bottom-[14px] left-[14px] grid h-[42px] w-[42px] place-items-center bg-[#F7A11A] text-white transition-transform duration-300 ease-[ease] group-hover:scale-110">
               <Play size={18} aria-hidden="true" />
             </span>
           </button>
         )}
       </div>
       {/* The colour bar under the thumbnail is the reference's device for tying a
-          card back to the palette. Gold here rather than its lilac. */}
-      <div className="h-[7px] bg-[#b8862f]" />
-      <h3 className="mt-[22px] text-[22px] font-normal tracking-[-.025em] text-[#111111]">{interview.name}</h3>
-      <p className="mt-[8px] max-w-[300px] text-[12px] leading-[1.5] text-[rgba(17,17,17,.6)]">{interview.note}</p>
+          card back to the palette. Moneybees orange replaces the reference lilac. */}
+      <div className="h-[7px] bg-[#F7A11A]" />
+      <h3 className="mt-[22px] text-[22px] font-normal tracking-[-.025em] text-[#000000]">{interview.name}</h3>
+      <p className="mt-[8px] max-w-[300px] text-[12px] leading-[1.5] text-[rgba(0,0,0,.6)]">{interview.note}</p>
       <a
         href={`https://www.youtube.com/watch?v=${interview.id}`}
         target="_blank"
         rel="noreferrer"
-        className={`group mt-[26px] flex items-center justify-between gap-[20px] border-t border-t-[rgba(17,17,17,.2)] pt-[14px] text-[12px] text-[#111111] no-underline transition-colors duration-200 ease-[ease] hover:text-[#b8862f] ${FOCUS}`}
+        className={`group mt-[26px] flex items-center justify-between gap-[20px] border-t border-t-[rgba(0,0,0,.2)] pt-[14px] text-[12px] text-[#000000] no-underline transition-colors duration-200 ease-[ease] hover:text-[#F7A11A] ${FOCUS}`}
       >
         Watch on YouTube
         <i className="not-italic transition-transform duration-200 ease-[ease] group-hover:translate-x-[3px] group-hover:-translate-y-[3px]">
-          <ArrowRightUp size={15} aria-hidden="true" />
+          <ArrowRight size={15} aria-hidden="true" />
         </i>
       </a>
     </article>
@@ -131,15 +131,15 @@ export default function InterviewCarousel() {
     });
   };
 
-  const arrow = "grid h-[46px] w-[46px] place-items-center border border-[rgba(17,17,17,.22)] bg-white text-[#111111] transition-[background-color,color,border-color,opacity] duration-200 ease-[ease] enabled:hover:border-[#b8862f] enabled:hover:bg-[#b8862f] enabled:hover:text-white disabled:opacity-30";
+  const arrow = "grid h-[46px] w-[46px] place-items-center border border-[rgba(0,0,0,.22)] bg-white text-[#000000] transition-[background-color,color,border-color,opacity] duration-200 ease-[ease] enabled:hover:border-[#F7A11A] enabled:hover:bg-[#F7A11A] enabled:hover:text-white disabled:opacity-30";
 
   return (
     <section
       aria-label="Understanding businesses"
-      className="border-t border-t-[rgba(17,17,17,.14)] bg-white py-[86px] max-[600px]:py-[60px]"
+      className="border-t border-t-[rgba(0,0,0,.14)] bg-white py-[86px] max-[600px]:py-[60px]"
     >
       <div className="px-[max(32px,calc((100vw_-_1480px)/2))] max-[600px]:px-[22px]">
-        <span className="block text-[9px] uppercase tracking-[.14em] text-[rgba(17,17,17,.6)]">
+        <span className="block text-[9px] uppercase tracking-[.14em] text-[rgba(0,0,0,.6)]">
           Understanding businesses
         </span>
         <div className="mt-[38px] flex items-end justify-between gap-[40px]">
@@ -148,7 +148,7 @@ export default function InterviewCarousel() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.5 }}
             transition={{ duration: reduceMotion ? 0 : 0.8, ease: EASE_OUT }}
-            className="max-w-[760px] text-[clamp(2rem,3.4vw,3.5rem)] font-light leading-[1.04] tracking-[-.04em] text-[#111111]"
+            className="max-w-[760px] text-[clamp(2rem,3.4vw,3.5rem)] font-light leading-[1.04] tracking-[-.04em] text-[#000000]"
           >
             Seven businesses. Seven ways
             <br />
@@ -163,7 +163,7 @@ export default function InterviewCarousel() {
             </button>
           </div>
         </div>
-        <p className="mt-[24px] max-w-[520px] text-[12px] leading-[1.6] text-[rgba(17,17,17,.62)]">
+        <p className="mt-[24px] max-w-[520px] text-[12px] leading-[1.6] text-[rgba(0,0,0,.62)]">
           We value a security by first understanding the business behind it. These films, published by Insider, are a
           plain look at how ordinary businesses earn. It is the same question we ask of every holding.
         </p>

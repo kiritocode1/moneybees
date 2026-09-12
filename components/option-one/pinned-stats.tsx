@@ -19,9 +19,9 @@ const STATS = [
     value: 50,
     suffix: " lakh",
     copy: "The SEBI minimum for a Portfolio Management Service mandate. An Alternative Investment Fund begins at ₹1 crore.",
-    /* Ink panel. White type, so the gold reveal behind it reads as a warm edge
+    /* Ink panel. White type, so the orange reveal behind it reads as a warm edge
        rather than a flash. */
-    tone: "bg-[#111111] text-white",
+    tone: "bg-[#000000] text-white",
     sub: "text-[rgba(255,255,255,.62)]",
   },
   {
@@ -29,8 +29,8 @@ const STATS = [
     value: 500,
     suffix: "",
     copy: "The widely covered names most portfolios are built from. Our research begins below them, among businesses fewer analysts reach.",
-    tone: "bg-[#eceae5] text-[#111111]",
-    sub: "text-[rgba(17,17,17,.6)]",
+    tone: "bg-[#9D9EA1] text-[#000000]",
+    sub: "text-[rgba(0,0,0,.6)]",
   },
 ] as const;
 
@@ -81,7 +81,7 @@ export default function PinnedStats() {
 
           <div className="grid grid-rows-2 max-[900px]:grid-rows-none">
             {STATS.map(({ prefix, value, suffix, copy, tone, sub }, index) => (
-              /* Gold sits underneath each cell. The panel slides across it, so
+              /* Orange sits underneath each cell. The panel slides across it, so
                  the reveal happens in the gap the panel has not covered yet —
                  the reference does the same thing with its orange and yellow
                  bands, in its own palette.
@@ -95,7 +95,7 @@ export default function PinnedStats() {
                 initial={reduceMotion ? false : "hidden"}
                 whileInView="shown"
                 viewport={{ once: true, amount: 0.35 }}
-                className="relative overflow-hidden bg-[#b8862f]"
+                className="relative overflow-hidden bg-[#F7A11A]"
               >
                 <motion.div
                   variants={{

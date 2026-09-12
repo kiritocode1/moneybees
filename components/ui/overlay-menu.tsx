@@ -52,10 +52,10 @@ const DEFAULT_SECONDARY: MenuLink[] = [
 ];
 
 const DEFAULT_PANELS: [string, string, string, string] = [
-  "#1b58cf",
-  "#061842",
-  "#123786",
-  "#0d2a72",
+  "#F7A11A",
+  "#000000",
+  "#9D9EA1",
+  "#F7A11A",
 ];
 
 export default function OverlayMenu({
@@ -67,7 +67,7 @@ export default function OverlayMenu({
   primaryLinks = DEFAULT_PRIMARY,
   secondaryLinks = DEFAULT_SECONDARY,
   panelColors = DEFAULT_PANELS,
-  menuColor = "#081f57",
+  menuColor = "#000000",
   togglerColor = "#ffffff",
 }: OverlayMenuProps) {
   const rootRef = useRef<HTMLDivElement>(null);
@@ -287,7 +287,7 @@ const styles = `
   position: relative;
   width: 100%;
   min-height: 100%;
-  background-color: #141414;
+  background-color: #000000;
   font-family: "Onest", sans-serif;
 }
 
@@ -418,7 +418,7 @@ const styles = `
 
 .om-root .om-legal a {
   font-size: 0.9rem;
-  color: #6f8cc9;
+  color: #9D9EA1;
 }
 
 .om-root .om-primary-links a {
@@ -428,7 +428,7 @@ const styles = `
 
 .om-root .om-secondary-links a {
   font-size: clamp(1.25rem, 2vw, 1.75rem);
-  color: #9eb9ef;
+  color: #9D9EA1;
 }
 
 .om-root .om-content a .om-line {

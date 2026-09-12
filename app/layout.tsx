@@ -2,8 +2,7 @@ import type { Metadata } from "next";
 import { Instrument_Serif, Rethink_Sans } from "next/font/google";
 import "./globals.css";
 
-// Project default body face. Individual directions may override this in their
-// own layout — see app/option-N/layout.tsx.
+// Project default body faces.
 const rethinkSans = Rethink_Sans({
   subsets: ["latin"],
   variable: "--font-rethink-sans",
@@ -19,10 +18,10 @@ const instrumentSerif = Instrument_Serif({
 
 export const metadata: Metadata = {
   title: {
-    default: "Moneybee",
+    default: "Moneybee | Investment Management",
     template: "%s · Moneybee",
   },
-  description: "Design directions for the Moneybee website.",
+  description: "Moneybee Portfolio Management Services and Alternative Investment Fund.",
   robots: { index: false, follow: false },
 };
 
@@ -36,7 +35,9 @@ export default function RootLayout({
       lang="en"
       className={`${rethinkSans.variable} ${instrumentSerif.variable} h-full antialiased`}
     >
-      <body className="min-h-full font-sans">{children}</body>
+      <body className="option-one-shell min-h-full bg-white font-sans text-black">
+        {children}
+      </body>
     </html>
   );
 }

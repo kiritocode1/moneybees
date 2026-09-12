@@ -2,6 +2,7 @@
   "name": "moneybees",
   "version": "0.1.0",
   "private": true,
+  "portless": "moneybees",
   "scripts": {
     "dev": "next dev",
     "build": "next build",

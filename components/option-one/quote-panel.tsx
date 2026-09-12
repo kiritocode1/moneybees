@@ -6,7 +6,7 @@ import { QuoteUp } from "reicon-react";
 import { EASE_OUT } from "@/lib/ease";
 
 /**
- * A split pull-quote: ink on the left carrying the attribution, warm paper on
+ * A split pull-quote: ink on the left carrying the attribution, grey on
  * the right carrying the words.
  *
  * The attribution is the investment desk rather than a named individual, and the
@@ -33,8 +33,8 @@ export default function QuotePanel() {
       aria-label="From the investment desk"
       className="grid min-h-[600px] grid-cols-2 max-[900px]:min-h-0 max-[900px]:grid-cols-1"
     >
-      <div className="flex flex-col bg-[#111111] p-[52px] text-white max-[600px]:p-[28px]">
-        <i className="not-italic text-[#b8862f]" aria-hidden="true">
+      <div className="flex flex-col bg-[#000000] p-[52px] text-white max-[600px]:p-[28px]">
+        <i className="not-italic text-[#F7A11A]" aria-hidden="true">
           <QuoteUp size={54} />
         </i>
         <motion.div {...reveal(0.1)} className="mx-auto mt-[80px] max-[900px]:mt-[42px] max-[900px]:mx-0">
@@ -52,17 +52,17 @@ export default function QuotePanel() {
         </motion.div>
       </div>
 
-      <div className="flex flex-col justify-start bg-[#eceae5] p-[52px] max-[600px]:p-[28px]">
+      <div className="flex flex-col justify-start bg-[#9D9EA1] p-[52px] max-[600px]:p-[28px]">
         <motion.blockquote
           {...reveal(0.18)}
-          className="max-w-[620px] text-[clamp(1.6rem,2.6vw,2.5rem)] font-light leading-[1.14] tracking-[-.035em] text-[#111111]"
+          className="max-w-[620px] text-[clamp(1.6rem,2.6vw,2.5rem)] font-light leading-[1.14] tracking-[-.035em] text-[#000000]"
         >
           A good company is not a good investment at every price. Most of the work is deciding which of those two
           questions you are actually answering.
         </motion.blockquote>
         <motion.p
           {...reveal(0.28)}
-          className="mt-[34px] max-w-[430px] text-[11px] leading-[1.55] text-[rgba(17,17,17,.62)]"
+          className="mt-[34px] max-w-[430px] text-[11px] leading-[1.55] text-[rgba(0,0,0,.62)]"
         >
           The clearest evidence of how a manager thinks is what they publish when they are not selling anything.
         </motion.p>

@@ -31,9 +31,9 @@ export default function FrameworkRow() {
   return (
     <section
       aria-label="Regulatory and market framework"
-      className="border-y border-y-[rgba(17,17,17,.14)] bg-white px-[max(32px,calc((100vw_-_1480px)/2))] py-[38px] max-[600px]:px-[22px] max-[600px]:py-[30px]"
+      className="border-y border-y-[rgba(0,0,0,.14)] bg-white px-[max(32px,calc((100vw_-_1480px)/2))] py-[38px] max-[600px]:px-[22px] max-[600px]:py-[30px]"
     >
-      <span className="block text-[9px] uppercase tracking-[.14em] text-[rgba(17,17,17,.6)]">
+      <span className="block text-[9px] uppercase tracking-[.14em] text-[rgba(0,0,0,.6)]">
         Regulatory and market framework
       </span>
       {/* Seven equal cells on desktop, folding to four then three so the
@@ -53,10 +53,10 @@ export default function FrameworkRow() {
             }}
             className="grid place-items-center gap-[7px] text-center"
           >
-            <b className="text-[19px] font-[650] tracking-[-.03em] text-[#111111] max-[600px]:text-[16px]">
+            <b className="text-[19px] font-[650] tracking-[-.03em] text-[#000000] max-[600px]:text-[16px]">
               {name}
             </b>
-            <small className="text-[8px] uppercase tracking-[.08em] text-[rgba(17,17,17,.5)]">
+            <small className="text-[8px] uppercase tracking-[.08em] text-[rgba(0,0,0,.5)]">
               {role}
             </small>
           </motion.li>
