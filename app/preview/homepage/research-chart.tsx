@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import type { MotionValue } from "motion/react";
-import manifest from "./chart-manifest.json";
+import manifest from "./orange-chart-manifest.json";
 import s from "./preview.module.css";
 
 export default function ResearchChart({ progress, stage }: { progress: MotionValue<number>; stage: number }) {
@@ -72,6 +72,7 @@ export default function ResearchChart({ progress, stage }: { progress: MotionVal
       <rect width={manifest.width} height={manifest.height} fill="#e4e4e4" />
       <g transform={`translate(282 270) scale(${manifest.scale}) translate(-282 -270)`}>
         <image ref={imageRef} href={manifest.frames[0].src} width={manifest.width} height={manifest.height} />
+
       </g>
     </svg>
   );
