@@ -7,7 +7,7 @@ import SiteNavigation from "@/components/ui/site-navigation";
 import s from "./preview.module.css";
 import ResearchChart from "./research-chart";
 import PreviewFooter from "./preview-footer";
-import SelectionUniverse from "./selection-universe";
+import { MoneybeeIntroduction, BusinessStory, MoneybeeNumbers, InvestmentExamples, TeamSection } from "./home-story";
 
 const stages = [
   { label: "Discover", heading: "Which businesses deserve\na closer look?", copy: "We screen companies for size, financial fundamentals and management quality before committing to deeper research.", number: "~6,000", definition: "companies in the starting universe", detail: "~1,200 investable · ~350 shortlisted", note: "01 / The starting universe" },
@@ -52,7 +52,6 @@ function ResearchSection() {
             <p className={s.description}>{stage.copy}</p>
             <div className={s.researchMetric}><strong>{stage.number}</strong><span>{stage.definition}</span></div>
             <p className={s.researchDetail}>{stage.detail}<small>Approximate PMS company counts.</small></p>
-            <a className={s.textLink} href="#universe">View the selection stages</a>
           </div>
           <div className={s.stageControls} aria-label="Research stages">
             {stages.map((item, index) => <button type="button" key={item.label} aria-pressed={active === index} onClick={() => chooseStage(index)}>
@@ -99,12 +98,15 @@ export default function HomepagePreview() {
               </div>
             </div>
             <div id="record" className={s.performanceNote}><span>Queenbee PMS inception: 1 August 2007. Figures as at 31 July 2026.</span><span>Draft figures from supplied client material, pending publication approval.<br />Past performance is not indicative of future results.</span></div>
-            <a href="#research" className={s.nextSection}>How we select investments <span>↓</span></a>
+            <a href="#introduction" className={s.nextSection}>Inside Moneybee <span>↓</span></a>
           </section>
 
+          <MoneybeeIntroduction />
+          <BusinessStory />
           <ResearchSection />
 
-          <SelectionUniverse />
+          <MoneybeeNumbers />
+          <InvestmentExamples />
 
           <section id="products" className={s.products}>
             <div className={s.productHeading}><p className={s.eyebrow}>Ways to invest</p><h2>How would you<br />hold your investment?</h2></div>
@@ -114,10 +116,11 @@ export default function HomepagePreview() {
             </div>
             <p className={s.productFootnote}>Ownership illustrations only. Review each product’s eligibility, terms and risks before investing.</p>
           </section>
+          <TeamSection />
           <PreviewFooter />
         </main>
       </SiteNavigation>
-      <aside className={s.previewBar} aria-label="Section preview navigation"><span>Section studies <b>Draft</b></span><nav><a href="#performance">Performance</a><a href="#research">Research</a><a href="#universe">Full visual</a><a href="#products">PMS / AIF</a><a href="#footer">Footer</a></nav><Link href="/">Current homepage</Link></aside>
+      <aside className={s.previewBar} aria-label="Section preview navigation"><span>Section studies <b>Draft</b></span><nav><a href="#performance">Performance</a><a href="#introduction">Moneybee</a><a href="#research">Research</a><a href="#products">PMS / AIF</a><a href="#investments">Investments</a><a href="#team">Team</a><a href="#footer">Footer</a></nav><Link href="/">Current homepage</Link></aside>
     </div>
   );
 }
