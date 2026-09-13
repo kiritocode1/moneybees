@@ -96,14 +96,14 @@ export function MoneybeeNumbers() {
   return <section id="numbers" className={s.numbers}>
     <h2>Moneybee in numbers</h2>
     <div className={s.numberGrid}>
-      <div><p>Companies in the research universe</p><strong>~6,000</strong></div>
-      <div><p>Holdings in the PMS portfolio</p><strong>~20</strong></div>
+      <div><p>1 August 2007</p><strong>₹10 <span>lakh</span></strong></div>
+      <div><p>31 July 2026</p><strong>₹2.885 <span>crore</span></strong></div>
     </div>
     <div className={s.numberFacts}>
-      <p><strong>3+ years</strong><span>Minimum PMS investment horizon</span></p>
-      <p><strong>30%</strong><span>Stated maximum sector allocation</span></p>
+      <p><strong>₹59.7 lakh</strong><span>Same ₹10 lakh invested in S&amp;P BSE 500 TRI</span></p>
+      <p><strong>30%</strong><span>Maximum allocation to any one sector</span></p>
     </div>
-    <p className={s.numberSource}>Moneybee Group Profile, April 2026. Approximate company counts; sector limit is a policy ceiling, not current allocation.</p>
+    <p className={s.numberSource}>PMS illustration from Moneybee’s August 2026 presentation, citing APMI data. Returns after expenses; individual accounts may vary. Past performance does not indicate future results. Sector ceiling from the April 2026 Group Profile, not current allocation or a claim about the full performance period.</p>
   </section>;
 }
 
