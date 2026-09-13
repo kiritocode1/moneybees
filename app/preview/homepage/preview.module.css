@@ -61,7 +61,7 @@
 .stageIcon { font-size:10px; }
 .stageLine { position:absolute; left:0; bottom:-1px; width:0; height:1px; background:var(--ink); transition:width .3s ease-out; }
 .stageControls button[aria-pressed="true"] .stageLine { width:78%; background:var(--orange); }
-.universe { position:relative; isolation:isolate; aspect-ratio:1400/790; overflow:hidden; color:#fff; margin:75px 3%; background:radial-gradient(ellipse at 2% 68%,#d69d22 0,transparent 70%),radial-gradient(ellipse at 95% 15%,#dedbd3 0,transparent 68%),#d9b557; }
+.universe { position:relative; isolation:isolate; width:100%; height:100svh; min-height:540px; overflow:hidden; color:#fff; margin:0; background:radial-gradient(ellipse at 2% 68%,#d69d22 0,transparent 70%),radial-gradient(ellipse at 95% 15%,#dedbd3 0,transparent 68%),#d9b557; }
 .universeMeta { position:absolute; top:4.5%; left:3%; right:3%; z-index:2; }
 .universe h2 { position:absolute; top:16%; left:3%; font-size:clamp(22px,3vw,48px); line-height:1.08; letter-spacing:-.035em; z-index:2; }
 .universeDrawing { position:absolute; inset:0; width:100%; height:100%; }
@@ -69,7 +69,7 @@
 .universeStart { top:24%; left:72%; }
 .universeEnd { top:44%; left:15%; }
 .universeStart strong,.universeEnd strong { display:block; font-weight:400; font-size:clamp(45px,5.4vw,88px); line-height:1.15; letter-spacing:-.04em; }
-.universeStart span,.universeEnd span { display:block; font-size:clamp(12px,1.45vw,23px); line-height:1.3; margin-top:12px; }
+.universeStart>span,.universeEnd>span { display:block; font-size:clamp(12px,1.45vw,23px); line-height:1.3; margin-top:12px; }
 .universeBottom { position:absolute; left:3%; right:3%; bottom:3%; z-index:2; }
 .universeBottom p { font-size:clamp(11px,1.25vw,18px); }
 .universeBottom b { margin:0 20px; font-weight:400; }
@@ -116,7 +116,7 @@
   .description { font-size:16px; }
   .stageControls { display:flex; gap:15px; }
   .stageControls button { gap:8px; font-size:11px; align-items:baseline; }
-  .universe { margin:45px 0; }
+  .universe { margin:0; }
   .productHeading { grid-template-columns:1fr 1fr; }
   .productHeading>.eyebrow { grid-column:1/-1; }
 }
@@ -148,10 +148,10 @@
   .universeMeta span:nth-child(2) { display:none; }
   .universe h2 { top:86px; left:24px; font-size:32px; }
   .universeDrawing { opacity:.8; object-position:center; }
-  .universeStart { top:280px; left:auto; right:28px; }
-  .universeEnd { top:460px; left:28px; }
+  .universeStart { top:27%; left:auto; right:28px; }
+  .universeEnd { top:47%; left:28px; }
   .universeStart strong,.universeEnd strong { font-size:62px; }
-  .universeStart span,.universeEnd span { font-size:16px; }
+  .universeStart>span,.universeEnd>span { font-size:16px; }
   .universeBottom { left:24px; right:24px; bottom:26px; }
   .universeBottom p { font-size:12px; line-height:1.8; }
   .universeBottom b { margin:0 7px; }
@@ -218,3 +218,28 @@
 
 .heroStill { display:none; }
 @media(prefers-reduced-motion:reduce) { .heroMotion { display:none; } .heroStill { display:block; } }
+
+/* The threshold fills only overlapping strokes; isolated curves stay thin. */
+.universeLoop { animation:universe-drift 18s ease-in-out infinite alternate; }
+.universeConnector { stroke-dasharray:1; animation:universe-connect 12s cubic-bezier(.4,0,.2,1) infinite; }
+.universeTraveller { offset-path:path("M1103 424C865 738 339 778 320 529"); animation:universe-travel 12s cubic-bezier(.4,0,.2,1) infinite; }
+.universe[data-running="false"] .universeLoop,
+.universe[data-running="false"] .universeConnector,
+.universe[data-running="false"] .universeTraveller { animation-play-state:paused; }
+.universe .numberRoll { display:inline-flex; line-height:1.15; letter-spacing:-.04em; }
+.digitWindow { display:inline-block; height:1.15em; width:.6em; overflow:hidden; font-variant-numeric:tabular-nums; }
+.digitReel { display:flex; flex-direction:column; transform:var(--roll-end); }
+.digitReel>span { display:block; height:1.15em; flex-shrink:0; }
+.digitStill { display:none; }
+.universe[data-running="true"] .digitReel { animation:universe-roll 2.6s cubic-bezier(.16,1,.3,1) both; animation-delay:var(--roll-delay); }
+.universe[data-running="true"] .rollDelayed .digitReel { animation-delay:calc(4s + var(--roll-delay)); }
+@keyframes universe-drift { from { transform:translate(0,0); } to { transform:translate(var(--loop-x),var(--loop-y)); } }
+@keyframes universe-connect { 0%,8% { stroke-dashoffset:1; } 58%,92% { stroke-dashoffset:0; opacity:1; } 100% { stroke-dashoffset:0; opacity:0; } }
+@keyframes universe-travel { 0%,8% { offset-distance:0%; opacity:0; } 12% { opacity:1; } 58% { offset-distance:100%; opacity:1; } 64%,100% { offset-distance:100%; opacity:0; } }
+@keyframes universe-roll { from { transform:translateY(0); } to { transform:var(--roll-end); } }
+@media(prefers-reduced-motion:reduce) {
+ .universeLoop,.universeConnector,.universeTraveller,.universe[data-running="true"] .digitReel { animation:none; }
+ .universeTraveller,.digitReel { display:none; }
+ .digitStill { display:block; }
+ .universeConnector { stroke-dashoffset:0; }
+}

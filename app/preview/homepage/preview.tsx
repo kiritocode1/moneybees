@@ -7,6 +7,7 @@ import SiteNavigation from "@/components/ui/site-navigation";
 import s from "./preview.module.css";
 import ResearchChart from "./research-chart";
 import PreviewFooter from "./preview-footer";
+import SelectionUniverse from "./selection-universe";
 
 const stages = [
   { label: "Discover", heading: "Which businesses deserve\na closer look?", copy: "We screen companies for size, financial fundamentals and management quality before committing to deeper research.", number: "~6,000", definition: "companies in the starting universe", detail: "~1,200 investable · ~350 shortlisted", note: "01 / The starting universe" },
@@ -103,20 +104,7 @@ export default function HomepagePreview() {
 
           <ResearchSection />
 
-          <section id="universe" className={s.universe}>
-            <div className={s.universeMeta}><span>Moneybee</span><span>The selection process</span><span>Queenbee PMS</span></div>
-            <h2>A window into<br />our selection process.</h2>
-            <svg viewBox="0 0 1400 790" preserveAspectRatio="xMidYMid slice" className={s.universeDrawing} fill="none" aria-hidden="true"><g stroke="currentColor" strokeWidth="1.6" strokeLinecap="round">
-              <path d="M955 -47C790 60 879 394 1052 586C1240 795 1502 768 1437 482C1399 313 1173 -90 1047 -62" />
-              <path d="M724 439C709 232 928 252 1020 482C1126 749 945 788 851 660" />
-              <path d="M609 552C550 363 732 411 817 583C899 750 810 788 745 758" />
-              <path d="M565 670C475 538 624 487 670 668C688 735 676 757 654 767" />
-              <path d="M320 529C339 778 865 738 1103 424" />
-            </g></svg>
-            <div className={s.universeStart}><strong>~6,000</strong><span>companies in the<br />starting research universe</span></div>
-            <div className={s.universeEnd}><strong>~20</strong><span>holdings in the<br />PMS portfolio</span></div>
-            <div className={s.universeBottom}><p>~1,200 investable <b>·</b> ~350 shortlisted <b>·</b> &gt;100 analysed <b>·</b> ~75 investment ideas</p><small>Source: Moneybee Group Profile, April 2026, p. 13. Approximate company counts. Draft for review.</small></div>
-          </section>
+          <SelectionUniverse />
 
           <section id="products" className={s.products}>
             <div className={s.productHeading}><p className={s.eyebrow}>Ways to invest</p><h2>How would you<br />hold your investment?</h2></div>
