@@ -7,9 +7,9 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import s from "./home-story.module.css";
 
 const chapters = [
-  { label: "The businesses", text: "We mainly invest in brick and mortar companies, traditional businesses that we understand.", image: "/preview/moneybee/story/workplace.avif" },
-  { label: "The opportunity", text: "We focus on small companies where we can understand the downside and which have huge potential to grow.", image: "/preview/moneybee/story/workplace.avif" },
-  { label: "The work", text: "Annual reports, management meetings and plant visits help us decide what a business is worth. We keep reviewing that decision while we hold it.", image: "/preview/moneybee/story/workplace.avif" },
+  { label: "The businesses", text: "We mainly invest in brick and mortar companies, traditional businesses that we understand.", image: "/preview/moneybee/story/businesses.jpg" },
+  { label: "The opportunity", text: "We focus on small companies where we can understand the downside and which have huge potential to grow.", image: "/preview/moneybee/story/opportunity.jpg" },
+  { label: "The work", text: "Annual reports, management meetings and plant visits help us decide what a business is worth. We keep reviewing that decision while we hold it.", image: "/preview/moneybee/story/research.jpg" },
 ] as const;
 
 export function MoneybeeIntroduction() {
@@ -64,8 +64,8 @@ export function BusinessStory() {
         </article>)}</div>
         <svg viewBox="0 0 180 120" className={s.motif} aria-hidden="true">{[0, 12, 30, 54, 84, 120].map((x, i) => <rect key={x} x={x} y="0" width={4 + i * 3} height="120" fill="currentColor" />)}</svg>
       </div>
-      <div className={s.storyImages} aria-hidden="true">{chapters.map((chapter, index) => <div key={chapter.label} className={s.storyPanel} data-story-panel>
-        <Image src={chapter.image} alt="" fill sizes="(max-width: 991px) 100vw, 45vw" style={{ objectPosition: index === 2 ? "75% center" : index === 1 ? "25% center" : "center" }} />
+      <div className={s.storyImages} aria-hidden="true">{chapters.map(chapter => <div key={chapter.label} className={s.storyPanel} data-story-panel>
+        <Image src={chapter.image} alt="" fill sizes="(max-width: 991px) 100vw, 45vw" style={{ objectPosition: "center" }} />
       </div>)}</div>
     </div>
   </section>;

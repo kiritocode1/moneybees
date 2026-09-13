@@ -6,6 +6,7 @@ import Link from "next/link";
 import SiteNavigation from "@/components/ui/site-navigation";
 import s from "./preview.module.css";
 import ResearchChart from "./research-chart";
+import SelectionUniverse from "./selection-universe";
 import PreviewFooter from "./preview-footer";
 import { MoneybeeIntroduction, BusinessStory, MoneybeeNumbers, InvestmentExamples, TeamSection } from "./home-story";
 
@@ -103,6 +104,7 @@ export default function HomepagePreview() {
 
           <MoneybeeIntroduction />
           <BusinessStory />
+          <SelectionUniverse />
           <ResearchSection />
 
           <MoneybeeNumbers />
