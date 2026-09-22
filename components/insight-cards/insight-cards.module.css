@@ -1,0 +1,268 @@
+/*
+ * Card chrome. Every measurement here is taken off the source capture, which
+ * was recorded at 1916px wide with the cards at their natural size, so the
+ * numbers are 1:1 with the reference rather than rescaled.
+ */
+
+.row {
+  display: flex;
+  gap: 22px;
+  justify-content: center;
+  padding: 60px 22px;
+  background: #28282a;
+  perspective: 1400px;
+}
+
+.card {
+  /* Resting palette. Hover swaps these four and everything inside follows. */
+  --surface: #1b1b1e;
+  --ink: #e4e0da;
+  --ink-dim: rgba(228, 224, 218, 0.34);
+  --stroke: rgba(240, 214, 200, 0.5);
+  --face: #1d1d21;
+  --face-lit: #232327;
+  --accent: #eb5a3c;
+  --lamp: #eb5a3c;
+  --accent-wall: #b8422a;
+  --speck: rgba(240, 220, 205, 0.38);
+  /* Emissive in the dark state, a cast shadow in the light one. */
+  --bloom: 0.55;
+  --drop: 0;
+
+  position: relative;
+  width: 450px;
+  height: 561px;
+  flex: 0 0 auto;
+  background: var(--surface);
+  /* Chamfered, not rounded: 14px 45-degree cuts on all four corners. */
+  clip-path: polygon(
+    14px 0,
+    calc(100% - 14px) 0,
+    100% 14px,
+    100% calc(100% - 14px),
+    calc(100% - 14px) 100%,
+    14px 100%,
+    0 calc(100% - 14px),
+    0 14px
+  );
+  transform-style: preserve-3d;
+  transform: rotateX(calc(var(--tilt-y, 0) * -8deg))
+    rotateY(calc(var(--tilt-x, 0) * 7deg));
+  transition:
+    background-color 200ms linear,
+    transform 220ms ease-out;
+  will-change: transform;
+}
+
+/* While the pointer is inside, the tilt follows it frame by frame, so the
+   transform must not lag behind with an easing of its own. */
+.card[data-lit="true"] {
+  --surface: #e2dbd3;
+  --ink: #17161a;
+  --ink-dim: rgba(23, 22, 26, 0.36);
+  --stroke: rgba(40, 34, 30, 0.75);
+  --face: #f1ece5;
+  --face-lit: #ddd4c9;
+  --lamp: #f6a893;
+  --accent-wall: #d2694c;
+  --speck: rgba(40, 34, 30, 0.3);
+  --bloom: 0;
+  --drop: 0.2;
+  transition:
+    background-color 200ms linear,
+    transform 0ms;
+}
+
+.header {
+  position: absolute;
+  inset: 0 53px auto 54px;
+  top: 47px;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.title {
+  margin: 0;
+  font-family: var(--font-rethink-sans), "Helvetica Neue", Arial, sans-serif;
+  font-size: 34px;
+  font-weight: 700;
+  letter-spacing: -0.021em;
+  line-height: 1;
+  color: var(--ink);
+  transition: color 200ms linear;
+}
+
+.index {
+  font-family: ui-monospace, "SFMono-Regular", "Menlo", monospace;
+  font-size: 13px;
+  letter-spacing: 0.06em;
+  color: var(--ink-dim);
+  transition: color 200ms linear;
+}
+
+/* The four crop marks around the figure. 14px arms, inset 53px from the card
+   edges, 130px below the top and 52px above the bottom. */
+.bracket {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border: 1.5px solid var(--ink);
+  opacity: 0.55;
+  transition: border-color 200ms linear;
+}
+
+.bracket[data-corner="tl"] {
+  top: 130px;
+  left: 53px;
+  border-right: 0;
+  border-bottom: 0;
+}
+
+.bracket[data-corner="tr"] {
+  top: 130px;
+  right: 53px;
+  border-left: 0;
+  border-bottom: 0;
+}
+
+.bracket[data-corner="bl"] {
+  bottom: 52px;
+  left: 53px;
+  border-right: 0;
+  border-top: 0;
+}
+
+.bracket[data-corner="br"] {
+  bottom: 52px;
+  right: 53px;
+  border-left: 0;
+  border-top: 0;
+}
+
+.figure {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+/* ------------------------------------------------------------ figure ink --- */
+
+.figure :global(.fig-face) {
+  fill: var(--face);
+  stroke: var(--stroke);
+  stroke-width: 1.15;
+  stroke-linejoin: round;
+  transition:
+    fill 200ms linear,
+    stroke 200ms linear;
+}
+
+.figure :global(.fig-face--lit) {
+  fill: var(--face-lit);
+}
+
+.figure :global(.fig-outline) {
+  fill: none;
+  stroke: var(--stroke);
+  stroke-width: 1.15;
+  transition: stroke 200ms linear;
+}
+
+.figure :global(.fig-ground) {
+  fill: none;
+  stroke: var(--stroke);
+  stroke-width: 1.4;
+  stroke-linecap: round;
+  opacity: 0.65;
+  transition: stroke 200ms linear;
+}
+
+.figure :global(.fig-tick) {
+  stroke: var(--stroke);
+  stroke-width: 1.4;
+  stroke-linecap: round;
+}
+
+.figure :global(.fig-accent-face) {
+  fill: var(--accent);
+  stroke: var(--accent);
+  stroke-width: 1.15;
+  stroke-linejoin: round;
+}
+
+/* The side walls of a highlighted wedge, a step darker than its top face so the
+   solid still reads as lit from above. */
+.figure :global(.fig-accent-wall) {
+  fill: var(--accent-wall);
+  stroke: var(--accent-wall);
+  stroke-width: 1.15;
+  stroke-linejoin: round;
+  transition:
+    fill 200ms linear,
+    stroke 200ms linear;
+}
+
+.figure :global(.fig-lamp-wall) {
+  fill: var(--lamp);
+  stroke: var(--lamp);
+  stroke-width: 1.15;
+  stroke-linejoin: round;
+  transition:
+    fill 200ms linear,
+    stroke 200ms linear;
+}
+
+/* Emissive pool under the pie in the dark state; the light state replaces it
+   with a cast shadow, so it fades out rather than inverting. */
+.figure :global(.fig-bloom) {
+  fill: url(#insight-bloom);
+  opacity: var(--bloom);
+  transition: opacity 200ms linear;
+}
+
+.figure :global(.fig-lamp) {
+  fill: var(--accent);
+  stroke: var(--accent);
+  stroke-width: 1.15;
+}
+
+.figure :global(.fig-marker) {
+  fill: var(--accent);
+  stroke: rgba(255, 255, 255, 0.55);
+  stroke-width: 1.2;
+}
+
+.figure :global(.fig-marker-glow) {
+  fill: url(#insight-glow);
+}
+
+.figure :global(.fig-beam) {
+  fill: url(#insight-beam);
+}
+
+.figure :global(.fig-beam-dot) {
+  fill: var(--accent);
+}
+
+.speck {
+  fill: var(--speck);
+  transition: fill 200ms linear;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card,
+  .card[data-lit="true"] {
+    transition: background-color 200ms linear;
+    transform: none;
+  }
+}
+
+@media (max-width: 1420px) {
+  .row {
+    flex-wrap: wrap;
+  }
+}
