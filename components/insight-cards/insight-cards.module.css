@@ -5,7 +5,8 @@
  */
 
 .row {
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(3, 450px);
   gap: 22px;
   justify-content: center;
   padding: 60px 22px;
@@ -56,7 +57,8 @@
 
 /* While the pointer is inside, the tilt follows it frame by frame, so the
    transform must not lag behind with an easing of its own. */
-.card[data-lit="true"] {
+.card[data-lit="true"],
+.card:focus-visible {
   --surface: #e2dbd3;
   --ink: #17161a;
   --ink-dim: rgba(23, 22, 26, 0.36);
@@ -248,6 +250,37 @@
   fill: var(--accent);
 }
 
+.figure :global(.fig-data-dot) {
+  fill: var(--stroke);
+  transition: fill 200ms linear;
+}
+
+.figure :global(.fig-label) {
+  fill: var(--ink-dim);
+  font-family: ui-monospace, "SFMono-Regular", "Menlo", monospace;
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  transition: fill 200ms linear;
+}
+
+.figure :global(.fig-label--strong) {
+  fill: var(--ink);
+  font-size: 14px;
+}
+
+.figure :global(.fig-route) {
+  fill: none;
+  stroke: var(--stroke);
+  stroke-width: 1.15;
+  stroke-linejoin: round;
+  transition: stroke 200ms linear;
+}
+
+.figure :global(.fig-route--active) {
+  stroke: var(--accent);
+  filter: drop-shadow(0 0 7px color-mix(in srgb, var(--accent) 65%, transparent));
+}
+
 .speck {
   fill: var(--speck);
   transition: fill 200ms linear;
@@ -255,7 +288,8 @@
 
 @media (prefers-reduced-motion: reduce) {
   .card,
-  .card[data-lit="true"] {
+  .card[data-lit="true"],
+  .card:focus-visible {
     transition: background-color 200ms linear;
     transform: none;
   }
@@ -263,6 +297,25 @@
 
 @media (max-width: 1420px) {
   .row {
-    flex-wrap: wrap;
+    grid-template-columns: repeat(2, 450px);
+  }
+}
+
+@media (max-width: 950px) {
+  .row {
+    grid-template-columns: 450px;
+  }
+}
+
+@media (max-width: 494px) {
+  .row {
+    grid-template-columns: minmax(0, 450px);
+    padding-inline: 12px;
+  }
+
+  .card {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 450 / 561;
   }
 }

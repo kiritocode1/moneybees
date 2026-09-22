@@ -14,6 +14,12 @@ export default function InsightCardsPreview() {
           { title: "Productive days", figure: "bars" },
           { title: "Spending patterns", figure: "pie" },
           { title: "Busiest hours", figure: "beacon" },
+          { title: "Wealth comparison", figure: "wealth" },
+          { title: "Research selection", figure: "research" },
+          { title: "Historical picks", figure: "pyramid" },
+          { title: "Business growth", figure: "growth" },
+          { title: "Risk & process", figure: "risk" },
+          { title: "Fund allocation", figure: "allocation" },
         ]}
       />
     </main>

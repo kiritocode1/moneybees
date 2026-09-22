@@ -14,7 +14,7 @@ import {
   SQUASH,
   FRONT_FROM,
   FRONT_TO,
-} from "./geometry";
+} from "@/components/iso/geometry";
 
 /**
  * The figures are driven by hover, not by mount.
@@ -33,7 +33,7 @@ import {
 const SPIN_UP = 0.1;
 const SPIN_DOWN = 0.38;
 
-function useFigureFrame(active: boolean, draw: (seconds: number) => void) {
+export function useFigureFrame(active: boolean, draw: (seconds: number) => void) {
   const drawRef = useRef(draw);
   const activeRef = useRef(active);
   // Synced in effects rather than during render: the rAF loop reads both every

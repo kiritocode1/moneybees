@@ -3,8 +3,25 @@
 import { useRef, useState } from "react";
 import styles from "./insight-cards.module.css";
 import { BarsFigure, BeaconFigure, PieFigure } from "./figures";
+import {
+  AllocationFigure,
+  GrowthFigure,
+  PyramidFigure,
+  ResearchFigure,
+  RiskFigure,
+  WealthFigure,
+} from "./moneybee-figures";
 
-type FigureKind = "bars" | "pie" | "beacon";
+type FigureKind =
+  | "bars"
+  | "pie"
+  | "beacon"
+  | "wealth"
+  | "research"
+  | "pyramid"
+  | "growth"
+  | "risk"
+  | "allocation";
 
 export type InsightCard = {
   title: string;
@@ -15,7 +32,13 @@ const FIGURES = {
   bars: BarsFigure,
   pie: PieFigure,
   beacon: BeaconFigure,
-} as const;
+  wealth: WealthFigure,
+  research: ResearchFigure,
+  pyramid: PyramidFigure,
+  growth: GrowthFigure,
+  risk: RiskFigure,
+  allocation: AllocationFigure,
+} satisfies Record<FigureKind, React.ComponentType<{ active: boolean }>>;
 
 /**
  * Fixed speckle field behind each figure. Seeded so it never shifts on render,
@@ -67,6 +90,9 @@ function Card({ title, figure, index }: InsightCard & { index: number }) {
       ref={ref}
       className={styles.card}
       data-lit={lit}
+      tabIndex={0}
+      onFocus={() => setLit(true)}
+      onBlur={release}
       onPointerEnter={() => setLit(true)}
       onPointerMove={track}
       onPointerLeave={release}
