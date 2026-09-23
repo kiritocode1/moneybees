@@ -97,69 +97,111 @@ export function WealthFigure({ active }: FigureProps) {
 const RESEARCH_PLANES = [132, 108, 86, 66, 48, 29] as const;
 const RESEARCH_COUNTS = [13, 10, 8, 6, 4, 1] as const;
 const RESEARCH_Y = [216, 264, 311, 356, 399, 440] as const;
+const RESEARCH_LAST = RESEARCH_PLANES.length - 1;
+const RESEARCH_STEP = 0.85;
+const RESEARCH_HOLD = 1.1;
+const RESEARCH_FADE = 0.5;
+const RESEARCH_CYCLE = RESEARCH_LAST * RESEARCH_STEP + RESEARCH_HOLD + RESEARCH_FADE;
+const RESEARCH_DOT = 2;
+const RESEARCH_FINAL_DOT = 9;
+
+/** Screen position of dot `index` on layer `stage`, matching the static layer dots. */
+function researchDot(stage: number, index: number): Point {
+  const count = RESEARCH_COUNTS[stage];
+  const spread = Math.min(17, (RESEARCH_PLANES[stage] * 1.5) / count);
+  return [
+    CENTRE_X + (index - (count - 1) / 2) * spread,
+    RESEARCH_Y[stage] + (count === 1 ? 0 : index % 2 === 0 ? -3 : 3),
+  ];
+}
+
+/**
+ * Where each of the top layer's dots lands on every layer below. A layer with
+ * fewer dots takes several arrivals on one position, so the dots merge as they
+ * fall until all 13 share the single dot on the last layer.
+ */
+const RESEARCH_PATHS = Array.from({ length: RESEARCH_COUNTS[0] }, (_, particle) =>
+  RESEARCH_COUNTS.map((count, stage) =>
+    researchDot(stage, Math.round((particle * (count - 1)) / (RESEARCH_COUNTS[0] - 1))),
+  ),
+);
 
 export function ResearchFigure({ active }: FigureProps) {
   const markerRef = useRef<SVGGElement | null>(null);
   const planesRef = useRef<(SVGPathElement | null)[]>([]);
-  const dotGroupsRef = useRef<(SVGGElement | null)[]>([]);
+  const particlesRef = useRef<(SVGCircleElement | null)[]>([]);
 
   useFigureFrame(active, (time) => {
-    const raw = (time / 1.05) % (RESEARCH_PLANES.length * 2 - 2);
-    const position = raw < RESEARCH_PLANES.length ? raw : RESEARCH_PLANES.length * 2 - 2 - raw;
-    const low = Math.floor(position);
-    const high = Math.min(RESEARCH_PLANES.length - 1, low + 1);
-    const blend = easeInOut(position - low);
-    const y = RESEARCH_Y[low] + (RESEARCH_Y[high] - RESEARCH_Y[low]) * blend;
-    markerRef.current?.setAttribute("transform", `translate(${CENTRE_X} ${y.toFixed(2)})`);
+    const phase = time % RESEARCH_CYCLE;
+    const travel = RESEARCH_LAST * RESEARCH_STEP;
+    const step = Math.min(RESEARCH_LAST, phase / RESEARCH_STEP);
+    const low = Math.min(RESEARCH_LAST - 1, Math.floor(step));
+    const blend = easeInOut(step - low);
+    const position = low + blend;
+    // Fade in at the top, hold the merged dot at the bottom, fade out, repeat.
+    const fadeIn = Math.min(1, phase / 0.25);
+    const fadeOut = 1 - Math.max(0, (phase - travel - RESEARCH_HOLD) / RESEARCH_FADE);
+    const visibility = Math.min(fadeIn, fadeOut);
+
+    particlesRef.current.forEach((particle, index) => {
+      if (!particle) return;
+      const route = RESEARCH_PATHS[index];
+      const [x0, y0] = route[low];
+      const [x1, y1] = route[low + 1];
+      particle.setAttribute("cx", (x0 + (x1 - x0) * blend).toFixed(2));
+      particle.setAttribute("cy", (y0 + (y1 - y0) * blend).toFixed(2));
+      particle.setAttribute("r", (RESEARCH_DOT + position * 0.5).toFixed(2));
+      particle.style.opacity = visibility.toFixed(3);
+    });
+
+    // The orange dot grows as the last merge arrives, then fades with the cycle.
+    const arrival = Math.max(0, position - (RESEARCH_LAST - 1));
+    markerRef.current?.setAttribute(
+      "transform",
+      `translate(${CENTRE_X} ${RESEARCH_Y[RESEARCH_LAST]}) scale(${(arrival * fadeOut).toFixed(3)})`,
+    );
 
     planesRef.current.forEach((plane, index) => {
       if (!plane) return;
       plane.style.opacity = (0.25 + Math.max(0, 1 - Math.abs(position - index)) * 0.75).toFixed(3);
-    });
-    dotGroupsRef.current.forEach((group, index) => {
-      if (!group) return;
-      group.style.opacity = (0.22 + Math.max(0, 1 - Math.abs(position - index) * 0.6) * 0.58).toFixed(3);
     });
   });
 
   return (
     <g>
       <path className="fig-beam" d="M225 190L238 456L212 456Z" />
-      {RESEARCH_PLANES.map((radius, stage) => {
-        const y = RESEARCH_Y[stage];
-        return (
-          <g key={radius}>
-            <path
-              ref={(element) => {
-                planesRef.current[stage] = element;
-              }}
-              className="fig-outline"
-              d={diamond(CENTRE_X, y, radius, radius * SQUASH)}
-            />
-            <g
-              ref={(element) => {
-                dotGroupsRef.current[stage] = element;
-              }}
-            >
-              {Array.from({ length: RESEARCH_COUNTS[stage] }, (_, index) => {
-                const spread = Math.min(17, (radius * 1.5) / RESEARCH_COUNTS[stage]);
-                return (
-                  <circle
-                    key={index}
-                    className="fig-data-dot"
-                    cx={CENTRE_X + (index - (RESEARCH_COUNTS[stage] - 1) / 2) * spread}
-                    cy={y + (index % 2 === 0 ? -3 : 3)}
-                    r="2"
-                  />
-                );
-              })}
-            </g>
+      {RESEARCH_PLANES.map((radius, stage) => (
+        <g key={radius}>
+          <path
+            ref={(element) => {
+              planesRef.current[stage] = element;
+            }}
+            className="fig-outline"
+            d={diamond(CENTRE_X, RESEARCH_Y[stage], radius, radius * SQUASH)}
+          />
+          <g opacity="0.28">
+            {Array.from({ length: RESEARCH_COUNTS[stage] }, (_, index) => {
+              const [cx, cy] = researchDot(stage, index);
+              return <circle key={index} className="fig-data-dot" cx={cx} cy={cy} r={RESEARCH_DOT} />;
+            })}
           </g>
-        );
-      })}
-      <g ref={markerRef} transform={`translate(${CENTRE_X} ${RESEARCH_Y[2]})`}>
+        </g>
+      ))}
+      {RESEARCH_PATHS.map((route, index) => (
+        <circle
+          key={index}
+          ref={(element) => {
+            particlesRef.current[index] = element;
+          }}
+          className="fig-data-dot"
+          cx={route[0][0]}
+          cy={route[0][1]}
+          r={RESEARCH_DOT}
+        />
+      ))}
+      <g ref={markerRef} transform={`translate(${CENTRE_X} ${RESEARCH_Y[RESEARCH_LAST]}) scale(0)`}>
         <circle className="fig-marker-glow" r="52" />
-        <circle className="fig-marker" r="9" />
+        <circle className="fig-marker" r={RESEARCH_FINAL_DOT} />
       </g>
       <text className="fig-label" x="67" y="220">~6,000</text>
       <text className="fig-label" x="281" y="447">~20</text>
@@ -190,12 +232,21 @@ const PYRAMID_TIERS: PyramidTier[] = [
   { baseRadius: 28, topRadius: 0, bottomZ: 144, topZ: 184 },
 ];
 const PYRAMID_NORMALS = [Math.PI / 2, Math.PI, -Math.PI / 2, 0] as const;
-const PYRAMID_SPIN = 0.62;
+const PYRAMID_SPIN = 0.9;
+const PYRAMID_APEX_TIER = PYRAMID_TIERS[PYRAMID_TIERS.length - 1];
 
 function projectAt(x: number, y: number, z: number, rotation: number): Point {
   const cosine = Math.cos(rotation);
   const sine = Math.sin(rotation);
   return [x * cosine - y * sine, (x * sine + y * cosine) * SQUASH - z];
+}
+
+/** Twice the signed area of a projected polygon; negative faces the viewer. */
+function winding(points: readonly Point[]) {
+  return points.reduce((sum, [x, y], index) => {
+    const [nextX, nextY] = points[(index + 1) % points.length];
+    return sum + x * nextY - nextX * y;
+  }, 0);
 }
 
 function squareCorners(radius: number, z: number, rotation: number) {
@@ -212,9 +263,11 @@ export function PyramidFigure({ active }: FigureProps) {
   const glowRef = useRef<SVGEllipseElement | null>(null);
 
   useFigureFrame(active, (time) => {
-    // The only animated value is rotation. The shared hover clock advances at
-    // a constant rate while active, then loses energy and freezes on leave.
-    // Keeping the apex orange gives the turn a stable orientation marker.
+    // Rotation is the only animated value. Faces are culled by the winding of
+    // their projected outline rather than by their plan normal: the slopes lean
+    // back toward the viewer, so a face stays visible for a while after its
+    // plan normal turns side-on, and hiding it there made the silhouette jump.
+    // Shade follows each face's angle to the light continuously.
     const rotation = Math.PI / 4 + time * PYRAMID_SPIN;
     PYRAMID_TIERS.forEach((tier, index) => {
       const group = tierRefs.current[index];
@@ -222,11 +275,15 @@ export function PyramidFigure({ active }: FigureProps) {
       const bottom = squareCorners(tier.baseRadius, tier.bottomZ, rotation);
       const top = squareCorners(tier.topRadius, tier.topZ, rotation);
       const children = Array.from(group.children) as SVGPathElement[];
-      const strength = index === PYRAMID_TIERS.length - 1 ? 1 : 0;
+      const strength = tier === PYRAMID_APEX_TIER ? 1 : 0;
+      // Culling uses the whole face, apex to base, so the apex tier's
+      // zero-width top does not make the test degenerate.
+      const apex = projectAt(0, 0, PYRAMID_APEX_TIER.topZ, rotation);
+      const base = squareCorners(PYRAMID_TIERS[0].baseRadius, 0, rotation);
       const sides = PYRAMID_NORMALS.map((normal, side) => ({
         side,
-        visible: Math.sin(normal + rotation) > 0,
-        lit: Math.cos(normal + rotation) < 0,
+        visible: winding([apex, base[(side + 1) % 4], base[side]]) < 0,
+        shade: (1 + Math.cos(normal + rotation)) / 2,
         depth: (bottom[side][1] + bottom[(side + 1) % 4][1]) / 2,
       }))
         .filter((face) => face.visible)
@@ -235,16 +292,19 @@ export function PyramidFigure({ active }: FigureProps) {
       for (let slot = 0; slot < 4; slot += 1) {
         const face = sides[slot];
         const neutral = children[slot];
-        const accent = children[slot + 4];
+        const shade = children[slot + 4];
+        const accent = children[slot + 8];
         if (!face) {
           neutral.setAttribute("d", "");
+          shade.setAttribute("d", "");
           accent.setAttribute("d", "");
           continue;
         }
         const side = face.side;
         const d = path([top[side], top[(side + 1) % 4], bottom[(side + 1) % 4], bottom[side]]);
         neutral.setAttribute("d", d);
-        neutral.setAttribute("class", face.lit ? "fig-face" : "fig-face fig-face--lit");
+        shade.setAttribute("d", d);
+        shade.style.opacity = face.shade.toFixed(3);
         accent.setAttribute("d", d);
         accent.style.opacity = strength.toFixed(3);
       }
@@ -253,16 +313,13 @@ export function PyramidFigure({ active }: FigureProps) {
       const visibleBoundary = sides
         .map(({ side }) => path([top[side], top[(side + 1) % 4]], false))
         .join("");
-      children[8].setAttribute("d", tier.topRadius === 0 ? "" : visibleBoundary);
-      children[9].setAttribute("d", tier.topRadius === 0 ? "" : visibleBoundary);
-      children[9].style.opacity = strength.toFixed(3);
+      children[12].setAttribute("d", tier.topRadius === 0 ? "" : visibleBoundary);
+      children[13].setAttribute("d", tier.topRadius === 0 ? "" : visibleBoundary);
+      children[13].style.opacity = strength.toFixed(3);
     });
 
-    const apexTier = PYRAMID_TIERS.at(-1);
-    if (apexTier) {
-      glowRef.current?.setAttribute("cy", (GROUND_Y - apexTier.topZ - 2).toFixed(2));
-      glowRef.current?.setAttribute("rx", (apexTier.baseRadius * 0.9).toFixed(2));
-    }
+    glowRef.current?.setAttribute("cy", (GROUND_Y - PYRAMID_APEX_TIER.topZ - 2).toFixed(2));
+    glowRef.current?.setAttribute("rx", (PYRAMID_APEX_TIER.baseRadius * 0.9).toFixed(2));
   });
 
   return (
@@ -277,7 +334,10 @@ export function PyramidFigure({ active }: FigureProps) {
           }}
           transform={`translate(${CENTRE_X} ${GROUND_Y})`}
         >
-          <path /><path /><path /><path />
+          <path className="fig-face" /><path className="fig-face" />
+          <path className="fig-face" /><path className="fig-face" />
+          <path className="fig-face fig-face--lit" /><path className="fig-face fig-face--lit" />
+          <path className="fig-face fig-face--lit" /><path className="fig-face fig-face--lit" />
           <path className="fig-accent-wall" /><path className="fig-accent-wall" />
           <path className="fig-accent-wall" /><path className="fig-accent-wall" />
           <path className="fig-outline" />
