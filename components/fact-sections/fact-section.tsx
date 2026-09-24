@@ -111,7 +111,13 @@ export function SectionHeading({ id, label, heading, lead }: { id: string; label
     <div className="px-[max(32px,calc((100vw_-_1480px)/2))] pt-[120px] max-[600px]:px-[22px] max-[600px]:pt-[72px]">
       <BracketLabel>{label}</BracketLabel>
       <div className="mt-[18px] grid grid-cols-[1fr_.8fr] items-end gap-[60px] max-[900px]:grid-cols-1 max-[900px]:gap-[28px]">
-        <h2 id={`${id}-heading`} className="text-[clamp(3.6rem,6.4vw,7rem)] font-light leading-[.92] tracking-[-.06em]">
+        {/* Deck lines run from three words to a full sentence; a long one steps down a size so it holds four lines at most. */}
+        <h2
+          id={`${id}-heading`}
+          className={`font-light tracking-[-.055em] ${
+            heading.length > 56 ? "text-[clamp(2.4rem,4.2vw,4.6rem)] leading-[.98]" : "text-[clamp(3.6rem,6.4vw,7rem)] leading-[.92]"
+          }`}
+        >
           {heading}
         </h2>
         {lead && <p className="max-w-[440px] text-[13px] leading-[1.6] text-[rgba(0,0,0,.7)]">{lead}</p>}

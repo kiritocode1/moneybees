@@ -13,7 +13,7 @@ import {
   RESEARCH_Y,
   researchDot,
 } from "@/components/insight-cards/moneybee-figures";
-import { RESEARCH_SOURCE, RESEARCH_STAGES } from "@/lib/insights";
+import { HEADINGS, RESEARCH_LEAD, RESEARCH_SOURCE, RESEARCH_STAGES } from "@/lib/insights";
 import FactSection, {
   Bloom,
   Eyebrow,
@@ -160,24 +160,23 @@ export default function ResearchSection() {
   return (
     <FactSection
       id="research"
-      label="Research selection"
-      heading="How ~6,000 companies become ~20"
-      lead="About 1,200 of the roughly 6,000 companies in the universe fall in the size range Moneybee invests in, and about 20 of those end up in a portfolio."
+      label="Stock selection process"
+      heading={HEADINGS.research}
+      lead={RESEARCH_LEAD}
       intro={
         <div className="mt-[72px]">
           <SplitFrame>
             <Panel className="min-h-0">
-              <DotField sentence="Of about 6,000 companies, about 20 make it into the portfolio." keep={20} />
+              <DotField sentence="From universe of ~6000 companies" keep={20} />
             </Panel>
             <Panel className="grid place-items-center">
-              <BracketCaption text="Most of the work is deciding what not to own" className="w-full" />
+              <BracketCaption text="Know Venture. Know Gain." className="w-full" />
             </Panel>
           </SplitFrame>
         </div>
       }
       panels={RESEARCH_STAGES.map((_, stage) => ({ part: stage, content: <StagePanel stage={stage} /> }))}
       figure={ResearchFigure}
-      caveat="Company counts are the approximate figures Moneybee gives for its PMS selection process."
       source={RESEARCH_SOURCE}
     />
   );

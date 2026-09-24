@@ -192,9 +192,11 @@ export function BracketCaption({ text, loop = false, className = "" }: { text: s
  * where the lines cross. It stands in for the reference's logo tile, using the
  * square from Moneybee's wordmark.
  */
-export function SplitFrame({ children, cross = true }: { children: ReactNode; cross?: boolean }) {
+export function SplitFrame({ children, cross = true, cols = 2 }: { children: ReactNode; cross?: boolean; cols?: 2 | 3 }) {
   return (
-    <div className="relative grid grid-cols-2 gap-px border-y border-y-[#000] bg-[#000] max-[900px]:grid-cols-1">
+    <div
+      className={`relative grid gap-px border-y border-y-[#000] bg-[#000] max-[900px]:grid-cols-1 ${cols === 3 ? "grid-cols-3" : "grid-cols-2"}`}
+    >
       {children}
       {cross && (
         <span className="pointer-events-none absolute top-1/2 left-1/2 z-[1] h-[14px] w-[14px] -translate-x-1/2 -translate-y-1/2 bg-[#F7A11A] max-[900px]:hidden" />

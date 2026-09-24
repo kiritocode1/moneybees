@@ -105,7 +105,12 @@ function ChapterCard({
   );
 }
 
-export default function ChapterStack() {
+/**
+ * `without` drops chapters by label, for pages where another section already
+ * carries that content (the evolution preview replaces "The record").
+ */
+export default function ChapterStack({ without = [] }: { without?: readonly string[] } = {}) {
+  const chapters = CHAPTERS.filter((chapter) => !without.includes(chapter.label));
   const reduceMotion = useReducedMotion();
   const trackRef = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({
@@ -123,15 +128,15 @@ export default function ChapterStack() {
       ref={trackRef}
       aria-label="What the desk publishes"
       className="relative"
-      style={pinned ? { height: `${CHAPTERS.length * 100}svh` } : undefined}
+      style={pinned ? { height: `${chapters.length * 100}svh` } : undefined}
     >
       <div className={pinned ? "sticky top-0 h-svh overflow-hidden" : ""}>
-        {CHAPTERS.map((chapter, index) => (
+        {chapters.map((chapter, index) => (
           <ChapterCard
             key={chapter.n}
             chapter={chapter}
             index={index}
-            total={CHAPTERS.length}
+            total={chapters.length}
             progress={scrollYProgress}
             pinned={pinned}
           />

@@ -11,11 +11,10 @@ import {
   squareCorners,
   winding,
 } from "@/components/insight-cards/moneybee-figures";
-import { type CaseStudy, PICK_TIERS, PICKS_CAVEAT, PICKS_SOURCE } from "@/lib/insights";
+import { type CaseStudy, HEADINGS, PICK_TIERS, PICKS_CAVEAT, PICKS_LEAD, PICKS_SOURCE } from "@/lib/insights";
 import FactSection, {
   Bloom,
   clamp,
-  Eyebrow,
   r2,
   easeOut,
   FOCUS,
@@ -33,7 +32,9 @@ const APEX = PYRAMID_TIERS[PYRAMID_TIERS.length - 1];
 
 /** PYRAMID_TIERS runs base to apex; PICK_TIERS runs apex to base. */
 const pickFor = (tier: number) => PICK_TIERS[PYRAMID_TIERS.length - 1 - tier];
-const labelFor = (tier: number) => (tier === 0 ? "2× or more" : `Above ${pickFor(tier).multiple}`);
+/** The tier label as the slide prints it, and a short form for the figure. */
+const labelFor = (tier: number) => pickFor(tier).multiple;
+const shortLabel = (tier: number) => pickFor(tier).multiple.replace(" or more", "").replace(" ", "");
 
 /** Paper to a light grey by angle to the light, or the site orange to its wall shade when selected. */
 function faceFill(shade: number, selected: boolean) {
@@ -153,7 +154,7 @@ function PicksFigure({ progress, selected, onSelect }: FigureState) {
                 style={{ filter: active ? LINE_GLOW : "none" }}
               />
               <text x="258" y={y + 4} fontSize="12" fill="#000" fontFamily="ui-monospace, Menlo, monospace" letterSpacing=".04em">
-                {index === 0 ? "2×+" : `>${pickFor(index).multiple}`}
+                {shortLabel(index)}
               </text>
             </g>
           );
@@ -184,9 +185,10 @@ function FinancialsChart({ caseStudy }: { caseStudy: CaseStudy }) {
           <span key={row.year} className="flex-1 text-center">{row.year}</span>
         ))}
       </div>
-      <figcaption className="mt-[14px] text-[11px] leading-[1.5] text-[rgba(0,0,0,.72)]">
-        Revenue ₹{first.revenue} cr to ₹{last.revenue.toLocaleString("en-IN")} cr. Profit after tax{" "}
-        <span className="text-[#000000]">₹{first.profit} cr to ₹{last.profit} cr</span>.
+      <figcaption className="mt-[12px] flex gap-[16px] text-[10px] text-[rgba(0,0,0,.65)]">
+        <span>All Amt in Cr</span>
+        <span><i className="mr-[5px] inline-block h-[8px] w-[8px] bg-[#D9D8D6]" />Revenue {first.revenue} to {last.revenue}</span>
+        <span><i className="mr-[5px] inline-block h-[8px] w-[8px] bg-[#F7A11A]" />PAT {first.profit} to {last.profit}</span>
       </figcaption>
     </figure>
   );
@@ -200,7 +202,6 @@ function TierPanel({ tier }: { tier: number }) {
 
   return (
     <div>
-      <Eyebrow>Multiplied</Eyebrow>
       <PanelTitle>{labelFor(tier)}</PanelTitle>
 
       {typeof picks === "string" ? (
@@ -236,37 +237,31 @@ function TierPanel({ tier }: { tier: number }) {
       {study && (
         <div className="mt-[26px] grid gap-[14px] text-[11px] leading-[1.55] text-[rgba(0,0,0,.72)]">
           {[
-            ["Business", study.business],
-            ["Edge", study.edge],
-            ["Growth plan", study.growth],
+            ["Business Model", study.business],
+            ["Competitive Edge", study.edge],
+            ["Growth Prospect", study.growth],
           ].map(([label, copy]) => (
-            <p key={label} className="grid grid-cols-[86px_1fr] gap-[16px]">
+            <p key={label} className="grid grid-cols-[110px_1fr] gap-[16px]">
               <span className="text-[9px] uppercase tracking-[.1em] text-[rgba(0,0,0,.5)]">{label}</span>
               {copy}
             </p>
           ))}
           <FinancialsChart caseStudy={study} />
-          <small className="text-[9px] text-[rgba(0,0,0,.5)]">{study.source}. ₹ crore.</small>
+          <small className="text-[9px] text-[rgba(0,0,0,.5)]">{study.source}</small>
         </div>
       )}
     </div>
   );
 }
 
-/** Section B, "What the research has found". Panels run base to apex, so it ends on the highest multiple. */
+/** Section B, "Our multibagger picks", the deck's own title for slide 20. Panels run base to apex, so it ends on the highest multiple. */
 export default function PicksSection() {
   return (
     <FactSection
       id="picks"
-      label="Historical picks"
-      heading="What the research has found"
-      lead={
-        <>
-          Moneybee looks for small companies with capable, honest management and a business model that holds up, and
-          tries to own them early. When the business grows, the market eventually prices it differently. These are past
-          PMS holdings from Moneybee&rsquo;s presentations, grouped by how many times each one multiplied.
-        </>
-      }
+      label="Our multibagger picks"
+      heading={HEADINGS.picks}
+      lead={PICKS_LEAD}
       panels={PYRAMID_TIERS.map((_, tier) => ({ part: tier, content: <TierPanel tier={tier} /> }))}
       figure={PicksFigure}
       caveat={PICKS_CAVEAT}

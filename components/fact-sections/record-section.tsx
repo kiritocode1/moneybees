@@ -1,18 +1,14 @@
 "use client";
 
 import { useRef } from "react";
-import { PERIOD_RETURNS, RECORD_METHOD, RECORD_SOURCE, WEALTH } from "@/lib/insights";
+import { HEADINGS, PERIOD_RETURNS, RECORD_CAVEAT, RECORD_LEAD, RECORD_METHOD, RECORD_SOURCE, WEALTH } from "@/lib/insights";
 import { BracketLabel, Eyebrow, r2, SectionFooter, SectionHeading } from "./fact-section";
 import { Panel, SplitFrame, useStageClock } from "./motion-language";
 
-/** ₹ in lakh, written the way the deck writes it: lakh below a crore, crore above. */
-function rupees(lakh: number) {
-  if (lakh >= 100) return `₹${(lakh / 100).toFixed(3)} crore`;
-  return `₹${lakh.toFixed(1).replace(/\.0$/, "")} lakh`;
-}
+/** Rupees in millions, written the way the deck writes them: "Rs. 28.85 Mn". */
+const rupees = (millions: number) => `Rs. ${millions.toFixed(2).replace(/\.00$/, "")} Mn`;
 
 const pct = (value: number) => `${value < 0 ? "−" : ""}${Math.abs(value).toFixed(2)}%`;
-const pp = (value: number) => `${value > 0 ? "+" : value < 0 ? "−" : ""}${Math.abs(value).toFixed(2)} pp`;
 
 const RING_DOTS = 20;
 const COUNT_FOR = 2.6;
@@ -38,7 +34,7 @@ function RingPanel() {
   return (
     <div ref={ref} className="h-full">
       <div className="relative z-[1] p-[28px] max-[600px]:p-[20px]">
-        <BracketLabel>Queenbee PMS, 1 August 2007 to 31 July 2026</BracketLabel>
+        <BracketLabel>Inception Date is August 1, 2007</BracketLabel>
       </div>
       <svg viewBox="0 0 640 380" className="absolute inset-0 h-full w-full" aria-hidden="true">
         {dots.map(({ index, x, y, r }) =>
@@ -51,11 +47,10 @@ function RingPanel() {
       </svg>
       <div className="absolute inset-x-0 top-1/2 -translate-y-[40%] text-center">
         <strong className="block text-[clamp(1.6rem,2.6vw,2.6rem)] font-light tracking-[-.04em] tabular-nums">{rupees(value)}</strong>
-        <span className="mt-[6px] block text-[10px] text-[rgba(0,0,0,.55)]">from ₹10 lakh</span>
+        <span className="mt-[6px] block text-[10px] text-[rgba(0,0,0,.55)]">as of July 31, 2026, from {rupees(WEALTH.start)}</span>
       </div>
       <p className="absolute right-[28px] bottom-[22px] left-[28px] flex justify-between gap-[20px] text-[11px] text-[rgba(0,0,0,.65)] max-[600px]:flex-col max-[600px]:gap-[4px]">
-        <span>The same ₹10 lakh in the S&amp;P BSE 500 TRI: {rupees(WEALTH.benchmark)}</span>
-        <span className="text-[#000000]">{(WEALTH.queenbee / WEALTH.benchmark).toFixed(2)}× the index</span>
+        <span>as opposed to {rupees(WEALTH.benchmark)} from S&amp;P BSE500 TRI</span>
       </p>
     </div>
   );
@@ -82,7 +77,7 @@ function TickerPanel() {
     <div ref={ref} className="h-full">
       <div className="relative z-[1] grid gap-[10px] p-[28px] max-[600px]:p-[20px]">
         <BracketLabel>{period}</BracketLabel>
-        <span className="text-[11px] text-[rgba(0,0,0,.6)]">S&amp;P BSE 500 TRI over the same period: {pct(benchmark)}</span>
+        <span className="text-[11px] text-[rgba(0,0,0,.6)]">S&amp;P BSE 500 TRI {pct(benchmark)}</span>
       </div>
       <div className="absolute right-[-0.3em] bottom-[-0.1em] text-right" aria-hidden="true">
         {rows.map((row, depth) => (
@@ -107,10 +102,9 @@ function PeriodTable() {
     <table className="w-full border-collapse text-left text-[13px]">
       <thead>
         <tr className="border-b border-b-[rgba(0,0,0,.25)] text-[9px] uppercase tracking-[.1em] text-[rgba(0,0,0,.55)]">
-          <th className="py-[10px] font-normal">Period</th>
+          <th className="py-[10px] font-normal">Year</th>
           <th className="py-[10px] text-right font-normal">Queenbee</th>
           <th className="py-[10px] text-right font-normal">S&amp;P BSE 500 TRI</th>
-          <th className="py-[10px] text-right font-normal">Difference</th>
         </tr>
       </thead>
       <tbody>
@@ -119,7 +113,6 @@ function PeriodTable() {
             <td className="py-[12px]">{period}</td>
             <td className="py-[12px] text-right tabular-nums">{pct(queenbee)}</td>
             <td className="py-[12px] text-right tabular-nums text-[rgba(0,0,0,.6)]">{pct(benchmark)}</td>
-            <td className="py-[12px] text-right tabular-nums">{pp(queenbee - benchmark)}</td>
           </tr>
         ))}
       </tbody>
@@ -137,9 +130,9 @@ export default function RecordSection() {
     <section id="record" aria-labelledby="record-heading" className="bg-white">
       <SectionHeading
         id="record"
-        label="The record"
-        heading="What ₹10 lakh became"
-        lead="Queenbee, Moneybee's PMS, measured against the S&P BSE 500 TRI. It compounded at 19.44% a year against 9.90%."
+        label="Wealth creation by Moneybee PMS"
+        heading={HEADINGS.record}
+        lead={RECORD_LEAD}
       />
       <div className="mt-[72px]">
         <SplitFrame>
@@ -153,18 +146,18 @@ export default function RecordSection() {
       </div>
       <div className="grid grid-cols-[1fr_.7fr] gap-[80px] px-[max(32px,calc((100vw_-_1480px)/2))] pt-[72px] pb-[90px] max-[900px]:grid-cols-1 max-[900px]:gap-[40px] max-[600px]:px-[22px]">
         <div>
-          <Eyebrow>Every period, as at 31 July 2026</Eyebrow>
+          <Eyebrow>Return as on July 31, 2026 as per APMI</Eyebrow>
           <div className="mt-[18px]">
             <PeriodTable />
           </div>
         </div>
         <div>
-          <Eyebrow>How the figures are measured</Eyebrow>
+          <Eyebrow>Disclaimer</Eyebrow>
           <p className="mt-[18px] text-[13px] leading-[1.6] text-[rgba(0,0,0,.72)]">{RECORD_METHOD}</p>
         </div>
       </div>
       <SectionFooter
-        caveat="Past performance is not indicative of future results. These are the figures of Queenbee PMS, not of the Flyingbee AIF, which declared its first close in October 2025."
+        caveat={RECORD_CAVEAT}
         source={RECORD_SOURCE}
       />
     </section>
