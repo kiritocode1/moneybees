@@ -81,3 +81,21 @@ body {
     overflow: visible;
   }
 }
+
+/* The footer's word marquee: one full set of words travels its own width, so
+   the doubled row loops without a seam. */
+@keyframes footer-marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.footer-marquee {
+  animation: footer-marquee 60s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .footer-marquee {
+    animation: none;
+  }
+}

@@ -372,3 +372,28 @@ export const HEADINGS = {
   risk: "Prioritizing downside protection over high-risk returns",
   record: "Compounding is the magic that turns small, regular investments into substantial wealth",
 } as const;
+
+/* ------------------------------------------------------------ contact --- */
+
+/** Contact details, AIF presentation p17, as printed. */
+export const CONTACT = {
+  company: "Moneybee Securities Pvt Ltd",
+  address: ["303, Tower A, Peninsula Business Park,", "G. K. Marg, Lower Parel (W), Mumbai 400 013"],
+  phones: ["022 4030 2080", "+91 98672 90143"],
+  website: "www.moneybee.in",
+  emails: [
+    ["Onboarding queries", "customersupportaif@moneybee.in"],
+    ["Product related queries", "marketingaif@moneybee.in"],
+    ["Investor grievance", "grievanceaif@moneybee.in"],
+  ],
+} as const;
+
+/**
+ * SEBI registrations for the two businesses this site covers, AIF
+ * presentation p15. Broking and depository numbers belong to other Moneybee
+ * businesses and stay off this pure-play site.
+ */
+export const REGISTRATIONS = [
+  ["Portfolio Management Services", "INP000001959"],
+  ["Alternative Investment Fund", "IN/AIF3/24-25/1709"],
+] as const;

@@ -16,6 +16,7 @@ import StructureSection from "@/components/fact-sections/structure-section";
 import ChapterStack from "@/components/option-one/chapter-stack";
 import FrameworkRow from "@/components/option-one/framework-row";
 import InterviewCarousel from "@/components/option-one/interview-carousel";
+import SiteFooter from "@/components/footer/site-footer";
 import SiteNavigation from "@/components/ui/site-navigation";
 import { EASE_OUT } from "@/lib/ease";
 
@@ -128,28 +129,6 @@ function SettlingImage({
     >
       {children}
     </motion.div>
-  );
-}
-
-/* Every ground the wordmark sits on is now white or near-white, including the
-   washed photograph behind the fixed header, so it no longer needs a light and
-   a dark variant. */
-function Wordmark({ tagline = false }: { tagline?: boolean }) {
-  return (
-    <div className="flex items-center gap-[12px]">
-      <a
-        href="#top"
-        aria-label="Moneybee home"
-        className={`inline-flex w-max items-center gap-[8px] text-[15px] font-[650] tracking-[-.04em] text-[#000000] no-underline ${FOCUS}`}
-      >
-        Moneybee <span className="h-[7px] w-[7px] bg-[#F7A11A]" />
-      </a>
-      {tagline && (
-        <small className="text-[8px] font-medium uppercase text-[rgba(0,0,0,.6)]">
-          Small steps, Big Outcomes
-        </small>
-      )}
-    </div>
   );
 }
 
@@ -615,69 +594,15 @@ export default function HomepageEvolution() {
           </div>
         </section>
 
-        <footer
-          id="contact"
-          className="mx-auto mb-[32px] min-h-[560px] w-[calc(100%_-_64px)] bg-[#9D9EA1] px-[54px] pt-[60px] pb-[30px] text-[#000000] max-[600px]:w-[calc(100%_-_24px)] max-[600px]:px-[24px] max-[600px]:pt-[42px] max-[600px]:pb-[20px]"
-        >
-          <div className="grid grid-cols-[1fr_auto_60px] items-start gap-[28px] pb-[56px] max-[600px]:grid-cols-[1fr_auto] max-[600px]:gap-[32px]">
-            <Wordmark />
-            <div className="text-right uppercase max-[600px]:col-[1/-1] max-[600px]:row-start-2 max-[600px]:text-left">
-              <p className="text-[10px] font-[650] leading-[1.35]">“Small steps,<br />Big Outcomes.”</p>
-              <small className="mt-[12px] block text-[8px] text-[rgba(0,0,0,.62)]">Moneybee</small>
-            </div>
-            <a
-              href="#contact"
-              aria-label="Schedule a conversation"
-              className={`group grid h-[54px] w-[54px] justify-self-end place-items-center bg-[#000000] text-white no-underline transition-transform duration-200 ease-[ease] hover:translate-x-[2px] hover:-translate-y-[2px] max-[600px]:col-start-2 max-[600px]:row-start-1 ${FOCUS}`}
-            >
-              <ArrowRight size={16} aria-hidden="true" />
-            </a>
-          </div>
-          <div className="grid grid-cols-[1.3fr_repeat(4,1fr)] gap-[50px] pt-[48px] pb-[72px] max-[900px]:grid-cols-2 max-[600px]:grid-cols-2 max-[600px]:gap-x-[20px] max-[600px]:gap-y-[42px]">
-            <div>
-              <span className="mb-[20px] block text-[8px] text-[rgba(0,0,0,.62)]">Our approach</span>
-              <p className="mt-[8px] block text-[10px] leading-[1.5] text-[#000000]">Fundamental research.<br />Long-term ownership.</p>
-            </div>
-            <div>
-              <span className="mb-[20px] block text-[8px] text-[rgba(0,0,0,.62)]">Office</span>
-              <p className="mt-[8px] block text-[10px] leading-[1.5] text-[#000000]">Mumbai, Maharashtra<br />India</p>
-            </div>
-            {[
-              ["Explore", [["Philosophy", "#philosophy"], ["What we do", "#what-we-do"], ["Founder", "#founder"], ["Managing risk", "#risk-rules"], ["Performance", "#performance"]]],
-              ["Regulatory", [["Investor Charter", "#contact"], ["Disclosure Document", "#contact"], ["Grievance redressal", "#contact"], ["SEBI SCORES", "#contact"]]],
-              ["Investors", [["Investor login", "https://www.moneybee.in/register.php"], ["Speak with our team", "#contact"]]],
-            ].map(([heading, links]) => (
-              <div key={heading as string}>
-                <span className="mb-[20px] block text-[8px] text-[rgba(0,0,0,.62)]">{heading as string}</span>
-                {(links as string[][]).map(([label, href]) => (
-                  <a
-                    key={label}
-                    href={href}
-                    className={`mt-[8px] block text-[10px] leading-[1.5] text-[#000000] no-underline transition-colors duration-200 ease-[ease] hover:text-[#F7A11A] ${FOCUS}`}
-                  >
-                    {label}
-                  </a>
-                ))}
-              </div>
-            ))}
-          </div>
-          <div className="flex justify-between gap-[50px] border-t border-t-[rgba(0,0,0,.14)] pt-[24px] max-[600px]:flex-col">
-            <p className="max-w-[760px] text-[8px] leading-[1.5] text-[rgba(0,0,0,.62)]">
-              Investments in securities are subject to market risk, including the loss of principal. Read all related documents carefully before investing. Registration with SEBI does not imply approval or endorsement of the portfolio manager by the Board. Past performance is not indicative of future results.
-            </p>
-            <div className="flex gap-[22px]">
-              {[["Privacy", "#top"], ["Terms", "#top"], ["Back to top ↑", "#top"]].map(([label, href]) => (
-                <a
-                  key={label}
-                  href={href}
-                  className={`text-[8px] text-[#000000] no-underline transition-colors duration-200 ease-[ease] hover:text-[#F7A11A] ${FOCUS}`}
-                >
-                  {label}
-                </a>
-              ))}
-            </div>
-          </div>
-        </footer>
+        <SiteFooter
+          explore={[
+            ["Philosophy", "#philosophy"],
+            ["What we do", "#what-we-do"],
+            ["Founder", "#founder"],
+            ["Managing risk", "#risk-rules"],
+            ["Performance", "#performance"],
+          ]}
+        />
       </main>
     </SiteNavigation>
   );
