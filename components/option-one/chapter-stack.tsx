@@ -39,6 +39,15 @@ const CHAPTERS = [
   },
 ] as const;
 
+/** A chapter's text from elsewhere: a label, a heading, and a paragraph or a row of figures. */
+export type ChapterContent = {
+  label: string;
+  title: string;
+  body?: string;
+  /** Figures shown large under the heading, as [name, value]. */
+  figures?: readonly (readonly [string, string])[];
+};
+
 /**
  * One card in the stack.
  *
@@ -58,6 +67,8 @@ function ChapterCard({
   progress,
   pinned,
   figure,
+  bare,
+  content,
 }: {
   chapter: (typeof CHAPTERS)[number];
   index: number;
@@ -65,6 +76,8 @@ function ChapterCard({
   progress: MotionValue<number>;
   pinned: boolean;
   figure?: ReactNode;
+  bare?: boolean;
+  content?: ChapterContent;
 }) {
   const slice = 1 / total;
   const start = index * slice + slice * 0.38;
@@ -74,6 +87,7 @@ function ChapterCard({
   const y = useTransform(progress, [start, end], ["0%", "-102%"]);
   const isLast = index === total - 1;
 
+
   return (
     <motion.article
       style={pinned ? { zIndex: total - index, ...(isLast ? {} : { y }) } : undefined}
@@ -82,7 +96,7 @@ function ChapterCard({
       }`}
     >
       {figure && (
-        <div className="pointer-events-none absolute top-1/2 right-[max(32px,calc((100vw_-_1480px)/2))] h-[min(62svh,520px)] aspect-[450/400] -translate-y-[38%] max-[1100px]:hidden">
+        <div className="pointer-events-none absolute top-1/2 right-[max(24px,calc((100vw_-_1480px)/2))] h-[min(50svh,440px)] aspect-[450/400] -translate-y-[36%] max-[1100px]:hidden">
           {figure}
         </div>
       )}
@@ -93,10 +107,30 @@ function ChapterCard({
               {chapter.n}
             </span>
             <span className="mt-[4px] block text-[clamp(3rem,8vw,9rem)] font-light leading-[.88] tracking-[-.055em]">
-              {chapter.label}
+              {content?.label ?? chapter.label}
             </span>
           </div>
-          <div className="max-w-[620px] self-start pt-[10px]">
+          {content ? (
+            <div className="max-w-[520px] self-start pt-[10px] max-[1300px]:max-w-[440px] max-[1100px]:max-w-[620px]">
+              <h2 className="text-[clamp(1.9rem,3.4vw,3.6rem)] font-normal leading-[1.02] tracking-[-.04em]">
+                {content.title}
+              </h2>
+              {content.body && (
+                <p className={`mt-[32px] max-w-[44ch] text-[15px] leading-[1.6] ${chapter.sub} max-[600px]:text-[14px]`}>{content.body}</p>
+              )}
+              {content.figures && (
+                <dl className="mt-[36px] grid grid-cols-3 gap-x-[28px] gap-y-[22px] max-[600px]:grid-cols-2">
+                  {content.figures.map(([name, value]) => (
+                    <div key={name}>
+                      <dt className="text-[clamp(2rem,3vw,3rem)] font-light leading-none tracking-[-.05em] tabular-nums">{value}%</dt>
+                      <dd className={`mt-[8px] text-[12px] ${chapter.sub}`}>{name}</dd>
+                    </div>
+                  ))}
+                </dl>
+              )}
+            </div>
+          ) : (
+          <div className={`max-w-[620px] self-start pt-[10px] ${bare ? "hidden" : ""}`}>
             <h2 className="text-[clamp(2rem,4.2vw,4.2rem)] font-normal leading-[1.02] tracking-[-.04em]">
               {chapter.title[0]}
               <br />
@@ -106,6 +140,7 @@ function ChapterCard({
               {chapter.copy}
             </p>
           </div>
+          )}
         </div>
       </div>
     </motion.article>
@@ -119,7 +154,16 @@ function ChapterCard({
 export default function ChapterStack({
   without = [],
   figures = {},
-}: { without?: readonly string[]; figures?: Readonly<Record<string, ReactNode>> } = {}) {
+  bare = false,
+  content = {},
+}: {
+  without?: readonly string[];
+  figures?: Readonly<Record<string, ReactNode>>;
+  /** Labels and figures only, for pages where the chapter copy is not yet the client's. */
+  bare?: boolean;
+  /** Replaces a chapter's label and text, keyed by its original label. */
+  content?: Readonly<Record<string, ChapterContent>>;
+} = {}) {
   const chapters = CHAPTERS.filter((chapter) => !without.includes(chapter.label));
   const reduceMotion = useReducedMotion();
   const trackRef = useRef<HTMLElement>(null);
@@ -150,6 +194,8 @@ export default function ChapterStack({
             progress={scrollYProgress}
             pinned={pinned}
             figure={figures[chapter.label]}
+            bare={bare}
+            content={content[chapter.label]}
           />
         ))}
       </div>

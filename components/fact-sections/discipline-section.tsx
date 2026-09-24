@@ -1,8 +1,8 @@
 "use client";
 
 import { useRef } from "react";
-import { DISCIPLINE_LEAD, DISCIPLINE_SOURCE, EXIT_TRIGGERS, HEADINGS, RED_FLAGS, WHAT_WE_DONT_DO, WHAT_WE_LOOK_FOR } from "@/lib/insights";
-import { BracketLabel, ORANGE, SectionFooter, SectionHeading } from "./fact-section";
+import { DISCIPLINE_LEAD, EXIT_TRIGGERS, HEADINGS, RED_FLAGS, WHAT_WE_DONT_DO, WHAT_WE_LOOK_FOR } from "@/lib/insights";
+import { BracketLabel, ORANGE, SectionHeading } from "./fact-section";
 import { Panel, SplitFrame, useStageClock } from "./motion-language";
 
 const STEP = 0.55;
@@ -14,7 +14,7 @@ const REST = 1.8;
  * Each panel runs its own clock with its own offset, so the four panels never
  * change together, the way the reference's panels cut independently.
  */
-function StackedList({ title, items, offset, accent }: { title: string; items: readonly string[]; offset: number; accent?: boolean }) {
+export function StackedList({ title, items, offset, accent }: { title: string; items: readonly string[]; offset: number; accent?: boolean }) {
   const ref = useRef<HTMLDivElement>(null);
   const period = items.length * STEP + REST;
   const t = (useStageClock(ref, period - 0.01, period) + offset) % period;
@@ -74,7 +74,6 @@ export default function DisciplineSection() {
           </Panel>
         </SplitFrame>
       </div>
-      <SectionFooter source={DISCIPLINE_SOURCE} />
     </section>
   );
 }

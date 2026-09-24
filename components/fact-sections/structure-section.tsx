@@ -1,8 +1,8 @@
 "use client";
 
 import { useRef } from "react";
-import { HEADINGS, STRUCTURE_FUND, STRUCTURE_PARTIES, STRUCTURE_SOURCE, type StructureSide } from "@/lib/insights";
-import { LINE_GLOW, ORANGE, r2, SectionFooter, SectionHeading } from "./fact-section";
+import { HEADINGS, STRUCTURE_FUND, STRUCTURE_PARTIES, type StructureSide } from "@/lib/insights";
+import { LINE_GLOW, ORANGE, r2, SectionHeading } from "./fact-section";
 import { useStageClock } from "./motion-language";
 
 const HOLD = 2.6;
@@ -86,20 +86,13 @@ function Lane({ from, to, t, lit }: { from: Point; to: Point; t: number; lit: bo
  * arrow. Dots run every line in its direction, and one party at a time lights
  * with its two labels, the way the reference steps through its panels.
  */
-export default function StructureSection() {
+/** The diagram alone, for pages that frame it with their own heading. */
+export function StructureDiagram() {
   const ref = useRef<HTMLDivElement>(null);
   const t = useStageClock(ref, HOLD * STRUCTURE_PARTIES.length - 0.01, 1000);
   const lit = Math.floor(t / HOLD) % STRUCTURE_PARTIES.length;
-
   return (
-    <section id="structure" aria-labelledby="structure-heading" className="bg-white">
-      <SectionHeading
-        id="structure"
-        label="Structure of Flyingbee Investment Fund"
-        heading={HEADINGS.structure}
-        lead="An Alternative Investment Fund (AIF) is a privately pooled investment vehicle that collects funds from investors, both Indian and foreign, where collective investments are made into different nontraditional investment options."
-      />
-      <div ref={ref} className="mt-[56px] border-y border-y-[#000] px-[max(32px,calc((100vw_-_1480px)/2))] max-[600px]:px-[12px]">
+      <div ref={ref} className="border-y border-y-[#000] px-[max(32px,calc((100vw_-_1480px)/2))] max-[600px]:px-[12px]">
         <svg viewBox="0 0 1200 660" className="mx-auto w-full max-w-[1240px]" role="img" aria-label="Structure of Flyingbee Investment Fund">
           {STRUCTURE_PARTIES.map((party, index) => {
             const { a, b, labelA, labelB, angle } = lanes(party.side);
@@ -160,7 +153,21 @@ export default function StructureSection() {
           </text>
         </svg>
       </div>
-      <SectionFooter source={STRUCTURE_SOURCE} />
+  );
+}
+
+export default function StructureSection() {
+  return (
+    <section id="structure" aria-labelledby="structure-heading" className="bg-white">
+      <SectionHeading
+        id="structure"
+        label="Structure of Flyingbee Investment Fund"
+        heading={HEADINGS.structure}
+        lead="An Alternative Investment Fund (AIF) is a privately pooled investment vehicle that collects funds from investors, both Indian and foreign, where collective investments are made into different nontraditional investment options."
+      />
+      <div className="mt-[56px]">
+        <StructureDiagram />
+      </div>
     </section>
   );
 }

@@ -113,3 +113,30 @@ body {
 [data-chapter-figure="grey"] svg .fig-bloom { fill: url(#chapter-grey-bloom); }
 [data-chapter-figure="grey"] svg .fig-marker-glow { fill: url(#chapter-grey-glow); }
 [data-chapter-figure="grey"] svg .fig-beam { fill: url(#chapter-grey-beam); }
+
+/* Pixel Reveal (components/pixel-reveal). While a heading is hidden or being
+   drawn by the canvas its DOM glyphs are transparent; once done, or static
+   (no WebGL, reduced motion), the real text shows. The failsafe reveals the
+   text after 4s if the engine never registers the element. */
+@keyframes pr-failsafe {
+  to {
+    -webkit-text-fill-color: currentColor;
+  }
+}
+
+@media (scripting: enabled) {
+  [data-pixel-reveal]:not([data-pr-state]) {
+    -webkit-text-fill-color: transparent;
+    animation: 0s linear 4s forwards pr-failsafe;
+  }
+}
+
+:where([data-pixel-reveal]) {
+  -webkit-font-smoothing: auto;
+  -moz-osx-font-smoothing: auto;
+}
+
+[data-pr-state="hidden"],
+[data-pr-state="active"] {
+  -webkit-text-fill-color: transparent;
+}

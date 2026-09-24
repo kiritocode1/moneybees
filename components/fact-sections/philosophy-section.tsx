@@ -3,8 +3,8 @@
 import { useInView, useReducedMotion } from "motion/react";
 import { useRef } from "react";
 import { FRONT_FROM, FRONT_TO, path, type Point, project } from "@/components/iso/geometry";
-import { HEADINGS, PHILOSOPHY_SOURCE, PILLARS } from "@/lib/insights";
-import { BracketLabel, ORANGE, r2, SectionFooter, SectionHeading, SOLID_GLOW, useFigureClock } from "./fact-section";
+import { HEADINGS, PILLARS } from "@/lib/insights";
+import { BracketLabel, ORANGE, r2, SectionHeading, SOLID_GLOW, useFigureClock } from "./fact-section";
 import { Panel, SplitFrame, typedWords } from "./motion-language";
 
 /*
@@ -125,7 +125,7 @@ export default function PhilosophySection() {
 
   return (
     <section id="philosophy-pillars" aria-labelledby="philosophy-pillars-heading" className="bg-white">
-      <SectionHeading id="philosophy-pillars" label="Our investment philosophy" heading={HEADINGS.philosophy} />
+      <SectionHeading id="philosophy-pillars" label="Our philosophy" heading={HEADINGS.philosophy} />
       <div ref={ref} className="mt-[72px]">
         <SplitFrame>
           <Panel className="grid min-h-[560px] place-items-center">
@@ -174,7 +174,6 @@ export default function PhilosophySection() {
           </Panel>
         </SplitFrame>
       </div>
-      <SectionFooter source={PHILOSOPHY_SOURCE} />
     </section>
   );
 }

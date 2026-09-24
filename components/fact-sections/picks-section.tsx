@@ -11,7 +11,7 @@ import {
   squareCorners,
   winding,
 } from "@/components/insight-cards/moneybee-figures";
-import { type CaseStudy, HEADINGS, PICK_TIERS, PICKS_CAVEAT, PICKS_LEAD, PICKS_SOURCE } from "@/lib/insights";
+import { type CaseStudy, HEADINGS, PICK_TIERS, PICKS_LEAD } from "@/lib/insights";
 import FactSection, {
   Bloom,
   clamp,
@@ -247,7 +247,6 @@ function TierPanel({ tier }: { tier: number }) {
             </p>
           ))}
           <FinancialsChart caseStudy={study} />
-          <small className="text-[9px] text-[rgba(0,0,0,.5)]">{study.source}</small>
         </div>
       )}
     </div>
@@ -264,8 +263,6 @@ export default function PicksSection() {
       lead={PICKS_LEAD}
       panels={PYRAMID_TIERS.map((_, tier) => ({ part: tier, content: <TierPanel tier={tier} /> }))}
       figure={PicksFigure}
-      caveat={PICKS_CAVEAT}
-      source={PICKS_SOURCE}
     />
   );
 }

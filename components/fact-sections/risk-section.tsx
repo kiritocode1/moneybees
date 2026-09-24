@@ -1,8 +1,8 @@
 "use client";
 
 import { useRef } from "react";
-import { HEADINGS, RISK_LEAD, RISK_RULES, RISK_SOURCE } from "@/lib/insights";
-import { BracketLabel, LINE_GLOW, ORANGE, r2, SectionFooter, SectionHeading } from "./fact-section";
+import { HEADINGS, PORTFOLIO_CONSTRUCTION, RISK_RULES } from "@/lib/insights";
+import { BracketLabel, LINE_GLOW, ORANGE, r2, SectionHeading } from "./fact-section";
 import { BracketCaption, Panel, SplitFrame, useStageClock } from "./motion-language";
 
 const [CONCENTRATION, VALUATION, LIQUIDITY, MARKET] = RISK_RULES;
@@ -195,9 +195,8 @@ export default function RiskSection() {
     <section id="risk-rules" aria-labelledby="risk-rules-heading" className="bg-white">
       <SectionHeading
         id="risk-rules"
-        label="Risk management framework"
+        label="Managing risk"
         heading={HEADINGS.risk}
-        lead={RISK_LEAD}
       />
       <div className="mt-[72px]">
         <SplitFrame>
@@ -215,10 +214,18 @@ export default function RiskSection() {
           </Panel>
         </SplitFrame>
       </div>
-      <SectionFooter
-        caveat="For more details on risk factors, key terms etc. please refer to Disclosure documents/PPM/ Key material documents. Investment in securities market are subject to market risks. Read all the related documents carefully before investing."
-        source={RISK_SOURCE}
-      />
+      {/* Portfolio construction, group profile p17: how the rules above are built into a portfolio. */}
+      <div className="px-[max(32px,calc((100vw_-_1480px)/2))] pt-[72px] pb-[80px] max-[600px]:px-[22px]">
+        <BracketLabel>Portfolio construction</BracketLabel>
+        <dl className="mt-[22px] grid grid-cols-5 gap-[28px] border-t border-t-[#000] pt-[22px] max-[1100px]:grid-cols-2 max-[600px]:grid-cols-1">
+          {PORTFOLIO_CONSTRUCTION.map(([name, text]) => (
+            <div key={name}>
+              <dt className="text-[15px] font-[550] tracking-[-.02em]">{name}</dt>
+              <dd className="mt-[10px] text-[13px] leading-[1.55] text-[rgba(0,0,0,.72)]">{text}</dd>
+            </div>
+          ))}
+        </dl>
+      </div>
     </section>
   );
 }

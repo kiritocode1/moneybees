@@ -1,8 +1,8 @@
 "use client";
 
 import { useRef } from "react";
-import { HEADINGS, PERIOD_RETURNS, RECORD_CAVEAT, RECORD_LEAD, RECORD_METHOD, RECORD_SOURCE, WEALTH } from "@/lib/insights";
-import { BracketLabel, Eyebrow, r2, SectionFooter, SectionHeading } from "./fact-section";
+import { HEADINGS, PERIOD_RETURNS, RECORD_LEAD, RECORD_METHOD, WEALTH } from "@/lib/insights";
+import { BracketLabel, Eyebrow, r2, SectionHeading } from "./fact-section";
 import { Panel, SplitFrame, useStageClock } from "./motion-language";
 
 /** Rupees in millions, written the way the deck writes them: "Rs. 28.85 Mn". */
@@ -156,10 +156,6 @@ export default function RecordSection() {
           <p className="mt-[18px] text-[13px] leading-[1.6] text-[rgba(0,0,0,.72)]">{RECORD_METHOD}</p>
         </div>
       </div>
-      <SectionFooter
-        caveat={RECORD_CAVEAT}
-        source={RECORD_SOURCE}
-      />
     </section>
   );
 }

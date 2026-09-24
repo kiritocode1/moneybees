@@ -2,6 +2,7 @@
 
 import { useMotionValueEvent, useReducedMotion, useScroll } from "motion/react";
 import { type ComponentType, type ReactNode, useEffect, useRef, useState } from "react";
+import { Materialize } from "@/components/pixel-reveal/materialize";
 
 export const FOCUS = "focus-visible:outline-2 focus-visible:outline-[#F7A11A] focus-visible:outline-offset-4";
 export const ORANGE = "#F7A11A";
@@ -112,26 +113,17 @@ export function SectionHeading({ id, label, heading, lead }: { id: string; label
       <BracketLabel>{label}</BracketLabel>
       <div className="mt-[18px] grid grid-cols-[1fr_.8fr] items-end gap-[60px] max-[900px]:grid-cols-1 max-[900px]:gap-[28px]">
         {/* Deck lines run from three words to a full sentence; a long one steps down a size so it holds four lines at most. */}
-        <h2
+        <Materialize
+          as="h2"
           id={`${id}-heading`}
           className={`font-light tracking-[-.055em] ${
             heading.length > 56 ? "text-[clamp(2.4rem,4.2vw,4.6rem)] leading-[.98]" : "text-[clamp(3.6rem,6.4vw,7rem)] leading-[.92]"
           }`}
         >
           {heading}
-        </h2>
+        </Materialize>
         {lead && <p className="max-w-[440px] text-[13px] leading-[1.6] text-[rgba(0,0,0,.7)]">{lead}</p>}
       </div>
-    </div>
-  );
-}
-
-/** Caveat and source, the line every fact section closes on. */
-export function SectionFooter({ caveat, source }: { caveat?: string; source: string }) {
-  return (
-    <div className="grid grid-cols-[1fr_1fr] gap-[60px] border-t border-t-[rgba(0,0,0,.13)] px-[max(32px,calc((100vw_-_1480px)/2))] pt-[22px] pb-[80px] text-[9px] leading-[1.55] text-[rgba(0,0,0,.55)] max-[900px]:grid-cols-1 max-[900px]:gap-[10px] max-[600px]:px-[22px]">
-      <p className="max-w-[560px]">{caveat}</p>
-      <p>Source: {source}</p>
     </div>
   );
 }
@@ -186,8 +178,6 @@ export default function FactSection({
   intro,
   panels,
   figure: Figure,
-  caveat,
-  source,
   after,
 }: {
   id: string;
@@ -201,8 +191,6 @@ export default function FactSection({
   panels: readonly { part: number; content: ReactNode }[];
   /** Rendered as a component so its callbacks stay out of render. */
   figure: ComponentType<FigureState>;
-  caveat?: string;
-  source: string;
   /** Plain content after the panels, before the source line. */
   after?: ReactNode;
 }) {
@@ -263,8 +251,6 @@ export default function FactSection({
       </div>
 
       {after}
-
-      <SectionFooter caveat={caveat} source={source} />
     </section>
   );
 }

@@ -1,6 +1,7 @@
 "use client";
 
-import { HEADINGS, RESEARCH_LEAD, RESEARCH_SOURCE, RESEARCH_STAGES } from "@/lib/insights";
+import { HEADINGS, RED_FLAGS, RESEARCH_STAGES, SELECTION_LEAD, WHAT_WE_DONT_DO, WHAT_WE_LOOK_FOR } from "@/lib/insights";
+import { StackedList } from "./discipline-section";
 import FactSection, { Eyebrow, type FigureState, ORANGE, PanelTitle, r2, SOLID_GLOW } from "./fact-section";
 import { BracketCaption, DotField, Panel, SplitFrame } from "./motion-language";
 
@@ -185,9 +186,9 @@ export default function ResearchSection() {
   return (
     <FactSection
       id="research"
-      label="Stock selection process"
+      label="Our process"
       heading={HEADINGS.research}
-      lead={RESEARCH_LEAD}
+      lead={SELECTION_LEAD}
       intro={
         <div className="mt-[72px]">
           <SplitFrame>
@@ -202,7 +203,21 @@ export default function ResearchSection() {
       }
       panels={RESEARCH_STAGES.map((_, stage) => ({ part: stage, content: <StagePanel stage={stage} /> }))}
       figure={HoneycombFigure}
-      source={RESEARCH_SOURCE}
+      after={
+        <div className="mb-[40px]">
+          <SplitFrame cols={3} cross={false}>
+            <Panel className="min-h-[380px]">
+              <StackedList title="What we look for" items={WHAT_WE_LOOK_FOR} offset={0} />
+            </Panel>
+            <Panel className="min-h-[380px]">
+              <StackedList title="What we don't do" items={WHAT_WE_DONT_DO} offset={1.1} />
+            </Panel>
+            <Panel className="min-h-[380px]">
+              <StackedList title="Red flags" items={RED_FLAGS} offset={2.3} accent />
+            </Panel>
+          </SplitFrame>
+        </div>
+      }
     />
   );
 }

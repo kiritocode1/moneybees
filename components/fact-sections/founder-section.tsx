@@ -2,8 +2,8 @@
 
 import Image from "next/image";
 import { useRef } from "react";
-import { FOUNDER, FOUNDER_SOURCE } from "@/lib/insights";
-import { BracketLabel, SectionFooter } from "./fact-section";
+import { FOUNDER } from "@/lib/insights";
+import { BracketLabel } from "./fact-section";
 import { Panel, SplitFrame, typedWords, useStageClock } from "./motion-language";
 
 const PER_WORD = 0.11;
@@ -47,7 +47,6 @@ export default function FounderSection() {
           </Panel>
         </SplitFrame>
       </div>
-      <SectionFooter source={FOUNDER_SOURCE} />
     </section>
   );
 }

@@ -48,11 +48,11 @@ export const PICK_TIERS: readonly PickTier[] = [
         name: "KPI Green Energy",
         caseStudy: {
           business:
-            "One of the leading Gujarat based renewable power generating company, operating both as an IPP and CPP producer for providing solar power",
+            "A solar power producer in Gujarat, selling to the grid and to captive customers.",
           edge:
-            "Established Infrastructure for evacuation power, higher per unit revenue realisation. Extensive promoter experience and strong execution capabilities in this domain",
+            "It owns its power evacuation infrastructure and earns more per unit. The promoters have long experience and a record of delivery.",
           growth:
-            "Strong Order book of ~40 MW under development for IPP and ~7.48MW under CPP, leading to improvement in margins and earnings growth for the next 3-5 years",
+            "About 40 MW of grid and 7.5 MW of captive capacity under development.",
           financials: fy([[59, 6], [102, 22], [230, 43], [644, 110], [1024, 162]]),
           source: "Group profile, April 2026, slide 21",
         },
@@ -61,11 +61,11 @@ export const PICK_TIERS: readonly PickTier[] = [
         name: "Pitti Engineering",
         caseStudy: {
           business:
-            "Manufacturer of Electrical Steel Laminations, Motors Cores, Sub-Assemblies, Die-Cast Rotors and Machining of metal components",
+            "Makes electrical steel laminations, motor cores, die-cast rotors and machined parts.",
           edge:
-            "Supplying components in key industries with strong tailwinds such as railway, renewables and power sector. Capex driven economy to support robust growth as well.",
+            "It supplies railways, renewables and power, all sectors with strong tailwinds.",
           growth:
-            "Doubling of machining hour capacity leading to better margins and strong order book position providing long term growth visibility",
+            "Machining capacity is doubling, with a strong order book behind it.",
           financials: fy([[525, 17], [518, 29], [954, 52], [1100, 59], [1202, 90]]),
           source: "Group profile, April 2026, slide 23",
         },
@@ -79,11 +79,11 @@ export const PICK_TIERS: readonly PickTier[] = [
         name: "Uni Abex Alloy",
         caseStudy: {
           business:
-            "One of the leading manufacturers and exporters of centrifugal and static castings in heat, wear and corrosion-resistant stainless-steel alloys",
+            "Makes and exports heat-, wear- and corrosion-resistant steel castings.",
           edge:
-            "Centrifugally cast haste alloy assemblies are not easily replicable due to the complexity behind engineering thereby creating high entry barrier",
+            "Its centrifugally cast alloy assemblies are hard to engineer and harder to copy.",
           growth:
-            "Partnership with TATA Group to develop air injection tubes critical for sponge iron technology thereby creating opportunities for revenue growth",
+            "It is developing air-injection tubes for sponge-iron plants with the Tata Group.",
           financials: fy([[102, 5], [105, 11], [137, 12], [163, 19], [180, 35]]),
           source: "Group profile, April 2026, slide 22",
         },
@@ -99,7 +99,7 @@ export const PICKS_SOURCE = "Group profile, April 2026, slides 20 to 23. AIF pre
 
 /** Recipe for multibaggers, group profile slide 14, verbatim. */
 export const PICKS_LEAD =
-  "There are several promising small companies that have capable and honest managements with sound business models. Early investment in such business creates access to rapid growth, which leads to valuation rerating and thus significant returns on investments.";
+  "We look for small companies with honest, capable management and a sound business, and get in early. When the business grows, the market re-rates it.";
 
 /** The footnote every case-study slide carries, verbatim. */
 export const PICKS_CAVEAT =
@@ -123,42 +123,42 @@ export const RESEARCH_STAGES: readonly ResearchStage[] = [
   {
     count: "~6000",
     name: "Screening",
-    summary: "From universe of ~6000 companies",
-    work: ["Annual report", "In-house screeners", "Team experience", "News flows", "Reports"],
+    summary: "The universe we start from.",
+    work: ["Annual reports", "In-house screeners", "The team's experience", "News flow", "Research reports"],
   },
   {
     count: "~1200",
     name: "Screening",
-    summary: "~1200 companies are within 150-2000 Cr market cap and investable",
-    work: ["Annual report", "In-house screeners", "Team experience", "News flows", "Reports"],
+    summary: "Fall between ₹150 crore and ₹2,000 crore in market cap, the range we invest in.",
+    work: ["Annual reports", "In-house screeners", "The team's experience", "News flow", "Research reports"],
   },
   {
     count: "~350",
     name: "Short list",
-    summary: "~350 companies are shortlisted with the help of experienced investment team",
-    work: ["Quality Management", "Fundamentals", "External events", "Correct Timing"],
+    summary: "Make the investment team's shortlist.",
+    work: ["Quality of management", "Fundamentals", "External events", "Timing"],
   },
   {
     count: ">100",
     name: "Analyse",
-    summary: "Macro and micro analysis on >100 companies",
-    work: ["Management meetings", "Competitive advantage", "Plant visits", "Peer comparison", "Financial models"],
+    summary: "Are studied in depth, from the economy down to the company.",
+    work: ["Management meetings", "Plant visits", "Competitive advantage", "Peer comparison", "Financial models"],
   },
   {
     count: "~75",
     name: "Construct",
-    summary: "Idea generation on ~75 stocks",
+    summary: "Become investment ideas, each weighed on risk against reward.",
     work: [
-      "Determining the risk reward equation",
-      "Understanding macro trends",
-      "Buy the stock at current/ target price or add to watchlist",
+      "Risk against reward",
+      "Macro trends",
+      "Buy at the current or target price, or wait on the watchlist",
     ],
   },
   {
     count: "~20",
     name: "Monitor",
-    summary: "Portfolio construction and risk monitoring of ~20 stocks",
-    work: ["Liquidity", "Sector exposure", "Risk management", "News flow", "Quarterly Reviews", "Sell discipline"],
+    summary: "Make it into the portfolio, and are watched from then on.",
+    work: ["Liquidity", "Sector exposure", "Risk management", "News flow", "Quarterly reviews", "Sell discipline"],
   },
 ];
 
@@ -180,57 +180,57 @@ export type RiskRule = { name: string; rule: string; detail: readonly string[] }
 export const RISK_RULES: readonly RiskRule[] = [
   {
     name: "Concentration",
-    rule: "Concentrated portfolio consisting of 15-20 small and mid cap stocks",
+    rule: "15 to 20 stocks. No sector above 30%.",
     detail: [
-      "Establish a diversified portfolio with a maximum sector allocation of 30% and a stringent due diligence on the earnings",
-      "Endeavor to have adequately diversified portfolio across sectors and stocks. A maximum exposure limit to any single stock will be set to ensure diversification and mitigate concentration risk.",
+      "Each portfolio also caps how much any single stock can hold.",
+      "Earnings are checked closely before a stock earns its place.",
     ],
   },
   {
     name: "Valuation",
-    rule: "Reasonable valuation is the corner stone of all our investment decision",
-    detail: ["The risk of buying stocks without adequate margin of safety."],
+    rule: "Never without a margin of safety.",
+    detail: ["A reasonable valuation comes first in every decision we make."],
   },
   {
     name: "Liquidity",
-    rule: "Invest in stocks with sufficient trading volumes",
+    rule: "Only stocks we can buy and sell cleanly.",
     detail: [
-      "Invest in stocks with sufficient trading volumes to ensure the ability to enter and exit positions without significantly impacting the stock price.",
-      "Maintain a reasonable cash allocation in the portfolio to manage liquidity and handle market volatility.",
-      "There is no active market for unlisted shares and exits often depend on IPOs, buybacks, or strategic sales. Have a pre-defined exit strategy to minimize liquidity risk.",
+      "Enough trading volume to enter and exit without moving the price.",
+      "A cash reserve for liquidity and volatility.",
+      "For unlisted holdings, the exit (an IPO, a buyback or a sale) is planned before we invest.",
     ],
   },
   {
     name: "Market",
-    rule: "The best way to manage market risk is by being patient.",
+    rule: "Patience.",
     detail: [
-      "This typically arises from certain fundamental economic conditions or events in the economy or industry.",
-      "Invest with at least 3-year time horizon or till the investment thesis is intact and actively search for conditions that can trigger a stock rerating",
+      "Markets move on the economy and on events. We sit through the swings instead of trading them.",
+      "At least three years, or for as long as the reason for owning holds.",
     ],
   },
 ];
 
 /** Red flags, AIF presentation p6, verbatim. */
 export const RED_FLAGS = [
-  "Companies with poor corporate governance",
-  "Low Promoter Holding",
-  "Expensive Valuations",
-  "Very High Leverage",
-  "High Institutional Ownership",
-  "Fad/ hot sectors",
+  "Poor corporate governance",
+  "Low promoter holding",
+  "Expensive valuations",
+  "Very high leverage",
+  "High institutional ownership",
+  "Fashionable sectors",
 ] as const;
 
 /** What we don't do, AIF presentation p6, verbatim. */
 export const WHAT_WE_DONT_DO = [
-  "Indulge in Derivatives and F&O",
-  "Trading and Short Term investments",
-  "Chase Returns by going after 'hot stocks'",
-  "Impulsive Decisions",
-  "Getting influenced by news and other platforms",
+  "Derivatives and F&O",
+  "Trading or short-term bets",
+  "Chasing hot stocks",
+  "Impulsive decisions",
+  "Following the news cycle",
 ] as const;
 
 /** Exit, AIF presentation p5, verbatim. */
-export const EXIT_TRIGGERS = ["On achievement of target price", "Incase of deviation from envisioned growth strategy"] as const;
+export const EXIT_TRIGGERS = ["The target price is reached", "The company strays from its growth plan"] as const;
 
 /** Risk mitigation, group profile p17, verbatim. */
 export const RISK_LEAD =
@@ -258,7 +258,7 @@ export const WEALTH = { start: 1, queenbee: 28.85, benchmark: 5.97 } as const;
 
 /** The wealth sentence, AIF presentation p12, verbatim. */
 export const RECORD_LEAD =
-  "An investment of Rs. 1 Mn with Moneybee PMS on August 1, 2007 would be worth Rs. 28.85 Mn as of July 31, 2026 as opposed to Rs. 5.97 Mn from S&P BSE500 TRI.";
+  "Rs. 1 Mn put into Moneybee PMS in August 2007 was worth Rs. 28.85 Mn by July 2026. The same amount in the S&P BSE 500 TRI grew to Rs. 5.97 Mn.";
 
 /** The disclaimer under the table, AIF presentation p12, verbatim. */
 export const RECORD_METHOD =
@@ -272,14 +272,14 @@ export const RECORD_SOURCE = "AIF presentation, August 2026, page 12. Return as 
 
 export type Pillar = { name: string; text: string };
 
-/** Investment philosophy, AIF presentation p4, verbatim. Six pillars around the bee. */
+/** Investment philosophy, verbatim: group profile p12's wording where it has the pillar, AIF p4's otherwise (Unbiased decision making). */
 export const PILLARS: readonly Pillar[] = [
-  { name: "Fundamental driven", text: "Bottom-up sector agnostic research focused on core financials and business operations, delivering superior returns" },
-  { name: "Long term value", text: "Adopt business owner mindset, embracing long-term compounding over short-term volatility" },
-  { name: "Outperform benchmark", text: "Aim for consistent benchmark outperformance while prioritizing downside protection over high-risk returns" },
-  { name: "Unbiased decision making", text: "Uninfluenced by 'herd mentality', all investments are thoroughly researched internally with zero reliance on external agencies" },
-  { name: "Management leadership", text: "Deep understanding of management's vision, goals and priorities. Partner with owners with demonstrated prudent capital allocation skills" },
-  { name: "Risk reward equation", text: "Invest only when value outweighs price, ensuring margin of safety and justified risk" },
+  { name: "Fundamental driven", text: "We study the numbers and the operations before we buy. The business decides, not the sector." },
+  { name: "Long term value", text: "We invest as if we were buying the whole business, and let it compound over years rather than quarters." },
+  { name: "Outperform benchmark", text: "We aim to beat the benchmark steadily while protecting the downside, not to chase big wins at the risk of capital." },
+  { name: "Unbiased decision making", text: "Every investment is researched in-house. We do not follow the herd or rely on outside agencies." },
+  { name: "Management leadership", text: "We spend time with management to understand their goals, and back owners who have allocated capital well." },
+  { name: "Risk reward equation", text: "We buy only when value is well above price. The expected return has to justify the risk." },
 ];
 
 export const PHILOSOPHY_SOURCE = "Group profile, April 2026, slide 12. AIF presentation, August 2026, page 4.";
@@ -289,11 +289,11 @@ export const PHILOSOPHY_SOURCE = "Group profile, April 2026, slide 12. AIF prese
 /** What we look for, AIF presentation p6, verbatim. */
 export const WHAT_WE_LOOK_FOR = [
   "Disproportionate beneficiaries of economic growth",
-  "Robust Fundamentals",
-  "Quality Management",
-  "Competitive Advantage",
-  "Favourable Risk Reward",
-  "Reasonable Valuations",
+  "Strong fundamentals",
+  "Quality management",
+  "A competitive advantage",
+  "Favourable risk and reward",
+  "Reasonable valuations",
 ] as const;
 
 /** Robust strategy for consistent performance, group profile p11, verbatim. */
@@ -311,10 +311,10 @@ export const FOUNDER = {
   quote:
     "Long-term investing isn't about chasing headlines, it's about owning quality businesses with the patience to let time compound your conviction. In a world obsessed with speed, we win by standing still when it matters most.",
   points: [
-    "45+ years of rich experience in corporate advisory and wealth management",
-    "Started Moneybee Group in 2004 offering Equity Broking, Fund Management and Investment Advisory",
-    "Specializes in turnaround and growth advisory for small and medium enterprises helping them unlock their full potential",
-    "Has been advisor and investor in companies helping them unlock value and reward shareholders with exponential returns",
+    "45 years in corporate advisory and wealth management",
+    "Founded Moneybee Group in 2004",
+    "Advises small and medium businesses on turnarounds and growth",
+    "Has advised and invested in companies that went on to reward their shareholders",
   ],
 } as const;
 
@@ -369,7 +369,7 @@ export const HEADINGS = {
   picks: "Our superior gains stem from venturing into opportunities overlooked by the investment crowd",
   products: "Specialising in small and mid-cap Indian equities",
   structure: "Exclusive Access to early-stage winners & differentiated opportunities",
-  risk: "Prioritizing downside protection over high-risk returns",
+  risk: "Risk management framework",
   record: "Compounding is the magic that turns small, regular investments into substantial wealth",
 } as const;
 
@@ -397,3 +397,189 @@ export const REGISTRATIONS = [
   ["Portfolio Management Services", "INP000001959"],
   ["Alternative Investment Fund", "IN/AIF3/24-25/1709"],
 ] as const;
+
+/* ------------------------------------------------------------ the story --- */
+
+/** Group profile p4, verbatim. */
+export const INTRODUCTION = {
+  lead: "Moneybee Group is a SEBI registered boutique portfolio management services firm, managing assets for its corporate and private clients globally.",
+  focus: "An India-focused portfolio manager. We find small and mid-sized companies that lead their niche, and own them while they grow.",
+  advice: "Since 2004 we have managed money for families and companies. You can invest with us through a Portfolio Management Service, where the stocks sit in your own demat account, or through Flyingbee, our Category III AIF.",
+  team: "Both are run by the same research team, from our office in Lower Parel, Mumbai.",
+} as const;
+
+/** PMS Bazaar rankings, December 2024, group profile p5. */
+export const RANKINGS = [
+  ["3rd", "5-year returns"],
+  ["6th", "3-year returns"],
+  ["6th", "1-year returns"],
+] as const;
+
+/** Why we focus on small cap Indian equities, group profile p14, verbatim. The index and multibagger-share figures are left out: the slide gives no source or date. */
+export const SMALL_CAP_THESIS = [
+  {
+    title: "Growth boom in India",
+    text: "India is moving from a developing economy to a developed one. New companies, and whole new sectors, are forming along the way.",
+  },
+  {
+    title: "Faster growth in small cap companies",
+    text: "That growth opens the most room for small businesses. We expect them to grow much faster than GDP.",
+  },
+  {
+    title: "Moneybee expertise",
+    text: "For two decades we have advised and invested in small businesses. Getting in early has been one of the biggest drivers of our returns.",
+  },
+] as const;
+
+export const SMALL_CAP_SOURCE = "Group profile, April 2026, slide 14.";
+
+/** Portfolio construction, group profile p17, verbatim. */
+export const PORTFOLIO_CONSTRUCTION = [
+  ["Asset allocation", "15 to 20 small and mid-cap stocks, drawn from emerging industries."],
+  ["Investment horizon", "At least three years, or as long as the thesis holds."],
+  ["Diversification", "No sector above 30% of the portfolio."],
+  ["Risk mitigation", "We stay away from cyclical businesses."],
+  ["Rebalancing", "We sell once a stock has done what we bought it for."],
+] as const;
+
+/** Moneybee PMS, group profile p9, p11 and p17, verbatim. */
+export const PMS_PRODUCT = {
+  name: "Moneybee PMS",
+  lead: "A SEBI registered boutique portfolio management firm specialising in small and mid-cap Indian equities",
+  points: [
+    "Long-only Indian equities",
+    "15 to 20 small and mid-cap stocks",
+    "A horizon of at least three years",
+    "New money goes in by today's risk and reward, not by copying a model portfolio",
+    "Fees tied to performance, so our interest follows yours",
+    "No exit load",
+  ],
+  registration: "INP000001959",
+} as const;
+
+/** Flyingbee Investment Fund, AIF presentation p2, p8, p9 and p10, verbatim. */
+export const AIF_PRODUCT = {
+  name: "Flyingbee Investment Fund",
+  lead: "High-growth listed companies, and unlisted companies before they go public.",
+  terms: [
+    ["Minimum investment", "Rs. 1 crore"],
+    ["Suitable time frame", "3-5 years"],
+    ["Fee structure", "A fixed fee, or a fixed fee with profit share above a hurdle rate"],
+    ["Target investments", "At least 51% listed, up to 49% unlisted"],
+    ["Exit load", "None"],
+    ["Sponsor commitment", "5% of the corpus or Rs. 10 crore, whichever is lower"],
+    ["Benchmark", "S&P BSE 500 TRI"],
+    ["Who can invest", "Resident and non-resident individuals, HUFs and companies"],
+    ["Redemption", "Holdings cannot fall below the Rs. 1 crore minimum"],
+  ],
+  performance: [
+    ["3 Months", "11.08%", "3.29%"],
+    ["6 Months", "23.20%", "1.38%"],
+  ],
+  firstClose: "First Close declared on October 30, 2025",
+  registration: "IN/AIF3/24-25/1709",
+} as const;
+
+/** AIF presentation p2, verbatim: how an AIF holding differs from a PMS holding. */
+export const PMS_VS_AIF =
+  "In a PMS you own the stocks in your own demat account. In an AIF you own units of the fund.";
+
+export const PRODUCTS_SOURCE = "Group profile, April 2026, slides 9, 11 and 17. AIF presentation, August 2026, pages 2, 8, 9 and 10.";
+
+export type TeamMember = { name: string; role: string; photo: string; points: readonly string[] };
+
+/** Team profile, AIF presentation p14 and group profile p25 to 26, verbatim. */
+export const TEAM: readonly TeamMember[] = [
+  {
+    name: "Shreyam Shah",
+    role: "Fund Manager - Flyingbee Investment Fund",
+    photo: "/people/shreyam-shah.jpg",
+    points: [
+      "A chartered accountant, 14 years at Moneybee leading research on listed and unlisted companies.",
+      "Since 2015 he has also run Tee Ventures, India's only dedicated golf-ball manufacturer, so he knows what running a small company takes.",
+      "Before Moneybee he worked in assurance at EY.",
+    ],
+  },
+  {
+    name: "Suprit Shah",
+    role: "Compliance Officer – Moneybee Group",
+    photo: "/people/suprit-shah.jpg",
+    points: [
+      "A law graduate who joined Moneybee in 2022 and now heads compliance.",
+      "He works on risk management and fraud prevention, and holds Level 1 of the Enterprise Risk Management programme from the International Risk Management Institute.",
+    ],
+  },
+  {
+    name: "Ritesh Mistry",
+    role: "Asst. Vice President, Advisory",
+    photo: "/people/ritesh-mistry.jpg",
+    points: [
+      "An MBA with 15 years in corporate research, business modelling, valuation and advisory.",
+      "He covers chemicals, automobiles and capital goods.",
+    ],
+  },
+  {
+    name: "Anurag Roonwal",
+    role: "Asst. Vice President, PMS",
+    photo: "/people/anurag-roonwal.jpg",
+    points: [
+      "A chartered accountant and FRM, with CFA Level 2. Six years at Moneybee finding undervalued small and mid-sized companies.",
+      "Before Moneybee he worked in due diligence at EY and statutory audit at PwC.",
+    ],
+  },
+  {
+    name: "Manan Shah",
+    role: "Asst. Portfolio Manager, PMS",
+    photo: "/people/manan-shah.jpg",
+    points: [
+      "A chartered accountant, five years at Moneybee on research and investment banking for listed and private companies.",
+      "Before Moneybee he ran his own diamond trading business in Dubai.",
+    ],
+  },
+  {
+    name: "Chinmayi Upadhyay",
+    role: "Senior Associate, PMS",
+    photo: "/people/chinmayi-upadhyay.jpg",
+    points: [
+      "A chartered accountant, three years at Moneybee on sector and company research, listed and private.",
+      "Before Moneybee she worked in the GST practice at Suresh Surana & Associates (RSM India).",
+    ],
+  },
+];
+
+export const TEAM_SOURCE = "AIF presentation, August 2026, page 14. Group profile, April 2026, slides 25 and 26.";
+
+/** Who it is for: group profile p9 and AIF p9, verbatim. */
+export const AUDIENCE = {
+  pms: "Create wealth for HNIs, NRI Investors, Ultra HNIs, and Family Offices",
+  aif: "Flyingbee is open to resident and non-resident individuals, HUFs and companies.",
+} as const;
+
+/** Robust strategy, group profile p11, the first line only. */
+export const SELECTION_LEAD = "We meet management more than once and visit the plants before we buy. The numbers are checked line by line.";
+
+/** About Moneybee PMS, group profile p9, verbatim. Sits under "Finding value where the market is not looking". */
+export const PMS_APPROACH = "Bottom-up research. We pick companies one at a time, on their own numbers, whatever the sector.";
+
+/**
+ * The chapter stack's three cards. Headings are deck lines verbatim (group
+ * profile p13 and p11, p19's chart title); the paragraphs are AIF p5's Monitor
+ * and Due diligence points, joined into a sentence without adding to them.
+ */
+export const PROCESS_CHAPTERS = {
+  monitor: {
+    label: "Monitor",
+    title: "Portfolio construction and risk monitoring of ~20 stocks",
+    body: "We follow the news, review every holding each quarter, and keep talking to management and the people around the company.",
+  },
+  diligence: {
+    label: "Due diligence",
+    title: "Confidence building through analysis of fundamentals, multiple management interviews and plant visits.",
+    body: "Management meetings, plant visits, peer comparison and our own financial models.",
+  },
+  sectors: {
+    label: "Sectors",
+    title: "Top 5 - Sector Allocation (%)",
+    figures: [["Renewable Energy", "12.2"], ["Chemicals", "11.74"], ["Oil & Gas", "8.97"], ["Financials & NBFC", "8.72"], ["Capital Goods", "7.8"]],
+  },
+} as const;
