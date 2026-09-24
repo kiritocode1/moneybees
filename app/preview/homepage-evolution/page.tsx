@@ -13,6 +13,7 @@ import RecordSection from "@/components/fact-sections/record-section";
 import ResearchSection from "@/components/fact-sections/research-section";
 import RiskSection from "@/components/fact-sections/risk-section";
 import StructureSection from "@/components/fact-sections/structure-section";
+import ChapterFigure from "@/components/option-one/chapter-figure";
 import ChapterStack from "@/components/option-one/chapter-stack";
 import FrameworkRow from "@/components/option-one/framework-row";
 import InterviewCarousel from "@/components/option-one/interview-carousel";
@@ -514,7 +515,13 @@ export default function HomepageEvolution() {
         <FounderSection />
         <div id="performance">
           <RecordSection />
-          <ChapterStack without={["The record"]} />
+          <ChapterStack
+            figures={{
+              "The letter": <ChapterFigure kind="beacon" tone="orange" />,
+              "The method": <ChapterFigure kind="bars" tone="ink" />,
+              "The record": <ChapterFigure kind="pie" tone="grey" />,
+            }}
+          />
         </div>
 
         <InterviewCarousel />

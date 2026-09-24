@@ -1,7 +1,7 @@
 "use client";
 
 import { type MotionValue, motion, useReducedMotion, useScroll, useTransform } from "motion/react";
-import { useRef } from "react";
+import { type ReactNode, useRef } from "react";
 
 /**
  * What the desk publishes, and how the figures behind it are produced. These
@@ -57,12 +57,14 @@ function ChapterCard({
   total,
   progress,
   pinned,
+  figure,
 }: {
   chapter: (typeof CHAPTERS)[number];
   index: number;
   total: number;
   progress: MotionValue<number>;
   pinned: boolean;
+  figure?: ReactNode;
 }) {
   const slice = 1 / total;
   const start = index * slice + slice * 0.38;
@@ -79,6 +81,11 @@ function ChapterCard({
         pinned ? "absolute inset-0" : "relative min-h-svh"
       }`}
     >
+      {figure && (
+        <div className="pointer-events-none absolute top-1/2 right-[max(32px,calc((100vw_-_1480px)/2))] h-[min(62svh,520px)] aspect-[450/400] -translate-y-[38%] max-[1100px]:hidden">
+          {figure}
+        </div>
+      )}
       <div className={`border-t pt-[36px] ${chapter.rule}`}>
         <div className="grid grid-cols-[.42fr_1fr] gap-[40px] max-[900px]:grid-cols-1 max-[900px]:gap-[28px]">
           <div>
@@ -109,7 +116,10 @@ function ChapterCard({
  * `without` drops chapters by label, for pages where another section already
  * carries that content (the evolution preview replaces "The record").
  */
-export default function ChapterStack({ without = [] }: { without?: readonly string[] } = {}) {
+export default function ChapterStack({
+  without = [],
+  figures = {},
+}: { without?: readonly string[]; figures?: Readonly<Record<string, ReactNode>> } = {}) {
   const chapters = CHAPTERS.filter((chapter) => !without.includes(chapter.label));
   const reduceMotion = useReducedMotion();
   const trackRef = useRef<HTMLElement>(null);
@@ -139,6 +149,7 @@ export default function ChapterStack({ without = [] }: { without?: readonly stri
             total={chapters.length}
             progress={scrollYProgress}
             pinned={pinned}
+            figure={figures[chapter.label]}
           />
         ))}
       </div>

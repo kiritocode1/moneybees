@@ -192,10 +192,10 @@ export default function ResearchSection() {
         <div className="mt-[72px]">
           <SplitFrame>
             <Panel className="min-h-0">
-              <DotField sentence="From universe of ~6000 companies" keep={20} />
+              <DotField sentence="What is our selection process?" keep={20} />
             </Panel>
             <Panel className="grid place-items-center">
-              <BracketCaption text="Know Venture. Know Gain." className="w-full" />
+              <BracketCaption text="What makes us special?" className="w-full" />
             </Panel>
           </SplitFrame>
         </div>

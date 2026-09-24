@@ -99,3 +99,17 @@ body {
     animation: none;
   }
 }
+
+/* The card figures reference fixed gradient ids. In the chapter stack each
+   tone brings its own, so point the glow classes at that tone's gradients.
+   The extra `svg` keeps these above the card module's own rules. */
+[data-chapter-figure] svg .fig-marker { stroke: rgba(255, 255, 255, 0.6); }
+[data-chapter-figure="orange"] svg .fig-bloom { fill: url(#chapter-orange-bloom); }
+[data-chapter-figure="orange"] svg .fig-marker-glow { fill: url(#chapter-orange-glow); }
+[data-chapter-figure="orange"] svg .fig-beam { fill: url(#chapter-orange-beam); }
+[data-chapter-figure="ink"] svg .fig-bloom { fill: url(#chapter-ink-bloom); }
+[data-chapter-figure="ink"] svg .fig-marker-glow { fill: url(#chapter-ink-glow); }
+[data-chapter-figure="ink"] svg .fig-beam { fill: url(#chapter-ink-beam); }
+[data-chapter-figure="grey"] svg .fig-bloom { fill: url(#chapter-grey-bloom); }
+[data-chapter-figure="grey"] svg .fig-marker-glow { fill: url(#chapter-grey-glow); }
+[data-chapter-figure="grey"] svg .fig-beam { fill: url(#chapter-grey-beam); }
