@@ -4,11 +4,11 @@ import { useRef } from "react";
 import { barFaces, path, SQUASH, type Point } from "@/components/iso/geometry";
 import { type FigureProps, useFigureFrame } from "./figures";
 
-const CENTRE_X = 225;
-const GROUND_Y = 430;
-const easeInOut = (value: number) => (1 - Math.cos(Math.PI * value)) / 2;
+export const CENTRE_X = 225;
+export const GROUND_Y = 430;
+export const easeInOut = (value: number) => (1 - Math.cos(Math.PI * value)) / 2;
 
-function diamond(cx: number, cy: number, radiusX: number, radiusY: number) {
+export function diamond(cx: number, cy: number, radiusX: number, radiusY: number) {
   return path([
     [cx, cy - radiusY],
     [cx + radiusX, cy],
@@ -17,7 +17,7 @@ function diamond(cx: number, cy: number, radiusX: number, radiusY: number) {
   ]);
 }
 
-function slabFaces(cx: number, cy: number, radiusX: number, radiusY: number, depth: number) {
+export function slabFaces(cx: number, cy: number, radiusX: number, radiusY: number, depth: number) {
   return {
     top: diamond(cx, cy, radiusX, radiusY),
     wall: path([
@@ -94,19 +94,19 @@ export function WealthFigure({ active }: FigureProps) {
 
 /* ============================================================= research === */
 
-const RESEARCH_PLANES = [132, 108, 86, 66, 48, 29] as const;
-const RESEARCH_COUNTS = [13, 10, 8, 6, 4, 1] as const;
-const RESEARCH_Y = [216, 264, 311, 356, 399, 440] as const;
+export const RESEARCH_PLANES = [132, 108, 86, 66, 48, 29] as const;
+export const RESEARCH_COUNTS = [13, 10, 8, 6, 4, 1] as const;
+export const RESEARCH_Y = [216, 264, 311, 356, 399, 440] as const;
 const RESEARCH_LAST = RESEARCH_PLANES.length - 1;
 const RESEARCH_STEP = 0.85;
 const RESEARCH_HOLD = 1.1;
 const RESEARCH_FADE = 0.5;
 const RESEARCH_CYCLE = RESEARCH_LAST * RESEARCH_STEP + RESEARCH_HOLD + RESEARCH_FADE;
-const RESEARCH_DOT = 2;
-const RESEARCH_FINAL_DOT = 9;
+export const RESEARCH_DOT = 2;
+export const RESEARCH_FINAL_DOT = 9;
 
 /** Screen position of dot `index` on layer `stage`, matching the static layer dots. */
-function researchDot(stage: number, index: number): Point {
+export function researchDot(stage: number, index: number): Point {
   const count = RESEARCH_COUNTS[stage];
   const spread = Math.min(17, (RESEARCH_PLANES[stage] * 1.5) / count);
   return [
@@ -120,7 +120,7 @@ function researchDot(stage: number, index: number): Point {
  * fewer dots takes several arrivals on one position, so the dots merge as they
  * fall until all 13 share the single dot on the last layer.
  */
-const RESEARCH_PATHS = Array.from({ length: RESEARCH_COUNTS[0] }, (_, particle) =>
+export const RESEARCH_PATHS = Array.from({ length: RESEARCH_COUNTS[0] }, (_, particle) =>
   RESEARCH_COUNTS.map((count, stage) =>
     researchDot(stage, Math.round((particle * (count - 1)) / (RESEARCH_COUNTS[0] - 1))),
   ),
@@ -211,7 +211,7 @@ export function ResearchFigure({ active }: FigureProps) {
 
 /* ============================================================== pyramid === */
 
-type PyramidTier = {
+export type PyramidTier = {
   baseRadius: number;
   topRadius: number;
   bottomZ: number;
@@ -224,32 +224,32 @@ type PyramidTier = {
  * slope from the 132-unit base to the apex. There are no horizontal caps or
  * separated slabs.
  */
-const PYRAMID_TIERS: PyramidTier[] = [
+export const PYRAMID_TIERS: PyramidTier[] = [
   { baseRadius: 132, topRadius: 106, bottomZ: 0, topZ: 36 },
   { baseRadius: 106, topRadius: 80, bottomZ: 36, topZ: 72 },
   { baseRadius: 80, topRadius: 54, bottomZ: 72, topZ: 108 },
   { baseRadius: 54, topRadius: 28, bottomZ: 108, topZ: 144 },
   { baseRadius: 28, topRadius: 0, bottomZ: 144, topZ: 184 },
 ];
-const PYRAMID_NORMALS = [Math.PI / 2, Math.PI, -Math.PI / 2, 0] as const;
-const PYRAMID_SPIN = 0.9;
+export const PYRAMID_NORMALS = [Math.PI / 2, Math.PI, -Math.PI / 2, 0] as const;
+export const PYRAMID_SPIN = 0.9;
 const PYRAMID_APEX_TIER = PYRAMID_TIERS[PYRAMID_TIERS.length - 1];
 
-function projectAt(x: number, y: number, z: number, rotation: number): Point {
+export function projectAt(x: number, y: number, z: number, rotation: number): Point {
   const cosine = Math.cos(rotation);
   const sine = Math.sin(rotation);
   return [x * cosine - y * sine, (x * sine + y * cosine) * SQUASH - z];
 }
 
 /** Twice the signed area of a projected polygon; negative faces the viewer. */
-function winding(points: readonly Point[]) {
+export function winding(points: readonly Point[]) {
   return points.reduce((sum, [x, y], index) => {
     const [nextX, nextY] = points[(index + 1) % points.length];
     return sum + x * nextY - nextX * y;
   }, 0);
 }
 
-function squareCorners(radius: number, z: number, rotation: number) {
+export function squareCorners(radius: number, z: number, rotation: number) {
   return [
     projectAt(radius, radius, z, rotation),
     projectAt(-radius, radius, z, rotation),
