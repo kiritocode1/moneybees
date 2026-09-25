@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useRef } from "react";
+import { BracketLabel } from "./fact-section";
 
 const FOCUS = "focus-visible:outline-2 focus-visible:outline-[#F7A11A] focus-visible:outline-offset-4";
 
@@ -31,9 +32,8 @@ export default function PartnersSection() {
   return (
     <section aria-labelledby="partners-heading" className="bg-[#000000] py-[110px] text-white max-[600px]:py-[72px]">
       <div className="flex items-center justify-between px-[max(32px,calc((100vw_-_1480px)/2))] max-[600px]:px-[22px]">
-        <h2 id="partners-heading" className="flex items-center gap-[14px] text-[15px] font-[550] uppercase tracking-[.02em]">
-          <i className="h-[14px] w-[14px] bg-white" />
-          The fund&rsquo;s partners
+        <h2 id="partners-heading">
+          <BracketLabel>The fund&rsquo;s partners</BracketLabel>
         </h2>
         <div className="flex gap-[8px]">
           {[

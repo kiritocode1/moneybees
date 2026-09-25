@@ -3,22 +3,25 @@
 import { motion, useReducedMotion, useScroll, useTransform } from "motion/react";
 import Image from "next/image";
 import { useCallback, useRef } from "react";
-import {
-  ArrowRight,
-  Compass,
-  Eye,
-  HandHeart,
-  Hourglass,
-  Search,
-  Shield,
-  TagPrice,
-} from "reicon-react";
+import { ArrowRight } from "reicon-react";
+import { BracketLabel } from "@/components/fact-sections/fact-section";
+import FounderSection from "@/components/fact-sections/founder-section";
+import PhilosophySection from "@/components/fact-sections/philosophy-section";
+import ProductsSection from "@/components/fact-sections/products-section";
+import PicksSection from "@/components/fact-sections/picks-section";
+import RecordSection from "@/components/fact-sections/record-section";
+import ResearchSection from "@/components/fact-sections/research-section";
+import RiskSection from "@/components/fact-sections/risk-section";
+import TeamSection from "@/components/fact-sections/team-section";
+import WhySmallCapsSection from "@/components/fact-sections/why-small-caps-section";
+import ChapterFigure from "@/components/option-one/chapter-figure";
 import ChapterStack from "@/components/option-one/chapter-stack";
 import FrameworkRow from "@/components/option-one/framework-row";
-import InterviewCarousel from "@/components/option-one/interview-carousel";
-import PinnedStats from "@/components/option-one/pinned-stats";
-import QuotePanel from "@/components/option-one/quote-panel";
+import SiteFooter from "@/components/footer/site-footer";
 import SiteNavigation from "@/components/ui/site-navigation";
+import { Materialize } from "@/components/pixel-reveal/materialize";
+import { PixelRevealRoot } from "@/components/pixel-reveal/pixel-reveal";
+import { AIF_PRODUCT, AUDIENCE, INTRODUCTION, PMS_APPROACH, RANKINGS, PMS_PRODUCT, PMS_VS_AIF, PROCESS_CHAPTERS } from "@/lib/insights";
 import { EASE_OUT } from "@/lib/ease";
 
 /* Shared utility strings. These are whole literal class names so Tailwind's
@@ -31,48 +34,23 @@ const GUTTER = "px-[max(32px,calc((100vw_-_1480px)/2))]";
 const ARROW_TILE =
   "grid place-items-center not-italic transition-transform duration-200 ease-[ease] group-hover:translate-x-[2px] group-hover:-translate-y-[2px]";
 
-/** The four investment principles. See docs/direction.md, "The narrative". */
-const principles = [
-  [Search, "Fundamental research", "We understand the business before we value the security. Annual reports, unit economics, and the history of the people running it."],
-  [Compass, "Independent thinking", "Conviction comes from evidence we have gathered ourselves. Consensus is a starting point, never a reason to own something."],
-  [Hourglass, "Long-term ownership", "Business performance drives returns over years. Market noise drives them over weeks. We are invested in the first."],
-  [TagPrice, "Valuation discipline", "A good company is not a good investment at every price. Price is a decision in itself, not a detail of one."],
-] as const;
-
-/** Pure-play PMS and AIF. The two figures are SEBI statutory minimums, not Moneybee data. */
+/** Group profile p9 and p17, AIF presentation p9, as printed. The download rows are site actions. */
 const offerings = [
-  ["Portfolio Management Service", "₹50 lakh minimum"],
-  ["Alternative Investment Fund", "₹1 crore minimum"],
+  ["Moneybee PMS", "15 to 20 stocks"],
+  ["Flyingbee Investment Fund", "Rs. 1 crore minimum"],
   ["Disclosure Document and PPM", "Download"],
   ["Fee structure and illustration", "Download"],
 ] as const;
 
-/** How risk is handled, stated while nothing is going wrong. */
-const riskPractices = [
-  ["Downside", "Protect first", "Position sizing and cash levels are set so that a poor year stays survivable, not so that a good year looks better."],
-  ["Concentration", "Know each holding", "We hold few enough businesses that any one of them can be explained from memory, without notes."],
-  ["Turnover", "Trade rarely", "Low turnover keeps costs down and keeps more of the return once tax has been accounted for."],
-] as const;
-
 /**
- * A display heading whose lines rise out of a mask instead of fading in place.
- *
- * Each line gets its own `overflow-hidden` wrapper, so the type appears to be
- * uncovered from the baseline up. The wrapper needs vertical room for
- * descenders or `g` and `y` would sit clipped once the line has landed: the em
- * padding opens the clip box and the equal negative margin takes that room back
- * out of the flow, leaving line spacing exactly as `<br />` left it.
- *
- * The viewport trigger sits on the heading rather than on each line, so all
- * lines are driven by one intersection and the stagger stays deterministic no
- * matter how the heading happens to wrap.
+ * A display heading revealed with Pixel Reveal's materialize preset. Lines stay
+ * on their own lines; the hero's level-1 heading plays on load, the rest when
+ * they scroll into view.
  */
 function RisingHeading({
   lines,
   className = "",
   level = 2,
-  delay = 0,
-  stagger = 0.1,
 }: {
   lines: React.ReactNode[];
   className?: string;
@@ -80,93 +58,15 @@ function RisingHeading({
   delay?: number;
   stagger?: number;
 }) {
-  const reduceMotion = useReducedMotion();
-  const Tag = level === 1 ? motion.h1 : motion.h2;
   return (
-    <Tag
-      className={className}
-      initial={reduceMotion ? false : "hidden"}
-      whileInView="shown"
-      viewport={{ once: true, amount: 0.3 }}
-    >
+    <Materialize as={level === 1 ? "h1" : "h2"} trigger={level === 1 ? "load" : "inview"} className={className}>
       {lines.map((line, index) => (
-        <span
-          // A heading's lines are fixed content in a fixed order, and a line may be a
-          // node rather than a string, so position is the only stable identity here.
-          key={index}
-          className="block overflow-hidden pb-[.2em] -mb-[.2em]"
-        >
-          <motion.span
-            className="block"
-            variants={{
-              // Overshoot the mask height so no part of the line is ever visible
-              // in the descender room below it before the rise begins.
-              hidden: { y: "150%" },
-              shown: {
-                y: 0,
-                transition: {
-                  duration: reduceMotion ? 0 : 1.05,
-                  delay: reduceMotion ? 0 : delay + index * stagger,
-                  ease: EASE_OUT,
-                },
-              },
-            }}
-          >
-            {line}
-          </motion.span>
+        // A heading's lines are fixed content in a fixed order, so position is their identity.
+        <span key={index} className="block">
+          {line}
         </span>
       ))}
-    </Tag>
-  );
-}
-
-/**
- * A photograph that settles rather than arrives: it enters slightly overscaled
- * and eases back to its natural size behind a fixed frame. The frame does the
- * clipping so the surrounding layout never moves.
- */
-function SettlingImage({
-  className = "",
-  children,
-  amount = 0.25,
-}: {
-  className?: string;
-  children: React.ReactNode;
-  amount?: number;
-}) {
-  const reduceMotion = useReducedMotion();
-  return (
-    <motion.div
-      className={`overflow-hidden ${className}`}
-      initial={reduceMotion ? false : { scale: 1.16 }}
-      whileInView={{ scale: 1 }}
-      viewport={{ once: true, amount }}
-      transition={{ duration: reduceMotion ? 0 : 1.6, ease: EASE_OUT }}
-    >
-      {children}
-    </motion.div>
-  );
-}
-
-/* Every ground the wordmark sits on is now white or near-white, including the
-   washed photograph behind the fixed header, so it no longer needs a light and
-   a dark variant. */
-function Wordmark({ tagline = false }: { tagline?: boolean }) {
-  return (
-    <div className="flex items-center gap-[12px]">
-      <a
-        href="#top"
-        aria-label="Moneybee home"
-        className={`inline-flex w-max items-center gap-[8px] text-[15px] font-[650] tracking-[-.04em] text-[#000000] no-underline ${FOCUS}`}
-      >
-        Moneybee <span className="h-[7px] w-[7px] bg-[#F7A11A]" />
-      </a>
-      {tagline && (
-        <small className="text-[8px] font-medium uppercase text-[rgba(0,0,0,.6)]">
-          Small steps, Big Outcomes
-        </small>
-      )}
-    </div>
+    </Materialize>
   );
 }
 
@@ -192,7 +92,11 @@ function CornerLink({
   );
 }
 
-export default function Option1() {
+/**
+ * The Moneybee homepage. Facts come from the client decks (lib/insights.ts):
+ * headings are deck lines, paragraphs are rewritten plainly from deck facts.
+ */
+export default function Home() {
   const reduceMotion = useReducedMotion();
 
   // Parallax for the hero photograph. The layer is taller than the section and
@@ -250,6 +154,7 @@ export default function Option1() {
 
   return (
     <SiteNavigation>
+      <PixelRevealRoot>
       <main id="top" className="option-one overflow-clip bg-white text-[#000000]">
         <section ref={heroRef} className="relative flex min-h-svh flex-col overflow-hidden">
           <motion.div
@@ -294,7 +199,7 @@ export default function Option1() {
                 className="h-[68px] w-[94px] bg-[#9D9EA1] object-cover max-[600px]:h-[58px] max-[600px]:w-[80px]"
               />
               <p className="text-[12px] leading-[1.45] text-[rgba(0,0,0,.66)]">
-                Finding value where the market is not looking. Fundamental, bottom-up research into businesses that most portfolios never reach.
+                {INTRODUCTION.focus}
               </p>
             </motion.div>
           </div>
@@ -310,8 +215,8 @@ export default function Option1() {
             className="relative z-[2] mx-auto mt-auto flex w-[min(100%_-_64px,1480px)] flex-wrap items-end gap-x-[64px] gap-y-[22px] border-t border-t-[rgba(0,0,0,.14)] pt-[26px] pb-[46px] max-[900px]:w-[calc(100%_-_36px)] max-[900px]:gap-x-[40px] max-[600px]:gap-x-[32px] max-[600px]:gap-y-[18px] max-[600px]:pb-[30px]"
           >
             {[
-              ["Portfolio Management Service", "SEBI-registered portfolio manager"],
-              ["Alternative Investment Fund", "SEBI-registered fund"],
+              ["Portfolio Management Service", `SEBI ${PMS_PRODUCT.registration}`],
+              ["Alternative Investment Fund", `SEBI ${AIF_PRODUCT.registration}`],
               ["Moneybee Securities Pvt Ltd", "Mumbai, Maharashtra, India"],
             ].map(([title, detail]) => (
               <span key={title} className="grid gap-[5px]">
@@ -319,7 +224,7 @@ export default function Option1() {
                 <small className="text-[9px] uppercase tracking-[.06em] text-[rgba(0,0,0,.6)]">{detail}</small>
               </span>
             ))}
-            <CornerLink href="#philosophy" className="ml-auto">
+            <CornerLink href="#about" className="ml-auto">
               Scroll to explore
             </CornerLink>
           </motion.div>
@@ -395,94 +300,72 @@ export default function Option1() {
             {...reveal(0.78)}
             className="relative z-[1] mt-[46px] ml-[18%] max-w-[540px] text-[12px] leading-[1.55] text-[rgba(0,0,0,.64)] max-[600px]:ml-[12%]"
           >
-            Most portfolios are built from the same few hundred widely covered names. We work further down the market, among small and ultra-small businesses where fewer analysts look and where price and value drift furthest apart.
+            {PMS_APPROACH}
           </motion.p>
         </section>
 
-        <section
-          id="principles"
-          aria-label="Investment principles"
-          className="grid min-h-[840px] grid-cols-4 border-y border-y-[rgba(0,0,0,.13)] bg-[#9D9EA1] max-[900px]:min-h-0 max-[900px]:grid-cols-2 max-[600px]:grid-cols-1"
-        >
-          {principles.map(([Icon, title, copy], index) => (
-            <motion.article
-              key={title}
-              {...reveal(index * 0.08)}
-              className="group flex min-h-[840px] flex-col border-r border-r-[rgba(0,0,0,.13)] px-[38px] pt-[30px] pb-[56px] transition-colors duration-500 ease-[ease] last:border-r-0 hover:bg-[rgba(0,0,0,.03)] max-[900px]:min-h-[390px] max-[600px]:min-h-[340px] max-[600px]:border-r-0 max-[600px]:border-b max-[600px]:border-b-[rgba(0,0,0,.13)]"
-            >
-              <span className="text-[9px] text-[rgba(0,0,0,.62)]">0{index + 1}</span>
-              <i className="mt-[34px] grid h-[42px] w-[42px] place-items-center rounded-full border border-[rgba(247,161,26,.45)] text-[19px] not-italic text-[#F7A11A] transition-[color,border-color,transform] duration-500 ease-[ease] group-hover:-translate-y-[5px] group-hover:scale-110 group-hover:border-[rgba(247,161,26,.95)] group-hover:text-[#F7A11A]">
-                <Icon size={27} aria-hidden="true" />
-              </i>
-              <div className="mt-auto text-center">
-                <h2 className="font-serif text-[24px] font-normal">{title}</h2>
-                <p className="mx-auto mt-[16px] max-w-[230px] text-[10px] leading-[1.5] text-[rgba(0,0,0,.6)]">{copy}</p>
-              </div>
-            </motion.article>
-          ))}
-        </section>
-
-        <PinnedStats />
-
-        {/* The written introduction, held off the left edge so the white space
-            on that side does the work a rule would otherwise have to. Lead
-            paragraph first, then the detail underneath it at reading size. */}
-        <section
-          id="about"
-          className={`bg-white pt-[110px] pb-[130px] ${GUTTER} max-[600px]:px-[22px] max-[600px]:pt-[72px] max-[600px]:pb-[80px]`}
-        >
-          <div className="ml-[42%] max-w-[760px] max-[900px]:ml-0">
-            <motion.h2
-              {...reveal()}
-              className="text-[clamp(1.5rem,2.4vw,2.2rem)] font-[550] leading-[1.16] tracking-[-.03em] text-[#000000]"
-            >
-              Moneybee is a pure-play investment manager. A Portfolio Management Service and an Alternative
-              Investment Fund, both run off one research process.
-            </motion.h2>
-            <motion.div
-              {...reveal(0.12)}
-              className="mt-[38px] grid gap-[22px] text-[15px] leading-[1.6] text-[rgba(0,0,0,.76)] max-[600px]:text-[14px]"
-            >
-              <p>
-                We are not a broker and we do not distribute other people&rsquo;s products. The only way the firm earns
-                is by managing money, which puts our incentive and yours on the same side of the table: the quality
-                of the portfolio, not the number of transactions in it.
-              </p>
-              <p>
-                The research is bottom-up and mostly unglamorous. Annual reports, unit economics, and the history of
-                the people running the business. Much of it is spent among small and ultra-small companies, where
-                fewer analysts look and where price and value drift furthest apart.
-              </p>
-              <p>
-                Risk is set out in the same plain terms, while nothing is going wrong. Position sizing, cash levels
-                and turnover are decisions taken before a weak quarter rather than during one.{" "}
-                <a
-                  href="#desk"
-                  className={`text-[#000000] underline underline-offset-[5px] transition-colors duration-200 ease-[ease] hover:text-[#F7A11A] ${FOCUS}`}
-                >
-                  Read what the desk publishes.
-                </a>
-              </p>
+        {/* 1 · Who we are. Group profile p4, p3 and p5, verbatim. */}
+        <section id="about" className={`bg-white pt-[110px] pb-[100px] ${GUTTER} max-[600px]:px-[22px] max-[600px]:pt-[72px]`}>
+          <BracketLabel>About Moneybee</BracketLabel>
+          <div className="mt-[22px] grid grid-cols-[1fr_.8fr] items-end gap-[60px] max-[900px]:grid-cols-1 max-[900px]:gap-[28px]">
+            <Materialize as="h2" className="text-[clamp(2.2rem,3.6vw,3.8rem)] font-light leading-[1.02] tracking-[-.045em]">
+              {INTRODUCTION.lead}
+            </Materialize>
+            <motion.div {...reveal(0.12)} className="grid gap-[16px] text-[15px] leading-[1.6] text-[rgba(0,0,0,.76)]">
+              <p>{INTRODUCTION.advice}</p>
+              <p>{INTRODUCTION.team}</p>
             </motion.div>
           </div>
         </section>
 
+        {/* Recognition, after Wonder Vision's: the one centred section, plain facts, no boast. */}
+        <section aria-labelledby="recognition-heading" className={`bg-white pt-[40px] pb-[130px] text-center ${GUTTER} max-[600px]:px-[22px]`}>
+          <Materialize as="h2" id="recognition-heading" className="text-[clamp(3rem,5.4vw,5.6rem)] leading-none font-light tracking-[-.05em] uppercase">
+            Recognition
+          </Materialize>
+          <p className="mx-auto mt-[26px] max-w-[52ch] text-[16px] leading-[1.6] text-[rgba(0,0,0,.72)]">
+            Ranked among India&rsquo;s top performing portfolio managers by PMS Bazaar, December 2024.
+          </p>
+          <dl className="mx-auto mt-[56px] grid max-w-[980px] grid-cols-3 border-y border-y-[#000] max-[600px]:grid-cols-1">
+            {RANKINGS.map(([rank, period]) => (
+              <div key={period} className="border-r border-r-[rgba(0,0,0,.13)] py-[34px] last:border-r-0 max-[600px]:border-r-0 max-[600px]:border-b max-[600px]:last:border-b-0">
+                <dt className="text-[clamp(3.4rem,6vw,6rem)] leading-none font-light tracking-[-.05em]">{rank}</dt>
+                <dd className="mt-[12px] text-[13px] uppercase tracking-[.06em] text-[rgba(0,0,0,.6)]">{period}</dd>
+              </div>
+            ))}
+          </dl>
+        </section>
+
+        {/* 2 · Why small caps */}
+        <WhySmallCapsSection />
+        {/* 3 · What we believe */}
+        <PhilosophySection />
+        {/* 4 · How we choose */}
+        <ResearchSection />
+        {/* 5 · How we protect */}
+        <RiskSection />
+        {/* 6 · What it has produced */}
+        <PicksSection />
+        <div id="performance">
+          <RecordSection />
+        </div>
+        {/* 7 · What you can invest in */}
         <section
           id="what-we-do"
           className={`relative grid min-h-[880px] grid-cols-[.32fr_1fr] gap-[50px] overflow-hidden bg-white py-[68px] ${GUTTER} max-[900px]:min-h-0 max-[900px]:grid-cols-1 max-[600px]:px-[22px] max-[600px]:py-[60px]`}
         >
           <div className="absolute top-[27%] left-[61%] h-[560px] w-[560px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,rgba(247,161,26,.13)_0%,rgba(247,161,26,.05)_38%,transparent_70%)] blur-[4px]" />
           <p className="relative z-[2] max-w-[210px] text-[10px] leading-[1.5] text-[rgba(0,0,0,.6)] max-[900px]:mb-[20px]">
-            A PMS holds securities in your own name. An AIF pools capital under a single strategy.
+            {PMS_VS_AIF}
           </p>
           <div className="relative z-[2]">
             <RisingHeading
-              lines={["Two products.", "One research", "process."]}
+              lines={["Specialising in", "small and mid-cap", "Indian equities"]}
               className="max-w-[900px] text-center text-[clamp(4.5rem,7vw,7.5rem)] font-light leading-[.91] tracking-[-.06em] text-[#000000] max-[600px]:text-[3.7rem]"
             />
             <div className="mt-[40px] ml-[20%] grid grid-cols-[1fr_310px] items-end gap-[60px] max-[900px]:ml-0 max-[600px]:mt-[36px] max-[600px]:grid-cols-1">
               <p className="max-w-[400px] text-[11px] leading-[1.55] text-[rgba(0,0,0,.64)]">
-                A Portfolio Management Service and an Alternative Investment Fund. What differs between them is structure, eligibility, and the kind of capital each is built to hold. The research behind both is the same.
+                Long-only Indian equities, mostly small and mid caps. Flyingbee, our AIF, can also own companies before they list.
               </p>
               <Image
                 src="https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=600&q=90"
@@ -520,234 +403,49 @@ export default function Option1() {
             className="absolute bottom-[44px] left-[max(32px,calc((100vw_-_1480px)/2))] h-[168px] w-[248px] object-cover max-[900px]:hidden"
           />
         </section>
-
-        <section
-          id="risk"
-          className={`relative min-h-[880px] overflow-hidden bg-white pt-[44px] pb-[40px] ${GUTTER} max-[900px]:min-h-0 max-[600px]:px-[22px] max-[600px]:pt-[52px] max-[600px]:pb-[44px]`}
-        >
-          <div className="absolute top-[28%] left-[48%] h-[780px] w-[780px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,rgba(247,161,26,.13)_0%,rgba(247,161,26,.05)_38%,transparent_70%)] blur-[4px]" />
-          <p className="relative z-[2] max-w-[340px] text-[10px] leading-[1.5] text-[rgba(0,0,0,.6)]">
-            Most firms discuss risk only once it has arrived. We set ours out while nothing is going wrong.
-          </p>
+        <ProductsSection bare />
+        {/* 8 · Who manages it */}
+        <FounderSection />
+        <TeamSection />
+        {/* 9 · What we publish, and how to begin */}
+        <ChapterStack
+          content={{
+            "The letter": PROCESS_CHAPTERS.monitor,
+            "The method": PROCESS_CHAPTERS.diligence,
+            "The record": PROCESS_CHAPTERS.sectors,
+          }}
+          figures={{
+            "The letter": <ChapterFigure kind="beacon" tone="orange" />,
+            "The method": <ChapterFigure kind="bars" tone="ink" />,
+            "The record": <ChapterFigure kind="pie" tone="grey" />,
+          }}
+        />
+        <section className={`bg-white py-[140px] ${GUTTER} max-[600px]:px-[22px] max-[600px]:py-[90px]`}>
+          <BracketLabel>Who we work with</BracketLabel>
           <RisingHeading
-            className="relative z-[2] mt-[16px] text-center text-[clamp(4.4rem,7.6vw,8rem)] font-light leading-[.9] tracking-[-.065em] text-[#000000] max-[600px]:text-[3.6rem]"
-            lines={[
-              "How we",
-              <>
-                think about{" "}
-                <span className="inline-block h-[82px] w-[170px] align-middle max-[600px]:h-[50px] max-[600px]:w-[100px]">
-                  <Image
-                    src="https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=330&q=85"
-                    alt="A Moneybee portfolio manager"
-                    width={170}
-                    height={82}
-                    className="h-full w-full object-cover"
-                  />
-                </span>
-              </>,
-              "risk",
-            ]}
+            lines={[AUDIENCE.pms]}
+            className="mt-[22px] max-w-[1100px] text-[clamp(2.6rem,5vw,5.4rem)] font-light leading-[.98] tracking-[-.05em]"
           />
-          <div className="relative z-[2] mx-auto mt-[24px] grid max-w-[610px] grid-cols-[1fr_42px] items-center gap-[40px]">
-            <p className="max-w-[440px] text-[11px] leading-[1.55] text-[rgba(0,0,0,.6)]">
-              Every investment carries risk. Managing it is our responsibility, and this is how we go about it.
-            </p>
-            <i className="grid h-[42px] w-[42px] place-items-center bg-[#000000] not-italic text-white shadow-[0_0_28px_rgba(0,0,0,.18)]">
-              <Shield size={22} aria-hidden="true" />
-            </i>
-          </div>
-          <div className="relative z-[2] mt-[28px] border-t border-t-[rgba(0,0,0,.13)]">
-            {riskPractices.map(([label, headline, copy], index) => (
-              <motion.div
-                key={label}
-                {...reveal(index * 0.07)}
-                className="grid min-h-[68px] grid-cols-[.55fr_.7fr_1fr] items-center gap-[40px] border-b border-b-[rgba(0,0,0,.13)] max-[600px]:grid-cols-[.5fr_.7fr] max-[600px]:gap-[16px] max-[600px]:py-[20px]"
-              >
-                <span className="text-[10px] text-[rgba(0,0,0,.6)]">{label}</span>
-                <strong className="max-w-[20ch] text-[clamp(1.9rem,2.9vw,3.3rem)] font-normal leading-[.98] tracking-[-.035em]">{headline}</strong>
-                <p className="max-w-[410px] text-[10px] leading-[1.45] text-[rgba(0,0,0,.6)] max-[600px]:col-start-2">{copy}</p>
-              </motion.div>
-            ))}
-          </div>
-          <div className="relative z-[2] mt-[28px] grid grid-cols-2 max-[600px]:grid-cols-1">
-            <motion.article
-              {...reveal()}
-              className="grid min-h-[132px] grid-cols-[70px_1fr] items-center gap-[22px] bg-[#000000] p-[36px] text-white"
-            >
-              <i className="text-[42px] font-[200] not-italic"><Eye size={46} aria-hidden="true" /></i>
-              <div>
-                <h3 className="font-serif text-[23px] font-normal">Nothing hidden</h3>
-                <p className="mt-[10px] max-w-[390px] text-[9px] leading-[1.5] text-white">
-                  Holdings, changes, costs and mistakes are reported the same way in a weak quarter as in a strong one.
-                </p>
-              </div>
-            </motion.article>
-            <motion.article
-              {...reveal(0.08)}
-              className="grid min-h-[132px] grid-cols-[70px_1fr] items-center gap-[22px] bg-[#F7A11A] p-[36px] text-white"
-            >
-              <i className="text-[42px] font-[200] not-italic"><HandHeart size={46} aria-hidden="true" /></i>
-              <div>
-                <h3 className="font-serif text-[23px] font-normal">Capital held in trust</h3>
-                <p className="mt-[10px] max-w-[390px] text-[9px] leading-[1.5] text-white">
-                  A mandate belongs to the family that gave it to us. Every decision behind it stays open to question.
-                </p>
-              </div>
-            </motion.article>
-          </div>
+          <motion.p {...reveal(0.2)} className="mt-[26px] text-[13px] text-[rgba(0,0,0,.66)]">
+            {AUDIENCE.aif}
+          </motion.p>
+          <motion.div {...reveal(0.3)}>
+            <CornerLink className="mt-[40px]">Schedule a conversation</CornerLink>
+          </motion.div>
         </section>
 
-        {/* The desk, in three parts: what it believes, then what it publishes
-            and how the figures behind that are produced. The chapter cards carry
-            the content the standalone performance section used to hold. */}
-        <div id="desk">
-          <QuotePanel />
-        </div>
-        <div id="performance">
-          <ChapterStack />
-        </div>
-
-        <InterviewCarousel />
-
-        <section className="relative min-h-svh overflow-hidden">
-          <SettlingImage className="absolute inset-0">
-            <Image
-              src="https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?auto=format&fit=crop&w=2200&q=90"
-              alt="Market data on a trading screen"
-              fill
-              sizes="100vw"
-              className="object-cover"
-            />
-          </SettlingImage>
-          <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,.9),rgba(255,255,255,.93))]" />
-          {/* The three pinned frames drop in from their own edges, so the collage
-              assembles itself around the closing line rather than arriving whole. */}
-          <motion.div
-            initial={reduceMotion ? false : { opacity: 0, y: -46 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.4 }}
-            transition={{ duration: reduceMotion ? 0 : 1.1, ease: EASE_OUT }}
-            className="absolute top-0 left-0 z-[2] h-[236px] w-[376px] max-[900px]:h-[140px] max-[900px]:w-[210px] max-[600px]:h-[100px] max-[600px]:w-[145px]"
-          >
-            <Image
-              src="https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=800&q=85"
-              alt="An analyst at work"
-              width={520}
-              height={300}
-              className="h-full w-full object-cover"
-            />
-          </motion.div>
-          <motion.div
-            initial={reduceMotion ? false : { opacity: 0, y: -46 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.4 }}
-            transition={{ duration: reduceMotion ? 0 : 1.1, delay: reduceMotion ? 0 : 0.12, ease: EASE_OUT }}
-            className="absolute top-0 right-[11%] z-[2] h-[180px] w-[290px] max-[900px]:h-[140px] max-[900px]:w-[210px] max-[600px]:h-[100px] max-[600px]:w-[145px]"
-          >
-            <Image
-              src="https://images.unsplash.com/photo-1521737711867-e3b97375f902?auto=format&fit=crop&w=600&q=85"
-              alt="A portfolio discussion"
-              width={350}
-              height={220}
-              className="h-full w-full object-cover"
-            />
-          </motion.div>
-          <motion.div
-            initial={reduceMotion ? false : { opacity: 0, y: 46 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.4 }}
-            transition={{ duration: reduceMotion ? 0 : 1.1, delay: reduceMotion ? 0 : 0.24, ease: EASE_OUT }}
-            className="absolute right-0 bottom-0 z-[2] h-[268px] w-[506px] max-[900px]:h-[140px] max-[900px]:w-[210px] max-[600px]:h-[100px] max-[600px]:w-[145px]"
-          >
-            <Image
-              src="https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=900&q=85"
-              alt="The Moneybee office"
-              width={650}
-              height={360}
-              className="h-full w-full object-cover"
-            />
-          </motion.div>
-          <div className="relative z-[3] flex min-h-svh flex-col items-center justify-center text-center max-[600px]:px-[24px]">
-            <RisingHeading
-              lines={["Every meaningful investment", "relationship begins with", "a conversation"]}
-              className="max-w-[1100px] font-serif text-[clamp(2.4rem,4vw,4.6rem)] font-normal leading-[1.02] max-[600px]:text-[2.4rem]"
-            />
-            <motion.span
-              {...reveal(0.34)}
-              className="mt-[20px] block max-w-[470px] text-[11px] leading-[1.5] text-[rgba(0,0,0,.66)]"
-            >
-              We would like to understand your objectives before discussing ours.
-            </motion.span>
-            <motion.div {...reveal(0.42)}>
-              <CornerLink className="mt-[36px]">Schedule a conversation</CornerLink>
-            </motion.div>
-          </div>
-        </section>
-
-        <footer
-          id="contact"
-          className="mx-auto mb-[32px] min-h-[560px] w-[calc(100%_-_64px)] bg-[#9D9EA1] px-[54px] pt-[60px] pb-[30px] text-[#000000] max-[600px]:w-[calc(100%_-_24px)] max-[600px]:px-[24px] max-[600px]:pt-[42px] max-[600px]:pb-[20px]"
-        >
-          <div className="grid grid-cols-[1fr_auto_60px] items-start gap-[28px] pb-[56px] max-[600px]:grid-cols-[1fr_auto] max-[600px]:gap-[32px]">
-            <Wordmark />
-            <div className="text-right uppercase max-[600px]:col-[1/-1] max-[600px]:row-start-2 max-[600px]:text-left">
-              <p className="text-[10px] font-[650] leading-[1.35]">“Small steps,<br />Big Outcomes.”</p>
-              <small className="mt-[12px] block text-[8px] text-[rgba(0,0,0,.62)]">Moneybee</small>
-            </div>
-            <a
-              href="#contact"
-              aria-label="Schedule a conversation"
-              className={`group grid h-[54px] w-[54px] justify-self-end place-items-center bg-[#000000] text-white no-underline transition-transform duration-200 ease-[ease] hover:translate-x-[2px] hover:-translate-y-[2px] max-[600px]:col-start-2 max-[600px]:row-start-1 ${FOCUS}`}
-            >
-              <ArrowRight size={16} aria-hidden="true" />
-            </a>
-          </div>
-          <div className="grid grid-cols-[1.3fr_repeat(4,1fr)] gap-[50px] pt-[48px] pb-[72px] max-[900px]:grid-cols-2 max-[600px]:grid-cols-2 max-[600px]:gap-x-[20px] max-[600px]:gap-y-[42px]">
-            <div>
-              <span className="mb-[20px] block text-[8px] text-[rgba(0,0,0,.62)]">Our approach</span>
-              <p className="mt-[8px] block text-[10px] leading-[1.5] text-[#000000]">Fundamental research.<br />Long-term ownership.</p>
-            </div>
-            <div>
-              <span className="mb-[20px] block text-[8px] text-[rgba(0,0,0,.62)]">Office</span>
-              <p className="mt-[8px] block text-[10px] leading-[1.5] text-[#000000]">Mumbai, Maharashtra<br />India</p>
-            </div>
-            {[
-              ["Explore", [["Philosophy", "#philosophy"], ["What we do", "#what-we-do"], ["Investment desk", "#desk"], ["Managing risk", "#risk"], ["Performance", "#performance"]]],
-              ["Regulatory", [["Investor Charter", "#contact"], ["Disclosure Document", "#contact"], ["Grievance redressal", "#contact"], ["SEBI SCORES", "#contact"]]],
-              ["Investors", [["Investor login", "https://www.moneybee.in/register.php"], ["Speak with our team", "#contact"]]],
-            ].map(([heading, links]) => (
-              <div key={heading as string}>
-                <span className="mb-[20px] block text-[8px] text-[rgba(0,0,0,.62)]">{heading as string}</span>
-                {(links as string[][]).map(([label, href]) => (
-                  <a
-                    key={label}
-                    href={href}
-                    className={`mt-[8px] block text-[10px] leading-[1.5] text-[#000000] no-underline transition-colors duration-200 ease-[ease] hover:text-[#F7A11A] ${FOCUS}`}
-                  >
-                    {label}
-                  </a>
-                ))}
-              </div>
-            ))}
-          </div>
-          <div className="flex justify-between gap-[50px] border-t border-t-[rgba(0,0,0,.14)] pt-[24px] max-[600px]:flex-col">
-            <p className="max-w-[760px] text-[8px] leading-[1.5] text-[rgba(0,0,0,.62)]">
-              Investments in securities are subject to market risk, including the loss of principal. Read all related documents carefully before investing. Registration with SEBI does not imply approval or endorsement of the portfolio manager by the Board. Past performance is not indicative of future results.
-            </p>
-            <div className="flex gap-[22px]">
-              {[["Privacy", "#top"], ["Terms", "#top"], ["Back to top ↑", "#top"]].map(([label, href]) => (
-                <a
-                  key={label}
-                  href={href}
-                  className={`text-[8px] text-[#000000] no-underline transition-colors duration-200 ease-[ease] hover:text-[#F7A11A] ${FOCUS}`}
-                >
-                  {label}
-                </a>
-              ))}
-            </div>
-          </div>
-        </footer>
+        <SiteFooter
+          explore={[
+            ["About Moneybee", "#about"],
+            ["Our philosophy", "#philosophy-pillars"],
+            ["Our process", "#research"],
+            ["Performance", "#performance"],
+            ["Our strategies", "#what-we-do"],
+            ["Team", "#team"],
+          ]}
+        />
       </main>
+      </PixelRevealRoot>
     </SiteNavigation>
   );
 }

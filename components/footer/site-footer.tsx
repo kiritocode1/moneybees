@@ -1,7 +1,8 @@
 import { ArrowRight } from "reicon-react";
 import { BracketLabel } from "@/components/fact-sections/fact-section";
-import { CONTACT, PILLARS, REGISTRATIONS } from "@/lib/insights";
+import { CONTACT, REGISTRATIONS } from "@/lib/insights";
 import DotWordmark from "./dot-wordmark";
+import MumbaiClock from "./mumbai-clock";
 
 const FOCUS = "focus-visible:outline-2 focus-visible:outline-[#F7A11A] focus-visible:outline-offset-4";
 const GUTTER = "px-[max(32px,calc((100vw_-_1480px)/2))] max-[600px]:px-[22px]";
@@ -9,8 +10,9 @@ const GUTTER = "px-[max(32px,calc((100vw_-_1480px)/2))] max-[600px]:px-[22px]";
 type Link = readonly [label: string, href: string];
 
 /**
- * The footer, after footer.design: United Carriers' dot-matrix wordmark and
- * word marquee, ESR's restraint, Heron's hairline columns. White ground and
+ * The footer, after footer.design and Aspen Search: a closing brand line with
+ * the office clock, a contact band, Heron's hairline columns, and United
+ * Carriers' dot-matrix wordmark to end on. White ground and
  * ink hairlines to match the evolved homepage. Every line is either the
  * existing footer's or the decks' own (contact p17, registrations p15,
  * pillars p4).
@@ -18,31 +20,34 @@ type Link = readonly [label: string, href: string];
 export default function SiteFooter({ explore }: { explore: readonly Link[] }) {
   const columns: readonly (readonly [string, readonly Link[]])[] = [
     ["Explore", explore],
-    ["Regulatory", [["Investor Charter", "#contact"], ["Disclosure Document", "#contact"], ["Grievance redressal", "#contact"], ["SEBI SCORES", "#contact"]]],
-    ["Investors", [["Investor login", "https://www.moneybee.in/register.php"], ["Speak with our team", "#contact"]]],
+    ["Investors", [["Investor login", "https://www.moneybee.in/register.php"], ["Investor Charter", "#contact"], ["Disclosure Document", "#contact"], ["Grievance redressal", "#contact"], ["SEBI SCORES", "#contact"]]],
   ];
 
   return (
     <footer id="contact" className="border-t border-t-[#000] bg-white text-[#000000]">
-      <div className={`flex items-start justify-between gap-[32px] pt-[48px] pb-[40px] ${GUTTER}`}>
+      {/* Aspen's closing band: the brand line set large, and a contact band
+          that fills with the accent on hover. */}
+      <div className={`grid grid-cols-[1fr_auto] items-end gap-[40px] pt-[80px] pb-[56px] max-[900px]:grid-cols-1 ${GUTTER}`}>
         <div>
           <svg viewBox="200 205 1455 445" width="180" height="55" className="block" aria-label="Moneybee">
             <image href="/moneybee-logo.svg" width="2048" height="897" />
           </svg>
-          <p className="mt-[18px] text-[13px] tracking-[-.01em]">Know Venture. Know Gain.</p>
+          <p className="mt-[36px] text-[clamp(2.6rem,5.4vw,5.6rem)] leading-[.95] font-light tracking-[-.055em]">Know Venture. Know Gain.</p>
         </div>
-        <a
-          href="#contact"
-          className={`group inline-flex items-center gap-[12px] text-[12px] no-underline ${FOCUS}`}
-        >
-          Schedule a conversation
-          <i className="grid h-[44px] w-[44px] place-items-center bg-[#000] text-white not-italic transition-transform duration-200 group-hover:translate-x-[2px] group-hover:-translate-y-[2px]">
-            <ArrowRight size={16} aria-hidden="true" />
-          </i>
-        </a>
+        <MumbaiClock />
       </div>
+      <a
+        href="mailto:marketingaif@moneybee.in"
+        className={`group relative flex items-center justify-between overflow-hidden border-t border-t-[#000] py-[30px] text-[clamp(1.4rem,2.4vw,2.2rem)] font-light tracking-[-.03em] text-[#000] no-underline ${GUTTER} ${FOCUS}`}
+      >
+        <span className="absolute inset-0 origin-left scale-x-0 bg-[#F7A11A] transition-transform duration-500 ease-[cubic-bezier(.16,1,.3,1)] group-hover:scale-x-100" aria-hidden="true" />
+        <span className="relative">Schedule a conversation</span>
+        <i className="relative grid h-[52px] w-[52px] place-items-center bg-[#000] text-white not-italic">
+          <ArrowRight size={18} aria-hidden="true" />
+        </i>
+      </a>
 
-      <div className="grid grid-cols-[1fr_1fr_1fr_1.5fr] gap-px border-y border-y-[#000] bg-[#000] max-[900px]:grid-cols-2 max-[600px]:grid-cols-1">
+      <div className="grid grid-cols-[1fr_1fr_1.4fr] gap-px border-y border-y-[#000] bg-[#000] max-[900px]:grid-cols-2 max-[600px]:grid-cols-1">
         {columns.map(([heading, links]) => (
           <nav key={heading} aria-label={heading} className="bg-white p-[28px] max-[600px]:p-[22px]">
             <BracketLabel>{heading}</BracketLabel>
@@ -86,18 +91,6 @@ export default function SiteFooter({ explore }: { explore: readonly Link[] }) {
             ))}
           </dl>
         </address>
-      </div>
-
-      {/* United Carriers' word marquee, carrying the six pillars. Pure CSS, paused under reduced motion. */}
-      <div className="overflow-hidden border-b border-b-[rgba(0,0,0,.13)] py-[22px]" aria-hidden="true">
-        <div className="footer-marquee flex w-max text-[clamp(1.6rem,3vw,2.8rem)] font-light tracking-[-.04em] text-[rgba(0,0,0,.22)]">
-          {[...PILLARS, ...PILLARS].map((pillar, index) => (
-            <span key={index} className="flex items-center gap-[48px] pr-[48px] whitespace-nowrap">
-              <span className="h-[9px] w-[9px] bg-[#F7A11A]" />
-              {pillar.name}
-            </span>
-          ))}
-        </div>
       </div>
 
       <div className={`grid grid-cols-[1fr_auto] items-start gap-[40px] pt-[22px] pb-[10px] text-[10px] leading-[1.55] max-[900px]:grid-cols-1 ${GUTTER}`}>

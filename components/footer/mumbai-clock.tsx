@@ -1,0 +1,24 @@
+"use client";
+
+import { useEffect, useState } from "react";
+
+const format = new Intl.DateTimeFormat("en-IN", { hour: "2-digit", minute: "2-digit", hour12: false, timeZone: "Asia/Kolkata" });
+
+/** The Mumbai office's local time, after Aspen's office clocks. Rendered after mount so server and client agree. */
+export default function MumbaiClock() {
+  const [time, setTime] = useState<string | null>(null);
+  useEffect(() => {
+    const tick = () => setTime(format.format(new Date()));
+    tick();
+    const id = window.setInterval(tick, 15000);
+    return () => window.clearInterval(id);
+  }, []);
+  return (
+    <p className="text-right text-[12px] uppercase tracking-[.06em] max-[900px]:text-left">
+      <span className="block text-[rgba(0,0,0,.55)]">Mumbai</span>
+      <span className="mt-[4px] block font-mono text-[clamp(1.6rem,2.4vw,2.2rem)] tracking-[-.02em] normal-case tabular-nums">
+        {time ?? "--:--"} <span className="text-[13px] text-[rgba(0,0,0,.55)]">IST</span>
+      </span>
+    </p>
+  );
+}

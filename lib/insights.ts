@@ -193,7 +193,7 @@ export const RISK_RULES: readonly RiskRule[] = [
   },
   {
     name: "Liquidity",
-    rule: "Only stocks we can buy and sell cleanly.",
+    rule: "We only buy stocks that trade enough to get in and out without moving the price.",
     detail: [
       "Enough trading volume to enter and exit without moving the price.",
       "A cash reserve for liquidity and volatility.",
@@ -202,7 +202,7 @@ export const RISK_RULES: readonly RiskRule[] = [
   },
   {
     name: "Market",
-    rule: "Patience.",
+    rule: "We hold for at least three years and sit through market swings instead of trading them.",
     detail: [
       "Markets move on the economy and on events. We sit through the swings instead of trading them.",
       "At least three years, or for as long as the reason for owning holds.",

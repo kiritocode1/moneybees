@@ -91,9 +91,6 @@ function ConcentrationPanel() {
           strokeDasharray={capped ? undefined : "4 4"}
           style={{ filter: capped ? "drop-shadow(0 0 6px rgba(247,161,26,.7))" : "none", transition: "stroke 300ms ease" }}
         />
-        <text x="300" y={capY - 8} textAnchor="end" fontSize="11" fontFamily="ui-monospace, Menlo, monospace" fill="#000" opacity={capped ? 1 : 0.5}>
-          maximum sector allocation 30%
-        </text>
         <line x1="24" x2="300" y1={baseY - GAP / 2} y2={baseY - GAP / 2} stroke="rgba(0,0,0,.35)" />
       </svg>
     </div>
@@ -104,14 +101,10 @@ function ConcentrationPanel() {
 function ValuationPanel() {
   return (
     <div className="grid h-full grid-rows-[auto_1fr]">
-      <div className="p-[28px] max-[600px]:p-[20px]">
-        <BracketLabel>{VALUATION.name} risk</BracketLabel>
-      </div>
+      <PanelHead name={VALUATION.name} rule={VALUATION.rule} />
       <div className="grid place-items-center pb-[40px]">
         {/* The deck's short form of the rule (AIF p4), so the ribbon reads at a glance. */}
         <BracketCaption text="Invest only when value outweighs price" loop className="w-full" />
-        <p className="mb-[14px] max-w-[40ch] px-[28px] text-center text-[13px] leading-[1.5] text-[#000000]">{VALUATION.rule}</p>
-        <p className="max-w-[40ch] px-[28px] text-center text-[11px] leading-[1.55] text-[rgba(0,0,0,.6)]">{VALUATION.detail.join(" ")}</p>
       </div>
     </div>
   );
@@ -138,7 +131,6 @@ function LiquidityPanel() {
       <PanelHead name={LIQUIDITY.name} rule={LIQUIDITY.rule} />
       <svg viewBox="0 0 640 190" className="absolute inset-x-0 bottom-[40px] w-full" aria-hidden="true">
         <path d={price} fill="none" stroke={ORANGE} strokeWidth="1.6" style={{ filter: LINE_GLOW }} />
-        <text x="630" y="26" textAnchor="end" fontSize="11" fontFamily="ui-monospace, Menlo, monospace" fill="#000">stock price</text>
         {[...lane(110, 1), ...lane(160, -1)].map((dot, index) =>
           dot.hollow ? (
             <circle key={index} cx={dot.x} cy={dot.y} r="11" fill="none" stroke="rgba(0,0,0,.3)" />
@@ -146,10 +138,7 @@ function LiquidityPanel() {
             <circle key={index} cx={dot.x} cy={dot.y} r="11" fill="#000" />
           ),
         )}
-        <text x="10" y="92" fontSize="11" fontFamily="ui-monospace, Menlo, monospace" fill="rgba(0,0,0,.55)">enter</text>
-        <text x="10" y="186" fontSize="11" fontFamily="ui-monospace, Menlo, monospace" fill="rgba(0,0,0,.55)">exit</text>
       </svg>
-      <p className="absolute bottom-[12px] left-[28px] max-w-[60ch] text-[10px] leading-[1.5] text-[rgba(0,0,0,.55)] max-[600px]:left-[20px]">{LIQUIDITY.detail[1]}</p>
     </div>
   );
 }
@@ -172,9 +161,6 @@ function MarketPanel() {
         <path d={line} fill="none" stroke={ORANGE} strokeWidth="1.5" style={{ filter: "drop-shadow(0 0 6px rgba(247,161,26,.6))" }} />
       </svg>
       <PanelHead name={MARKET.name} rule={MARKET.rule} />
-      <p className="relative z-[1] -mt-[14px] max-w-[40ch] px-[28px] text-[11px] leading-[1.55] text-[rgba(0,0,0,.6)] max-[600px]:px-[20px]">
-        {MARKET.detail[1]}
-      </p>
       <strong
         aria-hidden="true"
         className="absolute bottom-[-0.14em] left-[-0.04em] text-[clamp(6rem,13vw,13rem)] leading-none font-normal tracking-[-.06em] whitespace-nowrap"

@@ -97,11 +97,16 @@ export type FigureState = {
   onSelect: (part: number) => void;
 };
 
-/** A section label in the reference's bracket style: orange brackets around a plain label. */
+/**
+ * The one section label used across the page, after Wonder Vision: a small
+ * solid square and an uppercase label. It inherits the text colour, so it
+ * reads on the dark bands as well as on paper.
+ */
 export function BracketLabel({ children }: { children: ReactNode }) {
   return (
-    <span className="text-[14px] tracking-[-.01em] text-[rgba(0,0,0,.8)]">
-      <span className="text-[#F7A11A]">[</span> {children} <span className="text-[#F7A11A]">]</span>
+    <span className="inline-flex items-center gap-[10px] text-[13px] font-[550] uppercase tracking-[.03em]">
+      <i className="h-[10px] w-[10px] shrink-0 bg-current" aria-hidden="true" />
+      {children}
     </span>
   );
 }

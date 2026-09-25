@@ -134,7 +134,7 @@ export default function TeamSection() {
           </AnimatePresence>
         </div>
 
-        <ol className="grid list-none grid-cols-6 gap-[10px] p-0 max-[1000px]:order-1 max-[1000px]:grid-cols-3 max-[600px]:grid-cols-2">
+        <ol className="grid list-none grid-cols-6 gap-[10px] p-0 max-[1000px]:order-1 max-[1000px]:grid-cols-3 max-[600px]:gap-[6px]">
           {TEAM.map((person, index) => {
             const on = index === active;
             return (
