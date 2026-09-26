@@ -5,30 +5,20 @@ import { useRef } from "react";
 import { FRONT_FROM, FRONT_TO, path, type Point, project } from "@/components/iso/geometry";
 import { HEADINGS, PILLARS } from "@/lib/insights";
 import { BracketLabel, ORANGE, r2, SectionHeading, SOLID_GLOW, useFigureClock } from "./fact-section";
+import IonicColumn, { ColumnGradients } from "./ionic-column";
 import { Panel, SplitFrame, typedWords } from "./motion-language";
 
 /*
- * Six Roman columns standing in a ring, a tholos seen in the cards'
- * axonometric projection. The ring turns as one; each column also turns on its
- * own axis with it, so the flutes travel across the shaft. Whichever column is
+ * Six Ionic columns (ionic-column.tsx) standing in a ring, a tholos seen in
+ * the cards' axonometric projection. The ring turns as one rigid piece, so
+ * each column turns on its own axis with it and its flutes, eggs and volutes
+ * travel through the light. Whichever column is
  * nearest the viewer lights orange, and its pillar's name and sentence show
  * beside it, so the text follows the turn.
  */
 
 const RING = 150;
 const SPIN = 0.42;
-const SHAFT_R = 12.5;
-const SHAFT_TOP = 150;
-const FLUTES = 16;
-/** Base and capital, bottom to top: [radius, bottom z, top z]. */
-const BASE = [
-  [20, 0, 7],
-  [16.5, 7, 13],
-] as const;
-const CAPITAL = [
-  [15.5, SHAFT_TOP, SHAFT_TOP + 6],
-  [20.5, SHAFT_TOP + 6, SHAFT_TOP + 13],
-] as const;
 const STYLOBATE = RING + 44;
 
 const at = (cx: number, cy: number) => (x: number, y: number, z: number): Point => project(cx + x, cy + y, z);
@@ -52,56 +42,7 @@ function disc(cx: number, cy: number, radius: number, bottom: number, top: numbe
   };
 }
 
-/** The flutes on the visible half of the shaft at a given turn, each with how squarely it faces the viewer. */
-function flutes(cx: number, cy: number, turn: number) {
-  const p = at(cx, cy);
-  const out: { d: string; facing: number }[] = [];
-  for (let k = 0; k < FLUTES; k += 1) {
-    const angle = (k / FLUTES) * Math.PI * 2 + turn;
-    const facing = Math.sin(angle + Math.PI / 4);
-    if (facing <= 0.05) continue;
-    const x = SHAFT_R * Math.cos(angle);
-    const y = SHAFT_R * Math.sin(angle);
-    out.push({ d: path([p(x, y, BASE[1][2]), p(x, y, SHAFT_TOP)], false), facing });
-  }
-  return out;
-}
-
 const STYLOBATE_DISC = disc(0, 0, STYLOBATE, -16, 0);
-
-function Column({ cx, cy, turn, lit }: { cx: number; cy: number; turn: number; lit: boolean }) {
-  const stroke = lit ? "#9a6208" : "rgba(0,0,0,.72)";
-  const wall = lit ? "#e79a17" : "#f3f2f0";
-  const face = lit ? ORANGE : "#ffffff";
-  const common = { stroke, strokeWidth: 1, strokeLinejoin: "round" as const };
-  const shaft = disc(cx, cy, SHAFT_R, BASE[1][2], SHAFT_TOP);
-  return (
-    <g style={{ filter: lit ? SOLID_GLOW : "none", transition: "filter 300ms ease" }}>
-      {BASE.map(([radius, bottom, top]) => {
-        const part = disc(cx, cy, radius, bottom, top);
-        return (
-          <g key={bottom}>
-            <path d={part.wall} fill={wall} {...common} />
-            <path d={part.top} fill={face} {...common} />
-          </g>
-        );
-      })}
-      <path d={shaft.wall} fill={wall} {...common} />
-      {flutes(cx, cy, turn).map((flute, index) => (
-        <path key={index} d={flute.d} stroke={lit ? "#9a6208" : "#000"} strokeOpacity={0.15 + flute.facing * 0.35} strokeWidth="1" />
-      ))}
-      {CAPITAL.map(([radius, bottom, top]) => {
-        const part = disc(cx, cy, radius, bottom, top);
-        return (
-          <g key={bottom}>
-            <path d={part.wall} fill={wall} {...common} />
-            <path d={part.top} fill={face} {...common} />
-          </g>
-        );
-      })}
-    </g>
-  );
-}
 
 export default function PhilosophySection() {
   const ref = useRef<HTMLDivElement>(null);
@@ -129,8 +70,9 @@ export default function PhilosophySection() {
       <div ref={ref} className="mt-[72px]">
         <SplitFrame>
           <Panel className="grid min-h-[560px] place-items-center">
-            <svg viewBox="-230 -250 460 400" className="w-[min(94%,640px)]" role="img" aria-label="Six pillars of the investment philosophy, turning">
+            <svg viewBox="-232 -270 464 420" className="w-[min(94%,640px)]" role="img" aria-label="Six pillars of the investment philosophy, turning">
               <defs>
+                <ColumnGradients id="ionic" />
                 <radialGradient id="pillars-bloom">
                   <stop offset="0%" stopColor={ORANGE} stopOpacity="0.38" />
                   <stop offset="100%" stopColor={ORANGE} stopOpacity="0" />
@@ -147,7 +89,9 @@ export default function PhilosophySection() {
               {[...columns]
                 .sort((a, b) => a.depth - b.depth)
                 .map(({ index, cx, cy }) => (
-                  <Column key={index} cx={cx} cy={cy} turn={turn} lit={index === front} />
+                  <g key={index} style={{ filter: index === front ? SOLID_GLOW : "none", transition: "filter 300ms ease" }}>
+                    <IonicColumn id="ionic" cx={cx} cy={cy} turn={turn} lit={index === front} />
+                  </g>
                 ))}
             </svg>
           </Panel>

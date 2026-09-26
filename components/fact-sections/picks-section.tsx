@@ -78,7 +78,7 @@ function labelAnchor(index: number, rotation: number): Point {
   return [r2(Math.max(...corners.map(([x]) => x))), -midZ];
 }
 
-function PicksFigure({ progress, selected, onSelect }: FigureState) {
+export function PicksFigure({ progress, selected, onSelect }: FigureState) {
   const settled = progress > 0.8;
   const svgRef = useRef<SVGSVGElement>(null);
   const inView = useInView(svgRef);

@@ -6,7 +6,7 @@ const primaryLinks = [
   { label: "About Us", href: "/#about" },
   { label: "PMS", href: "/pms" },
   { label: "AIF", href: "/aif" },
-  { label: "Our Approach", href: "/#philosophy" },
+  { label: "Our Approach", href: "/#philosophy-pillars" },
   { label: "Careers", href: "/careers" },
   { label: "Contact Us", href: "/#contact" },
 ];

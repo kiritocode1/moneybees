@@ -1,8 +1,7 @@
 "use client";
 
-import { motion, useReducedMotion, useScroll, useTransform } from "motion/react";
+import { motion, useReducedMotion } from "motion/react";
 import Image from "next/image";
-import { useCallback, useRef } from "react";
 import { ArrowRight } from "reicon-react";
 import { BracketLabel } from "@/components/fact-sections/fact-section";
 import FounderSection from "@/components/fact-sections/founder-section";
@@ -16,12 +15,10 @@ import TeamSection from "@/components/fact-sections/team-section";
 import WhySmallCapsSection from "@/components/fact-sections/why-small-caps-section";
 import ChapterFigure from "@/components/option-one/chapter-figure";
 import ChapterStack from "@/components/option-one/chapter-stack";
-import FrameworkRow from "@/components/option-one/framework-row";
+import { HeroSection, WhoWeAreSection } from "@/components/hero/hero-sections";
 import SiteFooter from "@/components/footer/site-footer";
 import SiteNavigation from "@/components/ui/site-navigation";
-import { Materialize } from "@/components/pixel-reveal/materialize";
-import { PixelRevealRoot } from "@/components/pixel-reveal/pixel-reveal";
-import { AIF_PRODUCT, AUDIENCE, INTRODUCTION, PMS_APPROACH, RANKINGS, PMS_PRODUCT, PMS_VS_AIF, PROCESS_CHAPTERS } from "@/lib/insights";
+import { AUDIENCE, PMS_VS_AIF, PROCESS_CHAPTERS } from "@/lib/insights";
 import { EASE_OUT } from "@/lib/ease";
 
 /* Shared utility strings. These are whole literal class names so Tailwind's
@@ -43,14 +40,24 @@ const offerings = [
 ] as const;
 
 /**
- * A display heading revealed with Pixel Reveal's materialize preset. Lines stay
- * on their own lines; the hero's level-1 heading plays on load, the rest when
- * they scroll into view.
+ * A display heading whose lines rise out of a mask instead of fading in place.
+ *
+ * Each line gets its own `overflow-hidden` wrapper, so the type appears to be
+ * uncovered from the baseline up. The wrapper needs vertical room for
+ * descenders or `g` and `y` would sit clipped once the line has landed: the em
+ * padding opens the clip box and the equal negative margin takes that room back
+ * out of the flow, leaving line spacing exactly as `<br />` left it.
+ *
+ * The viewport trigger sits on the heading rather than on each line, so all
+ * lines are driven by one intersection and the stagger stays deterministic no
+ * matter how the heading happens to wrap.
  */
 function RisingHeading({
   lines,
   className = "",
   level = 2,
+  delay = 0,
+  stagger = 0.1,
 }: {
   lines: React.ReactNode[];
   className?: string;
@@ -58,15 +65,43 @@ function RisingHeading({
   delay?: number;
   stagger?: number;
 }) {
+  const reduceMotion = useReducedMotion();
+  const Tag = level === 1 ? motion.h1 : motion.h2;
   return (
-    <Materialize as={level === 1 ? "h1" : "h2"} trigger={level === 1 ? "load" : "inview"} className={className}>
+    <Tag
+      className={className}
+      initial={reduceMotion ? false : "hidden"}
+      whileInView="shown"
+      viewport={{ once: true, amount: 0.3 }}
+    >
       {lines.map((line, index) => (
-        // A heading's lines are fixed content in a fixed order, so position is their identity.
-        <span key={index} className="block">
-          {line}
+        <span
+          // A heading's lines are fixed content in a fixed order, and a line may be a
+          // node rather than a string, so position is the only stable identity here.
+          key={index}
+          className="block overflow-hidden pb-[.2em] -mb-[.2em]"
+        >
+          <motion.span
+            className="block"
+            variants={{
+              // Overshoot the mask height so no part of the line is ever visible
+              // in the descender room below it before the rise begins.
+              hidden: { y: "150%" },
+              shown: {
+                y: 0,
+                transition: {
+                  duration: reduceMotion ? 0 : 1.05,
+                  delay: reduceMotion ? 0 : delay + index * stagger,
+                  ease: EASE_OUT,
+                },
+              },
+            }}
+          >
+            {line}
+          </motion.span>
         </span>
       ))}
-    </Materialize>
+    </Tag>
   );
 }
 
@@ -99,32 +134,6 @@ function CornerLink({
 export default function Home() {
   const reduceMotion = useReducedMotion();
 
-  // Parallax for the hero photograph. The layer is taller than the section and
-  // hangs off both edges, so it can drift against the scroll without ever
-  // exposing a seam. Progress runs from the top of the page to the moment the
-  // hero leaves the viewport.
-  const heroRef = useRef<HTMLElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: heroRef,
-    offset: ["start start", "end start"],
-  });
-  const heroDrift = useTransform(scrollYProgress, [0, 1], ["0%", "7%"]);
-
-  // React does not render the `muted` attribute into server markup, which can cost us
-  // autoplay before hydration. Set it on the element directly, then start playback.
-  const videoRef = useCallback(
-    (el: HTMLVideoElement | null) => {
-      if (!el) return;
-      el.muted = true;
-      if (reduceMotion) {
-        el.pause();
-        return;
-      }
-      void el.play().catch(() => {});
-    },
-    [reduceMotion],
-  );
-
   /* A single restrained reveal: a short fade and rise as a section arrives.
      Under reduced motion it must still resolve to the final state. Returning no
      props at all is not enough: the server renders before `useReducedMotion`
@@ -140,201 +149,12 @@ export default function Home() {
           transition: { duration: 0.7, delay, ease: EASE_OUT },
         };
 
-  /* The masked-line variant used by the philosophy display, which choreographs
-     its own lines rather than delegating to `RisingHeading`. Same mechanics:
-     overshoot the mask so the line is never caught sitting in the descender
-     room, and collapse to an instant resolve under reduced motion. */
-  const risingLine = (delay: number) => ({
-    hidden: { y: reduceMotion ? 0 : "150%" },
-    shown: {
-      y: 0,
-      transition: { duration: reduceMotion ? 0 : 1.05, delay: reduceMotion ? 0 : delay, ease: EASE_OUT },
-    },
-  });
-
   return (
     <SiteNavigation>
-      <PixelRevealRoot>
       <main id="top" className="option-one overflow-clip bg-white text-[#000000]">
-        <section ref={heroRef} className="relative flex min-h-svh flex-col overflow-hidden">
-          <motion.div
-            style={reduceMotion ? undefined : { y: heroDrift }}
-            className="absolute inset-x-0 -top-[9%] h-[118%]"
-          >
-            <Image
-              src="https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&w=2200&q=90"
-              alt="Contemporary office interior"
-              fill
-              priority
-              sizes="100vw"
-              className="object-cover object-[center_42%]"
-            />
-          </motion.div>
-          {/* The photograph is held back to a ghost so black type can sit on it.
-              Heaviest at the left where the headline lands, and solid white at the
-              foot so the regulatory line reads against paper rather than glass. */}
-          <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(255,255,255,.94)_0%,rgba(255,255,255,.84)_54%,rgba(255,255,255,.9)_100%),linear-gradient(to_top,#fff_0%,transparent_38%)]" />
-
-          <div className="relative z-[2] mx-auto w-[min(100%_-_64px,1480px)] pt-[190px] max-[900px]:w-[calc(100%_-_36px)] max-[900px]:pt-[120px] max-[600px]:pt-[110px]">
-            <RisingHeading
-              level={1}
-              lines={["Build, preserve, and", "grow your wealth"]}
-              className="max-w-[850px] font-serif text-[clamp(4.5rem,7vw,7.4rem)] font-normal leading-[.94] tracking-[-.045em] max-[900px]:text-[clamp(3.5rem,11vw,6rem)] max-[600px]:text-[3.7rem]"
-            />
-            <motion.div
-              initial={reduceMotion ? false : { opacity: 0, y: 18 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: reduceMotion ? 0 : 0.7, delay: 0.24, ease: EASE_OUT }}
-              className="mt-[66px] grid w-[440px] grid-cols-[94px_1fr] items-center gap-[22px] max-[600px]:w-full max-[600px]:grid-cols-[80px_1fr]"
-            >
-              <video
-                ref={videoRef}
-                src="/video/research-desk.mp4"
-                poster="/video/research-desk.jpg"
-                muted
-                loop
-                playsInline
-                preload="metadata"
-                aria-label="A printed holdings statement being read and marked by hand"
-                className="h-[68px] w-[94px] bg-[#9D9EA1] object-cover max-[600px]:h-[58px] max-[600px]:w-[80px]"
-              />
-              <p className="text-[12px] leading-[1.45] text-[rgba(0,0,0,.66)]">
-                {INTRODUCTION.focus}
-              </p>
-            </motion.div>
-          </div>
-          {/* The hero's foot. Regulatory standing belongs near the top of the page,
-              and putting it here gives the lower half of the frame something to hold
-              instead of 300px of empty photograph. Every item is a fact; registration
-              numbers stay out until the client supplies them. */}
-          <motion.div
-            initial={reduceMotion ? false : { opacity: 0, y: 14 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: reduceMotion ? 0 : 0.7, delay: 0.44, ease: EASE_OUT }}
-            aria-label="Regulatory status"
-            className="relative z-[2] mx-auto mt-auto flex w-[min(100%_-_64px,1480px)] flex-wrap items-end gap-x-[64px] gap-y-[22px] border-t border-t-[rgba(0,0,0,.14)] pt-[26px] pb-[46px] max-[900px]:w-[calc(100%_-_36px)] max-[900px]:gap-x-[40px] max-[600px]:gap-x-[32px] max-[600px]:gap-y-[18px] max-[600px]:pb-[30px]"
-          >
-            {[
-              ["Portfolio Management Service", `SEBI ${PMS_PRODUCT.registration}`],
-              ["Alternative Investment Fund", `SEBI ${AIF_PRODUCT.registration}`],
-              ["Moneybee Securities Pvt Ltd", "Mumbai, Maharashtra, India"],
-            ].map(([title, detail]) => (
-              <span key={title} className="grid gap-[5px]">
-                <b className="text-[12px] font-[550] tracking-[-.01em] text-[#000000]">{title}</b>
-                <small className="text-[9px] uppercase tracking-[.06em] text-[rgba(0,0,0,.6)]">{detail}</small>
-              </span>
-            ))}
-            <CornerLink href="#about" className="ml-auto">
-              Scroll to explore
-            </CornerLink>
-          </motion.div>
-        </section>
-
-        <FrameworkRow />
-
-        <section
-          id="philosophy"
-          className="relative flex min-h-[720px] flex-col items-center justify-center overflow-hidden bg-white px-[28px] py-[104px] max-[600px]:min-h-[500px] max-[600px]:py-[76px]"
-        >
-          <div className="absolute top-[40%] left-[55%] h-[560px] w-[560px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,rgba(247,161,26,.13)_0%,rgba(247,161,26,.05)_38%,transparent_70%)] blur-[4px]" />
-          {/* The one place on the page where the motion is the point. The two outer
-              lines rise out of their masks, the footage grows into the gap between
-              them, and "where the market" slides in from the right to close the
-              line. One viewport trigger on the parent drives all four, so the
-              sequence reads as a single composed movement. */}
-          <motion.div
-            initial={reduceMotion ? false : "hidden"}
-            whileInView="shown"
-            viewport={{ once: true, amount: 0.4 }}
-            className="relative z-[1] w-[min(100%,1160px)] text-[clamp(4rem,7.3vw,7.8rem)] font-light leading-[.92] tracking-[-.06em] text-[#000000] max-[600px]:text-[3.25rem]"
-          >
-            <span className="block overflow-hidden pb-[.2em] -mb-[.2em]">
-              <motion.span className="block" variants={risingLine(0)}>
-                Finding value
-              </motion.span>
-            </span>
-            <div className="flex items-center justify-end gap-[24px] max-[600px]:justify-start max-[600px]:gap-[12px]">
-              <motion.video
-                ref={videoRef}
-                src="/video/desk-analysis.mp4"
-                poster="/video/desk-analysis.jpg"
-                muted
-                loop
-                playsInline
-                preload="metadata"
-                aria-label="An analyst working through holdings data"
-                variants={{
-                  // Pure scale from the top-left corner: the frame opens out to the
-                  // right and down into a slot the layout has already reserved, so
-                  // nothing around it shifts. No opacity here on purpose, a fade
-                  // reads as the footage appearing rather than growing.
-                  hidden: { scale: reduceMotion ? 1 : 0 },
-                  shown: {
-                    scale: 1,
-                    transition: { duration: reduceMotion ? 0 : 1.1, delay: reduceMotion ? 0 : 0.3, ease: EASE_OUT },
-                  },
-                }}
-                className="h-[82px] w-[150px] origin-top-left bg-[#9D9EA1] object-cover max-[900px]:h-[58px] max-[900px]:w-[100px] max-[600px]:h-[44px] max-[600px]:w-[75px]"
-              />
-              <motion.span
-                variants={{
-                  hidden: { x: reduceMotion ? 0 : 130, opacity: 0 },
-                  shown: {
-                    x: 0,
-                    opacity: 1,
-                    transition: { duration: reduceMotion ? 0 : 1.15, delay: reduceMotion ? 0 : 0.34, ease: EASE_OUT },
-                  },
-                }}
-                className="inline-block"
-              >
-                where the market
-              </motion.span>
-            </div>
-            <span className="block ml-[27%] overflow-hidden pb-[.2em] -mb-[.2em] max-[600px]:ml-[12%]">
-              <motion.span className="block" variants={risingLine(0.52)}>
-                is not looking
-              </motion.span>
-            </span>
-          </motion.div>
-          <motion.p
-            {...reveal(0.78)}
-            className="relative z-[1] mt-[46px] ml-[18%] max-w-[540px] text-[12px] leading-[1.55] text-[rgba(0,0,0,.64)] max-[600px]:ml-[12%]"
-          >
-            {PMS_APPROACH}
-          </motion.p>
-        </section>
-
-        {/* 1 · Who we are. Group profile p4, p3 and p5, verbatim. */}
-        <section id="about" className={`bg-white pt-[110px] pb-[100px] ${GUTTER} max-[600px]:px-[22px] max-[600px]:pt-[72px]`}>
-          <BracketLabel>About Moneybee</BracketLabel>
-          <div className="mt-[22px] grid grid-cols-[1fr_.8fr] items-end gap-[60px] max-[900px]:grid-cols-1 max-[900px]:gap-[28px]">
-            <Materialize as="h2" className="text-[clamp(2.2rem,3.6vw,3.8rem)] font-light leading-[1.02] tracking-[-.045em]">
-              {INTRODUCTION.lead}
-            </Materialize>
-            <motion.div {...reveal(0.12)} className="grid gap-[16px] text-[15px] leading-[1.6] text-[rgba(0,0,0,.76)]">
-              <p>{INTRODUCTION.advice}</p>
-              <p>{INTRODUCTION.team}</p>
-            </motion.div>
-          </div>
-        </section>
-
-        {/* Recognition, after Wonder Vision's: the one centred section, plain facts, no boast. */}
-        <section aria-labelledby="recognition-heading" className={`bg-white pt-[40px] pb-[130px] text-center ${GUTTER} max-[600px]:px-[22px]`}>
-          <Materialize as="h2" id="recognition-heading" className="text-[clamp(3rem,5.4vw,5.6rem)] leading-none font-light tracking-[-.05em] uppercase">
-            Recognition
-          </Materialize>
-          <p className="mx-auto mt-[26px] max-w-[52ch] text-[16px] leading-[1.6] text-[rgba(0,0,0,.72)]">
-            Ranked among India&rsquo;s top performing portfolio managers by PMS Bazaar, December 2024.
-          </p>
-          <dl className="mx-auto mt-[56px] grid max-w-[980px] grid-cols-3 border-y border-y-[#000] max-[600px]:grid-cols-1">
-            {RANKINGS.map(([rank, period]) => (
-              <div key={period} className="border-r border-r-[rgba(0,0,0,.13)] py-[34px] last:border-r-0 max-[600px]:border-r-0 max-[600px]:border-b max-[600px]:last:border-b-0">
-                <dt className="text-[clamp(3.4rem,6vw,6rem)] leading-none font-light tracking-[-.05em]">{rank}</dt>
-                <dd className="mt-[12px] text-[13px] uppercase tracking-[.06em] text-[rgba(0,0,0,.6)]">{period}</dd>
-              </div>
-            ))}
-          </dl>
-        </section>
+        {/* Hero and 1 · Who we are, in antimetal.com's layout (components/hero). */}
+        <HeroSection />
+        <WhoWeAreSection />
 
         {/* 2 · Why small caps */}
         <WhySmallCapsSection />
@@ -445,7 +265,6 @@ export default function Home() {
           ]}
         />
       </main>
-      </PixelRevealRoot>
     </SiteNavigation>
   );
 }

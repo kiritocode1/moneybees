@@ -5,7 +5,6 @@ import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { TEAM } from "@/lib/insights";
 import { EASE_OUT } from "@/lib/ease";
-import { Materialize } from "@/components/pixel-reveal/materialize";
 import { BracketLabel } from "./fact-section";
 
 const FOCUS = "focus-visible:outline-2 focus-visible:outline-[#F7A11A] focus-visible:outline-offset-4";
@@ -95,9 +94,9 @@ export default function TeamSection() {
       <div className="px-[max(32px,calc((100vw_-_1480px)/2))] pt-[120px] max-[600px]:px-[22px] max-[600px]:pt-[72px]">
         <BracketLabel>The people behind the portfolio</BracketLabel>
         <div className="mt-[18px] flex items-end justify-between gap-[40px] border-b border-b-[rgba(0,0,0,.13)] pb-[28px] max-[900px]:flex-col max-[900px]:items-start">
-          <Materialize as="h2" id="team-heading" className="text-[clamp(3.6rem,6.4vw,7rem)] leading-[.9] font-light tracking-[-.06em]">
+          <h2 id="team-heading" className="text-[clamp(3.6rem,6.4vw,7rem)] leading-[.9] font-light tracking-[-.06em]">
             Team profile
-          </Materialize>
+          </h2>
           <div className="flex items-center gap-[22px] text-[12px] uppercase tracking-[.08em]">
             <span className="font-mono text-[rgba(0,0,0,.5)] normal-case">
               {pad(active)} / {pad(TEAM.length - 1)}
