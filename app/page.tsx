@@ -4,10 +4,9 @@ import { motion } from "motion/react";
 import { useReducedMotion } from "@/lib/use-reduced-motion";
 import Image from "next/image";
 import { ArrowRight } from "reicon-react";
-import { BracketLabel } from "@/components/fact-sections/fact-section";
 import FounderSection from "@/components/fact-sections/founder-section";
 import PhilosophyFlythrough from "@/components/philosophy/philosophy-flythrough";
-import ProductsSection from "@/components/fact-sections/products-section";
+import PartnersSection from "@/components/fact-sections/partners-section";
 import PicksSection from "@/components/fact-sections/picks-section";
 import RecordSection from "@/components/fact-sections/record-section";
 import ResearchSection from "@/components/fact-sections/research-section";
@@ -18,7 +17,7 @@ import ChapterStack from "@/components/option-one/chapter-stack";
 import { HeroSection, WhoWeAreSection } from "@/components/hero/hero-sections";
 import SiteFooter from "@/components/footer/site-footer";
 import SiteNavigation from "@/components/ui/site-navigation";
-import { AUDIENCE, PMS_VS_AIF, PROCESS_CHAPTERS } from "@/lib/insights";
+import { PMS_VS_AIF, PROCESS_CHAPTERS } from "@/lib/insights";
 import { EASE_OUT } from "@/lib/ease";
 
 /* Shared utility strings. These are whole literal class names so Tailwind's
@@ -105,47 +104,11 @@ function RisingHeading({
   );
 }
 
-function CornerLink({
-  children,
-  href = "#contact",
-  className = "",
-}: {
-  children: React.ReactNode;
-  href?: string;
-  className?: string;
-}) {
-  return (
-    <a
-      href={href}
-      className={`group inline-flex items-center gap-[10px] text-[11px] text-[#000000] no-underline ${FOCUS} ${className}`}
-    >
-      <i className={`h-[28px] w-[28px] bg-[#F7A11A] text-white ${ARROW_TILE}`}>
-        <ArrowRight size={16} aria-hidden="true" />
-      </i>
-      {children}
-    </a>
-  );
-}
-
 /**
  * The Moneybee homepage. Facts come from the client decks (lib/insights.ts):
  * headings are deck lines, paragraphs are rewritten plainly from deck facts.
  */
 export default function Home() {
-  const reduceMotion = useReducedMotion();
-
-  /* A single restrained reveal: a short fade and rise as a section arrives.
-     The props are the same with and without reduced motion, because the server
-     cannot know the setting and any difference breaks hydration. Reduced motion
-     only drops the duration, so the section still resolves to its final state
-     the moment it is in view. */
-  const reveal = (delay = 0) => ({
-    initial: { opacity: 0, y: 22 },
-    whileInView: { opacity: 1, y: 0 },
-    viewport: { once: true, amount: 0.2 },
-    transition: reduceMotion ? { duration: 0 } : { duration: 0.7, delay, ease: EASE_OUT },
-  });
-
   return (
     <SiteNavigation>
       <main id="top" className="option-one overflow-clip bg-white text-[#000000]">
@@ -220,7 +183,7 @@ export default function Home() {
             className="absolute bottom-[44px] left-[max(32px,calc((100vw_-_1480px)/2))] h-[168px] w-[248px] object-cover max-[900px]:hidden"
           />
         </section>
-        <ProductsSection bare />
+        <PartnersSection />
         {/* 8 · Who manages it */}
         <TeamSection />
         {/* 9 · What we publish, and how to begin */}
@@ -236,19 +199,6 @@ export default function Home() {
             "The record": <ChapterFigure kind="pie" tone="grey" />,
           }}
         />
-        <section className={`bg-white py-[140px] ${GUTTER} max-[600px]:px-[22px] max-[600px]:py-[90px]`}>
-          <BracketLabel>Who we work with</BracketLabel>
-          <RisingHeading
-            lines={[AUDIENCE.pms]}
-            className="mt-[22px] max-w-[1100px] text-[clamp(2.6rem,5vw,5.4rem)] font-light leading-[.98] tracking-[-.05em]"
-          />
-          <motion.p {...reveal(0.2)} className="mt-[26px] text-[13px] text-[rgba(0,0,0,.66)]">
-            {AUDIENCE.aif}
-          </motion.p>
-          <motion.div {...reveal(0.3)}>
-            <CornerLink className="mt-[40px]">Schedule a conversation</CornerLink>
-          </motion.div>
-        </section>
 
         <SiteFooter
           explore={[

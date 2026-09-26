@@ -5,8 +5,8 @@ import * as THREE from "three";
  * camera path the section scrolls along. Plain three.js, no scene library.
  *
  * Units are metres-ish. The camera path follows the one sketched on the flat
- * version: down from high on the right, along the ring past each column in
- * turn, then in to the centre.
+ * version: from straight overhead, down on the right, along the ring past
+ * each column in turn, then in to the centre.
  */
 
 export const COLUMN_COUNT = 6;
@@ -63,46 +63,83 @@ function orbitPose(progress: number) {
   return { position, target };
 }
 
-const OPENING = new THREE.Vector3(9, 10.5, 9);
-const OPENING_TARGET = new THREE.Vector3(0, 2.2, 0);
-const DESCENT_BEND = new THREE.Vector3(9.4, 4.2, 6.6);
-const CENTRE = new THREE.Vector3(0, 2.1, 0);
-/** Level, across the ring, as the camera reaches the centre. */
-const CENTRE_TARGET = new THREE.Vector3(-3 * Math.cos(START_ANGLE), 2.3, -3 * Math.sin(START_ANGLE));
-/** Then straight up over the centre, looking down on the whole ring. */
+/** The opening shot: straight down over the centre, the whole ring in frame. */
 const OVERHEAD = new THREE.Vector3(0, 15, 0);
 const FLOOR = new THREE.Vector3(0, 0, 0);
-/** "Up" on screen for the overhead shot: the direction the camera was travelling. */
+/**
+ * "Up" on screen for the overhead shot. Pointing it across the ring puts the
+ * orbit's starting point at the bottom of the frame, so the camera appears to
+ * drop toward the viewer's side of the ring as it comes down.
+ */
 export const OVERHEAD_UP = new THREE.Vector3(-Math.cos(START_ANGLE), 0, -Math.sin(START_ANGLE));
-const OPENING_LENS = 36;
+/** The descent's two bends: out over the right of the ring while still high, then down to column height. */
+const DESCENT_OUT = new THREE.Vector3(3.5, 14.5, 3.5);
+const DESCENT_DOWN = new THREE.Vector3(10.5, 7.5, 10.5);
+/** The way in: along the centre line of the gap between the first and last columns. */
+const GAP_ANGLE = START_ANGLE - LEAD;
+/** The ending: at the centre of the ring (the X on the sketch), level at first, then looking up. */
+const CENTRE = new THREE.Vector3(0, 2.2, 0);
+const CENTRE_TARGET = new THREE.Vector3(-3 * Math.cos(GAP_ANGLE), 2.6, -3 * Math.sin(GAP_ANGLE));
+const LOW_CENTRE = new THREE.Vector3(0, 0.9, 0);
+/** Nearly straight up; the slight lean keeps the far side of the ring toward the top of the frame. */
+const SKY = new THREE.Vector3(-0.35 * Math.cos(GAP_ANGLE), 12, -0.35 * Math.sin(GAP_ANGLE));
+/** "Up" on screen once the camera looks up: across the ring, the way it came in. */
+const LOOK_UP_UP = new THREE.Vector3(-Math.cos(GAP_ANGLE), 0, -Math.sin(GAP_ANGLE));
+const OPENING_LENS = 40;
 const ORBIT_LENS = 44;
-const CLOSING_LENS = 40;
+const CENTRE_LENS = 56;
+/** Wide enough that from the centre every column rises in from the edge of the frame. */
+const CLOSING_LENS = 88;
+/** Share of the closing stretch spent getting to the centre; the rest tilts up. */
+const ARRIVE = 0.55;
 
 /** Field of view at `progress`, before the narrow-screen widening. */
 export function lensAt(progress: number) {
   if (progress <= DESCENT_END) return OPENING_LENS + (ORBIT_LENS - OPENING_LENS) * easeInOut(clamp01(progress / DESCENT_END));
   if (progress <= ORBIT_END) return ORBIT_LENS;
-  return ORBIT_LENS + (CLOSING_LENS - ORBIT_LENS) * easeInOut(clamp01((progress - ORBIT_END) / (1 - ORBIT_END)));
+  const t = clamp01((progress - ORBIT_END) / (1 - ORBIT_END));
+  if (t < ARRIVE) return ORBIT_LENS + (CENTRE_LENS - ORBIT_LENS) * easeInOut(t / ARRIVE);
+  return CENTRE_LENS + (CLOSING_LENS - CENTRE_LENS) * easeInOut((t - ARRIVE) / (1 - ARRIVE));
 }
 
-/** Where the camera is, and what it looks at, at scroll `progress` from 0 to 1. */
+function cubic(a: THREE.Vector3, b: THREE.Vector3, c: THREE.Vector3, d: THREE.Vector3, t: number) {
+  const u = 1 - t;
+  return new THREE.Vector3()
+    .addScaledVector(a, u * u * u)
+    .addScaledVector(b, 3 * u * u * t)
+    .addScaledVector(c, 3 * u * t * t)
+    .addScaledVector(d, t * t * t);
+}
+
+/**
+ * Where the camera is and what it looks at, at scroll `progress` from 0 to 1.
+ * `overhead` runs to 1 as the view turns vertical (straight down at the start,
+ * nearly straight up at the end), where world up stops meaning anything and
+ * `up` takes over as the screen's up.
+ */
 export function cameraPose(progress: number) {
   if (progress <= DESCENT_END) {
     const t = easeInOut(clamp01(progress / DESCENT_END));
     const end = orbitPose(DESCENT_END);
-    return { position: bezier(OPENING, DESCENT_BEND, end.position, t), target: OPENING_TARGET.clone().lerp(end.target, t), rise: 0 };
+    return {
+      position: cubic(OVERHEAD, DESCENT_OUT, DESCENT_DOWN, end.position, t),
+      target: FLOOR.clone().lerp(end.target, t),
+      overhead: 1 - t,
+      up: OVERHEAD_UP,
+    };
   }
-  if (progress <= ORBIT_END) return { ...orbitPose(progress), rise: 0 };
+  if (progress <= ORBIT_END) return { ...orbitPose(progress), overhead: 0, up: OVERHEAD_UP };
   const t = clamp01((progress - ORBIT_END) / (1 - ORBIT_END));
   const start = orbitPose(ORBIT_END);
-  if (t < 0.5) {
-    // In through the gap between two columns to the centre of the ring.
-    const u = easeInOut(t / 0.5);
-    const bend = new THREE.Vector3(ORBIT_RADIUS * 0.5 * Math.cos(START_ANGLE), 1.9, ORBIT_RADIUS * 0.5 * Math.sin(START_ANGLE));
-    return { position: bezier(start.position, bend, CENTRE, u), target: start.target.clone().lerp(CENTRE_TARGET, u), rise: 0 };
+  if (t < ARRIVE) {
+    // In through the gap between the first and last columns to the centre of the ring.
+    const u = easeInOut(t / ARRIVE);
+    const bend = new THREE.Vector3(ORBIT_RADIUS * 0.5 * Math.cos(GAP_ANGLE), 2.1, ORBIT_RADIUS * 0.5 * Math.sin(GAP_ANGLE));
+    return { position: bezier(start.position, bend, CENTRE, u), target: start.target.clone().lerp(CENTRE_TARGET, u), overhead: 0, up: LOOK_UP_UP };
   }
-  const u = easeInOut((t - 0.5) / 0.5);
-  return { position: CENTRE.clone().lerp(OVERHEAD, u), target: CENTRE_TARGET.clone().lerp(FLOOR, u), rise: u };
+  // Then down low at the X and tilting up, so the six columns rise in from the edges of the frame.
+  const u = easeInOut((t - ARRIVE) / (1 - ARRIVE));
+  return { position: CENTRE.clone().lerp(LOW_CENTRE, u), target: CENTRE_TARGET.clone().lerp(SKY, u), overhead: u, up: LOOK_UP_UP };
 }
 
 /** How lit each column is at `progress`: its own pillar's moment, then all six together at the centre. */
@@ -514,8 +551,8 @@ export function createTholos(canvas: HTMLCanvasElement) {
       eye.lerp(pose.position, k);
       look.lerp(pose.target, k);
       camera.position.copy(eye);
-      // Looking straight down, world up is undefined; hand "up" to the travel direction as the camera rises.
-      camera.up.set(0, 1, 0).lerp(OVERHEAD_UP, pose.rise).normalize();
+      // Looking straight down or up, world up is undefined, so those shots supply their own.
+      camera.up.set(0, 1, 0).lerp(pose.up, pose.overhead).normalize();
       camera.lookAt(look);
       camera.fov = lensAt(progress) + (narrow ? 26 : 0);
       camera.updateProjectionMatrix();

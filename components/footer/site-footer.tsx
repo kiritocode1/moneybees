@@ -1,6 +1,6 @@
-import { ArrowRight } from "reicon-react";
 import { BracketLabel } from "@/components/fact-sections/fact-section";
-import { CONTACT, REGISTRATIONS } from "@/lib/insights";
+import { CONTACT, RECORD_METHOD, REGISTRATIONS } from "@/lib/insights";
+import DotMarquee from "./dot-marquee";
 import DotWordmark from "./dot-wordmark";
 import MumbaiClock from "./mumbai-clock";
 
@@ -9,13 +9,16 @@ const GUTTER = "px-[max(32px,calc((100vw_-_1480px)/2))] max-[600px]:px-[22px]";
 
 type Link = readonly [label: string, href: string];
 
+const LABEL = "text-[11px] uppercase tracking-[.08em] text-[rgba(0,0,0,.55)]";
+const LINK = `text-[16px] leading-[1.35] tracking-[-.015em] text-[#000] no-underline transition-colors duration-200 hover:text-[#F7A11A] ${FOCUS}`;
+
 /**
- * The footer, after footer.design and Aspen Search: a closing brand line with
- * the office clock, a contact band, Heron's hairline columns, and United
- * Carriers' dot-matrix wordmark to end on. White ground and
- * ink hairlines to match the evolved homepage. Every line is either the
- * existing footer's or the decks' own (contact p17, registrations p15,
- * pillars p4).
+ * The footer, after footer.design and Aspen Search: the brand line as a dot
+ * marquee, four columns on the page's own
+ * gutter, the legal lines, and United Carriers' dot-matrix wordmark to end on.
+ * Everything shares one left edge. The office clock sits with the office
+ * address it belongs to. Every line is either the existing footer's or the
+ * decks' own (contact p17, registrations p15).
  */
 export default function SiteFooter({ explore }: { explore: readonly Link[] }) {
   const columns: readonly (readonly [string, readonly Link[]])[] = [
@@ -25,36 +28,20 @@ export default function SiteFooter({ explore }: { explore: readonly Link[] }) {
 
   return (
     <footer id="contact" className="border-t border-t-[#000] bg-white text-[#000000]">
-      {/* Aspen's closing band: the brand line set large, and a contact band
-          that fills with the accent on hover. */}
-      <div className={`grid grid-cols-[1fr_auto] items-end gap-[40px] pt-[80px] pb-[56px] max-[900px]:grid-cols-1 ${GUTTER}`}>
-        <div>
-          <svg viewBox="200 205 1455 445" width="180" height="55" className="block" aria-label="Moneybee">
-            <image href="/moneybee-logo.svg" width="2048" height="897" />
-          </svg>
-          <p className="mt-[36px] text-[clamp(2.6rem,5.4vw,5.6rem)] leading-[.95] font-light tracking-[-.055em]">Know Venture. Know Gain.</p>
-        </div>
-        <MumbaiClock />
+      {/* The brand line as a marquee in orange dots, the wordmark's lattice set moving. */}
+      <div className="pt-[64px] pb-[48px]">
+        <DotMarquee text="Know Venture. Know Gain." />
       </div>
-      <a
-        href="mailto:marketingaif@moneybee.in"
-        className={`group relative flex items-center justify-between overflow-hidden border-t border-t-[#000] py-[30px] text-[clamp(1.4rem,2.4vw,2.2rem)] font-light tracking-[-.03em] text-[#000] no-underline ${GUTTER} ${FOCUS}`}
-      >
-        <span className="absolute inset-0 origin-left scale-x-0 bg-[#F7A11A] transition-transform duration-500 ease-[cubic-bezier(.16,1,.3,1)] group-hover:scale-x-100" aria-hidden="true" />
-        <span className="relative">Schedule a conversation</span>
-        <i className="relative grid h-[52px] w-[52px] place-items-center bg-[#000] text-white not-italic">
-          <ArrowRight size={18} aria-hidden="true" />
-        </i>
-      </a>
 
-      <div className="grid grid-cols-[1fr_1fr_1.4fr] gap-px border-y border-y-[#000] bg-[#000] max-[900px]:grid-cols-2 max-[600px]:grid-cols-1">
+      {/* Four columns on the page gutter: two of links, then how to write to us and where to find us. */}
+      <div className={`grid grid-cols-[1fr_1fr_1.3fr_1.3fr] gap-x-[48px] gap-y-[56px] border-t border-t-[#000] pt-[64px] pb-[72px] max-[1000px]:grid-cols-2 max-[600px]:grid-cols-1 ${GUTTER}`}>
         {columns.map(([heading, links]) => (
-          <nav key={heading} aria-label={heading} className="bg-white p-[28px] max-[600px]:p-[22px]">
+          <nav key={heading} aria-label={heading}>
             <BracketLabel>{heading}</BracketLabel>
-            <ul className="mt-[18px] grid list-none gap-[8px] p-0">
+            <ul className="mt-[22px] grid list-none gap-[12px] p-0">
               {links.map(([label, href]) => (
                 <li key={label}>
-                  <a href={href} className={`text-[15px] tracking-[-.015em] text-[#000] no-underline transition-colors duration-200 hover:text-[#F7A11A] ${FOCUS}`}>
+                  <a href={href} className={LINK}>
                     {label}
                   </a>
                 </li>
@@ -62,56 +49,66 @@ export default function SiteFooter({ explore }: { explore: readonly Link[] }) {
             </ul>
           </nav>
         ))}
-        <address className="bg-white p-[28px] not-italic max-[600px]:p-[22px]">
-          <BracketLabel>Contact details</BracketLabel>
-          <p className="mt-[18px] text-[15px] leading-[1.45] tracking-[-.015em]">
-            <b className="font-[550]">{CONTACT.company}</b>
-            <br />
-            {CONTACT.address[0]}
-            <br />
-            {CONTACT.address[1]}
-          </p>
-          <p className="mt-[14px] text-[15px] tracking-[-.015em]">
-            {CONTACT.phones.map((phone) => (
-              <a key={phone} href={`tel:${phone.replace(/\s/g, "")}`} className={`mr-[18px] text-[#000] no-underline hover:text-[#F7A11A] ${FOCUS}`}>
-                {phone}
-              </a>
-            ))}
-          </p>
-          <dl className="mt-[14px] grid grid-cols-[auto_1fr] gap-x-[16px] gap-y-[6px] text-[12px]">
+        <div>
+          <BracketLabel>Write to us</BracketLabel>
+          <dl className="mt-[22px] grid gap-[16px]">
             {CONTACT.emails.map(([label, email]) => (
-              <div key={email} className="contents">
-                <dt className="text-[rgba(0,0,0,.55)]">{label}</dt>
-                <dd>
-                  <a href={`mailto:${email}`} className={`text-[#000] no-underline hover:text-[#F7A11A] ${FOCUS}`}>
+              <div key={email}>
+                <dt className={LABEL}>{label}</dt>
+                <dd className="mt-[4px]">
+                  <a href={`mailto:${email}`} className={LINK}>
                     {email}
                   </a>
                 </dd>
               </div>
             ))}
           </dl>
+        </div>
+        <address className="not-italic">
+          <BracketLabel>Visit us</BracketLabel>
+          <p className="mt-[22px] text-[16px] leading-[1.45] tracking-[-.015em]">
+            <b className="font-[550]">{CONTACT.company}</b>
+            <br />
+            {CONTACT.address[0]}
+            <br />
+            {CONTACT.address[1]}
+          </p>
+          <p className="mt-[16px] flex flex-wrap gap-x-[20px] gap-y-[4px]">
+            {CONTACT.phones.map((phone) => (
+              <a key={phone} href={`tel:${phone.replace(/\s/g, "")}`} className={LINK}>
+                {phone}
+              </a>
+            ))}
+          </p>
+          <div className="mt-[24px]">
+            <MumbaiClock />
+          </div>
         </address>
       </div>
 
-      <div className={`grid grid-cols-[1fr_auto] items-start gap-[40px] pt-[22px] pb-[10px] text-[10px] leading-[1.55] max-[900px]:grid-cols-1 ${GUTTER}`}>
-        <div className="grid gap-[10px]">
-          <p className="flex flex-wrap gap-x-[28px] gap-y-[4px] uppercase tracking-[.06em] text-[#000]">
+      <div className={`border-t border-t-[rgba(0,0,0,.13)] pt-[24px] pb-[28px] text-[11px] leading-[1.6] ${GUTTER}`}>
+        <div className="flex flex-wrap items-baseline justify-between gap-x-[40px] gap-y-[12px] uppercase tracking-[.06em]">
+          <p className="flex flex-wrap gap-x-[28px] gap-y-[4px] text-[#000]">
             {REGISTRATIONS.map(([business, number]) => (
               <span key={number}>
                 {business} <span className="text-[rgba(0,0,0,.55)]">{number}</span>
               </span>
             ))}
           </p>
-          <p className="max-w-[820px] text-[rgba(0,0,0,.6)]">
+          <nav aria-label="Legal" className="flex gap-[22px]">
+            {[["Privacy", "#top"], ["Terms", "#top"], ["Back to top", "#top"]].map(([label, href]) => (
+              <a key={label} href={href} className={`text-[#000] no-underline hover:text-[#F7A11A] ${FOCUS}`}>
+                {label}
+              </a>
+            ))}
+          </nav>
+        </div>
+        <div className="mt-[16px] grid grid-cols-2 gap-[48px] text-[rgba(0,0,0,.6)] max-[900px]:grid-cols-1 max-[900px]:gap-[10px]">
+          <p>
             Investments in securities are subject to market risk, including the loss of principal. Read all related documents carefully before investing. Registration with SEBI does not imply approval or endorsement of the portfolio manager by the Board. Past performance is not indicative of future results.
           </p>
-        </div>
-        <div className="flex gap-[22px] uppercase tracking-[.06em]">
-          {[["Privacy", "#top"], ["Terms", "#top"], ["Back to top", "#top"]].map(([label, href]) => (
-            <a key={label} href={href} className={`text-[#000] no-underline hover:text-[#F7A11A] ${FOCUS}`}>
-              {label}
-            </a>
-          ))}
+          {/* The method behind the returns shown on the page, AIF presentation p12. */}
+          <p>{RECORD_METHOD}</p>
         </div>
       </div>
 

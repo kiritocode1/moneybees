@@ -472,12 +472,13 @@ export const AIF_PRODUCT = {
     ["Benchmark", "S&P BSE 500 TRI"],
     ["Who can invest", "Resident and non-resident individuals, HUFs and companies"],
     ["Redemption", "Holdings cannot fall below the Rs. 1 crore minimum"],
+    // The deck prints this as "First Close declared on October 30, 2025".
+    ["First close", "October 30, 2025"],
   ],
   performance: [
     ["3 Months", "11.08%", "3.29%"],
     ["6 Months", "23.20%", "1.38%"],
   ],
-  firstClose: "First Close declared on October 30, 2025",
   registration: "IN/AIF3/24-25/1709",
 } as const;
 

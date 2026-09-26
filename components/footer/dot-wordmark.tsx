@@ -2,9 +2,11 @@
 
 import { useReducedMotion } from "@/lib/use-reduced-motion";
 import { useEffect, useRef } from "react";
+import { hexagon, ROW_PITCH } from "./hexagon";
 
 const STEP = 9;
-const DOT = 2.7;
+/** Circumradius of each hexagonal cell. */
+const DOT = 3.3;
 const REACH = 120;
 const PUSH = 28;
 const INK = [0, 0, 0] as const;
@@ -14,7 +16,7 @@ type Dot = { hx: number; hy: number; x: number; y: number; hollow: boolean };
 
 /**
  * The footer's dot-matrix wordmark, after United Carriers on footer.design:
- * "MONEYBEE" set in the site face, sampled onto a lattice and drawn as dots.
+ * "MONEYBEE" set in the site face, sampled onto a honeycomb lattice and drawn as hexagons.
  * A ring cursor pushes the dots aside and tints the nearest ones orange; they
  * spring home when it leaves. Idle, the rows carry a faint ripple. Under
  * reduced motion it is drawn once and holds still.
@@ -61,8 +63,9 @@ export default function DotWordmark({ word = "MONEYBEE" }: { word?: string }) {
       const pixels = ink.getImageData(0, 0, width, height).data;
 
       dots = [];
-      for (let y = STEP / 2; y < height; y += STEP) {
-        for (let x = STEP / 2; x < width; x += STEP) {
+      // A honeycomb: rows a hexagon's height apart, every other row shifted by half a cell.
+      for (let row = 0, y = STEP / 2; y < height; row += 1, y += STEP * ROW_PITCH) {
+        for (let x = STEP / 2 + (row % 2) * (STEP / 2); x < width; x += STEP) {
           if (pixels[(Math.floor(y) * width + Math.floor(x)) * 4 + 3] > 120) {
             const seed = Math.sin(x * 12.9898 + y * 78.233) * 43758.5453;
             dots.push({ hx: x, hy: y, x, y, hollow: seed - Math.floor(seed) < 0.07 });
@@ -93,7 +96,7 @@ export default function DotWordmark({ word = "MONEYBEE" }: { word?: string }) {
         dot.y += (ty - dot.y) * 0.18;
         const colour = INK.map((channel, index) => Math.round(channel + (ORANGE[index] - channel) * heat));
         context.beginPath();
-        context.arc(dot.x, dot.y, DOT, 0, Math.PI * 2);
+        hexagon(context, dot.x, dot.y, DOT);
         if (dot.hollow && heat < 0.2) {
           context.strokeStyle = "rgba(0,0,0,.35)";
           context.lineWidth = 1;

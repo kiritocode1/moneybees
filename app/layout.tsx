@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Instrument_Serif, Rethink_Sans } from "next/font/google";
+import { Geist_Mono, Instrument_Serif, Rethink_Sans } from "next/font/google";
 import "./globals.css";
 
 // Project default body faces.
@@ -13,6 +13,13 @@ const instrumentSerif = Instrument_Serif({
   weight: "400",
   subsets: ["latin"],
   variable: "--font-instrument-serif",
+  display: "swap",
+});
+
+/** The small uppercase mono labels, after antimetal's .text-eyebrow. */
+const geistMono = Geist_Mono({
+  subsets: ["latin"],
+  variable: "--font-geist-mono",
   display: "swap",
 });
 
@@ -33,7 +40,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${rethinkSans.variable} ${instrumentSerif.variable} h-full antialiased`}
+      className={`${rethinkSans.variable} ${instrumentSerif.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="option-one-shell min-h-full bg-white font-sans text-black">
         {children}

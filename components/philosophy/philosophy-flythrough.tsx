@@ -9,10 +9,10 @@ import { COLUMN_COUNT, DESCENT_END, ORBIT_END, pillarCentre } from "./tholos";
 
 /**
  * Our philosophy as a camera move. The section is pinned while you scroll
- * through it: the camera comes down from high over the tholos, travels the ring
- * past each of the six columns, lighting one at a time with its pillar beside
- * it, then goes in to the centre where all six light together. Scrolling on
- * leaves the pin and runs into the next section.
+ * through it: the camera opens looking straight down on the tholos, comes down
+ * on the right, travels the ring past each of the six columns, lighting one at
+ * a time with its pillar beside it, then goes in to the centre where all six
+ * light together. Scrolling on leaves the pin and runs into the next section.
  */
 
 const PILLAR_SPAN = (ORBIT_END - DESCENT_END) / COLUMN_COUNT;
@@ -33,22 +33,32 @@ function between(value: number, input: readonly number[], output: readonly numbe
   return output[output.length - 1];
 }
 
-function PillarCard({ index, progress }: { index: number; progress: MotionValue<number> }) {
+/** Scroll stops over which pillar `index`'s card fades in, holds and fades out. */
+function cardRange(index: number) {
   const centre = pillarCentre(index);
-  const range = [centre - PILLAR_SPAN * 0.5, centre - PILLAR_SPAN * 0.28, centre + PILLAR_SPAN * 0.28, centre + PILLAR_SPAN * 0.5];
+  return [centre - PILLAR_SPAN * 0.5, centre - PILLAR_SPAN * 0.28, centre + PILLAR_SPAN * 0.28, centre + PILLAR_SPAN * 0.5];
+}
+
+/** How visible the most visible pillar card is at `value`. */
+const cardPresence = (value: number) =>
+  Math.max(...PILLARS.map((_, index) => between(value, cardRange(index), [0, 1, 1, 0])));
+
+/** The opening: the heading alone on paper, then the scene fading in as the heading leaves. */
+const INTRO_END = 0.065;
+const SCENE_IN = [0.03, 0.075] as const;
+
+function PillarCard({ index, progress }: { index: number; progress: MotionValue<number> }) {
+  const range = cardRange(index);
   const opacity = useTransform(progress, (value) => between(value, range, [0, 1, 1, 0]));
   const y = useTransform(progress, (value) => between(value, range, [24, 0, 0, -24]));
   const pillar = PILLARS[index];
   return (
     <motion.article
       style={{ opacity, y }}
-      className="pointer-events-none absolute bottom-[max(48px,8svh)] left-[max(32px,calc((100vw_-_1480px)/2))] w-[min(520px,calc(100vw_-_64px))] motion-reduce:hidden max-[600px]:left-[14px] max-[600px]:w-[calc(100vw_-_28px)] max-[600px]:bg-white/88 max-[600px]:p-[16px] max-[600px]:backdrop-blur-[6px]"
+      className="pointer-events-none absolute bottom-[max(48px,8svh)] left-[max(32px,calc((100vw_-_1480px)/2))] w-[min(600px,calc(100vw_-_64px))] motion-reduce:hidden max-[600px]:left-[14px] max-[600px]:w-[calc(100vw_-_28px)] max-[600px]:bg-white/88 max-[600px]:p-[16px] max-[600px]:backdrop-blur-[6px]"
     >
-      <span className="font-mono text-[11px] tracking-[.1em] text-[rgba(0,0,0,.55)]">
-        {String(index + 1).padStart(2, "0")} / {String(COLUMN_COUNT).padStart(2, "0")}
-      </span>
-      <h3 className="mt-[10px] text-[clamp(2.2rem,4.4vw,4.4rem)] leading-[.95] font-light tracking-[-.05em]">{pillar.name}</h3>
-      <p className="mt-[18px] max-w-[40ch] text-[15px] leading-[1.55] text-[rgba(0,0,0,.74)]">{pillar.text}</p>
+      <h3 className="text-[clamp(2.2rem,4.4vw,4.4rem)] leading-[.95] font-light tracking-[-.05em] text-[#F7A11A]">{pillar.name}</h3>
+      <p className="mt-[20px] max-w-[34ch] text-[clamp(1.15rem,1.55vw,1.45rem)] leading-[1.45] text-[rgba(0,0,0,.82)]">{pillar.text}</p>
     </motion.article>
   );
 }
@@ -67,7 +77,12 @@ export default function PhilosophyFlythrough() {
     setActive(index);
   });
 
-  const introOpacity = useTransform(scrollYProgress, (value) => between(value, [0, DESCENT_END * 0.55, DESCENT_END * 0.9], [1, 1, 0]));
+  const introOpacity = useTransform(scrollYProgress, (value) => between(value, [0, SCENE_IN[0], INTRO_END], [1, 1, 0]));
+  const sceneOpacity = useTransform(scrollYProgress, (value) => between(value, [0, ...SCENE_IN], [0, 0, 1]));
+  const scrimOpacity = useTransform(scrollYProgress, cardPresence);
+  // After the look-up has held, the lower frame fades to paper, so when the pin releases
+  // the frame's bottom edge meets the next section as white instead of cutting the ring.
+  const exitOpacity = useTransform(scrollYProgress, (value) => between(value, [0.965, 0.998], [0, 1]));
   const railOpacity = useTransform(scrollYProgress, (value) =>
     between(value, [DESCENT_END * 0.8, DESCENT_END, ORBIT_END, ORBIT_END + 0.03], [0, 1, 1, 0]),
   );
@@ -89,7 +104,7 @@ export default function PhilosophyFlythrough() {
       let raf = 0;
       let previous = performance.now();
       const tick = (now: number) => {
-        // Reduced motion holds the opening view, where the whole ring is in frame.
+        // Reduced motion holds the opening overhead view, where the whole ring is in frame.
         tholos.frame(reduceMotion ? 0 : progressRef.current, Math.min(now - previous, 50) / 1000);
         previous = now;
         raf = requestAnimationFrame(tick);
@@ -122,18 +137,34 @@ export default function PhilosophyFlythrough() {
     // know the setting, so branching in React would render a different tree on the client.
     <section ref={sectionRef} id="philosophy-pillars" aria-labelledby="philosophy-pillars-heading" className="relative h-[760svh] bg-white motion-reduce:h-auto">
       <div className="sticky top-0 h-svh overflow-hidden motion-reduce:static motion-reduce:h-[70svh]">
-        <canvas ref={canvasRef} className="absolute inset-0 h-full w-full" aria-hidden="true" />
+        <motion.canvas
+          ref={canvasRef}
+          style={{ opacity: sceneOpacity }}
+          className="absolute inset-0 h-full w-full motion-reduce:!opacity-100"
+          aria-hidden="true"
+        />
+        <motion.div
+          aria-hidden="true"
+          style={{ opacity: exitOpacity }}
+          className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_bottom,transparent_30%,#fff_92%)] motion-reduce:hidden"
+        />
 
         <motion.div
           style={{ opacity: introOpacity }}
-          className="pointer-events-none absolute top-[max(110px,14svh)] left-[max(32px,calc((100vw_-_1480px)/2))] max-w-[620px] max-[600px]:left-[22px] motion-reduce:hidden"
+          className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center px-[22px] text-center motion-reduce:hidden"
         >
           <BracketLabel>Our philosophy</BracketLabel>
-          <h2 id="philosophy-pillars-heading" className="mt-[18px] text-[clamp(3rem,6vw,6.4rem)] leading-[.92] font-light tracking-[-.055em]">
+          <h2 id="philosophy-pillars-heading" className="mt-[22px] text-[clamp(3rem,7vw,7.6rem)] leading-[.92] font-light tracking-[-.055em]">
             {HEADINGS.philosophy}
           </h2>
         </motion.div>
 
+        {/* Paper behind the pillar text, fading out toward the columns, so the sentence never sits on flutes. */}
+        <motion.div
+          aria-hidden="true"
+          style={{ opacity: scrimOpacity }}
+          className="pointer-events-none absolute inset-y-0 left-0 w-[min(760px,70vw)] bg-[linear-gradient(to_right,rgba(255,255,255,.94)_0%,rgba(255,255,255,.82)_45%,transparent_100%)] motion-reduce:hidden max-[600px]:hidden"
+        />
         {PILLARS.map((pillar, index) => (
           <PillarCard key={pillar.name} index={index} progress={scrollYProgress} />
         ))}
@@ -146,11 +177,11 @@ export default function PhilosophyFlythrough() {
           {PILLARS.map((pillar, index) => (
             <li
               key={pillar.name}
-              className="flex items-center justify-end gap-[10px] text-[12px] transition-colors duration-300"
-              style={{ color: index === active ? "#000" : "rgba(0,0,0,.3)" }}
+              className="flex items-center justify-end gap-[12px] text-[15px] transition-colors duration-300"
+              style={{ color: index === active ? "#000" : "rgba(0,0,0,.45)" }}
             >
               {pillar.name}
-              <span className={`h-[7px] w-[7px] transition-colors duration-300 ${index === active ? "bg-[#F7A11A]" : "bg-[rgba(0,0,0,.18)]"}`} />
+              <span className={`h-[8px] w-[8px] transition-colors duration-300 ${index === active ? "bg-[#F7A11A]" : "bg-[rgba(0,0,0,.18)]"}`} />
             </li>
           ))}
         </motion.ol>
@@ -161,10 +192,9 @@ export default function PhilosophyFlythrough() {
         <p aria-hidden="true" className="col-span-full text-[clamp(2.6rem,5vw,5rem)] leading-[.95] font-light tracking-[-.05em]">
           {HEADINGS.philosophy}
         </p>
-        {PILLARS.map((pillar, index) => (
+        {PILLARS.map((pillar) => (
           <div key={pillar.name}>
-            <span className="font-mono text-[11px] text-[rgba(0,0,0,.55)]">{String(index + 1).padStart(2, "0")}</span>
-            <h3 className="mt-[8px] text-[1.6rem] font-light tracking-[-.03em]">{pillar.name}</h3>
+            <h3 className="text-[1.6rem] font-light tracking-[-.03em] text-[#F7A11A]">{pillar.name}</h3>
             <p className="mt-[10px] text-[14px] leading-[1.55] text-[rgba(0,0,0,.72)]">{pillar.text}</p>
           </div>
         ))}

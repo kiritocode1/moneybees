@@ -1,25 +1,42 @@
 "use client";
 
+import { motion, useInView } from "motion/react";
 import { useRef } from "react";
-import { HEADINGS, PERIOD_RETURNS, RECORD_LEAD, RECORD_METHOD, WEALTH } from "@/lib/insights";
-import { BracketLabel, Eyebrow, r2, SectionHeading } from "./fact-section";
-import { Panel, SplitFrame, useStageClock } from "./motion-language";
+import { BODY, COLUMN, DashedRule, EYEBROW, Rise, SUBHEAD } from "@/components/hero/editorial";
+import { HEADINGS, PERIOD_RETURNS, RECORD_LEAD, WEALTH } from "@/lib/insights";
+import { useReducedMotion } from "@/lib/use-reduced-motion";
+import { r2 } from "./fact-section";
+import { useStageClock } from "./motion-language";
+
+/*
+ * Wealth creation, set like the intro under the hero: paragraphs beside a
+ * figure, alternating sides row by row. Each figure draws itself when it
+ * comes into view. The TWRR method note that used to sit under this section is
+ * in the footer's legal lines.
+ */
 
 /** Rupees in millions, written the way the deck writes them: "Rs. 28.85 Mn". */
 const rupees = (millions: number) => `Rs. ${millions.toFixed(2).replace(/\.00$/, "")} Mn`;
-
 const pct = (value: number) => `${value < 0 ? "−" : ""}${Math.abs(value).toFixed(2)}%`;
+
+const byPeriod = (period: string) => {
+  const row = PERIOD_RETURNS.find((item) => item.period === period);
+  if (!row) throw new Error(`No "${period}" row in PERIOD_RETURNS`);
+  return row;
+};
+const FIVE_YEAR = byPeriod("5 year");
+const SINCE_INCEPTION = byPeriod("Since Inception");
+const ONE_YEAR = byPeriod("1 year");
 
 const RING_DOTS = 20;
 const COUNT_FOR = 2.6;
 
 /**
- * The reference's ring: dots on a tilted ellipse, turning, near dots larger
- * than far ones and a few hollow or white. Twenty of them, one per holding in
- * a typical portfolio. The figure in the middle counts the ₹10 lakh up to its
- * July 2026 value once, then holds, while the ring keeps turning.
+ * Dots on a tilted ellipse, turning, near dots larger than far ones and a few
+ * hollow, one per holding in a typical portfolio. The figure in the middle
+ * counts Rs. 1 Mn up to its July 2026 value once it is in view, then holds.
  */
-function RingPanel() {
+function WealthRing() {
   const ref = useRef<HTMLDivElement>(null);
   const spin = useStageClock(ref, 0, 1000);
   const count = useStageClock(ref, COUNT_FOR);
@@ -28,15 +45,12 @@ function RingPanel() {
   const dots = Array.from({ length: RING_DOTS }, (_, index) => {
     const angle = (index / RING_DOTS) * Math.PI * 2 + spin * 0.35;
     const depth = (Math.sin(angle) + 1) / 2;
-    return { index, x: r2(320 + Math.cos(angle) * 210), y: r2(190 + Math.sin(angle) * 92), r: r2(5 + depth * 9), depth };
+    return { index, x: r2(320 + Math.cos(angle) * 250), y: r2(200 + Math.sin(angle) * 110), r: r2(5 + depth * 10), depth };
   }).sort((a, b) => a.depth - b.depth);
 
   return (
-    <div ref={ref} className="h-full">
-      <div className="relative z-[1] p-[28px] max-[600px]:p-[20px]">
-        <BracketLabel>Inception Date is August 1, 2007</BracketLabel>
-      </div>
-      <svg viewBox="0 0 640 380" className="absolute inset-0 h-full w-full" aria-hidden="true">
+    <div ref={ref} className="relative aspect-[640/400] w-full max-w-[640px]">
+      <svg viewBox="0 0 640 400" className="absolute inset-0 h-full w-full" aria-hidden="true">
         {dots.map(({ index, x, y, r }) =>
           index % 7 === 3 ? (
             <circle key={index} cx={x} cy={y} r={r} fill="#fff" stroke="rgba(0,0,0,.35)" />
@@ -45,115 +59,156 @@ function RingPanel() {
           ),
         )}
       </svg>
-      <div className="absolute inset-x-0 top-1/2 -translate-y-[40%] text-center">
-        <strong className="block text-[clamp(1.6rem,2.6vw,2.6rem)] font-light tracking-[-.04em] tabular-nums">{rupees(value)}</strong>
-        <span className="mt-[6px] block text-[10px] text-[rgba(0,0,0,.55)]">as of July 31, 2026, from {rupees(WEALTH.start)}</span>
+      <div className="absolute inset-0 flex flex-col items-center justify-center gap-[12px]">
+        <span className={`${EYEBROW} text-black/55`}>{rupees(WEALTH.start)} in August 2007</span>
+        <strong className="font-serif text-[clamp(2.4rem,4vw,3.6rem)] leading-none font-normal tabular-nums" aria-label={rupees(WEALTH.queenbee)}>
+          {rupees(value)}
+        </strong>
+        <span className={`${EYEBROW} bg-[#F7F7F8] px-[9px] py-[5px] text-black`}>S&amp;P BSE 500 TRI: {rupees(WEALTH.benchmark)}</span>
       </div>
-      <p className="absolute right-[28px] bottom-[22px] left-[28px] flex justify-between gap-[20px] text-[11px] text-[rgba(0,0,0,.65)] max-[600px]:flex-col max-[600px]:gap-[4px]">
-        <span>as opposed to {rupees(WEALTH.benchmark)} from S&amp;P BSE500 TRI</span>
-      </p>
     </div>
   );
 }
 
-const PER_ROW = 1.3;
+/** Short period names for the chart's axis. */
+const SHORT: Record<string, string> = {
+  "1 month": "1M",
+  "3 months": "3M",
+  "6 months": "6M",
+  "1 year": "1Y",
+  "3 year": "3Y",
+  "5 year": "5Y",
+  "Since Inception": "Since 2007",
+};
+
+const TOP = 36;
+const BOTTOM = 372;
+const LEFT = 64;
+const RIGHT = 676;
+const MAX = 20;
+const MIN = -8;
+const y = (value: number) => TOP + ((MAX - value) / (MAX - MIN)) * (BOTTOM - TOP);
+const GROUP = (RIGHT - LEFT) / PERIOD_RETURNS.length;
+const BAR = 24;
 
 /**
- * The reference's ticker: return figures too large for the panel, cropped at
- * its right edge, each new period landing on top and pushing the others down.
- * The period and the benchmark sit on the status line beside it. Every period
- * in the table comes through, the one-year loss included.
+ * Every period in the deck's table as a pair of bars, Moneybee PMS in orange
+ * and the index in grey, growing out of the zero line once in view. The
+ * one-year loss grows downward.
  */
-function TickerPanel() {
+function ReturnsBars() {
   const ref = useRef<HTMLDivElement>(null);
-  const t = useStageClock(ref, 0, PER_ROW * PERIOD_RETURNS.length);
-  const current = Math.floor(t / PER_ROW) % PERIOD_RETURNS.length;
-  const settle = Math.min(1, (t % PER_ROW) / 0.35);
-  const push = 1 - (1 - settle) ** 3;
-  const rows = [0, 1, 2].map((back) => PERIOD_RETURNS[(current - back + PERIOD_RETURNS.length) % PERIOD_RETURNS.length]);
-  const { period, benchmark } = PERIOD_RETURNS[current];
+  const inView = useInView(ref, { once: true, amount: 0.4 });
+  const reduceMotion = useReducedMotion();
+  const zero = y(0);
+
+  const bar = (value: number, x: number, fill: string, delay: number) => (
+    <motion.rect
+      x={x}
+      width={BAR}
+      y={value >= 0 ? y(value) : zero}
+      height={Math.abs(y(value) - zero)}
+      fill={fill}
+      style={{ transformBox: "fill-box", transformOrigin: value >= 0 ? "50% 100%" : "50% 0%" }}
+      initial={{ scaleY: 0 }}
+      animate={{ scaleY: inView ? 1 : 0 }}
+      transition={{ duration: reduceMotion ? 0 : 0.9, delay: reduceMotion ? 0 : delay, ease: [0.22, 1, 0.36, 1] }}
+    />
+  );
 
   return (
-    <div ref={ref} className="h-full">
-      <div className="relative z-[1] grid gap-[10px] p-[28px] max-[600px]:p-[20px]">
-        <BracketLabel>{period}</BracketLabel>
-        <span className="text-[11px] text-[rgba(0,0,0,.6)]">S&amp;P BSE 500 TRI {pct(benchmark)}</span>
+    <div ref={ref} className="w-full max-w-[680px]">
+      <div className={`${EYEBROW} mb-[18px] flex gap-[20px] text-black/70`} aria-hidden="true">
+        <span className="flex items-center gap-[8px]">
+          <i className="h-[9px] w-[9px] bg-[#F7A11A]" />
+          Moneybee PMS
+        </span>
+        <span className="flex items-center gap-[8px]">
+          <i className="h-[9px] w-[9px] bg-[#9D9EA1]" />
+          S&amp;P BSE 500 TRI
+        </span>
       </div>
-      <div className="absolute right-[-0.3em] bottom-[-0.1em] text-right" aria-hidden="true">
-        {rows.map((row, depth) => (
-          <strong
-            key={`${row.period}:${depth}`}
-            className="block text-[clamp(4.4rem,8.6vw,8.8rem)] leading-[.96] font-normal tracking-[-.05em] tabular-nums whitespace-nowrap"
-            style={{
-              opacity: depth === 0 ? push : 1 - depth * 0.3,
-              transform: `translateY(${(1 - push) * -40}%)`,
-            }}
-          >
-            {pct(row.queenbee)}
-          </strong>
+      <svg
+        viewBox="0 0 680 420"
+        role="img"
+        aria-label={`Returns by period, Moneybee PMS against the S&P BSE 500 TRI: ${PERIOD_RETURNS.map((row) => `${row.period} ${pct(row.queenbee)} against ${pct(row.benchmark)}`).join(", ")}.`}
+        className="block h-auto w-full overflow-visible"
+      >
+        {[20, 10, 0].map((tick) => (
+          <g key={tick}>
+            <line x1={LEFT} x2={RIGHT} y1={y(tick)} y2={y(tick)} stroke={tick === 0 ? "rgba(0,0,0,.5)" : "rgba(0,0,0,.18)"} strokeDasharray="2 5" strokeLinecap="round" />
+            <text x={LEFT - 12} y={y(tick) + 4} textAnchor="end" className="fill-black/55 font-[family-name:var(--font-geist-mono)] text-[11px]">
+              {tick}%
+            </text>
+          </g>
         ))}
-      </div>
+        {PERIOD_RETURNS.map((row, index) => {
+          const x = LEFT + GROUP * index + (GROUP - BAR * 2 - 4) / 2;
+          const labelY = (value: number) => (value >= 0 ? y(value) - 8 : y(value) + 16);
+          return (
+            <g key={row.period}>
+              {bar(row.queenbee, x, "#F7A11A", index * 0.08)}
+              {bar(row.benchmark, x + BAR + 4, "#9D9EA1", index * 0.08 + 0.04)}
+              <motion.text
+                x={x + BAR / 2}
+                y={labelY(row.queenbee)}
+                textAnchor="middle"
+                className="fill-black font-[family-name:var(--font-geist-mono)] text-[10px]"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: inView ? 1 : 0 }}
+                transition={{ duration: reduceMotion ? 0 : 0.4, delay: reduceMotion ? 0 : 0.7 + index * 0.08 }}
+              >
+                {row.queenbee.toFixed(1)}
+              </motion.text>
+              <text
+                x={x + BAR + 2}
+                y={BOTTOM + 34}
+                textAnchor="middle"
+                className="fill-black/60 font-[family-name:var(--font-geist-mono)] text-[11px] tracking-[.06em] uppercase"
+              >
+                {SHORT[row.period] ?? row.period}
+              </text>
+            </g>
+          );
+        })}
+      </svg>
     </div>
   );
 }
 
-function PeriodTable() {
-  return (
-    <table className="w-full border-collapse text-left text-[13px]">
-      <thead>
-        <tr className="border-b border-b-[rgba(0,0,0,.25)] text-[9px] uppercase tracking-[.1em] text-[rgba(0,0,0,.55)]">
-          <th className="py-[10px] font-normal">Year</th>
-          <th className="py-[10px] text-right font-normal">Queenbee</th>
-          <th className="py-[10px] text-right font-normal">S&amp;P BSE 500 TRI</th>
-        </tr>
-      </thead>
-      <tbody>
-        {PERIOD_RETURNS.map(({ period, queenbee, benchmark }) => (
-          <tr key={period} className="border-b border-b-[rgba(0,0,0,.13)]">
-            <td className="py-[12px]">{period}</td>
-            <td className="py-[12px] text-right tabular-nums">{pct(queenbee)}</td>
-            <td className="py-[12px] text-right tabular-nums text-[rgba(0,0,0,.6)]">{pct(benchmark)}</td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
-  );
-}
-
-/**
- * Section D, time-based. The ring counts the ₹10 lakh to its July 2026 value
- * beside the returns ticker, then the full table and the method sit below as
- * plain content. Sits before the chapter stack and takes over its third card.
- */
+/** Wealth creation by Moneybee PMS: two rows, text and figure trading sides. */
 export default function RecordSection() {
   return (
-    <section id="record" aria-labelledby="record-heading" className="bg-white">
-      <SectionHeading
-        id="record"
-        label="Wealth creation by Moneybee PMS"
-        heading={HEADINGS.record}
-        lead={RECORD_LEAD}
-      />
-      <div className="mt-[72px]">
-        <SplitFrame>
-          <Panel className="min-h-[440px]">
-            <RingPanel />
-          </Panel>
-          <Panel className="min-h-[440px]">
-            <TickerPanel />
-          </Panel>
-        </SplitFrame>
-      </div>
-      <div className="grid grid-cols-[1fr_.7fr] gap-[80px] px-[max(32px,calc((100vw_-_1480px)/2))] pt-[72px] pb-[90px] max-[900px]:grid-cols-1 max-[900px]:gap-[40px] max-[600px]:px-[22px]">
-        <div>
-          <Eyebrow>Return as on July 31, 2026 as per APMI</Eyebrow>
-          <div className="mt-[18px]">
-            <PeriodTable />
+    <section id="record" aria-labelledby="record-heading" className="bg-white text-black">
+      <DashedRule />
+      <div className={`${COLUMN} grid grid-cols-1 items-center gap-12 py-[100px] md:grid-cols-2`}>
+        <Rise onView>
+          <div className="flex flex-col gap-8">
+            <h2 id="record-heading" className={SUBHEAD}>
+              {HEADINGS.record}
+            </h2>
+            <p className={BODY}>{RECORD_LEAD}</p>
           </div>
-        </div>
-        <div>
-          <Eyebrow>Disclaimer</Eyebrow>
-          <p className="mt-[18px] text-[13px] leading-[1.6] text-[rgba(0,0,0,.72)]">{RECORD_METHOD}</p>
+        </Rise>
+        <WealthRing />
+      </div>
+      <DashedRule />
+      <div className={`${COLUMN} grid grid-cols-1 items-center gap-12 py-[100px] md:grid-cols-2`}>
+        {/* Text first in the markup so phones read it before the chart; the chart takes the left on wide screens. */}
+        <Rise onView>
+          <div className="flex flex-col gap-5">
+            <p className={BODY}>
+              As on July 31, 2026, Moneybee PMS has returned {pct(FIVE_YEAR.queenbee)} a year over five years, against{" "}
+              {pct(FIVE_YEAR.benchmark)} for the S&amp;P BSE 500 TRI. Since it began in August 2007, {pct(SINCE_INCEPTION.queenbee)} a year
+              against {pct(SINCE_INCEPTION.benchmark)}.
+            </p>
+            <p className={BODY}>
+              The last year was harder: down {pct(Math.abs(ONE_YEAR.queenbee))}, while the index rose {pct(ONE_YEAR.benchmark)}.
+            </p>
+          </div>
+        </Rise>
+        <div className="md:order-first">
+          <ReturnsBars />
         </div>
       </div>
     </section>

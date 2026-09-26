@@ -1,11 +1,8 @@
 "use client";
 
-import { Geist_Mono } from "next/font/google";
-import { motion } from "motion/react";
-import { useReducedMotion } from "@/lib/use-reduced-motion";
-import type { ReactNode } from "react";
 import { INTRODUCTION } from "@/lib/insights";
 import CornerBrackets from "./corner-brackets";
+import { BODY, COLUMN, DashedRule, Rise } from "./editorial";
 import HeroPyramid from "./hero-pyramid";
 import WealthChart from "./wealth-chart";
 
@@ -18,40 +15,15 @@ import WealthChart from "./wealth-chart";
  * are ours: white paper, black, #F7A11A and grey.
  */
 
-const geistMono = Geist_Mono({ subsets: ["latin"], variable: "--font-geist-mono", display: "swap" });
-
 /** .text-heading. Tracking eased from -.037em: Instrument Serif is narrower than Signifier. */
 const HEADING = "font-serif text-[clamp(2.5rem,1.0417rem+3.6458vw,3.375rem)] leading-[1.1] font-normal tracking-[-.02em]";
-/** .text-body */
-const BODY = "font-serif text-[clamp(1.25rem,.8333rem+1.0417vw,1.5rem)] leading-[1.2] font-normal";
 /** .text-button with the button shell. */
 const BUTTON =
   "relative inline-flex cursor-pointer items-center justify-center rounded-full px-[24.5px] py-[12.5px] text-[14px] leading-[1.5] font-medium whitespace-nowrap no-underline transition-colors duration-200 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#F7A11A]";
-const COLUMN = "mx-auto w-full max-w-[1512px] px-6 md:px-[120px]";
-
-function DashedRule() {
-  return <hr className="m-0 w-full border-0 border-t border-dashed border-black/10" />;
-}
-
-/** The source's entrance: 12px rise and fade, 700ms on cubic-bezier(.22,1,.36,1). */
-function Rise({ children, delay = 0, onView = false }: { children: ReactNode; delay?: number; onView?: boolean }) {
-  const reduceMotion = useReducedMotion();
-  const shown = { opacity: 1, y: 0 };
-  return (
-    <motion.div
-      // The same starting state on the server and client; reduced motion only drops the duration.
-      initial={{ opacity: 0, y: 12 }}
-      {...(onView ? { whileInView: shown, viewport: { once: true, amount: 0.2 } } : { animate: shown })}
-      transition={{ duration: reduceMotion ? 0 : 0.7, delay: reduceMotion ? 0 : delay, ease: [0.22, 1, 0.36, 1] }}
-    >
-      {children}
-    </motion.div>
-  );
-}
 
 export function HeroSection() {
   return (
-    <section aria-label="Hero" className={`${geistMono.variable} relative isolate w-full overflow-hidden bg-white text-black max-md:flex max-md:flex-col`}>
+    <section aria-label="Hero" className="relative isolate w-full overflow-hidden bg-white text-black max-md:flex max-md:flex-col">
       {/* The source's figure is centred about x 1120 and y 400 at 1440 wide. The
           pyramid's own centre sits 44% into its viewBox, so the box hangs right of that. */}
       <div className="absolute top-[400px] right-[max(24px,calc((100vw_-_1512px)/2_+_96px))] z-0 w-[min(42vw,600px)] -translate-y-1/2 max-md:relative max-md:top-0 max-md:right-0 max-md:order-last max-md:mx-auto max-md:w-[min(100%_-_48px,520px)] max-md:translate-y-0 max-md:pb-12">
@@ -93,7 +65,7 @@ export function WhoWeAreSection() {
   return (
     <>
       <DashedRule />
-      <section id="about" aria-label="Who we are" className={`${geistMono.variable} w-full bg-white text-black`}>
+      <section id="about" aria-label="Who we are" className={`w-full bg-white text-black`}>
         <div className={`${COLUMN} grid grid-cols-1 items-start gap-10 py-[80px] md:grid-cols-2 md:gap-12`}>
           <WealthChart />
           <Rise onView>

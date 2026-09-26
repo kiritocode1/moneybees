@@ -14,9 +14,9 @@ export default function MumbaiClock() {
     return () => window.clearInterval(id);
   }, []);
   return (
-    <p className="text-right text-[12px] uppercase tracking-[.06em] max-[900px]:text-left">
+    <p className="text-[11px] uppercase tracking-[.08em]">
       <span className="block text-[rgba(0,0,0,.55)]">Mumbai</span>
-      <span className="mt-[4px] block font-mono text-[clamp(1.6rem,2.4vw,2.2rem)] tracking-[-.02em] normal-case tabular-nums">
+      <span className="mt-[4px] block font-mono text-[1.6rem] tracking-[-.02em] normal-case tabular-nums">
         {time ?? "--:--"} <span className="text-[13px] text-[rgba(0,0,0,.55)]">IST</span>
       </span>
     </p>
