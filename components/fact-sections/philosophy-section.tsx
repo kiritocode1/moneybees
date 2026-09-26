@@ -1,6 +1,7 @@
 "use client";
 
-import { useInView, useReducedMotion } from "motion/react";
+import { useInView } from "motion/react";
+import { useReducedMotion } from "@/lib/use-reduced-motion";
 import { useRef } from "react";
 import { FRONT_FROM, FRONT_TO, path, type Point, project } from "@/components/iso/geometry";
 import { HEADINGS, PILLARS } from "@/lib/insights";

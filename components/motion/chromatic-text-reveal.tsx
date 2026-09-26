@@ -1,13 +1,8 @@
 "use client";
 // beui.dev/components/motion/text-animation
 
-import {
-  type MotionStyle,
-  motion,
-  type UseInViewOptions,
-  useInView,
-  useReducedMotion,
-} from "motion/react";
+import { type MotionStyle, motion, type UseInViewOptions, useInView } from "motion/react";
+import { useReducedMotion } from "@/lib/use-reduced-motion";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { EASE_IN_OUT, EASE_OUT } from "@/lib/ease";
 import { cn } from "@/lib/utils";

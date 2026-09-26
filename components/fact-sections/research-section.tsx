@@ -15,48 +15,38 @@ import { BracketCaption, DotField, Panel, SplitFrame } from "./motion-language";
  */
 
 /**
- * India's outline as (longitude, latitude), simplified, following the Government
- * of India's official depiction: all of Jammu & Kashmir and Ladakh, including
- * Gilgit-Baltistan and Aksai Chin. At honeycomb resolution the coastline only
- * needs a few dozen points, but the northern border must follow the official map.
+ * The comb, copied cell by cell from the reference card at its fullest
+ * (reference/movin-03635/hex/strip-f4.png): a 22 by 15 field of faint cells
+ * with a wide, rounded cluster inside it. Each row lists the cluster's columns
+ * as inclusive [from, to] runs; odd rows sit half a cell to the right. The
+ * hole in row 3 and the strays in rows 12 and 13 are the reference's own.
  */
-const INDIA: readonly (readonly [number, number])[] = [
-  [77.8, 35.5], [79.5, 35.6], [80.3, 35.0], [80.2, 33.5], [79.0, 32.5], [78.8, 31.0], [80.2, 30.2], [81.1, 30.0],
-  [83.0, 27.3], [85.0, 26.8], [88.0, 26.4], [88.1, 27.1], [88.8, 28.1], [89.0, 26.9], [92.0, 26.8], [92.1, 27.4],
-  [94.0, 28.9], [95.4, 29.2], [96.9, 28.8], [97.4, 28.2], [97.0, 27.2], [95.2, 26.6], [94.6, 25.0], [94.2, 23.9],
-  [93.4, 23.5], [93.2, 22.2], [92.6, 22.0], [92.3, 23.7], [91.4, 24.1], [90.1, 25.2], [89.8, 26.0], [88.6, 26.4],
-  [88.1, 25.5], [88.5, 24.3], [88.9, 22.9], [89.0, 21.7], [87.0, 21.4], [86.8, 20.5], [85.5, 19.6], [84.5, 18.5],
-  [82.3, 16.5], [80.5, 15.5], [80.2, 13.6], [79.8, 11.5], [79.3, 10.3], [78.2, 8.9], [77.5, 8.1], [76.5, 8.9],
-  [75.9, 11.0], [74.8, 12.9], [74.0, 15.0], [73.3, 17.0], [72.8, 19.0], [72.8, 21.0], [72.0, 21.3], [70.4, 20.8],
-  [69.0, 22.3], [68.4, 23.5], [70.8, 24.4], [70.0, 25.7], [70.4, 27.5], [72.5, 28.9], [73.8, 30.1], [74.5, 31.0],
-  [74.8, 32.4], [73.5, 33.9], [73.9, 34.8], [72.6, 35.5], [74.5, 36.9], [75.5, 36.8], [77.0, 35.9],
+const COLS = 22;
+const ROWS = 15;
+const CLUSTER: readonly (readonly (readonly [number, number])[])[] = [
+  [],
+  [[9, 12]],
+  [[7, 14]],
+  [[5, 7], [9, 15]],
+  [[5, 18]],
+  [[4, 18]],
+  [[4, 18]],
+  [[3, 18]],
+  [[5, 19]],
+  [[4, 17]],
+  [[5, 17]],
+  [[4, 16]],
+  [[3, 3], [8, 15]],
+  [[8, 8], [10, 11], [13, 13]],
+  [],
 ];
-const LON_MIN = 68;
-const LAT_MAX = 37.5;
-/** Longitude is narrowed by cos(22°) so the map is not stretched sideways. */
-const LON_SCALE = 0.93;
-const SPAN_X = 29.5 * LON_SCALE;
-const SPAN_Y = 31;
+const inCluster = (row: number, col: number) => CLUSTER[row].some(([from, to]) => col >= from && col <= to);
 
 const R = 7;
 const W = Math.sqrt(3) * R;
 const H = 1.5 * R;
-/** Screen units per scaled degree: about 1.6 cells per degree across. */
-const UNIT = W / 0.62;
-const COLS = Math.ceil((SPAN_X * UNIT) / W);
-const ROWS = Math.ceil((SPAN_Y * UNIT) / H);
 const VIEW_W = r2(COLS * W + W / 2);
 const VIEW_H = r2(ROWS * H + R);
-
-function insideIndia(lon: number, lat: number) {
-  let inside = false;
-  for (let i = 0, j = INDIA.length - 1; i < INDIA.length; j = i, i += 1) {
-    const [xi, yi] = INDIA[i];
-    const [xj, yj] = INDIA[j];
-    if (yi > lat !== yj > lat && lon < ((xj - xi) * (lat - yi)) / (yj - yi) + xi) inside = !inside;
-  }
-  return inside;
-}
 
 const noise = (seed: number) => {
   const value = Math.sin(seed * 12.9898) * 43758.5453;
@@ -70,19 +60,17 @@ const hex = (x: number, y: number, radius: number) =>
   }).join(" ");
 
 /**
- * The comb over India. Cells outside the map are not drawn. `rank` is noise,
- * so the companies still in play stay spread across the country rather than
- * gathering in one place; `arrive` fills the map from north to south.
+ * The cluster's cells. `rank` is noise, so the companies still in play stay
+ * spread across the comb rather than gathering in one place; `arrive` fills it
+ * from top to bottom.
  */
 const CELLS = (() => {
   const cells: { points: string; rank: number; arrive: number; delay: number; order: number }[] = [];
   for (let row = 0; row < ROWS; row += 1) {
     for (let col = 0; col < COLS; col += 1) {
+      if (!inCluster(row, col)) continue;
       const x = col * W + (row % 2) * (W / 2) + W / 2;
       const y = row * H + R;
-      const lon = LON_MIN + x / UNIT / LON_SCALE;
-      const lat = LAT_MAX - y / UNIT;
-      if (!insideIndia(lon, lat)) continue;
       cells.push({
         points: hex(r2(x), r2(y), R - 1),
         rank: noise(row * 97 + col),
@@ -98,8 +86,25 @@ const CELLS = (() => {
   return cells;
 })();
 
-/** Cells still in play at each stage, as a share of the map, ending on exactly twenty: one per portfolio stock. */
-const KEEP = [1, 0.45, 0.2, 0.11, 0.07].map((share) => Math.round(CELLS.length * share)).concat(20);
+/** The faint cells around the cluster, the empty comb the card sits on. */
+const FIELD = Array.from({ length: ROWS * COLS }, (_, index) => {
+  const row = Math.floor(index / COLS);
+  const col = index % COLS;
+  return inCluster(row, col) ? null : hex(r2(col * W + (row % 2) * (W / 2) + W / 2), r2(row * H + R), R - 1);
+}).filter((points) => points !== null);
+
+/**
+ * Cells still in play at each stage, from the deck's counts on a log scale:
+ * the whole cluster at ~6000, exactly twenty at ~20 (one per portfolio stock),
+ * and every stage in between smaller than the one before.
+ */
+const COUNTS = RESEARCH_STAGES.map(({ count }) => Number(count.replace(/[^0-9]/g, "")));
+const KEEP = COUNTS.map((count) => {
+  const top = COUNTS[0];
+  const last = COUNTS[COUNTS.length - 1];
+  const t = Math.log(count / last) / Math.log(top / last);
+  return Math.round(last * (CELLS.length / last) ** t);
+});
 
 function HoneycombFigure({ progress, selected, onSelect }: FigureState) {
   const settled = progress > 0.8;
@@ -120,6 +125,9 @@ function HoneycombFigure({ progress, selected, onSelect }: FigureState) {
         className="mx-auto mt-[10px] block max-h-[46svh] w-auto max-w-full"
         aria-hidden="true"
       >
+        {FIELD.map((points) => (
+          <polygon key={points} points={points} fill="#f4f3f1" />
+        ))}
         {CELLS.map((cell, index) => {
           const arrived = progress >= cell.arrive;
           const inPlay = arrived && cell.order < keep;

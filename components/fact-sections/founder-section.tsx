@@ -15,7 +15,7 @@ export default function FounderSection() {
       className="border-t border-t-[rgba(255,255,255,.14)] bg-[#000000] px-[max(32px,calc((100vw_-_1480px)/2))] py-[120px] text-white max-[600px]:px-[22px] max-[600px]:py-[80px]"
     >
       <h2 id="founder-heading">
-        <BracketLabel>About the founder</BracketLabel>
+        <BracketLabel>Why small caps</BracketLabel>
       </h2>
       <div className="mt-[56px] grid grid-cols-[1fr_300px] items-start gap-[80px] max-[1000px]:grid-cols-1 max-[1000px]:gap-[48px]">
         <blockquote className="text-[clamp(1.9rem,3.4vw,3.4rem)] leading-[1.14] font-light tracking-[-.035em] text-[#8c8c8c]">

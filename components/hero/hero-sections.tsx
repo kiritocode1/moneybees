@@ -1,9 +1,10 @@
 "use client";
 
 import { Geist_Mono } from "next/font/google";
-import { motion, useReducedMotion } from "motion/react";
+import { motion } from "motion/react";
+import { useReducedMotion } from "@/lib/use-reduced-motion";
 import type { ReactNode } from "react";
-import { INTRODUCTION, RANKINGS, REGISTRATIONS } from "@/lib/insights";
+import { INTRODUCTION } from "@/lib/insights";
 import CornerBrackets from "./corner-brackets";
 import HeroPyramid from "./hero-pyramid";
 import WealthChart from "./wealth-chart";
@@ -13,7 +14,7 @@ import WealthChart from "./wealth-chart";
  * pinned source (reference/antimetal/source): the 1512px column with 120px
  * gutters, the type scale (.text-heading, .text-body, .text-eyebrow), the
  * dashed rule, the pill buttons and the corner-bracket box. Section order is
- * the source's minus its quote: hero, manifesto, then a numbered heading row. Colours
+ * the source's minus its quote: hero, then the manifesto. Colours
  * are ours: white paper, black, #F7A11A and grey.
  */
 
@@ -23,10 +24,6 @@ const geistMono = Geist_Mono({ subsets: ["latin"], variable: "--font-geist-mono"
 const HEADING = "font-serif text-[clamp(2.5rem,1.0417rem+3.6458vw,3.375rem)] leading-[1.1] font-normal tracking-[-.02em]";
 /** .text-body */
 const BODY = "font-serif text-[clamp(1.25rem,.8333rem+1.0417vw,1.5rem)] leading-[1.2] font-normal";
-/** .text-subhead */
-const SUBHEAD = "font-serif text-[clamp(2.125rem,.6667rem+3.6458vw,3rem)] leading-[1.1] font-normal tracking-[-.021em]";
-/** .text-eyebrow */
-const EYEBROW = "font-[family-name:var(--font-geist-mono)] text-[10px] leading-normal tracking-[.1em] uppercase";
 /** .text-button with the button shell. */
 const BUTTON =
   "relative inline-flex cursor-pointer items-center justify-center rounded-full px-[24.5px] py-[12.5px] text-[14px] leading-[1.5] font-medium whitespace-nowrap no-underline transition-colors duration-200 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#F7A11A]";
@@ -42,7 +39,8 @@ function Rise({ children, delay = 0, onView = false }: { children: ReactNode; de
   const shown = { opacity: 1, y: 0 };
   return (
     <motion.div
-      initial={reduceMotion ? false : { opacity: 0, y: 12 }}
+      // The same starting state on the server and client; reduced motion only drops the duration.
+      initial={{ opacity: 0, y: 12 }}
       {...(onView ? { whileInView: shown, viewport: { once: true, amount: 0.2 } } : { animate: shown })}
       transition={{ duration: reduceMotion ? 0 : 0.7, delay: reduceMotion ? 0 : delay, ease: [0.22, 1, 0.36, 1] }}
     >
@@ -110,37 +108,10 @@ export function WhoWeAreSection() {
               </p>
               <p className={BODY}>{INTRODUCTION.advice}</p>
               <p className={BODY}>{INTRODUCTION.team}</p>
-              <dl className="mt-3 grid gap-[6px]">
-                {REGISTRATIONS.map(([business, number]) => (
-                  <div key={number} className={`${EYEBROW} flex gap-[10px] text-black/60`}>
-                    <dt>{business}</dt>
-                    <dd className="text-black">SEBI {number}</dd>
-                  </div>
-                ))}
-              </dl>
             </div>
           </Rise>
         </div>
       </section>
-      {/* The source's numbered row after the manifesto: eyebrow, heading left, one sentence right. */}
-      <div className={`${geistMono.variable} ${COLUMN} bg-white py-[80px] text-black`}>
-        <Rise onView>
-          <div className="flex w-full flex-col gap-6">
-            <div className="flex items-center gap-8">
-              <span className={`${EYEBROW} text-black/60`}>01</span>
-              <span aria-hidden="true" className="h-[2px] w-[2px] shrink-0 rounded-full bg-black/20" />
-              <span className={`${EYEBROW} text-black/60`}>Recognition</span>
-            </div>
-            <div className="grid grid-cols-1 items-start gap-6 md:grid-cols-2 md:gap-12">
-              <h2 className={SUBHEAD}>Ranked among India&rsquo;s top performing portfolio managers</h2>
-              <p className={BODY}>
-                PMS Bazaar, December 2024: {RANKINGS[0][0]} on {RANKINGS[0][1]}, and {RANKINGS[1][0]} on both{" "}
-                {RANKINGS[1][1].replace(" returns", "")} and {RANKINGS[2][1]}.
-              </p>
-            </div>
-          </div>
-        </Rise>
-      </div>
     </>
   );
 }

@@ -1,6 +1,7 @@
 "use client";
 
-import { motion, useReducedMotion } from "motion/react";
+import { motion } from "motion/react";
+import { useReducedMotion } from "@/lib/use-reduced-motion";
 import Image from "next/image";
 import { QuoteUp } from "reicon-react";
 import { EASE_OUT } from "@/lib/ease";

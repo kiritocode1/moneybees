@@ -308,8 +308,9 @@ export const DISCIPLINE_SOURCE = "AIF presentation, August 2026, pages 5 and 6. 
 export const FOUNDER = {
   name: "Mr. Dhiren Shah, Managing Director",
   credentials: "FCA, GRAD CWA, LLB, M.COM",
+  /** His small-cap thesis, verbatim as the client gave it on 2026-09-26. */
   quote:
-    "Long-term investing isn't about chasing headlines, it's about owning quality businesses with the patience to let time compound your conviction. In a world obsessed with speed, we win by standing still when it matters most.",
+    "If India has to grow by 7-8% yoy for the next 20 years. There will be small & medium companies that will grow by 25-30% yoy. We look for these companies and stay invested with them",
   points: [
     "45 years in corporate advisory and wealth management",
     "Founded Moneybee Group in 2004",

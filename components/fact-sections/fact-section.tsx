@@ -1,6 +1,7 @@
 "use client";
 
-import { useMotionValueEvent, useReducedMotion, useScroll } from "motion/react";
+import { useMotionValueEvent, useScroll } from "motion/react";
+import { useReducedMotion } from "@/lib/use-reduced-motion";
 import { type ComponentType, type ReactNode, useEffect, useRef, useState } from "react";
 
 export const FOCUS = "focus-visible:outline-2 focus-visible:outline-[#F7A11A] focus-visible:outline-offset-4";

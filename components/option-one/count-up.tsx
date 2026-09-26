@@ -1,6 +1,7 @@
 "use client";
 
-import { animate, motion, useInView, useMotionValue, useReducedMotion, useTransform } from "motion/react";
+import { animate, motion, useInView, useMotionValue, useTransform } from "motion/react";
+import { useReducedMotion } from "@/lib/use-reduced-motion";
 import { useEffect, useRef } from "react";
 import { EASE_OUT } from "@/lib/ease";
 

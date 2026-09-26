@@ -1,6 +1,7 @@
 "use client";
 
-import { motion, useInView, useReducedMotion } from "motion/react";
+import { motion, useInView } from "motion/react";
+import { useReducedMotion } from "@/lib/use-reduced-motion";
 import { useRef } from "react";
 import { PERIOD_RETURNS, WEALTH } from "@/lib/insights";
 
@@ -44,7 +45,8 @@ export default function WealthChart() {
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, amount: 0.4 });
   const reduceMotion = useReducedMotion();
-  const run = inView || reduceMotion;
+  // Drawn when in view with either motion setting; reduced motion zeroes the durations instead, so hydration matches.
+  const run = inView;
   const at = (delay: number, duration = 0.6) => ({ duration: reduceMotion ? 0 : duration, delay: reduceMotion ? 0 : delay });
   const pct = (value: number) => `${value.toFixed(2)}%`;
 

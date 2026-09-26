@@ -1,6 +1,7 @@
 "use client";
 
-import { useInView, useReducedMotion } from "motion/react";
+import { useInView } from "motion/react";
+import { useReducedMotion } from "@/lib/use-reduced-motion";
 import { type ReactNode, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { ORANGE } from "./fact-section";
 

@@ -1,18 +1,18 @@
 "use client";
 
-import { motion, useReducedMotion } from "motion/react";
+import { motion } from "motion/react";
+import { useReducedMotion } from "@/lib/use-reduced-motion";
 import Image from "next/image";
 import { ArrowRight } from "reicon-react";
 import { BracketLabel } from "@/components/fact-sections/fact-section";
 import FounderSection from "@/components/fact-sections/founder-section";
-import PhilosophySection from "@/components/fact-sections/philosophy-section";
+import PhilosophyFlythrough from "@/components/philosophy/philosophy-flythrough";
 import ProductsSection from "@/components/fact-sections/products-section";
 import PicksSection from "@/components/fact-sections/picks-section";
 import RecordSection from "@/components/fact-sections/record-section";
 import ResearchSection from "@/components/fact-sections/research-section";
 import RiskSection from "@/components/fact-sections/risk-section";
 import TeamSection from "@/components/fact-sections/team-section";
-import WhySmallCapsSection from "@/components/fact-sections/why-small-caps-section";
 import ChapterFigure from "@/components/option-one/chapter-figure";
 import ChapterStack from "@/components/option-one/chapter-stack";
 import { HeroSection, WhoWeAreSection } from "@/components/hero/hero-sections";
@@ -70,7 +70,7 @@ function RisingHeading({
   return (
     <Tag
       className={className}
-      initial={reduceMotion ? false : "hidden"}
+      initial="hidden"
       whileInView="shown"
       viewport={{ once: true, amount: 0.3 }}
     >
@@ -135,19 +135,16 @@ export default function Home() {
   const reduceMotion = useReducedMotion();
 
   /* A single restrained reveal: a short fade and rise as a section arrives.
-     Under reduced motion it must still resolve to the final state. Returning no
-     props at all is not enough: the server renders before `useReducedMotion`
-     can report, so the opacity-0 style is already on the element and nothing
-     would ever clear it. `initial: false` adopts the target immediately. */
-  const reveal = (delay = 0) =>
-    reduceMotion
-      ? { initial: false, animate: { opacity: 1, y: 0 }, transition: { duration: 0 } }
-      : {
-          initial: { opacity: 0, y: 22 },
-          whileInView: { opacity: 1, y: 0 },
-          viewport: { once: true, amount: 0.2 },
-          transition: { duration: 0.7, delay, ease: EASE_OUT },
-        };
+     The props are the same with and without reduced motion, because the server
+     cannot know the setting and any difference breaks hydration. Reduced motion
+     only drops the duration, so the section still resolves to its final state
+     the moment it is in view. */
+  const reveal = (delay = 0) => ({
+    initial: { opacity: 0, y: 22 },
+    whileInView: { opacity: 1, y: 0 },
+    viewport: { once: true, amount: 0.2 },
+    transition: reduceMotion ? { duration: 0 } : { duration: 0.7, delay, ease: EASE_OUT },
+  });
 
   return (
     <SiteNavigation>
@@ -156,10 +153,10 @@ export default function Home() {
         <HeroSection />
         <WhoWeAreSection />
 
-        {/* 2 · Why small caps */}
-        <WhySmallCapsSection />
+        {/* 2 · Who runs it, and why small caps: the founder in his own words */}
+        <FounderSection />
         {/* 3 · What we believe */}
-        <PhilosophySection />
+        <PhilosophyFlythrough />
         {/* 4 · How we choose */}
         <ResearchSection />
         {/* 5 · How we protect */}
@@ -225,7 +222,6 @@ export default function Home() {
         </section>
         <ProductsSection bare />
         {/* 8 · Who manages it */}
-        <FounderSection />
         <TeamSection />
         {/* 9 · What we publish, and how to begin */}
         <ChapterStack

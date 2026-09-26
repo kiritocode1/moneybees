@@ -1,6 +1,6 @@
 "use client";
 
-import { useReducedMotion } from "motion/react";
+import { useReducedMotion } from "@/lib/use-reduced-motion";
 import { useEffect, useState } from "react";
 import { PicksFigure } from "@/components/fact-sections/picks-section";
 import { PYRAMID_TIERS } from "@/components/insight-cards/moneybee-figures";
@@ -20,19 +20,18 @@ const HOLD_MS = 8000;
 export default function HeroPyramid() {
   const reduceMotion = useReducedMotion();
   const top = PYRAMID_TIERS.length - 1;
-  const [built, setBuilt] = useState(0);
-  // Reduced motion skips the build rather than setting state from the effect.
-  const progress = reduceMotion ? 1 : built;
+  // Starts unbuilt on the server and the first client pass alike, so hydration matches.
+  const [progress, setProgress] = useState(0);
   const [selected, setSelected] = useState(top);
   const [heldUntil, setHeldUntil] = useState(0);
 
   useEffect(() => {
-    if (reduceMotion) return;
     let raf = 0;
     const start = performance.now();
     const tick = (now: number) => {
-      const next = Math.min((now - start) / BUILD_MS, 1);
-      setBuilt(next);
+      // Reduced motion lands on the built pyramid in the first frame.
+      const next = reduceMotion ? 1 : Math.min((now - start) / BUILD_MS, 1);
+      setProgress(next);
       if (next < 1) raf = requestAnimationFrame(tick);
     };
     raf = requestAnimationFrame(tick);

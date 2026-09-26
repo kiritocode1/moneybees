@@ -1,6 +1,7 @@
 "use client";
 
-import { AnimatePresence, motion, useReducedMotion } from "motion/react";
+import { AnimatePresence, motion } from "motion/react";
+import { useReducedMotion } from "@/lib/use-reduced-motion";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { TEAM } from "@/lib/insights";
@@ -117,7 +118,7 @@ export default function TeamSection() {
           <AnimatePresence mode="wait">
             <motion.div
               key={active}
-              initial={reduceMotion ? false : { opacity: 0, y: 10 }}
+              initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={reduceMotion ? undefined : { opacity: 0, y: -6 }}
               transition={{ duration: reduceMotion ? 0 : 0.3, ease: EASE_OUT }}
