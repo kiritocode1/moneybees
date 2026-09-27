@@ -189,6 +189,28 @@ function StagePanel({ stage }: { stage: number }) {
   );
 }
 
+/**
+ * What we look for, what we don't do and red flags, as three stacked lists.
+ * Shown on the product pages rather than in the homepage's process section.
+ */
+export function SelectionLists() {
+  return (
+    <div className="mb-[40px]">
+      <SplitFrame cols={3} cross={false}>
+        <Panel className="min-h-[380px]">
+          <StackedList title="What we look for" items={WHAT_WE_LOOK_FOR} offset={0} />
+        </Panel>
+        <Panel className="min-h-[380px]">
+          <StackedList title="What we don't do" items={WHAT_WE_DONT_DO} offset={1.1} />
+        </Panel>
+        <Panel className="min-h-[380px]">
+          <StackedList title="Red flags" items={RED_FLAGS} offset={2.3} accent />
+        </Panel>
+      </SplitFrame>
+    </div>
+  );
+}
+
 /** Section A, the selection funnel. Replaces the homepage's pinned stats. */
 export default function ResearchSection() {
   return (
@@ -211,21 +233,6 @@ export default function ResearchSection() {
       }
       panels={RESEARCH_STAGES.map((_, stage) => ({ part: stage, content: <StagePanel stage={stage} /> }))}
       figure={HoneycombFigure}
-      after={
-        <div className="mb-[40px]">
-          <SplitFrame cols={3} cross={false}>
-            <Panel className="min-h-[380px]">
-              <StackedList title="What we look for" items={WHAT_WE_LOOK_FOR} offset={0} />
-            </Panel>
-            <Panel className="min-h-[380px]">
-              <StackedList title="What we don't do" items={WHAT_WE_DONT_DO} offset={1.1} />
-            </Panel>
-            <Panel className="min-h-[380px]">
-              <StackedList title="Red flags" items={RED_FLAGS} offset={2.3} accent />
-            </Panel>
-          </SplitFrame>
-        </div>
-      }
     />
   );
 }

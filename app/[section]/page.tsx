@@ -2,6 +2,8 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import type { ComponentType } from "react";
 import { AifPanel, PmsPanel } from "@/components/fact-sections/products-section";
+import { SelectionLists } from "@/components/fact-sections/research-section";
+import ProcessChapters from "@/components/products/process-chapters";
 import SiteNavigation from "@/components/ui/site-navigation";
 
 /** Pages with real content: the two products. */
@@ -28,16 +30,21 @@ export default async function SectionPage({ params }: { params: Promise<{ sectio
   if (Product) {
     return (
       <SiteNavigation>
-        <main className="option-one min-h-svh bg-white px-[max(32px,calc((100vw_-_1480px)/2))] pt-[180px] pb-[120px] text-black max-[600px]:px-[22px] max-[600px]:pt-[130px]">
-          <div className="max-w-[1000px]">
-            <Product />
-            <Link
-              href="/#contact"
-              className="mt-[56px] inline-block bg-[#F7A11A] px-6 py-3 text-black focus-visible:outline-2 focus-visible:outline-offset-4"
-            >
-              Schedule a conversation
-            </Link>
+        <main className="option-one min-h-svh bg-white text-black">
+          <div className="px-[max(32px,calc((100vw_-_1480px)/2))] pt-[180px] pb-[100px] max-[600px]:px-[22px] max-[600px]:pt-[130px]">
+            <div className="max-w-[1000px]">
+              <Product />
+              <Link
+                href="/#contact"
+                className="mt-[56px] inline-block bg-[#F7A11A] px-6 py-3 text-black focus-visible:outline-2 focus-visible:outline-offset-4"
+              >
+                Schedule a conversation
+              </Link>
+            </div>
           </div>
+          {/* How the portfolio is chosen and looked after, moved here from the homepage. */}
+          <SelectionLists />
+          <ProcessChapters />
         </main>
       </SiteNavigation>
     );
