@@ -4,6 +4,8 @@ import type { ComponentType } from "react";
 import { AifPanel, PmsPanel } from "@/components/fact-sections/products-section";
 import { SelectionLists } from "@/components/fact-sections/research-section";
 import ProcessChapters from "@/components/products/process-chapters";
+import PartnersSection from "@/components/fact-sections/partners-section";
+import RiskSection from "@/components/fact-sections/risk-section";
 import SiteNavigation from "@/components/ui/site-navigation";
 
 /** Pages with real content: the two products. */
@@ -42,9 +44,12 @@ export default async function SectionPage({ params }: { params: Promise<{ sectio
               </Link>
             </div>
           </div>
-          {/* How the portfolio is chosen and looked after, moved here from the homepage. */}
+          {/* How the portfolio is chosen, protected and looked after, moved here from the homepage. */}
           <SelectionLists />
+          <RiskSection />
           <ProcessChapters />
+          {/* The partners are the fund's: custodian, trustee, registrar. */}
+          {section === "aif" && <PartnersSection />}
         </main>
       </SiteNavigation>
     );

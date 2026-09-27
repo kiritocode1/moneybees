@@ -1,8 +1,8 @@
 "use client";
 
-import { INTRODUCTION } from "@/lib/insights";
+import { INTRODUCTION, PERIOD_RETURNS } from "@/lib/insights";
 import CornerBrackets from "./corner-brackets";
-import { BODY, COLUMN, DashedRule, Rise } from "./editorial";
+import { BODY, COLUMN, DashedRule, EYEBROW, Rise } from "./editorial";
 import HeroPyramid from "./hero-pyramid";
 import WealthChart from "./wealth-chart";
 
@@ -21,6 +21,16 @@ const HEADING = "font-serif text-[clamp(2.5rem,1.0417rem+3.6458vw,3.375rem)] lea
 const BUTTON =
   "relative inline-flex cursor-pointer items-center justify-center rounded-full px-[24.5px] py-[12.5px] text-[14px] leading-[1.5] font-medium whitespace-nowrap no-underline transition-colors duration-200 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#F7A11A]";
 
+const SINCE_INCEPTION = PERIOD_RETURNS.find((row) => row.period === "Since Inception");
+
+/** The figures at the hero's foot, as the peers open with theirs. Every one is a deck fact. */
+const HERO_FIGURES = [
+  ["2004", "Managing money since"],
+  ["~20", "Stocks in the portfolio"],
+  [`${SINCE_INCEPTION?.queenbee.toFixed(2)}%`, `A year since 2007, against ${SINCE_INCEPTION?.benchmark.toFixed(2)}% for the S&P BSE 500 TRI`],
+  ["₹150–2,000 Cr", "The market caps we invest in"],
+] as const;
+
 export function HeroSection() {
   return (
     <section aria-label="Hero" className="relative isolate w-full overflow-hidden bg-white text-black max-md:flex max-md:flex-col">
@@ -30,7 +40,7 @@ export function HeroSection() {
         <HeroPyramid />
       </div>
       {/* 256px to the headline: the source's 76px header band plus its 180px top padding. */}
-      <div className={`${COLUMN} pointer-events-none relative z-10 flex flex-col gap-10 pt-[140px] pb-10 md:flex-row md:items-start md:gap-12 md:pt-[256px] md:pb-[200px]`}>
+      <div className={`${COLUMN} pointer-events-none relative z-10 flex flex-col gap-10 pt-[140px] pb-10 md:flex-row md:items-start md:gap-12 md:pt-[220px] md:pb-[72px]`}>
         <div className="flex max-w-[738px] flex-1 flex-col">
           <Rise>
             <h1 className={`${HEADING} text-balance`}>Finding value where the market is not looking</h1>
@@ -40,7 +50,7 @@ export function HeroSection() {
           </Rise>
           <Rise delay={0.16}>
             <div className="mt-10 flex flex-wrap items-center gap-4 md:mt-20">
-              <a href="#contact" className={`${BUTTON} pointer-events-auto bg-black text-white hover:bg-black/85`}>
+              <a href="#talk" className={`${BUTTON} pointer-events-auto bg-black text-white hover:bg-black/85`}>
                 Schedule a conversation
               </a>
               <a
@@ -56,6 +66,14 @@ export function HeroSection() {
         {/* The source reserves the figure's footprint in the flow; the figure sits behind. */}
         <div aria-hidden="true" className="hidden h-[400px] w-[417px] md:block" />
       </div>
+      <dl className={`${COLUMN} relative z-10 grid grid-cols-4 gap-x-10 gap-y-8 border-t border-dashed border-black/10 pt-[32px] pb-[56px] max-md:order-last max-md:grid-cols-2`}>
+        {HERO_FIGURES.map(([figure, label]) => (
+          <div key={label}>
+            <dt className="font-serif text-[clamp(2.2rem,3.4vw,3.2rem)] leading-none text-[#F7A11A] tabular-nums">{figure}</dt>
+            <dd className={`${EYEBROW} mt-[12px] max-w-[26ch] leading-[1.5] text-black/60`}>{label}</dd>
+          </div>
+        ))}
+      </dl>
     </section>
   );
 }

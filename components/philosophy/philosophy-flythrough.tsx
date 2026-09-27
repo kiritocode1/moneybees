@@ -135,7 +135,7 @@ export default function PhilosophyFlythrough() {
   return (
     // One structure for both motion settings, switched by `motion-reduce:` in CSS: the server cannot
     // know the setting, so branching in React would render a different tree on the client.
-    <section ref={sectionRef} id="philosophy-pillars" aria-labelledby="philosophy-pillars-heading" className="relative h-[760svh] bg-white motion-reduce:h-auto">
+    <section ref={sectionRef} id="philosophy-pillars" aria-labelledby="philosophy-pillars-heading" className="relative h-[500svh] bg-white motion-reduce:h-auto">
       <div className="sticky top-0 h-svh overflow-hidden motion-reduce:static motion-reduce:h-[70svh]">
         <motion.canvas
           ref={canvasRef}
