@@ -2,7 +2,7 @@
 
 import { INTRODUCTION, PERIOD_RETURNS } from "@/lib/insights";
 import CornerBrackets from "./corner-brackets";
-import { BODY, COLUMN, DashedRule, EYEBROW, Rise } from "./editorial";
+import { BODY, BUTTON, COLUMN, DashedRule, EYEBROW, HEADING, Rise } from "./editorial";
 import HeroPyramid from "./hero-pyramid";
 import WealthChart from "./wealth-chart";
 
@@ -15,11 +15,6 @@ import WealthChart from "./wealth-chart";
  * are ours: white paper, black, #F7A11A and grey.
  */
 
-/** .text-heading. Tracking eased from -.037em: Instrument Serif is narrower than Signifier. */
-const HEADING = "font-serif text-[clamp(2.5rem,1.0417rem+3.6458vw,3.375rem)] leading-[1.1] font-normal tracking-[-.02em]";
-/** .text-button with the button shell. */
-const BUTTON =
-  "relative inline-flex cursor-pointer items-center justify-center rounded-full px-[24.5px] py-[12.5px] text-[14px] leading-[1.5] font-medium whitespace-nowrap no-underline transition-colors duration-200 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#F7A11A]";
 
 const SINCE_INCEPTION = PERIOD_RETURNS.find((row) => row.period === "Since Inception");
 

@@ -1,0 +1,58 @@
+/*
+ * PREVIEW ONLY. Restyles the insight cards in the homepage's own palette
+ * without touching the card module, so the proposal can be reviewed before
+ * the real `tone` prop exists. Selectors carry one more element than the
+ * module's own rules so these variables win.
+ *
+ * Rest is paper with ink linework, the way the homepage prints everything.
+ * Hover flips to the ink panel the homepage already uses for "Nothing hidden"
+ * and the stats, so the reference's dark/light swap survives, inverted.
+ */
+
+.insights-light > div {
+  grid-template-columns: repeat(3, 450px);
+  padding: 0;
+  background: transparent;
+}
+
+.insights-light article {
+  --surface: #ffffff;
+  --ink: #000000;
+  --ink-dim: rgba(0, 0, 0, 0.5);
+  --stroke: rgba(0, 0, 0, 0.62);
+  --face: #ffffff;
+  --face-lit: #ededec;
+  --accent: #f7a11a;
+  --lamp: #f7a11a;
+  --accent-wall: #c98110;
+  --speck: rgba(0, 0, 0, 0.16);
+  --bloom: 0;
+  --drop: 0;
+  /* The homepage has no chamfers or rounded corners anywhere. */
+  clip-path: none;
+}
+
+.insights-light article[data-lit="true"],
+.insights-light article:focus-visible {
+  --surface: #000000;
+  --ink: #ffffff;
+  --ink-dim: rgba(255, 255, 255, 0.5);
+  --stroke: rgba(255, 255, 255, 0.62);
+  --face: #0d0d0d;
+  --face-lit: #1b1b1b;
+  --accent-wall: #b3730d;
+  --speck: rgba(255, 255, 255, 0.24);
+  --bloom: 0.55;
+}
+
+@media (max-width: 1420px) {
+  .insights-light > div {
+    grid-template-columns: repeat(2, 450px);
+  }
+}
+
+@media (max-width: 950px) {
+  .insights-light > div {
+    grid-template-columns: minmax(0, 450px);
+  }
+}

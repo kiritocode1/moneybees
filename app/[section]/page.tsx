@@ -1,21 +1,20 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import type { ComponentType } from "react";
-import { AifPanel, PmsPanel } from "@/components/fact-sections/products-section";
-import { SelectionLists } from "@/components/fact-sections/research-section";
-import ProcessChapters from "@/components/products/process-chapters";
-import PartnersSection from "@/components/fact-sections/partners-section";
-import RiskSection from "@/components/fact-sections/risk-section";
+import { BODY, BUTTON, COLUMN, EYEBROW, HEADING } from "@/components/hero/tokens";
+import SiteFooter from "@/components/footer/site-footer";
+import AifPage from "@/components/products/aif-page";
+import PmsPage from "@/components/products/pms-page";
 import SiteNavigation from "@/components/ui/site-navigation";
 
-/** Pages with real content: the two products. */
-const products: Record<string, ComponentType> = { pms: PmsPanel, aif: AifPanel };
-
 const sections = {
-  pms: { title: "Portfolio Management Services", description: "" },
-  aif: { title: "Alternative Investment Fund", description: "" },
-  careers: { title: "Careers", description: "Our careers portal is being prepared. Contact the Moneybee team for career enquiries." },
-};
+  pms: { title: "Portfolio Management Services" },
+  aif: { title: "Alternative Investment Fund" },
+  careers: { title: "Careers" },
+} as const;
+
+type Section = keyof typeof sections;
+const isSection = (value: string): value is Section => value in sections;
 
 export const dynamicParams = false;
 
@@ -23,46 +22,41 @@ export function generateStaticParams() {
   return Object.keys(sections).map((section) => ({ section }));
 }
 
+export async function generateMetadata({ params }: { params: Promise<{ section: string }> }): Promise<Metadata> {
+  const { section } = await params;
+  return isSection(section) ? { title: sections[section].title } : {};
+}
+
+/** /pms and /aif are the product pages; /careers holds its place until there is content for it. */
 export default async function SectionPage({ params }: { params: Promise<{ section: string }> }) {
   const { section } = await params;
-  if (!(section in sections)) notFound();
-  const content = sections[section as keyof typeof sections];
-  const Product = products[section];
-
-  if (Product) {
-    return (
-      <SiteNavigation>
-        <main className="option-one min-h-svh bg-white text-black">
-          <div className="px-[max(32px,calc((100vw_-_1480px)/2))] pt-[180px] pb-[100px] max-[600px]:px-[22px] max-[600px]:pt-[130px]">
-            <div className="max-w-[1000px]">
-              <Product />
-              <Link
-                href="/#contact"
-                className="mt-[56px] inline-block bg-[#F7A11A] px-6 py-3 text-black focus-visible:outline-2 focus-visible:outline-offset-4"
-              >
-                Schedule a conversation
-              </Link>
-            </div>
-          </div>
-          {/* How the portfolio is chosen, protected and looked after, moved here from the homepage. */}
-          <SelectionLists />
-          <RiskSection />
-          <ProcessChapters />
-          {/* The partners are the fund's: custodian, trustee, registrar. */}
-          {section === "aif" && <PartnersSection />}
-        </main>
-      </SiteNavigation>
-    );
-  }
+  if (!isSection(section)) notFound();
+  if (section === "pms") return <PmsPage />;
+  if (section === "aif") return <AifPage />;
 
   return (
     <SiteNavigation>
-      <main className="min-h-svh bg-white px-6 pt-52 pb-24 text-black md:px-12">
-        <div className="mx-auto max-w-5xl">
-          <h1 className="max-w-3xl text-5xl md:text-7xl">{content.title}</h1>
-          <p className="mt-8 max-w-xl text-lg leading-relaxed text-neutral-600">{content.description}</p>
-          <Link href="/#contact" className="mt-10 inline-block bg-[#F9A11B] px-6 py-3 text-black focus-visible:outline-2 focus-visible:outline-offset-4">Contact Us</Link>
-        </div>
+      <main id="top" className="option-one bg-white text-black">
+        <section className={`${COLUMN} min-h-[70svh] pt-[220px] pb-[120px] max-md:pt-[150px]`}>
+          <span className={`${EYEBROW} text-black/60`}>Careers</span>
+          <h1 className={`mt-[18px] ${HEADING} text-[clamp(3rem,1.6rem+4.6vw,5.4rem)]`}>Work with us</h1>
+          <p className={`mt-8 max-w-[560px] text-black/70 ${BODY}`}>
+            Our careers page is being prepared. Until then, write to us and tell us what you would like to work on.
+          </p>
+          <Link href="/#contact" className={`${BUTTON} mt-12 bg-black text-white hover:bg-black/85`}>
+            Contact us
+          </Link>
+        </section>
+        <SiteFooter
+          explore={[
+            ["About Moneybee", "/about"],
+            ["Our philosophy", "/#philosophy-pillars"],
+            ["Our process", "/#research"],
+            ["Performance", "/#performance"],
+            ["Our strategies", "/#invest"],
+            ["Team", "/#team"],
+          ]}
+        />
       </main>
     </SiteNavigation>
   );

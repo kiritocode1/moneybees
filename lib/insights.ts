@@ -589,17 +589,20 @@ export const PROCESS_CHAPTERS = {
 /* ---------------------------------------------------------------- faqs --- */
 
 /**
- * Homepage FAQs. Every answer is assembled from deck facts above, so it
+ * FAQs for the homepage and product pages; `scope` says which product page
+ * shows each (the homepage shows all). Every answer is assembled from deck facts above, so it
  * cannot drift from the rest of the site. The PMS minimum is not in the decks,
  * so the minimum-investment answer gives Flyingbee's only.
  */
-export const FAQS: readonly (readonly [question: string, answer: string])[] = [
-  ["What is the difference between a PMS and an AIF?", `${PMS_VS_AIF} Flyingbee can also hold unlisted companies before they list.`],
-  ["How many stocks will I own?", `Moneybee PMS holds ${PMS_PRODUCT.points[1].toLowerCase()}. Flyingbee invests at least 51% in listed companies and up to 49% in unlisted ones.`],
-  ["What size of company do you invest in?", `Companies of ₹150 crore to ₹2,000 crore in market cap, mostly small and mid caps.`],
-  ["How long should I stay invested?", "At least three years in the PMS. Three to five years in Flyingbee."],
-  ["What is the minimum investment in Flyingbee?", "Rs. 1 crore, and holdings cannot fall below it."],
-  ["How are fees charged, and is there an exit load?", "PMS fees are tied to performance, so our interest follows yours. Flyingbee charges a fixed fee, or a fixed fee with profit share above a hurdle rate. Neither has an exit load."],
-  ["Who can invest in Flyingbee?", "Resident and non-resident individuals, HUFs and companies."],
-  ["When do you sell a stock?", `When ${EXIT_TRIGGERS[0].toLowerCase()}, or when ${EXIT_TRIGGERS[1].replace("The company", "the company")}.`],
+export type FaqScope = "both" | "pms" | "aif";
+
+export const FAQS: readonly (readonly [question: string, answer: string, scope: FaqScope])[] = [
+  ["What is the difference between a PMS and an AIF?", `${PMS_VS_AIF} Flyingbee can also hold unlisted companies before they list.`, "both"],
+  ["How many stocks will I own?", `Moneybee PMS holds ${PMS_PRODUCT.points[1].toLowerCase()}. Flyingbee invests at least 51% in listed companies and up to 49% in unlisted ones.`, "both"],
+  ["What size of company do you invest in?", `Companies of ₹150 crore to ₹2,000 crore in market cap, mostly small and mid caps.`, "both"],
+  ["How long should I stay invested?", "At least three years in the PMS. Three to five years in Flyingbee.", "both"],
+  ["What is the minimum investment in Flyingbee?", "Rs. 1 crore, and holdings cannot fall below it.", "aif"],
+  ["How are fees charged, and is there an exit load?", "PMS fees are tied to performance, so our interest follows yours. Flyingbee charges a fixed fee, or a fixed fee with profit share above a hurdle rate. Neither has an exit load.", "both"],
+  ["Who can invest in Flyingbee?", "Resident and non-resident individuals, HUFs and companies.", "aif"],
+  ["When do you sell a stock?", `When ${EXIT_TRIGGERS[0].toLowerCase()}, or when ${EXIT_TRIGGERS[1].replace("The company", "the company")}.`, "both"],
 ];

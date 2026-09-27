@@ -6,6 +6,8 @@ import { BracketLabel } from "@/components/fact-sections/fact-section";
 import { BODY, COLUMN, DashedRule, EYEBROW, Rise, SUBHEAD } from "@/components/hero/editorial";
 import { AIF_PRODUCT, CONTACT, FAQS, PMS_PRODUCT, RANKINGS } from "@/lib/insights";
 
+type Product = "pms" | "aif";
+
 /*
  * The homepage sections that follow the peer pattern (see the competitor
  * comparison of 2026-09-27): recognition near the top, the two ways to invest,
@@ -137,9 +139,13 @@ export function LetsTalkSection() {
   );
 }
 
-/** FAQs as an accordion, one open at a time. The answers come from lib/insights.ts. */
-export function FaqSection() {
+/**
+ * FAQs as an accordion, one open at a time. The answers come from
+ * lib/insights.ts; a product page passes `product` to show only its questions.
+ */
+export function FaqSection({ product }: { product?: Product }) {
   const [open, setOpen] = useState<number | null>(0);
+  const questions = FAQS.filter(([, , scope]) => !product || scope === "both" || scope === product);
   return (
     <section id="faqs" aria-labelledby="faqs-heading" className="bg-white text-black">
       <div className={`${COLUMN} grid grid-cols-[.8fr_1.2fr] gap-12 py-[110px] max-[900px]:grid-cols-1`}>
@@ -150,7 +156,7 @@ export function FaqSection() {
           </h2>
         </div>
         <div className="border-t border-t-black">
-          {FAQS.map(([question, answer], index) => {
+          {questions.map(([question, answer], index) => {
             const expanded = open === index;
             return (
               <div key={question} className="border-b border-b-[rgba(0,0,0,.13)]">

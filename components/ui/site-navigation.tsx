@@ -3,12 +3,12 @@ import Link from "next/link";
 import OverlayMenu from "./overlay-menu";
 
 const primaryLinks = [
-  { label: "About Us", href: "/#about" },
+  { label: "About Us", href: "/about" },
   { label: "PMS", href: "/pms" },
   { label: "AIF", href: "/aif" },
   { label: "Our Approach", href: "/#philosophy-pillars" },
   { label: "Careers", href: "/careers" },
-  { label: "Contact Us", href: "/#contact" },
+  { label: "Contact Us", href: "/contact" },
 ];
 
 const groupLinks = [

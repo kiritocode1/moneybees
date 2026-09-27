@@ -10,14 +10,7 @@ import { useReducedMotion } from "@/lib/use-reduced-motion";
  * under the hero and the record section.
  */
 
-/** .text-subhead */
-export const SUBHEAD = "font-serif text-[clamp(2.125rem,.6667rem+3.6458vw,3rem)] leading-[1.1] font-normal tracking-[-.021em]";
-/** .text-body */
-export const BODY = "font-serif text-[clamp(1.25rem,.8333rem+1.0417vw,1.5rem)] leading-[1.2] font-normal";
-/** .text-eyebrow. The font is loaded in the root layout. */
-export const EYEBROW = "font-[family-name:var(--font-geist-mono)] text-[10px] leading-normal tracking-[.1em] uppercase";
-/** The source's 1512px column with 120px gutters. */
-export const COLUMN = "mx-auto w-full max-w-[1512px] px-6 md:px-[120px]";
+export { BODY, BUTTON, COLUMN, EYEBROW, HEADING, SUBHEAD } from "./tokens";
 
 export function DashedRule() {
   return <hr className="m-0 w-full border-0 border-t border-dashed border-black/10" />;

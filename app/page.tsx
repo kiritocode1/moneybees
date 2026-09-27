@@ -37,7 +37,7 @@ export default function Home() {
 
         <SiteFooter
           explore={[
-            ["About Moneybee", "#about"],
+            ["About Moneybee", "/about"],
             ["Our philosophy", "#philosophy-pillars"],
             ["Our process", "#research"],
             ["Performance", "#performance"],

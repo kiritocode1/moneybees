@@ -1,0 +1,8 @@
+- button "Open the menu" [expanded=false, ref=e1]
+- link "UC Investments 2023 - 2024" [ref=e3]
+- button "Scroll Down" [ref=e2]
+- generic "View ReportOur WayUC Investments2023 — 2024Read the Report" [ref=e4] clickable [onclick]
+  - link "View Report" [ref=e5]
+  - heading "Our Way" [level=1, ref=e6]
+  - generic [ref=e7] clickable [cursor:pointer]
+    - image [ref=e8] clickable [cursor:pointer, onclick]
