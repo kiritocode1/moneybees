@@ -13,7 +13,6 @@ export const PMS_HEADINGS = {
   strategy: "Robust strategy for consistent performance",
   clientFirst: "Client first approach",
   smallCaps: "Why we focus on small cap Indian equities",
-  selection: "Stock selection process",
   construction: "Portfolio construction",
   risk: "Risk management framework",
   sectors: "Top 5 sector allocation",
@@ -56,72 +55,6 @@ export const CLIENT_FIRST = [
   ["Fees", "A transparent, performance-based fee, so our interest follows yours."],
   ["Exit load", "None."],
 ] as const;
-
-export type SelectionStage = {
-  count: string;
-  /** The count as a number, for sizing the figure. */
-  value: number;
-  name: string;
-  summary: string;
-  work: readonly string[];
-  /** The decision-making list the slide boxes under Construct. */
-  decision?: readonly string[];
-};
-
-/**
- * Stock selection process, group profile p13, as the slide groups it: the
- * slide puts liquidity, sector exposure and risk management under Construct,
- * and the decision-making list beside it.
- */
-export const SELECTION_STAGES: readonly SelectionStage[] = [
-  {
-    count: "~6000",
-    value: 6000,
-    name: "Screening",
-    summary: "The universe of listed companies we start from.",
-    work: ["Annual reports", "In-house screeners", "Team experience", "News flow", "Research reports"],
-  },
-  {
-    count: "~1200",
-    value: 1200,
-    name: "Screening",
-    summary: "Sit between ₹150 crore and ₹2,000 crore in market cap, and are investable.",
-    work: ["Annual reports", "In-house screeners", "Team experience", "News flow", "Research reports"],
-  },
-  {
-    count: "~350",
-    value: 350,
-    name: "Short list",
-    summary: "Make the shortlist, drawn up with our experienced investment team.",
-    work: ["Quality management", "Fundamentals", "External events", "Correct timing"],
-  },
-  {
-    count: ">100",
-    value: 100,
-    name: "Analyse",
-    summary: "Get a macro and micro analysis, from the economy down to the plant.",
-    work: ["Management meetings", "Competitive advantage", "Plant visits", "Peer comparison", "Financial models"],
-  },
-  {
-    count: "~75",
-    value: 75,
-    name: "Construct",
-    summary: "Become investment ideas.",
-    work: ["Liquidity", "Sector exposure", "Risk management"],
-    decision: [
-      "Weigh the risk against the reward",
-      "Understand the macro trends",
-      "Buy at the current or target price, or add to the watchlist",
-    ],
-  },
-  {
-    count: "~20",
-    value: 20,
-    name: "Monitor",
-    summary: "Make it into the portfolio, where the risk is monitored from then on.",
-    work: ["News flow", "Monitoring", "Quarterly reviews", "Sell discipline"],
-  },
-];
 
 export type ConstructionRule = {
   key: "allocation" | "horizon" | "diversification" | "mitigation" | "rebalancing";

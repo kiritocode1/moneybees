@@ -11,14 +11,13 @@ import Performance from "./pms/performance";
 import Providers from "./pms/providers";
 import Risks from "./pms/risks";
 import Sectors from "./pms/sectors";
-import Selection from "./pms/selection";
 import SmallCaps from "./pms/small-caps";
 import Strategy from "./pms/strategy";
 
 /**
  * /pms, the Portfolio Management Service on its own terms, in the order a
  * client would ask: what it is, where the name comes from, the strategy and
- * why small caps, how stocks are chosen, how the portfolio is built and its
+ * why small caps, how the portfolio is built and its
  * risks managed, where it sits, what it has returned, three companies it
  * found early, who services it, then the ask and the PMS questions.
  */
@@ -32,7 +31,6 @@ export default function PmsPage() {
         <Strategy />
         <SmallCaps />
         <DashedRule />
-        <Selection />
         <Construction />
         <DashedRule />
         <Risks />

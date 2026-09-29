@@ -140,3 +140,57 @@ body {
 [data-pr-state="active"] {
   -webkit-text-fill-color: transparent;
 }
+
+/* /our-approach review card: each new count rises into place. */
+@keyframes approach-count {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* /our-approach step drawings: the screen's sweep, the scale's weighing, the
+   monitor's trace and the exit's departure. */
+@keyframes approach-scan {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(182px);
+  }
+}
+@keyframes approach-weigh {
+  from {
+    transform: rotate(-6deg);
+  }
+  to {
+    transform: rotate(6deg);
+  }
+}
+@keyframes approach-draw {
+  from {
+    stroke-dashoffset: 420;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes approach-exit {
+  0%,
+  20% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  80% {
+    transform: translateX(88px);
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(96px);
+    opacity: 0;
+  }
+}
