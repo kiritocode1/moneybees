@@ -1,30 +1,30 @@
-import { ContactHero, DesksSection, GrievanceSection, GroupSection, OfficersSection } from "@/components/contact/contact-sections";
+import { ContactHero, EnquirySection, OfficeSection } from "@/components/contact-v2/contact-sections";
 import SiteFooter from "@/components/footer/site-footer";
+import { LetsTalkSection } from "@/components/home/home-sections";
 import SiteNavigation from "@/components/ui/site-navigation";
 
 export const metadata = { title: "Contact" };
 
 /**
- * /contact: how to reach us, who to write to for each business, the PMS
- * officers, the grievance path and the group's other businesses. Facts come
- * from the decks via lib/contact.ts.
+ * /contact, built to the Content & Visual Plan §11: the heading with the
+ * phone and email, the office on a map, and the four enquiry options shaping
+ * a simple form that opens a mailto. Copy lives in lib/contact-v2.ts.
  */
 export default function ContactPage() {
   return (
     <SiteNavigation>
-      <main id="top" className="option-one overflow-clip bg-white text-black">
+      <main id="top" className="option-one bg-white text-black">
         <ContactHero />
-        <DesksSection />
-        <OfficersSection />
-        <GrievanceSection />
-        <GroupSection />
+        <OfficeSection />
+        <EnquirySection />
+        <LetsTalkSection />
         <SiteFooter
           explore={[
             ["About Moneybee", "/about"],
-            ["Our philosophy", "/#philosophy-pillars"],
-            ["Our process", "/#research"],
+            ["Our approach", "/our-approach"],
+            ["Office", "#office"],
+            ["Enquiry", "#enquiry"],
             ["Performance", "/#performance"],
-            ["Our strategies", "/#invest"],
             ["Team", "/#team"],
           ]}
         />

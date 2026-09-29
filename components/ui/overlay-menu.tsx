@@ -233,7 +233,7 @@ export default function OverlayMenu({
         {visibleLinks.length > 0 && (
           <div className="om-visible-links">
             {visibleLinks.map((link) => (
-              <a key={link.label} href={link.href} className={link.label === "Contact Us" ? "om-contact" : undefined}>{link.label}</a>
+              <a key={link.label} href={link.href} className={link.label === "Contact Us" || link.label === "Get Started" ? "om-contact" : undefined}>{link.label}</a>
             ))}
           </div>
         )}
@@ -276,7 +276,7 @@ export default function OverlayMenu({
           <div className="om-items-col">
             <div className="om-primary-links">
               {primaryLinks.map((link) => (
-                <a key={link.label} href={link.href} className={link.label === "Contact Us" ? "om-contact" : undefined}>{link.label}</a>
+                <a key={link.label} href={link.href} className={link.label === "Contact Us" || link.label === "Get Started" ? "om-contact" : undefined}>{link.label}</a>
               ))}
             </div>
             <div className="om-secondary-links">

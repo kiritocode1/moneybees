@@ -1,0 +1,342 @@
+MONEYBEE WEBSITE
+Content & Visual Plan — PMS & AIF Presentation → Investor Website
+Purpose: Convert the key information from the Moneybee PMS and AIF presentations into a clean, modern and investor-focused website structure.
+Content direction: Approximately 80–90% of the website information should come from the presentations. The remaining 10–20% can be added for website navigation, user experience and practical sections.
+Design direction: White background, black text and orange highlights, with a premium financial-services look and subtle Moneybee/honeycomb elements.
+Main Website Navigation
+Home  |  About Us  |  PMS  |  AIF  |  Our Approach  |  Insights  |  Investor Centre  |  Get Started
+Client Login and Distributor Login should remain clearly separated, with the main website focused on end customers/investors.
+
+1. HOME PAGE
+Main Heading
+KNOW VENTURE. KNOW GAIN.
+Short Introduction
+Moneybee is a SEBI-registered boutique portfolio management firm focused on identifying promising small and mid-sized Indian companies through research-driven investing and long-term wealth creation.
+Key Highlights
+45+ years of experience of the founder.
+PMS since August 2007.
+Research-driven investment approach.
+Focus on small and mid-cap Indian companies.
+Long-term approach to wealth creation.
+Main Sections
+Why Moneybee
+Our Investment Approach
+Portfolio Management Services (PMS)
+Flyingbee Investment Fund – Category III AIF
+Performance
+Our Team
+Get Started
+Visuals Needed
+Moneybee logo and tagline.
+Founder image.
+One premium business/investment image.
+Subtle honeycomb or bee-inspired graphic.
+Small performance highlight or chart.
+Orange Get Started button.
+Design Note
+The Home Page should quickly explain what Moneybee does, how it invests and where an investor can go next. Keep it visual and spacious rather than using long paragraphs.
+
+2. ABOUT US
+Heading
+About Moneybee Group
+Company Information
+Moneybee Group was started in 2004 by Mr. Dhiren Shah. The Group operates across areas including portfolio management, equity broking, investment advisory and related financial services.
+Moneybee focuses on understanding businesses deeply and identifying opportunities that may be overlooked by the wider market.
+Founder
+Mr. Dhiren Shah – Managing Director
+FCA, Grad CWA, LLB, M.Com.
+45+ years of experience in corporate advisory and wealth management.
+Started Moneybee Group in 2004.
+Experience in turnaround and growth advisory for small and medium-sized businesses.
+Deep understanding of multiple industries and market cycles.
+Experience as an advisor and investor in businesses.
+Moneybee Story
+“While bees convert nectar into honey, Moneybee focuses on transforming money into wealth.”
+Visuals Needed
+Founder photograph.
+Simple company timeline.
+Moneybee story graphic.
+Selected corporate or team photographs, if approved.
+Website Note
+The presentation and existing website contain different dates/wording in some historical areas. Final dates and company-history statements should be checked and approved before publication.
+
+3. PMS PAGE
+Heading
+Portfolio Management Services
+Introduction
+Moneybee PMS is focused on long-term investment in Indian equities, with a strong focus on small and mid-cap companies. The approach is research-driven, sector-agnostic and based on understanding businesses, management quality, valuations and risk.
+Why Moneybee PMS?
+Fundamental research.
+Small and mid-cap focus. 
+Concentrated portfolio.
+Quality management.
+Long-term investment approach.
+Risk-reward based decisions.
+Focus on overlooked opportunities.
+Investment Philosophy
+UNDISCOVERED → UNDER-RESEARCHED → UNDER-ESTIMATED
+Fundamental-driven research.
+Understanding management leadership and capital allocation.
+Long-term value creation.
+Risk-reward analysis and margin of safety.
+Focus on consistent performance while protecting downside.
+Portfolio Approach
+Concentrated portfolio of approximately 15–20 high-conviction stocks.
+At least 3-year investment horizon or until the investment thesis remains intact.
+Maximum sector allocation of 30%.
+Regular monitoring and quarterly review.
+Disciplined approach to rebalancing and exits.
+Visuals Needed
+Investment philosophy graphic.
+Stock-selection funnel.
+Portfolio construction diagram.
+Risk-management graphic.
+PMS performance chart.
+Orange Explore PMS / Get Started button.
+
+4. AIF PAGE – FLYINGBEE INVESTMENT FUND
+Heading
+Flyingbee Investment Fund
+Introduction
+Flyingbee Investment Fund is a Category III AIF managed by Moneybee. The fund focuses on opportunities in high-growth listed and pre-IPO/unlisted companies.
+Why Category III AIF?
+The presentation explains that an AIF is a privately pooled investment vehicle. Unlike PMS, where investors directly hold securities in their own demat accounts, AIF investors receive units of the fund.
+Flyingbee Structure
+Investors → Flyingbee Investment Fund → Moneybee Investment Manager
+Trustee
+Custodian and Fund Accountant
+Registrar and Transfer Agent
+Brokers
+Investment Approach
+Fundamental research.
+Quality management.
+Competitive advantage.
+Reasonable valuations.
+Risk-reward analysis.
+Long-term value creation.
+Unbiased decision making.
+Key Terms from the Presentation
+Minimum investment: ₹1 Crore.
+Suitable time frame: 3–5 years.
+Investment in listed and pre-IPO/unlisted opportunities.
+Benchmark: S&P BSE 500 TRI.
+No exit load, subject to approved fund documents.
+Visuals Needed
+Flyingbee Fund graphic.
+Category III AIF explanation.
+Fund structure diagram.
+Investment process.
+Orange Explore Flyingbee / Get Started button.
+Important: Terms, tax treatment, eligibility, fees and regulatory statements should be published only after checking the latest approved fund documents and compliance requirements.
+
+5. PMS VS AIF
+Heading
+PMS vs AIF – Understanding the Difference
+Simple Comparison
+PMS
+AIF
+Investor directly holds securities
+Investor receives units of the fund
+Portfolio managed for the client
+Money is pooled into a fund
+Individual portfolio
+Fund structure
+PMS strategies
+Flyingbee Investment Fund
+Direct demat holding
+Fund-level investment structure
+Simple Explanation
+PMS: The investor’s portfolio is managed according to the agreed investment mandate.
+AIF: Investors contribute to a pooled fund structure that is managed according to the fund’s approved strategy and documents.
+Visual Needed
+Use two simple diagrams: PMS → Investor → Securities, and AIF → Fund → Investments.
+
+6. OUR APPROACH
+Heading
+Our Investment Approach
+Core Philosophy
+UNDISCOVERED → UNDER-RESEARCHED → UNDER-ESTIMATED
+Stock Selection Process
+Screen – Start with a large universe of companies using financial information, screeners, reports, news flow and team experience.
+Shortlist – Review management quality, fundamentals, external events and timing.
+Analyse – Conduct management meetings, plant visits, competitive analysis, peer comparison and financial modelling.
+Decision Making – Review liquidity, sector exposure, macro trends, valuation and risk-reward.
+Monitor – Track news flow, quarterly results, management discussions and business developments.
+Exit – Exit when the investment objective is achieved or the investment thesis changes.
+What We Look For
+Disproportionate beneficiaries of economic growth.
+Robust fundamentals.
+Quality management.
+Competitive advantage.
+Favourable risk-reward.
+Reasonable valuations.
+What We Don't Do
+Derivatives and F&O.
+Trading and short-term investments.
+Chasing hot stocks.
+Impulsive investment decisions.
+Following market noise or external platforms without independent research.
+Risk Management
+Liquidity risk.
+Valuation risk.
+Market risk.
+Concentration risk.
+Visuals Needed
+A six-step orange-and-black investment process, followed by What We Look For, What We Don't Do and Risk Management sections.
+
+7. PERFORMANCE
+Heading
+Performance
+PMS Performance
+Use the performance data from the presentation as of 31 August 2026. Show Moneybee PMS alongside the S&P BSE 500 TRI for the available periods.
+Periods to Show
+1 Month
+3 Months
+6 Months
+1 Year
+2 Years
+3 Years
+5 Years
+Since Inception
+PMS Figures from the Presentation
+Moneybee: 1 Month %; 3 Months %; 6 Months %; 1 Year %; 2 Years %; 3 Years %; 5 Years %; Since Inception CAGR%.
+S&P BSE 500 TRI: 1 Month %; 3 Months %; 6 Months %; 1 Year %; 2 Years -%; 3 Years %; 5 Years %; Since Inception %.
+AIF Performance
+Flyingbee Investment Fund: 3 Months %; 6 Months %; other periods shown as N/A in the presentation.
+S&P BSE 500: 3 Months %; 6 Months %; other periods shown as N/A.
+Visuals Needed
+Clean performance table.
+Line or bar chart where appropriate.
+Wealth-growth illustration.
+Clear “As of 31 August 2026” label.
+Important: Performance data should carry the presentation’s methodology and disclaimer. Individual investor performance may vary, and past performance does not guarantee future performance. Final figures should be checked against the approved source before publication.
+
+8. CASE STUDIES / MULTIBAGGER PICKS
+Heading
+Our Investment Journey
+Use selected historical examples from the presentation to explain how Moneybee identified business opportunities. These should be presented as case studies, not as current recommendations.
+KPI Green Energy
+Business Model: Renewable power generation through IPP and CPP operations.
+Competitive Edge: Established power evacuation infrastructure, revenue realisation and promoter execution experience.
+Growth Prospect: Order book and development pipeline presented in the PMS deck.
+Uni Abex Alloy Products
+Business Model: Manufacturer/exporter of centrifugal and static castings in specialised stainless-steel alloys.
+Competitive Edge: Engineering complexity and high entry barriers.
+Growth Prospect: Partnership with the TATA Group and opportunities linked to sponge iron technology.
+Pitti Engineering
+Business Model: Manufacturer of electrical steel laminations, motor cores, sub-assemblies, die-cast rotors and machined components.
+Competitive Edge: Exposure to railway, renewable energy and power-related applications.
+Growth Prospect: Capacity expansion, order book and long-term growth visibility presented in the PMS deck.
+Visuals Needed
+Company logo or approved company image.
+Business model illustration.
+Simple revenue/EBITDA/PAT chart where available.
+Historical investment timeline.
+Disclaimer: The presentation states that the stocks/sectors shown are for illustration only and are not recommendations. Moneybee may or may not hold them in the future. Past performance may or may not be sustained.
+
+9. OUR TEAM
+Heading
+People Behind Moneybee
+Founder
+Dhiren Shah – Managing Director
+45+ years of experience in corporate advisory and wealth management, with experience across small and medium-sized businesses and multiple market cycles.
+Key Team Members
+Shreyam Shah – AIF / Investment Team
+CA; research across listed and unlisted companies and entrepreneurial experience.
+Suprit Shah – Compliance Officer, PMS
+LL.B.; compliance, risk management and fraud prevention experience.
+Visuals Needed
+Professional headshot for each approved team member.
+Name, designation and qualifications.
+Short biography of 2–3 lines.
+
+10. CAREERS
+Heading
+Build Your Career with Moneybee
+Moneybee brings together professionals working across investment research, portfolio management, advisory, compliance and financial services.
+Suggested Sections
+Current Openings
+Life at Moneybee
+Our Work Culture
+How to Apply
+Main CTA
+🟠 View Open Positions   |   🟠 Send Your Resume
+Visuals Needed
+Office/team photograph.
+Simple employee or workplace image.
+Clean job-opening cards.
+Note: The presentations do not provide detailed careers content. Final careers copy should be provided or approved by the HR/management team.
+
+11. CONTACT US
+Heading
+Let's Start a Conversation
+Office Address
+Moneybee Group 303, Tower A, Peninsula Business Park, G.K. Marg, Lower Parel, Mumbai – 400013
+Contact Details
+Phone: 022-4030 2080
+Email: info@moneybee.in
+Enquiry Options
+PMS Enquiry
+AIF Enquiry
+Investor Support
+General Enquiry
+Visuals Needed
+Map/location section.
+Simple enquiry form.
+Phone and email icons.
+Orange Get Started button.
+Final contact details should be checked against the latest approved company information before the website goes live.
+
+12. INVESTOR CENTRE
+Purpose
+The Investor Centre should collect important investor information and regulatory documents in one easy-to-find place. This keeps the main website clean while still giving investors access to detailed information.
+Sections
+Client Login
+Distributor Login
+Investor Charter
+Disclosures
+Risk Disclosures
+Policies
+Investor Complaints
+Grievance Redressal
+SCORES
+ODR
+Forms & Documents
+PMS Disclosure Document
+AIF Documents
+Visual Approach
+Use simple document cards with clear titles, dates and view/download buttons. Avoid putting long legal text directly on the Home Page.
+Important Website Principle
+Marketing pages should remain easy to understand. Detailed legal, risk and regulatory information should be available through the Investor Centre and relevant product pages.
+
+13. OVERALL WEBSITE DESIGN
+Color Direction
+Orange: Get Started buttons, key highlights, active navigation, important numbers and selected visual elements.
+White: Main page background and clean content areas.
+Black: Main text, headings and selected premium sections.
+Design Style
+Premium and modern.
+Clean and spacious.
+Investor-focused.
+Strong typography and clear hierarchy.
+High-quality business/investment imagery.
+Subtle honeycomb/bee-inspired elements.
+Avoid excessive orange backgrounds or cartoon-style bee graphics.
+Login Structure
+Client Login should be easy for investors to find.
+Distributor Login should be available separately.
+Distributor tools should not dominate the main investor journey.
+Main User Journey
+Understand Moneybee.
+Learn the investment approach.
+Understand PMS and AIF.
+Compare PMS and AIF.
+Review performance and historical case studies.
+Meet the team.
+Get Started or Login.
+Final Content Rule
+Keep approximately 80–90% of the main content from the approved PMS/AIF presentations and use only 10–20% new content where necessary for website navigation, user experience, Careers, Contact and other practical sections.
+Before publishing performance numbers, transaction claims, tax statements, regulatory statements or historical facts, obtain final compliance/management approval and confirm the latest source documents.
+
+
+MONEYBEE | KNOW VENTURE. KNOW GAIN.
