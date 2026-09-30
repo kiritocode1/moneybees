@@ -7,7 +7,6 @@ import { BracketLabel } from "@/components/fact-sections/fact-section";
 import { Rise } from "@/components/hero/editorial";
 import { BODY, COLUMN, EYEBROW, HEADING, SUBHEAD } from "@/components/hero/tokens";
 import {
-  APPLY_STEPS,
   applyHref,
   CAREERS,
   CAREERS_LOREM,
@@ -19,19 +18,24 @@ import {
   type Team,
   TEAM_NAMES,
 } from "@/lib/careers";
+import ApplyStack from "./apply-stack";
 import { CombGlyph, CULTURE_GLYPHS, ORANGE, TEAM_GLYPHS } from "./glyphs";
 
 /*
  * /careers, content plan §10: the heading with both CTAs, the current
  * openings as the page's one card grid, life at Moneybee around the team
  * photograph, the work culture as a white and black split, and how to apply
- * on a progress rail. Every section has a drawing; the openings and culture
+ * as a stack of sheets. Photographs sit in faded-bottom panels. Every section has a drawing; the openings and culture
  * points are lorem until HR writes them.
  */
 
 const FOCUS = "focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-current";
 const CTA = `inline-flex w-fit items-center rounded-full bg-[#F6A11A] px-[26px] py-[14px] text-[15px] font-medium text-black no-underline transition-[color,background-color,transform,scale] duration-200 ease-[cubic-bezier(.23,1,.32,1)] hover:bg-black hover:text-white active:scale-[0.97] motion-reduce:transition-none ${FOCUS}`;
 const CTA_OUTLINE = `inline-flex w-fit items-center rounded-full border border-black/25 px-[26px] py-[14px] text-[15px] font-medium text-black no-underline transition-[border-color,transform,scale] duration-200 ease-[cubic-bezier(.23,1,.32,1)] hover:border-black active:scale-[0.97] motion-reduce:transition-none ${FOCUS}`;
+/** The kobbe panel photographs sit in: #F6F6F6, 10px radius, a hairline ring. */
+const PANEL = "overflow-hidden rounded-[10px] bg-[#F6F6F6] ring-1 ring-black/[.06]";
+/** The panel's bottom 15% fades to the white page. */
+const PANEL_FADE = { maskImage: "linear-gradient(to bottom, #000 85%, transparent)", WebkitMaskImage: "linear-gradient(to bottom, #000 85%, transparent)" } as const;
 const number = (index: number) => String(index + 1).padStart(2, "0");
 
 function useShown<T extends Element>(amount = 0.45) {
@@ -200,7 +204,7 @@ export function LifeSection() {
           </div>
           <p className={`text-black/70 ${BODY}`}>{LIFE.text}</p>
         </div>
-        <div ref={ref} className="relative mt-[56px] aspect-[16/9] w-full overflow-hidden bg-[#F7F7F8] max-md:aspect-[4/3]">
+        <div ref={ref} className={`relative mt-[56px] aspect-[16/9] w-full max-md:aspect-[4/3] ${PANEL}`} style={PANEL_FADE}>
           <div
             className="absolute inset-0 motion-reduce:!transition-none"
             style={{ clipPath: shown ? "inset(0 0 0 0)" : "inset(18% 30% 18% 30%)", transition: "clip-path 1200ms cubic-bezier(.22,1,.36,1)" }}
@@ -239,7 +243,7 @@ export function CultureSection() {
             Our Work Culture
           </h2>
           <p className={`mt-[28px] max-w-[480px] text-black/70 ${BODY}`}>{CAREERS_LOREM.long}</p>
-          <div className="relative mt-[40px] aspect-[4/3] w-full overflow-hidden">
+          <div className={`relative mt-[40px] aspect-[4/3] w-full ${PANEL}`} style={PANEL_FADE}>
             <Image src="/people/moneybee-boardroom.jpg" alt="A meeting in the Moneybee boardroom" fill sizes="(max-width: 768px) 100vw, 560px" className="object-cover" />
           </div>
         </div>
@@ -267,59 +271,26 @@ export function CultureSection() {
   );
 }
 
-/**
- * How to apply: the steps down a progress rail. As the list comes into view
- * the rail fills orange from the top and lights each node as it passes.
- */
+/** How to apply: the heading and both CTAs over the four steps as a stack of sheets. */
 export function ApplySection() {
-  const { ref, shown } = useShown<HTMLOListElement>(0.4);
-  const last = APPLY_STEPS.length - 1;
-  const fill = 1500;
   return (
-    <section id="apply" aria-labelledby="apply-heading" className="scroll-mt-[96px] bg-[#F7F7F8] text-black">
-      <div className={`${COLUMN} grid grid-cols-1 gap-12 py-[120px] md:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)] md:gap-20 max-md:py-[80px]`}>
-        <div className="md:sticky md:top-[120px] md:self-start">
-          <span className={`${EYEBROW} text-black/60`}>04</span>
-          <h2 id="apply-heading" className={`mt-[14px] ${SUBHEAD}`}>
-            How to Apply
-          </h2>
-          <p className={`mt-[28px] max-w-[480px] text-black/70 ${BODY}`}>{CAREERS_LOREM.long}</p>
-          <div className="mt-[40px]">
-            <Ctas />
+    <section id="apply" aria-labelledby="apply-heading" className="scroll-mt-[96px] bg-white text-black">
+      <div className={`${COLUMN} py-[120px] max-md:py-[80px]`}>
+        <div className="grid grid-cols-1 items-end gap-8 md:grid-cols-2 md:gap-16">
+          <div>
+            <span className={`${EYEBROW} text-black/60`}>04</span>
+            <h2 id="apply-heading" className={`mt-[14px] ${SUBHEAD}`}>
+              How to Apply
+            </h2>
           </div>
+          <p className={`text-black/70 ${BODY}`}>{CAREERS_LOREM.long}</p>
         </div>
-        <ol ref={ref} className="relative m-0 list-none p-0">
-          {APPLY_STEPS.map((step, index) => (
-            <li key={step.name} className="relative grid grid-cols-[28px_minmax(0,1fr)] gap-x-[24px] pb-[44px] last:pb-0">
-              {/* The rail segment from this node's centre to the next one's, filled in turn. */}
-              {index < last && (
-                <>
-                  <span aria-hidden="true" className="absolute top-[16px] -bottom-[16px] left-[13px] w-[2px] bg-black/10" />
-                  <span
-                    aria-hidden="true"
-                    className="absolute top-[16px] -bottom-[16px] left-[13px] w-[2px] origin-top bg-[#F6A11A] motion-reduce:!transition-none"
-                    style={{ transform: `scaleY(${shown ? 1 : 0})`, transition: `transform ${fill / last}ms linear ${200 + (index / last) * fill}ms` }}
-                  />
-                </>
-              )}
-              <span
-                aria-hidden="true"
-                className="relative z-[1] mt-[2px] grid h-[28px] w-[28px] place-items-center rounded-full border-2 font-[family-name:var(--font-geist-mono)] text-[11px] tabular-nums motion-reduce:!transition-none"
-                style={{
-                  borderColor: shown ? ORANGE : "rgba(0,0,0,.25)",
-                  backgroundColor: shown ? ORANGE : "#F7F7F8",
-                  transition: `background-color 250ms ease ${200 + (index / last) * fill}ms, border-color 250ms ease ${200 + (index / last) * fill}ms`,
-                }}
-              >
-                {index + 1}
-              </span>
-              <div>
-                <h3 className="font-serif text-[clamp(1.5rem,1.1rem+.8vw,1.9rem)] leading-[1.1] font-normal">{step.name}</h3>
-                <p className="mt-[8px] max-w-[440px] text-[15px] leading-[1.55] text-black/65">{step.text}</p>
-              </div>
-            </li>
-          ))}
-        </ol>
+        <div className="mt-[56px]">
+          <ApplyStack />
+        </div>
+        <div className="mt-[24px]">
+          <Ctas />
+        </div>
       </div>
     </section>
   );

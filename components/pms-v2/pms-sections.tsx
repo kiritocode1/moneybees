@@ -1,21 +1,19 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
 import { BracketLabel } from "@/components/fact-sections/fact-section";
 import { Rise } from "@/components/hero/editorial";
 import { BODY, COLUMN, EYEBROW, HEADING, SUBHEAD } from "@/components/hero/tokens";
-import { ILLUSTRATIVE_SECTORS, PHILOSOPHY_POINTS, PHILOSOPHY_WORDS, PMS_LOREM, PMS_PAGE, PMS_PARTS, PORTFOLIO_APPROACH, WHY_PMS } from "@/lib/pms-v2";
-import { RISKS } from "@/lib/approach";
-import { RISK_GLYPHS } from "@/components/approach/glyphs";
-import { DelayedOn, FOCUS, hexPoints, number, ORANGE, OrangeButton, PageIndex, PRESS, T, useShown, NoScriptReveal } from "./shared";
+import PortfolioStack from "@/components/motion/portfolio-sheets";
+import { PHILOSOPHY_POINTS, PHILOSOPHY_WORDS, PMS_LOREM, PMS_PAGE, PMS_PARTS, RISK_CONTROLS, WHY_PMS } from "@/lib/pms-v2";
+import { DelayedOn, FigurePanel, FOCUS, hexPoints, number, ORANGE, OrangeButton, PageIndex, PRESS, T, useShown, NoScriptReveal } from "./shared";
 import { WHY_GLYPHS } from "./why-glyphs";
 
 /*
  * /pms, content plan §3: heading and introduction, why Moneybee PMS, the
- * investment philosophy, the portfolio approach, and the drawings the plan
- * lists (philosophy graphic, portfolio construction, risk management). The
- * funnel and the performance chart live in their own files.
+ * investment philosophy, the portfolio approach as a stack loop, and risk
+ * management as four controls around the portfolio. The funnel and the
+ * performance rows live in their own files.
  */
 
 export function PmsHero() {
@@ -37,9 +35,9 @@ export function PmsHero() {
           </Rise>
           <Rise delay={0.16}>
             <div className="mt-10 flex flex-wrap gap-3">
-              <OrangeButton href={PMS_PAGE.explore.href}>{PMS_PAGE.explore.label}</OrangeButton>
-              <OrangeButton href={PMS_PAGE.start.href} outline>
-                {PMS_PAGE.start.label}
+              <OrangeButton href={PMS_PAGE.start.href}>{PMS_PAGE.start.label}</OrangeButton>
+              <OrangeButton href={PMS_PAGE.explore.href} outline>
+                {PMS_PAGE.explore.label}
               </OrangeButton>
             </div>
           </Rise>
@@ -178,149 +176,92 @@ export function PhilosophySection() {
   );
 }
 
-const TOTAL_HOLDINGS = ILLUSTRATIVE_SECTORS.reduce((sum, sector) => sum + sector.holdings, 0);
-const SHADES = ["#000", "#333", "#5c5c5c", "#858585", "#adadad", "#d1d1d1"];
-const CAP = 30;
-/** Each cell of the honeycomb, tagged with the sector that owns it. */
-const CELLS = ILLUSTRATIVE_SECTORS.flatMap((sector, sectorIndex) => Array.from({ length: sector.holdings }, () => sectorIndex)).map((sector, index) => {
-  const r = 30;
-  const w = Math.sqrt(3) * r;
-  const row = Math.floor(index / 6);
-  const col = index % 6;
-  return { sector, x: 40 + col * w + (row % 2) * (w / 2), y: 40 + row * r * 1.5, index };
-});
-
-/**
- * The portfolio construction diagram: 18 holdings as a honeycomb, coloured by
- * sector, beside each sector's weight against the 30% cap. Pointing at a
- * sector lights its cells.
- */
+/** Portfolio Approach: the five docx lines as the stack loop's sheets, which carry the list themselves. */
 export function PortfolioSection() {
-  const { ref, shown } = useShown<HTMLDivElement>(0.3);
-  const [active, setActive] = useState<number | null>(null);
   return (
     <section id="portfolio" aria-labelledby="portfolio-heading" className="scroll-mt-[96px] bg-white text-black">
-      <div className={`${COLUMN} grid grid-cols-1 gap-14 py-[120px] md:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)] md:gap-20 max-md:py-[80px]`}>
-        <div ref={ref}>
-          <BracketLabel>Portfolio approach</BracketLabel>
-          <h2 id="portfolio-heading" className={`mt-[18px] ${SUBHEAD}`}>
-            Portfolio Approach
-          </h2>
-          <div className="mt-[40px] border border-black/15 p-[28px] max-[600px]:p-[16px]">
-            <div className="flex items-baseline justify-between">
-              <span className={`${EYEBROW} text-black/60`}>Illustration</span>
-              <span className={`${EYEBROW} text-black/60`}>Sector weights against the 30% cap</span>
-            </div>
-            <svg viewBox="0 0 368 170" className="mt-[16px] block h-auto w-full" aria-hidden="true">
-              {CELLS.map((cell) => {
-                const lit = active === null || active === cell.sector;
-                return (
-                  <polygon
-                    key={cell.index}
-                    points={hexPoints(cell.x, cell.y, 27)}
-                    fill={active === cell.sector ? ORANGE : SHADES[cell.sector]}
-                    opacity={shown ? (lit ? 1 : 0.15) : 0}
-                    className="transition-[opacity,fill,transform] duration-500 ease-[cubic-bezier(.23,1,.32,1)] motion-reduce:!transition-none"
-                    style={{ transformBox: "fill-box", transformOrigin: "center", transform: `scale(${shown ? 1 : 0.9})`, transitionDelay: active === null && !shown ? "0ms" : active === null ? `${cell.index * 30}ms` : "0ms" }}
-                  />
-                );
-              })}
-            </svg>
-            <ul className="mt-[24px] list-none p-0">
-              {ILLUSTRATIVE_SECTORS.map((sector, index) => {
-                const share = (sector.holdings / TOTAL_HOLDINGS) * 100;
-                return (
-                  <li key={sector.name}>
-                    <button
-                      type="button"
-                      onMouseEnter={() => setActive(index)}
-                      onMouseLeave={() => setActive(null)}
-                      onFocus={() => setActive(index)}
-                      onBlur={() => setActive(null)}
-                      className={`grid w-full grid-cols-[76px_minmax(0,1fr)_48px] items-center gap-3 py-[6px] text-left ${FOCUS}`}
-                    >
-                      <span className="flex items-center gap-2 text-[13px] text-black/70">
-                        <i className="h-[10px] w-[10px]" style={{ backgroundColor: active === index ? ORANGE : SHADES[index] }} />
-                        {sector.name}
-                      </span>
-                      <span className="relative h-[10px] bg-black/[.06]">
-                        <span
-                          className="absolute inset-y-0 left-0 origin-left transition-[transform,background-color] duration-700 ease-[cubic-bezier(.23,1,.32,1)] motion-reduce:!transition-none"
-                          style={{ width: `${(share / 35) * 100}%`, transform: `scaleX(${shown ? 1 : 0})`, backgroundColor: active === index ? ORANGE : "#000", transitionDelay: `${index * 60}ms` }}
-                        />
-                        {index === 0 && (
-                          <span className="absolute -top-[18px] -translate-x-1/2 text-[10px] tracking-[.08em] text-black/70" style={{ left: `${(CAP / 35) * 100}%` }}>
-                            CAP
-                          </span>
-                        )}
-                        <span className="absolute -inset-y-[4px] w-[2px] bg-[#F6A11A]" style={{ left: `${(CAP / 35) * 100}%` }} />
-                      </span>
-                      <span className="text-right text-[13px] tabular-nums text-black/70">{share.toFixed(1)}%</span>
-                    </button>
-                  </li>
-                );
-              })}
-            </ul>
+      <div className={`${COLUMN} py-[120px] max-md:py-[80px]`}>
+        <div className="grid grid-cols-1 items-end gap-8 md:grid-cols-2 md:gap-16">
+          <div>
+            <BracketLabel>Portfolio approach</BracketLabel>
+            <h2 id="portfolio-heading" className={`mt-[18px] ${SUBHEAD}`}>
+              Portfolio Approach
+            </h2>
           </div>
-        </div>
-        <div className="md:pt-[120px]">
           <p className={`text-black/70 ${BODY}`}>{PMS_LOREM.long}</p>
-          <ol className="mt-[40px] list-none border-t border-black p-0">
-            {PORTFOLIO_APPROACH.map((item, index) => (
-              <li key={item} className="grid grid-cols-[34px_minmax(0,1fr)] items-baseline gap-x-[14px] border-b border-black/15 py-[16px]">
+        </div>
+        <FigurePanel className="mt-[56px]">
+          <PortfolioStack />
+        </FigurePanel>
+      </div>
+    </section>
+  );
+}
+
+/** Node centres around the hex, in viewBox units: top, right, bottom, left. */
+const CONTROL_NODES = [
+  { x: 200, y: 34 },
+  { x: 356, y: 130 },
+  { x: 200, y: 226 },
+  { x: 44, y: 130 },
+] as const;
+
+/**
+ * The risk-management graphic: the portfolio as a hex, held by the four
+ * controls around it. The hex is the one lit element; the controls rise in
+ * after it, numbered as the list beside it.
+ */
+function ControlsGraphic({ on }: { on: boolean }) {
+  return (
+    <svg viewBox="0 0 400 260" className="block h-auto w-full" role="img" aria-label={RISK_CONTROLS.map((control) => control.name).join(", ")}>
+      {CONTROL_NODES.map((node, index) => (
+        <line key={index} x1="200" y1="130" x2={node.x} y2={node.y} stroke="#DADADA" strokeWidth="1.5" strokeDasharray="4 5" opacity={on ? 1 : 0} className={T} style={{ transitionDelay: `${300 + index * 70}ms` }} />
+      ))}
+      <polygon points={hexPoints(200, 130, 58)} fill="#FDECD1" stroke={ORANGE} strokeWidth="2" opacity={on ? 1 : 0} className={T} style={{ transformBox: "fill-box", transformOrigin: "center", transform: `scale(${on ? 1 : 0.9})` }} />
+      {CONTROL_NODES.map((node, index) => (
+        <g key={index} opacity={on ? 1 : 0} className={T} style={{ transitionDelay: `${450 + index * 70}ms` }}>
+          <circle cx={node.x} cy={node.y} r="22" fill="#fff" stroke="#DADADA" strokeWidth="1.5" />
+          <text x={node.x} y={node.y + 4} textAnchor="middle" fontSize="12" fill="#000" fontFamily="var(--font-geist-mono), ui-monospace, monospace" letterSpacing=".08em">
+            {number(index)}
+          </text>
+        </g>
+      ))}
+    </svg>
+  );
+}
+
+/** Risk Management: the four controls, drawn around the portfolio and listed beside it. */
+export function RiskSection() {
+  const { ref, shown } = useShown<HTMLDivElement>(0.35);
+  return (
+    <section id="risk" aria-labelledby="risk-heading" className="scroll-mt-[96px] border-t border-dashed border-black/10 bg-white text-black">
+      <div className={`${COLUMN} py-[120px] max-md:py-[80px]`}>
+        <div className="grid grid-cols-1 items-end gap-8 md:grid-cols-2 md:gap-16">
+          <div>
+            <BracketLabel>Risk management</BracketLabel>
+            <h2 id="risk-heading" className={`mt-[18px] ${SUBHEAD}`}>
+              Risk Management
+            </h2>
+          </div>
+          <p className={`text-black/70 ${BODY}`}>{PMS_LOREM.long}</p>
+        </div>
+        <div ref={ref} className="mt-[56px] grid grid-cols-1 items-center gap-10 md:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)] md:gap-16">
+          <FigurePanel>
+            <ControlsGraphic on={shown} />
+          </FigurePanel>
+          <ol className="m-0 list-none border-t border-black/10 p-0">
+            {RISK_CONTROLS.map((control, index) => (
+              <li key={control.name} className="grid grid-cols-[34px_minmax(0,1fr)] items-baseline gap-x-[14px] border-b border-black/10 py-[18px]">
                 <span className="font-[family-name:var(--font-geist-mono)] text-[13px] leading-none text-black/60 tabular-nums">{number(index)}</span>
-                <span className="font-serif text-[clamp(1.2rem,1rem+.5vw,1.45rem)] leading-[1.25]">{item}</span>
+                <div>
+                  <h3 className="font-serif text-[clamp(1.3rem,1rem+.6vw,1.6rem)] leading-[1.15] font-normal">{control.name}</h3>
+                  <p className="mt-[6px] text-[15px] leading-[1.55] text-black/70">{control.text}</p>
+                </div>
               </li>
             ))}
           </ol>
         </div>
       </div>
     </section>
-  );
-}
-
-
-/**
- * The risk-management graphic: the four risks the content plan names (§6),
- * each drawn by the same explainer as /our-approach. A pinned black band: the
- * heading holds on the left while the four risks run down a ruled list, each
- * row playing its drawing as it comes into view.
- */
-export function RiskSection() {
-  return (
-    <section id="risk" aria-labelledby="risk-heading" className="scroll-mt-[96px] bg-black text-white">
-      <div className={`${COLUMN} grid grid-cols-1 gap-12 py-[120px] md:grid-cols-[minmax(0,.85fr)_minmax(0,1.15fr)] md:gap-20 max-md:py-[80px]`}>
-        <div className="md:sticky md:top-[120px] md:self-start">
-          <BracketLabel>Risk management</BracketLabel>
-          <h2 id="risk-heading" className={`mt-[18px] ${SUBHEAD}`}>
-            Risk Management
-          </h2>
-          <p className={`mt-8 text-white/70 ${BODY}`}>{PMS_LOREM.long}</p>
-          <span aria-hidden="true" className="mt-10 block h-[3px] w-[64px] bg-[#F6A11A]" />
-        </div>
-        <ol className="m-0 list-none border-t border-white/40 p-0">
-          {RISKS.map((risk, index) => (
-            <RiskRow key={risk.name} risk={risk} index={index} />
-          ))}
-        </ol>
-      </div>
-    </section>
-  );
-}
-
-function RiskRow({ risk, index }: { risk: (typeof RISKS)[number]; index: number }) {
-  const { ref, shown } = useShown<HTMLLIElement>(0.5);
-  const Glyph = RISK_GLYPHS[risk.glyph];
-  return (
-    <li ref={ref} className="grid grid-cols-[minmax(0,1fr)_minmax(0,180px)] items-center gap-x-8 gap-y-5 border-b border-white/20 py-[32px] max-sm:grid-cols-1">
-      <div>
-        <span className={`${EYEBROW} text-[#F6A11A]`}>{number(index)}</span>
-        <h3 className="mt-[12px] font-serif text-[clamp(1.6rem,1.2rem+1vw,2.2rem)] leading-[1.1] font-normal">{risk.name}</h3>
-        <p className="mt-[10px] max-w-[440px] text-[15px] leading-[1.55] text-white/70">{risk.text}</p>
-      </div>
-      <div className="bg-white p-[14px] max-sm:max-w-[220px]">
-        <Glyph on={shown} />
-      </div>
-    </li>
   );
 }

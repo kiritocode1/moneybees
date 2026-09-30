@@ -7,7 +7,7 @@ import {
   Rise,
   SUBHEAD,
 } from "@/components/hero/editorial";
-import { AIF_PRODUCT, CONTACT, PMS_PRODUCT, RANKINGS } from "@/lib/insights";
+import { AIF_PRODUCT, PMS_PRODUCT, RANKINGS } from "@/lib/insights";
 
 /** The FAQ is the one interactive block here; it lives in its own client file. */
 export { FaqSection } from "./faq-section";
@@ -171,26 +171,22 @@ export function LetsTalkSection() {
             href="/contact"
             className={`inline-flex w-fit items-center rounded-full bg-[#F6A11A] px-[26px] py-[14px] text-[15px] font-medium text-black no-underline transition-[background-color,scale] duration-200 ${EASE} hover:bg-white active:scale-[.97] ${FOCUS_ON_DARK}`}
           >
-            Schedule a conversation
+            Get Started
           </Link>
+          {/* The content plan's contact details, not the AIF deck's product line. */}
           <p className="text-[15px] leading-[1.6] text-white/70">
-            {CONTACT.phones.map((phone, index) => (
-              <span key={phone}>
-                {index > 0 && " · "}
-                <a
-                  href={`tel:${phone.replace(/\s/g, "")}`}
-                  className={`text-white no-underline transition-colors duration-200 hover:text-[#F6A11A] ${FOCUS_ON_DARK}`}
-                >
-                  {phone}
-                </a>
-              </span>
-            ))}
-            <br />
             <a
-              href={`mailto:${CONTACT.emails[1][1]}`}
+              href="tel:+912240302080"
               className={`text-white no-underline transition-colors duration-200 hover:text-[#F6A11A] ${FOCUS_ON_DARK}`}
             >
-              {CONTACT.emails[1][1]}
+              022-4030 2080
+            </a>
+            <br />
+            <a
+              href="mailto:info@moneybee.in"
+              className={`text-white no-underline transition-colors duration-200 hover:text-[#F6A11A] ${FOCUS_ON_DARK}`}
+            >
+              info@moneybee.in
             </a>
           </p>
         </div>

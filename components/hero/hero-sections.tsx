@@ -1,7 +1,7 @@
 import Link from "next/link";
-import { INTRODUCTION, PERIOD_RETURNS } from "@/lib/insights";
+import { HOME_PLAN, INTRODUCTION, PERIOD_RETURNS } from "@/lib/insights";
 import CornerBrackets from "./corner-brackets";
-import { BODY, BUTTON, COLUMN, DashedRule, EYEBROW, HEADING, Rise } from "./editorial";
+import { BODY, BUTTON, COLUMN, DashedRule, EYEBROW, HEADING, Rise, SUBHEAD } from "./editorial";
 import HeroPyramid from "./hero-pyramid";
 import WealthChart from "./wealth-chart";
 
@@ -18,12 +18,12 @@ import WealthChart from "./wealth-chart";
 
 const SINCE_INCEPTION = PERIOD_RETURNS.find((row) => row.period === "Since Inception");
 
-/** The figures at the hero's foot, as the peers open with theirs. Every one is a deck fact. */
+/** The plan's key highlights that carry a figure, plus its small performance highlight. */
 const HERO_FIGURES = [
-  ["2004", "Managing money since"],
-  ["~20", "Stocks in the portfolio"],
+  ["45+", "Years of experience of the founder"],
+  ["Aug 2007", "PMS since"],
   [`${SINCE_INCEPTION?.queenbee.toFixed(2)}%`, `A year since 2007, against ${SINCE_INCEPTION?.benchmark.toFixed(2)}% for the S&P BSE 500 TRI`],
-  ["₹150–2,000 Cr", "The market caps we invest in"],
+  ["Small & mid", "The Indian companies we focus on"],
 ] as const;
 
 export function HeroSection() {
@@ -38,23 +38,23 @@ export function HeroSection() {
       <div className={`${COLUMN} pointer-events-none relative z-10 flex flex-col gap-10 pt-[140px] pb-10 md:flex-row md:items-start md:gap-12 md:pt-[220px] md:pb-[72px]`}>
         <div className="flex max-w-[738px] flex-1 flex-col">
           <Rise>
-            <h1 className={`${HEADING} text-balance`}>Finding value where the market is not looking</h1>
+            <h1 className={`${HEADING} text-balance`}>{HOME_PLAN.heading}</h1>
           </Rise>
           <Rise delay={0.08}>
-            <p className={`mt-6 max-w-[600px] text-black/70 md:mt-8 ${BODY}`}>{INTRODUCTION.focus}</p>
+            <p className={`mt-6 max-w-[600px] text-black/70 md:mt-8 ${BODY}`}>{HOME_PLAN.introduction}</p>
           </Rise>
           <Rise delay={0.16}>
             <div className="mt-10 flex flex-wrap items-center gap-4 md:mt-20">
-              <Link href="/contact" className={`${BUTTON} pointer-events-auto bg-black text-white hover:bg-black/85`}>
-                Schedule a conversation
+              <Link href="/contact" className={`${BUTTON} pointer-events-auto bg-[#F6A11A] text-black hover:bg-black hover:text-white`}>
+                Get Started
               </Link>
-              <a
-                href="#research"
+              <Link
+                href="/our-approach"
                 className={`${BUTTON} pointer-events-auto border border-dashed border-black/10 text-black hover:bg-black/[.03]`}
               >
-                Our process
+                Our Investment Approach
                 <CornerBrackets />
-              </a>
+              </Link>
             </div>
           </Rise>
         </div>
@@ -83,11 +83,22 @@ export function WhoWeAreSection() {
   return (
     <>
       <DashedRule />
-      <section id="about" aria-label="Who we are" className={`w-full bg-white text-black`}>
+      <section id="about" aria-labelledby="why-heading" className={`w-full bg-white text-black`}>
         <div className={`${COLUMN} grid grid-cols-1 items-start gap-10 py-[80px] md:grid-cols-2 md:gap-12`}>
           <WealthChart />
           <Rise onView>
             <div className="flex flex-col gap-5">
+              <h2 id="why-heading" className={SUBHEAD}>
+                Why Moneybee
+              </h2>
+              <ul className="mb-3 list-none border-t border-t-black/15 p-0">
+                {HOME_PLAN.highlights.map((highlight) => (
+                  <li key={highlight} className="flex gap-3 border-b border-b-black/15 py-3 text-[15px] leading-[1.45]">
+                    <span aria-hidden="true" className="mt-[.5em] h-[6px] w-[6px] shrink-0 bg-[#F6A11A]" />
+                    {highlight.replace(/\.$/, "")}
+                  </li>
+                ))}
+              </ul>
               <p className={BODY}>
                 {/* The bracketed drop cap: two lines tall, floated, dashed box with corner marks. */}
                 {/* Ink letter; the corner marks carry the orange. */}

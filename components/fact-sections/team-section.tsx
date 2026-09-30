@@ -97,7 +97,7 @@ export default function TeamSection() {
         <BracketLabel>The people behind the portfolio</BracketLabel>
         <div className="mt-[18px] flex items-end justify-between gap-[40px] border-b border-b-[rgba(0,0,0,.13)] pb-[28px] max-[900px]:flex-col max-[900px]:items-start">
           <h2 id="team-heading" className="text-[clamp(3.6rem,6.4vw,7rem)] leading-[.9] font-light tracking-[-.06em]">
-            Team profile
+            Our Team
           </h2>
           <div className="flex items-center gap-[22px] text-[12px] uppercase tracking-[.08em]">
             <span className="font-mono text-[rgba(0,0,0,.5)] normal-case">

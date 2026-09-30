@@ -3,11 +3,10 @@
  * Picks". The heading, the three companies' Business Model, Competitive Edge
  * and Growth Prospect lines and the disclaimer are the plan's wording. The
  * Revenue, EBITDA and PAT figures are CASE_FINANCIALS in lib/pms.ts (group
- * profile p21 to p23, FY20 to FY24, Rs. crore); the multiple is the tier
- * PICK_TIERS in lib/insights.ts files each company under.
+ * profile p21 to p23, FY20 to FY24, Rs. crore). The multibagger multiples are
+ * left off: they read as recommendations.
  */
 
-import { PICK_TIERS } from "@/lib/insights";
 import { CASE_FINANCIALS, type CaseFinancials, type CaseName } from "@/lib/pms";
 
 const LOREM = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.";
@@ -31,17 +30,11 @@ export type CaseStudyEntry = {
   business: string;
   edge: string;
   growth: string;
-  multiple: string;
   financials: CaseFinancials;
 };
 
-/** The tier a company sits in on the multibagger slide, e.g. "> 20X". */
-const multipleOf = (name: CaseName) =>
-  PICK_TIERS.find((tier) => typeof tier.picks !== "string" && tier.picks.some((pick) => pick.name === name))?.multiple.replace(/\s+/g, "") ?? "";
-
-const entry = (key: CaseName, study: Omit<CaseStudyEntry, "multiple" | "financials">): CaseStudyEntry => ({
+const entry = (key: CaseName, study: Omit<CaseStudyEntry, "financials">): CaseStudyEntry => ({
   ...study,
-  multiple: multipleOf(key),
   financials: CASE_FINANCIALS[key],
 });
 

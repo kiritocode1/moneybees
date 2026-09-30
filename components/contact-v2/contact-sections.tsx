@@ -2,12 +2,11 @@
 
 import { useInView } from "motion/react";
 import { useSearchParams } from "next/navigation";
-import { type FormEvent, Suspense, useEffect, useId, useRef, useState } from "react";
+import { type FormEvent, type KeyboardEvent, Suspense, useEffect, useId, useRef, useState } from "react";
 import { BracketLabel } from "@/components/fact-sections/fact-section";
 import { Rise } from "@/components/hero/editorial";
-import { BODY, COLUMN, EYEBROW, HEADING, SUBHEAD } from "@/components/hero/tokens";
+import { COLUMN, EYEBROW, HEADING, SUBHEAD } from "@/components/hero/tokens";
 import {
-  CONTACT_LOREM,
   CONTACT_PAGE,
   EMAIL,
   ENQUIRIES,
@@ -21,19 +20,21 @@ import {
   PHONE,
   PHONE_HREF,
 } from "@/lib/contact-v2";
-import { ENQUIRY_GLYPHS, MailIcon, PhoneIcon } from "./glyphs";
+import { MailIcon, PhoneIcon } from "./glyphs";
 
 /*
- * /contact, content plan §11: the heading with the contact details and the
- * Get Started button, the office on a map, and the four enquiry options
- * shaping a simple form. The form has no backend: sending it opens a mailto
- * to info@moneybee.in with the filled fields. `?enquiry=pms` (or aif,
- * support, general) preselects an option, so product pages can link here.
+ * /contact, content plan §11, on realevate.agency/contact's layout
+ * (reference/realevate-contact/NOTES.md). From 1024px the first screen is
+ * three columns: a slow vertical "Contact" marquee, the heading over the
+ * office, phone and email, and the four enquiry options as tabs over an
+ * underline-only form. The form has no backend: sending it opens a mailto to
+ * info@moneybee.in with the filled fields. `?enquiry=pms` (or aif, support,
+ * general) preselects a tab, so product pages can link here.
  */
 
 const FOCUS = "focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-current";
-const CTA = `inline-flex w-fit items-center rounded-full bg-[#F6A11A] px-[26px] py-[14px] text-[15px] font-medium text-black no-underline transition-[color,background-color,transform,scale] duration-200 ease-[cubic-bezier(.23,1,.32,1)] hover:bg-black hover:text-white active:scale-[0.97] motion-reduce:transition-none ${FOCUS}`;
-const number = (index: number) => String(index + 1).padStart(2, "0");
+/** Realevate's UI-state curve, used for the tab underline, tab colour and field borders. */
+const UI_EASE = "cubic-bezier(.7,.6,0,1)";
 
 function useShown<T extends Element>(amount = 0.45) {
   const ref = useRef<T>(null);
@@ -41,56 +42,146 @@ function useShown<T extends Element>(amount = 0.45) {
   return { ref, shown };
 }
 
-/** The heading beside the two direct lines, each with an icon that plays once in view. */
-export function ContactHero() {
-  const { ref, shown } = useShown<HTMLDivElement>(0.5);
-  const lines = [
-    { label: "Phone", value: PHONE, href: PHONE_HREF, Icon: PhoneIcon },
-    { label: "Email", value: EMAIL, href: `mailto:${EMAIL}`, Icon: MailIcon },
-  ] as const;
+/**
+ * The first screen. Below 1024px the columns stack: the marquee as one
+ * horizontal line, then the details, then the tabs and form.
+ */
+export function ContactScreen() {
   return (
-    <section aria-labelledby="contact-heading" className="bg-white text-black">
-      <div className={`${COLUMN} grid grid-cols-1 items-end gap-14 pt-[150px] pb-[110px] md:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] md:gap-20 md:pt-[220px] max-md:pb-[72px]`}>
-        <div>
-          <Rise>
-            <BracketLabel>Contact us</BracketLabel>
-          </Rise>
-          <Rise delay={0.05}>
-            <h1 id="contact-heading" className={`${HEADING} mt-[22px] text-balance text-[clamp(2.75rem,1.2rem+4.4vw,5rem)]`}>
-              {CONTACT_PAGE.heading}
-            </h1>
-          </Rise>
-          <Rise delay={0.12}>
-            <p className={`mt-8 max-w-[520px] text-black/70 ${BODY}`}>{CONTACT_PAGE.lead}</p>
-          </Rise>
-          <Rise delay={0.18}>
-            <a href="#enquiry" className={`mt-10 ${CTA}`}>
-              Get Started
-            </a>
-          </Rise>
-        </div>
-        <Rise delay={0.2}>
-          <div ref={ref}>
-            <span className={`${EYEBROW} text-black/60`}>Contact details</span>
-            <ul className="mt-[14px] list-none border-t border-black p-0">
-              {lines.map(({ label, value, href, Icon }, index) => (
-                <li key={label} className="border-b border-black/15">
-                  <a href={href} className={`group grid grid-cols-[56px_minmax(0,1fr)] items-center gap-[18px] py-[20px] text-black no-underline ${FOCUS}`}>
-                    <span className="block h-[56px] w-[56px]">
-                      <DelayedIcon Icon={Icon} on={shown} delay={index * 350} />
-                    </span>
-                    <span>
-                      <span className={`${EYEBROW} block text-black/60`}>{label}</span>
-                      <span className="mt-[4px] block font-serif text-[clamp(1.5rem,1.1rem+1vw,2.1rem)] leading-[1.1] break-words underline decoration-transparent decoration-2 underline-offset-[6px] transition-[text-decoration-color] duration-200 group-hover:decoration-[#F6A11A]">{value}</span>
-                    </span>
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </Rise>
+    <section aria-labelledby="contact-heading" className="relative bg-white pt-[112px] text-black lg:grid lg:pt-0 lg:min-h-[max(100svh,880px)] lg:grid-cols-[minmax(220px,.62fr)_minmax(0,1fr)_minmax(0,1.15fr)] lg:items-end">
+      <Marquee />
+      <ContactDetails />
+      <div id="enquiry" className="scroll-mt-[96px] px-6 pt-[64px] pb-[96px] md:px-[120px] lg:pt-[168px] lg:pr-[max(64px,calc((100vw_-_1512px)/2_+_120px))] lg:pl-[24px] lg:pb-[88px]">
+        <Suspense fallback={<EnquiryTabs initial={ENQUIRIES[0].id} />}>
+          <EnquiryFromParams />
+        </Suspense>
       </div>
     </section>
+  );
+}
+
+/**
+ * The word "Contact" in orange outline, repeated along a track that moves at
+ * about 110px/s (Realevate measured 111px/s). The track holds two identical
+ * halves and moves by one half, so the loop has no seam. Vertical from
+ * 1024px, reading bottom to top; one horizontal line below that.
+ */
+function Marquee() {
+  const words = Array.from({ length: 3 }, (_, index) => (
+    <span key={index} className="contact-marquee-word">
+      Contact
+    </span>
+  ));
+  return (
+    <div aria-hidden="true" className="contact-marquee pointer-events-none relative overflow-hidden select-none lg:self-stretch">
+      <div className="contact-marquee-track">
+        <div className="contact-marquee-half">{words}</div>
+        <div className="contact-marquee-half">{words}</div>
+      </div>
+      <style>{MARQUEE_CSS}</style>
+    </div>
+  );
+}
+
+/*
+ * Instrument Serif "Contact" measures about 3.3em plus a .35em gap, so one
+ * half of three words measures 1864px at 220px type (17s at about 110px/s)
+ * and 1017px at 120px type (9s).
+ */
+const MARQUEE_CSS = `
+.contact-marquee{height:132px}
+.contact-marquee-track{display:flex;width:max-content;animation:contact-marquee-x 9s linear infinite}
+.contact-marquee-half{display:flex;flex:none}
+.contact-marquee-word{font-family:var(--font-instrument-serif),Georgia,serif;font-size:120px;line-height:1.1;padding-inline:.175em;color:transparent;-webkit-text-stroke:1.5px #F6A11A;white-space:nowrap;letter-spacing:-.02em}
+@keyframes contact-marquee-x{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@keyframes contact-marquee-y{from{transform:translateY(-50%)}to{transform:translateY(0)}}
+@media (min-width:1024px){
+.contact-marquee{height:auto;margin-top:128px}
+.contact-marquee-track{position:absolute;top:0;left:50%;margin-left:-.5em;font-size:220px;flex-direction:column;width:auto;animation:contact-marquee-y 17s linear infinite}
+.contact-marquee-half{display:block;writing-mode:vertical-rl;white-space:nowrap;transform:rotate(180deg)}
+.contact-marquee-word{display:inline-block;font-size:220px;line-height:1}
+}
+@media (prefers-reduced-motion:reduce){.contact-marquee-track{animation:none}}
+`;
+
+/** The heading over the office, phone and email. The email button copies the address and says so in a chip. */
+function ContactDetails() {
+  const { ref, shown } = useShown<HTMLDListElement>(0.5);
+  const [copied, setCopied] = useState(false);
+  useEffect(() => {
+    if (!copied) return;
+    const timer = setTimeout(() => setCopied(false), 1800);
+    return () => clearTimeout(timer);
+  }, [copied]);
+  const copy = async () => {
+    try {
+      await navigator.clipboard.writeText(EMAIL);
+      setCopied(true);
+    } catch {
+      window.location.href = `mailto:${EMAIL}`;
+    }
+  };
+  const label = `${EYEBROW} text-black/55`;
+  const value = "mt-[6px] block font-serif text-[clamp(1.35rem,1.1rem+.6vw,1.7rem)] leading-[1.2]";
+  return (
+    <div className="px-6 pt-[40px] md:px-[120px] lg:px-[24px] lg:pt-[168px] lg:pb-[88px] xl:pl-[48px]">
+      <Rise>
+        <h1 id="contact-heading" className={`${HEADING} max-w-[440px] text-balance`}>
+          {CONTACT_PAGE.heading}
+        </h1>
+      </Rise>
+      <Rise delay={0.08}>
+        <dl ref={ref} className="m-0 mt-[48px] grid gap-[32px] lg:mt-[72px]">
+          <div>
+            <dt className={label}>Office address</dt>
+            <dd className="m-0">
+              <address className={`${value} not-italic`}>
+                {OFFICE.name}
+                {OFFICE.lines.map((line) => (
+                  <span key={line} className="block text-[clamp(1.05rem,.95rem+.3vw,1.2rem)] leading-[1.45] text-black/70 font-sans">
+                    {line}
+                  </span>
+                ))}
+              </address>
+            </dd>
+          </div>
+          <div className="grid grid-cols-[44px_minmax(0,1fr)] items-center gap-x-[16px]">
+            <span className="row-span-2 block h-[44px] w-[44px]">
+              <DelayedIcon Icon={PhoneIcon} on={shown} delay={0} />
+            </span>
+            <dt className={label}>Phone</dt>
+            <dd className="m-0">
+              <a href={PHONE_HREF} className={`${value} w-fit text-black underline decoration-transparent decoration-2 underline-offset-[5px] transition-[text-decoration-color] duration-200 hover:decoration-[#F6A11A] ${FOCUS}`}>
+                {PHONE}
+              </a>
+            </dd>
+          </div>
+          <div className="grid grid-cols-[44px_minmax(0,1fr)] items-center gap-x-[16px]">
+            <span className="row-span-2 block h-[44px] w-[44px]">
+              <DelayedIcon Icon={MailIcon} on={shown} delay={350} />
+            </span>
+            <dt className={label}>Email</dt>
+            <dd className="relative m-0 flex flex-wrap items-center gap-x-[12px]">
+              <button
+                type="button"
+                onClick={copy}
+                aria-label={`Copy ${EMAIL}`}
+                className={`${value} cursor-pointer border-0 bg-transparent p-0 text-left text-black underline decoration-transparent decoration-2 underline-offset-[5px] transition-[text-decoration-color] duration-200 hover:decoration-[#F6A11A] ${FOCUS}`}
+              >
+                {EMAIL}
+              </button>
+              <span
+                role="status"
+                className="mt-[6px] rounded-[3px] bg-black px-[8px] py-[3px] text-[12px] leading-[1.4] text-white transition-opacity duration-200 motion-reduce:transition-none"
+                style={{ opacity: copied ? 1 : 0 }}
+              >
+                {copied ? "Copied" : ""}
+              </span>
+            </dd>
+          </div>
+        </dl>
+      </Rise>
+    </div>
   );
 }
 
@@ -150,136 +241,144 @@ export function OfficeSection() {
   );
 }
 
-/**
- * The enquiry section. It reads `?enquiry=` for the first choice; the
- * fallback renders the default choice so the page still prerenders.
- */
-export function EnquirySection() {
-  return (
-    <Suspense fallback={<EnquiryBody initial={ENQUIRIES[0].id} />}>
-      <EnquiryFromParams />
-    </Suspense>
-  );
-}
-
 function EnquiryFromParams() {
   const initial = enquiryFromParam(useSearchParams().get("enquiry")) ?? ENQUIRIES[0].id;
-  return <EnquiryBody key={initial} initial={initial} />;
+  return <EnquiryTabs key={initial} initial={initial} />;
 }
 
 /**
- * The four enquiry options as native radios, each labelled by a drawn card;
- * the chosen one shapes the form beside it. The typed values live here, not in
- * the form, so switching option keeps the name, email and phone already typed.
+ * The four enquiry options as tabs over one form. The typed values live here,
+ * not in the form, so switching tab keeps the name, email and phone already
+ * typed. Arrow keys, Home and End move between tabs.
  */
-function EnquiryBody({ initial }: { initial: Enquiry["id"] }) {
+function EnquiryTabs({ initial }: { initial: Enquiry["id"] }) {
   const [activeId, setActiveId] = useState<Enquiry["id"]>(initial);
   const [values, setValues] = useState<Record<string, string>>({});
   const active = ENQUIRIES.find((enquiry) => enquiry.id === activeId) ?? ENQUIRIES[0];
-  const group = useId();
+  const base = useId();
+  const tabs = useRef<(HTMLButtonElement | null)[]>([]);
+  const onKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
+    const index = ENQUIRIES.findIndex((enquiry) => enquiry.id === activeId);
+    const last = ENQUIRIES.length - 1;
+    const next = { ArrowRight: index === last ? 0 : index + 1, ArrowLeft: index === 0 ? last : index - 1, Home: 0, End: last }[event.key];
+    if (next === undefined) return;
+    event.preventDefault();
+    setActiveId(ENQUIRIES[next].id);
+    tabs.current[next]?.focus();
+  };
   return (
-    <section id="enquiry" aria-labelledby="enquiry-heading" className="scroll-mt-[96px] bg-[#F7F7F8] text-black">
-      <div className={`${COLUMN} py-[120px] max-md:py-[80px]`}>
-        <div className="grid grid-cols-1 items-end gap-8 md:grid-cols-2 md:gap-16">
-          <div>
-            <span className={`${EYEBROW} text-black/60`}>03</span>
-            <h2 id="enquiry-heading" className={`mt-[14px] ${SUBHEAD}`}>
-              Enquiry Options
-            </h2>
-          </div>
-          <p className={`text-black/70 ${BODY}`}>{CONTACT_LOREM.long}</p>
-        </div>
-        <div className="mt-[56px] grid grid-cols-1 gap-[2px] lg:grid-cols-[minmax(0,.9fr)_minmax(0,1.1fr)]">
-          <fieldset className="m-0 min-w-0 border-0 p-0">
-            <legend className="sr-only">Choose an enquiry option</legend>
-            <div className="grid grid-cols-2 gap-[2px]">
-              {ENQUIRIES.map((enquiry, index) => {
-                const Glyph = ENQUIRY_GLYPHS[enquiry.glyph];
-                const selected = enquiry.id === active.id;
-                return (
-                  <label
-                    key={enquiry.id}
-                    className={`relative flex cursor-pointer flex-col p-[24px] text-left transition-colors duration-200 has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-[-4px] has-[:focus-visible]:outline-current max-sm:p-[16px] ${selected ? "bg-black text-white" : "bg-white text-black hover:bg-white/60"}`}
-                  >
-                    <input type="radio" name={`${group}-enquiry`} value={enquiry.id} checked={selected} onChange={() => setActiveId(enquiry.id)} className="sr-only" />
-                    <span className="flex items-center justify-between">
-                      <span className={`${EYEBROW} ${selected ? "text-[#F6A11A]" : "text-black/60"}`}>{number(index)}</span>
-                      <span className={`h-[12px] w-[12px] rounded-full border transition-colors duration-200 ${selected ? "border-[#F6A11A] bg-[#F6A11A]" : "border-black/40"}`} aria-hidden="true" />
-                    </span>
-                    <span className="mt-[16px] block h-[60px] w-[80px]">
-                      <Glyph on={selected} ink={selected ? "#fff" : "#000"} />
-                    </span>
-                    <span className="mt-[18px] font-serif text-[clamp(1.2rem,1.05rem+.7vw,1.7rem)] leading-[1.1] max-sm:mt-[10px]">{enquiry.name}</span>
-                    <span className={`mt-[8px] text-[14px] leading-[1.5] max-sm:hidden ${selected ? "text-white/65" : "text-black/60"}`}>{enquiry.text}</span>
-                  </label>
-                );
-              })}
-            </div>
-          </fieldset>
-          <EnquiryForm enquiry={active} values={values} onChange={(name, value) => setValues((current) => ({ ...current, [name]: value }))} />
-        </div>
+    <div className="lg:max-w-[540px]">
+      <div role="tablist" aria-label="Enquiry options" onKeyDown={onKeyDown} className="grid grid-cols-2 sm:grid-cols-4">
+        {ENQUIRIES.map((enquiry, index) => {
+          const selected = enquiry.id === active.id;
+          return (
+            <button
+              key={enquiry.id}
+              ref={(node) => {
+                tabs.current[index] = node;
+              }}
+              type="button"
+              role="tab"
+              id={`${base}-tab-${enquiry.id}`}
+              aria-selected={selected}
+              aria-controls={`${base}-panel`}
+              tabIndex={selected ? 0 : -1}
+              onClick={() => setActiveId(enquiry.id)}
+              className={`relative min-h-[48px] cursor-pointer border-0 border-b border-solid border-b-black/15 bg-transparent px-[4px] pb-[14px] pt-[10px] text-[15px] leading-[1.25] font-medium sm:whitespace-nowrap hover:text-black ${selected ? "text-black" : "text-black/55"} focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-black`}
+              style={{ transition: `color .25s ${UI_EASE}` }}
+            >
+              {enquiry.name}
+              <span
+                aria-hidden="true"
+                className="absolute right-0 -bottom-px left-0 h-[2px] bg-[#F6A11A] motion-reduce:!transition-none"
+                style={{ transform: `scaleX(${selected ? 1 : 0})`, transition: `transform .5s ${UI_EASE}` }}
+              />
+            </button>
+          );
+        })}
       </div>
-    </section>
+      <EnquiryForm
+        id={`${base}-panel`}
+        labelledBy={`${base}-tab-${active.id}`}
+        enquiry={active}
+        values={values}
+        onChange={(name, value) => setValues((current) => ({ ...current, [name]: value }))}
+      />
+    </div>
   );
 }
 
+/** Fields that sit two to a row from 640px; the rest take the full width. */
+const HALF = new Set(["phone", "amount", "city", "investor", "commitment", "client", "topic"]);
+
 /** The form for one option. Sending it opens the visitor's mail app with the fields filled in. */
-function EnquiryForm({ enquiry, values, onChange }: { enquiry: Enquiry; values: Readonly<Record<string, string>>; onChange: (name: string, value: string) => void }) {
+function EnquiryForm({
+  id,
+  labelledBy,
+  enquiry,
+  values,
+  onChange,
+}: {
+  id: string;
+  labelledBy: string;
+  enquiry: Enquiry;
+  values: Readonly<Record<string, string>>;
+  onChange: (name: string, value: string) => void;
+}) {
   const onSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     window.location.href = enquiryMailto(enquiry, values);
   };
   return (
-    <form onSubmit={onSubmit} aria-labelledby="enquiry-form-heading" className="bg-white p-[36px] max-[600px]:p-[22px]">
-      <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2 border-b border-black pb-[16px]">
-        <h3 id="enquiry-form-heading" aria-live="polite" className="font-serif text-[clamp(1.6rem,1.2rem+1vw,2.2rem)] leading-none">
-          {enquiry.name}
-        </h3>
-        <span className={`${EYEBROW} shrink-0 text-black/60`}>To {EMAIL}</span>
-      </div>
-      <p className="mt-[14px] text-[13px] text-black/60">
-        <span aria-hidden="true">*</span> required
-      </p>
-      <div className="mt-[14px] grid grid-cols-1 gap-x-[20px] gap-y-[18px] sm:grid-cols-2">
+    <form id={id} role="tabpanel" aria-labelledby={labelledBy} onSubmit={onSubmit} className="mt-[28px]">
+      <div className="grid grid-cols-1 gap-x-[20px] gap-y-[20px] sm:grid-cols-2">
         {enquiry.fields.map((field) => (
-          <Field key={field.name} field={field} value={values[field.name] ?? ""} onChange={(value) => onChange(field.name, value)} />
+          <Field key={field.name} field={field} half={HALF.has(field.name)} value={values[field.name] ?? ""} onChange={(value) => onChange(field.name, value)} />
         ))}
       </div>
-      <div className="mt-[28px] flex flex-wrap items-center gap-x-6 gap-y-3">
-        <button type="submit" className={`${CTA} cursor-pointer border-0`}>
-          Send enquiry
-        </button>
-        <span className="text-[13px] text-black/60">Opens your email app with these details.</span>
-      </div>
+      <p className="mt-[18px] text-[12px] text-black/55">
+        <span aria-hidden="true">*</span> required
+      </p>
+      <button
+        type="submit"
+        className={`group relative mt-[24px] inline-flex cursor-pointer items-center overflow-hidden rounded-full border-0 bg-[#F6A11A] px-[28px] py-[13px] text-[15px] font-medium text-black transition-[color,scale] duration-300 hover:text-white active:scale-[0.97] motion-reduce:transition-none ${FOCUS}`}
+      >
+        <span
+          aria-hidden="true"
+          className="absolute inset-0 translate-y-[101%] rounded-full bg-black transition-transform duration-300 group-hover:translate-y-0 motion-reduce:transition-none"
+          style={{ transitionTimingFunction: UI_EASE }}
+        />
+        <span className="relative">Get Started</span>
+      </button>
     </form>
   );
 }
 
-function Field({ field, value, onChange }: { field: EnquiryField; value: string; onChange: (value: string) => void }) {
+function Field({ field, half, value, onChange }: { field: EnquiryField; half: boolean; value: string; onChange: (value: string) => void }) {
   const id = useId();
   const input =
-    "mt-[6px] block w-full rounded-none border-0 border-b border-black/40 bg-transparent px-0 py-[8px] text-[16px] text-black outline-none transition-[border-color] duration-200 focus:border-black focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-black";
-  const wide = field.type === "textarea" ? "sm:col-span-2" : "";
+    "mt-[4px] block w-full appearance-none rounded-none border-0 border-b border-solid border-b-black/25 bg-transparent px-0 py-[8px] text-[16px] text-black outline-none focus:border-b-black focus:shadow-[0_1px_0_0_#000]";
+  const transition = { transition: `border-color .3s ${UI_EASE}, box-shadow .3s ${UI_EASE}` };
   return (
-    <label htmlFor={id} className={`block ${wide}`}>
-      <span className={`${EYEBROW} text-black/60`}>
+    <div className={half ? "" : "sm:col-span-2"}>
+      <label htmlFor={id} className="block text-[13px] leading-[1.4] text-black/55">
         {field.label}
-        {field.required && (
-          <span aria-hidden="true" className="text-black">
-            {" "}
-            *
-          </span>
-        )}
-      </span>
+        {field.required && <span aria-hidden="true"> *</span>}
+      </label>
       {field.options ? (
-        <select id={id} name={field.name} required={field.required} value={value} onChange={(event) => onChange(event.target.value)} className={`${input} cursor-pointer`}>
-          <option value="">Choose one</option>
-          {field.options.map((option) => (
-            <option key={option}>{option}</option>
-          ))}
-        </select>
+        <div className="relative">
+          <select id={id} name={field.name} required={field.required} value={value} onChange={(event) => onChange(event.target.value)} className={`${input} cursor-pointer pr-[24px]`} style={transition}>
+            <option value="">Choose one</option>
+            {field.options.map((option) => (
+              <option key={option}>{option}</option>
+            ))}
+          </select>
+          <svg viewBox="0 0 10 6" aria-hidden="true" className="pointer-events-none absolute top-1/2 right-[2px] h-[6px] w-[10px]">
+            <path d="M0 0h10L5 6Z" fill="#000" />
+          </svg>
+        </div>
       ) : field.type === "textarea" ? (
-        <textarea id={id} name={field.name} rows={4} required={field.required} value={value} onChange={(event) => onChange(event.target.value)} className={`${input} resize-y`} />
+        <textarea id={id} name={field.name} rows={3} required={field.required} value={value} onChange={(event) => onChange(event.target.value)} className={`${input} resize-none`} style={transition} />
       ) : (
         <input
           id={id}
@@ -292,8 +391,9 @@ function Field({ field, value, onChange }: { field: EnquiryField; value: string;
           value={value}
           onChange={(event) => onChange(event.target.value)}
           className={input}
+          style={transition}
         />
       )}
-    </label>
+    </div>
   );
 }

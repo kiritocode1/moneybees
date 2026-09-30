@@ -3,6 +3,7 @@
 import { useInView } from "motion/react";
 import { useRef, useState } from "react";
 import { BracketLabel } from "@/components/fact-sections/fact-section";
+import CardScroll from "@/components/motion/card-scroll";
 import { Rise } from "@/components/hero/editorial";
 import { BODY, COLUMN, EYEBROW, HEADING, SUBHEAD } from "@/components/hero/tokens";
 import { CASE_DISCLAIMER, CASE_LOREM, CASE_PARTS, CASE_STUDIES, CASE_STUDIES_PAGE, type CaseStudyEntry } from "@/lib/case-studies";
@@ -10,10 +11,11 @@ import { PageIndex, NoScriptReveal } from "@/components/pms-v2/shared";
 import { DRAWINGS } from "./drawings";
 
 /*
- * /case-studies, content plan §8: three past picks, each with the plan's
- * business model, edge and growth lines, a drawing of what the business does,
- * and its Revenue, EBITDA and PAT for FY20 to FY24. A closing timeline sets the
- * three side by side, above the plan's disclaimer. Past examples, not advice.
+ * /case-studies, content plan §8: the three past picks as a pinned card
+ * scroll, one card each with the plan's business model, edge and growth
+ * lines; then each company's business drawing and Revenue, EBITDA and PAT for
+ * FY20 to FY24; then a closing timeline and the plan's disclaimer. Past
+ * examples, not advice.
  */
 
 const ORANGE = "#F6A11A";
@@ -51,8 +53,6 @@ export function CaseStudiesHero() {
     </section>
   );
 }
-
-type Tone = "white" | "black" | "grey";
 
 const SERIES = [
   { key: "revenue", name: "Revenue" },
@@ -145,75 +145,84 @@ function Mark({ text, dark }: { text: string; dark: boolean }) {
   );
 }
 
-const TONES: Record<Tone, { section: string; card: string; line: string; body: string }> = {
-  white: { section: "border-t border-dashed border-black/10 bg-white text-black", card: "border border-black/15", line: "border-black/15", body: "text-black/75" },
-  black: { section: "bg-black text-white", card: "border border-white/20", line: "border-white/20", body: "text-white/80" },
-  grey: { section: "bg-[#F7F7F8] text-black", card: "bg-white", line: "border-black/15", body: "text-black/75" },
-};
+/** The plan's three lines per company, in its order. */
+const THESIS = [
+  ["Business Model", "business"],
+  ["Competitive Edge", "edge"],
+  ["Growth Prospect", "growth"],
+] as const;
 
-/**
- * One case, read in three steps: who (the company and its mark), the thesis
- * (the business model as the lead sentence, with the edge and the growth
- * prospect under it, beside the drawing of the business) and the outcome (the
- * multiple it reached and its PAT from FY20 to FY24), then the financials.
- */
-export function CaseStudySection({ study, index, tone }: { study: CaseStudyEntry; index: number; tone: Tone }) {
-  const { ref, shown } = useShown<HTMLDivElement>(0.2);
-  const dark = tone === "black";
-  const look = TONES[tone];
-  const Drawing = DRAWINGS[study.drawing];
+/** One company card: mark, number and name on the left, the plan's three lines on the right. */
+function CaseCard({ study, index, dark }: { study: CaseStudyEntry; index: number; dark: boolean }) {
   const label = dark ? "text-white/65" : "text-black/60";
-  const first = study.financials[0];
-  const last = study.financials[study.financials.length - 1];
-  const support = [
-    ["Competitive Edge", study.edge],
-    ["Growth Prospect", study.growth],
-  ] as const;
   return (
-    <section id={study.id} aria-labelledby={`${study.id}-heading`} className={`scroll-mt-[96px] ${look.section}`}>
-      <div ref={ref} className={`${COLUMN} py-[120px] max-md:py-[80px]`}>
-        {/* Who, and the outcome. */}
-        <div className={`grid grid-cols-1 items-end gap-10 border-b pb-[40px] md:grid-cols-[minmax(0,1fr)_auto] ${look.line}`}>
+    <div className="grid h-full grid-cols-1 content-between gap-6 md:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)] md:content-stretch md:gap-12">
+      <div className="flex flex-col justify-between gap-6">
+        <div className="flex items-center gap-[18px]">
+          <Mark text={study.mark} dark={dark} />
+          <span aria-hidden="true" className="font-serif text-[clamp(2.4rem,5vw,4.5rem)] leading-none opacity-20">
+            {number(index)}
+          </span>
+        </div>
+        <h2 className="font-serif text-[clamp(1.9rem,1.2rem+2.4vw,3.6rem)] leading-[1.02] font-normal text-balance">{study.name}</h2>
+      </div>
+      <dl className="m-0 grid content-end gap-0">
+        {THESIS.map(([term, key]) => (
+          <div key={term} className={`border-t py-[12px] md:py-[16px] ${dark ? "border-white/30" : "border-black/40"}`}>
+            <dt className={`${EYEBROW} ${label}`}>{term}</dt>
+            <dd className="mt-[6px] ml-0 font-serif text-[clamp(1.05rem,.95rem+.45vw,1.35rem)] leading-[1.25]">{study[key]}</dd>
+          </div>
+        ))}
+      </dl>
+    </div>
+  );
+}
+
+const CARD_TONES = ["light", "black", "orange"] as const;
+
+/** The three companies as the page's one pinned card scroll, each card sliding over the last. */
+export function CaseCardsSection() {
+  return (
+    <section aria-label="Case studies" className="bg-white text-black">
+      <CardScroll
+        label="Case studies"
+        cards={CASE_STUDIES.map((study, index) => ({
+          key: study.id,
+          tone: CARD_TONES[index % CARD_TONES.length],
+          place: "md:col-[1/3] md:row-[1/3]",
+          children: <CaseCard study={study} index={index} dark={CARD_TONES[index % CARD_TONES.length] === "black"} />,
+        }))}
+      />
+    </section>
+  );
+}
+
+/** One company's business drawing beside its Revenue, EBITDA and PAT, FY20 to FY24. */
+export function CaseStudySection({ study, index }: { study: CaseStudyEntry; index: number }) {
+  const { ref, shown } = useShown<HTMLDivElement>(0.2);
+  const Drawing = DRAWINGS[study.drawing];
+  return (
+    <section id={study.id} aria-labelledby={`${study.id}-heading`} className="scroll-mt-[96px] bg-white text-black">
+      <div ref={ref} className={`${COLUMN} pt-[96px] max-md:pt-[64px]`}>
+        <div className="flex items-center gap-[18px] border-b border-black/15 pb-[24px]">
+          <Mark text={study.mark} dark={false} />
           <div>
             <BracketLabel>Case study {number(index)}</BracketLabel>
-            <div className="mt-[22px] flex items-center gap-[22px]">
-              <Mark text={study.mark} dark={dark} />
-              <h2 id={`${study.id}-heading`} className={`${HEADING} text-balance text-[clamp(2.4rem,1.2rem+3.4vw,4.25rem)] leading-[1.02]`}>
-                {study.name}
-              </h2>
+            <h2 id={`${study.id}-heading`} className={`mt-[10px] ${SUBHEAD} text-[clamp(1.6rem,1.1rem+1.6vw,2.4rem)] leading-[1.1]`}>
+              {study.name}
+            </h2>
+          </div>
+        </div>
+        <div className="mt-[32px] grid grid-cols-1 gap-[16px] md:grid-cols-[minmax(0,1fr)_minmax(0,1.5fr)]">
+          <div className="self-stretch rounded-[10px] bg-white p-[28px] ring-1 ring-black/[.12] max-[600px]:p-[18px]">
+            <span className={`${EYEBROW} text-black/60`}>{THESIS[0][0]}</span>
+            <div className="mt-[16px]">
+              <Drawing on={shown} />
             </div>
           </div>
-          <div className="md:text-right">
-            <span className={`${EYEBROW} ${label}`}>Multibagger</span>
-            <p className={`mt-[6px] text-[clamp(2.4rem,1.6rem+2.4vw,3.6rem)] leading-none font-light tracking-[-.05em] tabular-nums ${dark ? "text-[#F6A11A]" : ""}`}>{study.multiple}</p>
-            {!dark && <span aria-hidden="true" className="mt-[10px] block h-[3px] w-[56px] bg-[#F6A11A] md:ml-auto" />}
-            <p className={`mt-[12px] font-[family-name:var(--font-geist-mono)] text-[12px] tracking-[.04em] ${label}`}>
-              PAT Rs. {first.pat} crore in {first.year} to Rs. {last.pat} crore in {last.year}
-            </p>
+          <div className="rounded-[10px] bg-white p-[28px] ring-1 ring-black/[.12] max-[600px]:p-[18px]">
+            <FinancialsChart study={study} dark={false} shown={shown} />
           </div>
-        </div>
-
-        {/* The thesis, beside the drawing of the business. */}
-        <div className="mt-[48px] grid grid-cols-1 gap-[48px] md:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] md:gap-[72px]">
-          <div>
-            <span className={`${EYEBROW} ${label}`}>Business Model</span>
-            <p className={`mt-[14px] ${SUBHEAD} text-[clamp(1.6rem,1.1rem+1.6vw,2.4rem)] leading-[1.15]`}>{study.business}</p>
-            <dl className="m-0 mt-[40px] grid grid-cols-1 gap-x-8 sm:grid-cols-2">
-              {support.map(([term, text]) => (
-                <div key={term} className={`border-t py-[18px] ${dark ? "border-white/40" : "border-black"}`}>
-                  <dt className={`${EYEBROW} ${label}`}>{term}</dt>
-                  <dd className={`mt-[10px] ml-0 font-serif text-[clamp(1.1rem,1rem+.4vw,1.3rem)] leading-[1.3] ${look.body}`}>{text}</dd>
-                </div>
-              ))}
-            </dl>
-          </div>
-          <div className={`self-start p-[28px] max-[600px]:p-[18px] ${look.card}`}>
-            <Drawing on={shown} dark={dark} />
-          </div>
-        </div>
-
-        <div className={`mt-[48px] p-[28px] max-[600px]:p-[18px] ${look.card}`}>
-          <FinancialsChart study={study} dark={dark} shown={shown} />
         </div>
       </div>
     </section>
@@ -222,8 +231,8 @@ export function CaseStudySection({ study, index, tone }: { study: CaseStudyEntry
 
 /**
  * The three companies on one FY20 to FY24 line: each year's PAT as a disc
- * sized by its value, drawn in left to right, ending on the multiple the
- * company reached. The plan's disclaimer closes the section.
+ * sized by its value, drawn in left to right, the last year in orange. The
+ * plan's disclaimer closes the section.
  */
 export function TimelineSection() {
   const { ref, shown } = useShown<HTMLDivElement>(0.3);
@@ -244,21 +253,20 @@ export function TimelineSection() {
         </div>
 
         <div ref={ref} className="mt-[56px]">
-          <div className={`${EYEBROW} grid grid-cols-[minmax(0,180px)_repeat(5,minmax(0,1fr))_72px] items-end border-b border-black pb-[12px] text-black/60 max-md:grid-cols-[repeat(5,minmax(0,1fr))_56px]`}>
+          <div className={`${EYEBROW} grid grid-cols-[minmax(0,180px)_repeat(5,minmax(0,1fr))] items-end border-b border-black pb-[12px] text-black/60 max-md:grid-cols-[repeat(5,minmax(0,1fr))]`}>
             <span className="max-md:hidden">PAT, Rs. crore</span>
             {years.map((year) => (
               <span key={year} className="text-center">
                 {year}
               </span>
             ))}
-            <span className="text-right">Multiple</span>
           </div>
           {CASE_STUDIES.map((study, row) => (
             <div key={study.id} className="border-b border-black/15 py-[22px]">
               <a href={`#${study.id}`} className="font-serif text-[clamp(1.2rem,1rem+.6vw,1.5rem)] leading-[1.2] text-black no-underline md:hidden">
                 {study.name}
               </a>
-              <div className="grid grid-cols-[minmax(0,180px)_repeat(5,minmax(0,1fr))_72px] items-center max-md:mt-[12px] max-md:grid-cols-[repeat(5,minmax(0,1fr))_56px]">
+              <div className="grid grid-cols-[minmax(0,180px)_repeat(5,minmax(0,1fr))] items-center max-md:mt-[12px] max-md:grid-cols-[repeat(5,minmax(0,1fr))]">
                 <a href={`#${study.id}`} className="pr-4 font-serif text-[clamp(1.2rem,1rem+.6vw,1.5rem)] leading-[1.2] text-black no-underline max-md:hidden">
                   {study.name}
                 </a>
@@ -291,12 +299,6 @@ export function TimelineSection() {
                     </div>
                   );
                 })}
-                <span
-                  className="text-right text-[clamp(1.2rem,1rem+.8vw,1.7rem)] leading-none font-normal tracking-[-.04em] tabular-nums motion-reduce:!transition-none"
-                  style={{ opacity: shown ? 1 : 0, transition: `opacity 400ms ease ${row * 160 + 500}ms` }}
-                >
-                  {study.multiple}
-                </span>
               </div>
             </div>
           ))}
@@ -319,11 +321,10 @@ export function TimelineSection() {
 }
 
 export function CaseStudyList() {
-  const tones: readonly Tone[] = ["white", "black", "grey"];
   return (
     <>
       {CASE_STUDIES.map((study, index) => (
-        <CaseStudySection key={study.id} study={study} index={index} tone={tones[index % tones.length]} />
+        <CaseStudySection key={study.id} study={study} index={index} />
       ))}
     </>
   );

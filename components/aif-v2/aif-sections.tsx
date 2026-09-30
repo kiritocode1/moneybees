@@ -2,12 +2,13 @@
 
 import { useInView } from "motion/react";
 import { useEffect, useId, useRef, useState } from "react";
-import { Draw, Hatch, MOVE, OUT, RM, tr } from "@/components/drawing/plate";
+import { Hatch, OUT, RM, tr } from "@/components/drawing/plate";
 import { BracketLabel } from "@/components/fact-sections/fact-section";
 import { Rise } from "@/components/hero/editorial";
 import { BODY, COLUMN, EYEBROW, HEADING, SUBHEAD } from "@/components/hero/tokens";
 import { AIF_LOREM, AIF_PARTS, APPROACH_STEPS, CATEGORY_III, FLYINGBEE, KEY_TERMS, STRUCTURE } from "@/lib/aif-v2";
 import { useReducedMotion } from "@/lib/use-reduced-motion";
+import CardScroll from "@/components/motion/card-scroll";
 import { OrangeButton, NoScriptReveal } from "@/components/pms-v2/shared";
 import { AifUnitsGlyph, FundGraphic, ORANGE, PmsHoldingGlyph, TERM_GLYPHS } from "./glyphs";
 
@@ -53,9 +54,9 @@ export function AifHero() {
             </Rise>
             <Rise delay={0.18}>
               <div className="mt-10 flex flex-wrap gap-3">
-                <OrangeButton href={FLYINGBEE.explore.href}>{FLYINGBEE.explore.label}</OrangeButton>
-                <OrangeButton href={FLYINGBEE.start.href} outline>
-                  {FLYINGBEE.start.label}
+                <OrangeButton href={FLYINGBEE.start.href}>{FLYINGBEE.start.label}</OrangeButton>
+                <OrangeButton href={FLYINGBEE.explore.href} outline>
+                  {FLYINGBEE.explore.label}
                 </OrangeButton>
               </div>
             </Rise>
@@ -137,32 +138,31 @@ function Delayed({ on, delay, children }: { on: boolean; delay: number; children
   return children(ready);
 }
 
-/** A chain arrow that draws itself on, with a unit moving along it; on a phone it points down. */
-function ChainArrow({ on, delay }: { on: boolean; delay: number }) {
+/** The structure's three cards: a number, the name, and the docx line where it has one. */
+function StructureCard({ n, title, text, children }: { n: string; title: string; text?: string; children?: React.ReactNode }) {
   return (
-    <div aria-hidden="true" className="flex items-center justify-center py-3 md:px-3 md:py-0">
-      <svg viewBox="0 0 64 14" className="h-[14px] w-[64px] overflow-visible max-md:w-[40px] max-md:rotate-90">
-        <line x1="0" x2="0" y1="3" y2="11" stroke="rgba(255,255,255,.4)" strokeWidth="1" />
-        <Draw d="M0 7H60" on={on} ms={420} delay={delay} ease={MOVE} stroke="rgba(255,255,255,.6)" strokeWidth="1.2" />
-        <path d="M55 2.5L60 7L55 11.5" fill="none" stroke="rgba(255,255,255,.7)" strokeWidth="1.2" className={RM} style={{ opacity: on ? 1 : 0, ...tr("opacity", 200, delay + 380) }} />
-        {on && <circle cx="4" cy="7" r="2.6" fill={ORANGE} className="animate-[aifv2-flow_2s_ease-in-out_infinite] motion-reduce:hidden" style={{ animationDelay: `${delay + 500}ms`, opacity: 0 }} />}
-      </svg>
+    <div className="flex h-full flex-col justify-between">
+      <div>
+        <h3 className="font-serif text-[clamp(1.8rem,3vw,2.6rem)] leading-[1.05] font-normal">{title}</h3>
+        {text && <p className="mt-3 max-w-[40ch] text-[15px] leading-[1.5] opacity-70">{text}</p>}
+        {children}
+      </div>
+      <span aria-hidden="true" className="font-serif text-[clamp(3rem,6vw,5rem)] leading-none opacity-20">
+        {n}
+      </span>
     </div>
   );
 }
 
 /**
- * Investors → Flyingbee Investment Fund → Moneybee Investment Manager, with the
- * trustee, custodian and fund accountant, registrar and transfer agent and
- * brokers wired to the fund. Hovering or focusing a party lights its line.
+ * Investors → Flyingbee Investment Fund → Moneybee Investment Manager as the
+ * page's one pinned card scroll: investors fill the stage, the fund lands on
+ * the right half with its four parties, the manager lands bottom-left.
  */
 export function StructureSection() {
-  const { ref, shown } = useShown<HTMLDivElement>(0.3);
-  const [active, setActive] = useState<number | null>(null);
   return (
-    <section id="structure" aria-labelledby="structure-heading" className="scroll-mt-[96px] bg-black text-white">
-      <style>{`@keyframes aifv2-flow { 0% { transform: translateX(0); opacity: 0 } 20% { opacity: 1 } 80% { opacity: 1 } 100% { transform: translateX(48px); opacity: 0 } }`}</style>
-      <div className={`${COLUMN} py-[120px] max-md:py-[80px]`}>
+    <section id="structure" aria-labelledby="structure-heading" className="scroll-mt-[96px] bg-white text-black">
+      <div className={`${COLUMN} pt-[120px] max-md:pt-[80px]`}>
         <div className="grid grid-cols-1 items-end gap-8 md:grid-cols-2 md:gap-16">
           <div>
             <BracketLabel>Structure</BracketLabel>
@@ -170,82 +170,45 @@ export function StructureSection() {
               {STRUCTURE.heading}
             </h2>
           </div>
-          <p className={`text-white/65 ${BODY}`}>{AIF_LOREM.long}</p>
-        </div>
-
-        <div ref={ref} className="mt-[72px] max-md:mt-[48px]">
-          <ol className="m-0 grid list-none grid-cols-1 p-0 md:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)_auto_minmax(0,1fr)]">
-            {STRUCTURE.chain.map((name, index) => {
-              const fund = index === 1;
-              return (
-                <li key={name} className="contents">
-                  {index > 0 && <ChainArrow on={shown} delay={index * 350} />}
-                  <div
-                    className={`flex min-h-[132px] flex-col justify-between p-[24px] ${fund ? "border-2 border-[#F6A11A]" : "border border-white/25"}`}
-                    style={{ opacity: shown ? 1 : 0.25, transition: `opacity 600ms ease ${index * 350}ms` }}
-                  >
-                    <span className={`${EYEBROW} ${fund ? "text-[#F6A11A]" : "text-white/60"}`}>{number(index)}</span>
-                    <span className="mt-6 font-serif text-[clamp(1.4rem,1rem+1vw,2rem)] leading-[1.1]">{name}</span>
-                  </div>
-                  {/* Phone: the parties hang straight off the fund, before the arrow to the manager. */}
-                  {fund && (
-                    <div className="md:hidden">
-                      <Parties shown={shown} active={active} setActive={setActive} />
-                    </div>
-                  )}
-                </li>
-              );
-            })}
-          </ol>
-
-          {/* Desktop: the parties hang below the chain, under the fund. */}
-          <div className="max-md:hidden">
-            <Parties shown={shown} active={active} setActive={setActive} />
-          </div>
+          <p className={`text-black/70 ${BODY}`}>{STRUCTURE.chain.join(" → ")}</p>
         </div>
       </div>
+      <div className="mt-12">
+        <CardScroll
+          label={STRUCTURE.heading}
+          cards={[
+            {
+              key: "investors",
+              tone: "light",
+              place: "md:col-[1/3] md:row-[1/3]",
+              children: <StructureCard n="01" title={STRUCTURE.chain[0]} text={STRUCTURE.investors} />,
+            },
+            {
+              key: "fund",
+              tone: "black",
+              place: "md:col-[2/3] md:row-[1/3]",
+              children: (
+                <StructureCard n="02" title={STRUCTURE.chain[1]} text={STRUCTURE.fund}>
+                  <ul className="m-0 mt-6 flex list-none flex-wrap gap-2 p-0">
+                    {STRUCTURE.parties.map((party) => (
+                      <li key={party} className="rounded-full border border-white/25 px-3 py-1 text-[13px]">
+                        {party}
+                      </li>
+                    ))}
+                  </ul>
+                </StructureCard>
+              ),
+            },
+            {
+              key: "manager",
+              tone: "orange",
+              place: "md:col-[1/2] md:row-[2/3]",
+              children: <StructureCard n="03" title={STRUCTURE.chain[2]} />,
+            },
+          ]}
+        />
+      </div>
     </section>
-  );
-}
-
-/** The four parties wired to the fund: a line down, a bus across, a drop to each (a rail on a phone). */
-function Parties({ shown, active, setActive }: { shown: boolean; active: number | null; setActive: (index: number | null) => void }) {
-  return (
-    <div className="relative">
-      <div className="absolute top-0 left-1/2 h-[40px] w-px -translate-x-1/2 bg-white/35 max-md:left-[24px] max-md:h-[28px]" style={{ transform: `scaleY(${shown ? 1 : 0})`, transformOrigin: "top", transition: "transform 500ms ease 1100ms" }} />
-      <div
-        className="absolute top-[40px] right-[calc((100%_-_60px)/8)] left-[calc((100%_-_60px)/8)] h-px bg-white/35 max-md:hidden"
-        style={{ transform: `scaleX(${shown ? 1 : 0})`, transition: "transform 600ms cubic-bezier(.22,1,.36,1) 1400ms" }}
-      />
-      <div className="absolute top-[28px] bottom-[48px] left-[24px] w-px bg-white/35 md:hidden" />
-      <ul className="m-0 grid list-none grid-cols-1 gap-[14px] p-0 pt-[40px] md:grid-cols-4 md:gap-[20px] max-md:pt-[28px] max-md:pl-[48px]">
-        {STRUCTURE.parties.map((party, index) => {
-          const lit = active === index;
-          return (
-            <li key={party} className="relative flex flex-col">
-              <span
-                aria-hidden="true"
-                className={`absolute transition-colors max-md:top-1/2 max-md:left-[-24px] max-md:h-px max-md:w-[24px] md:top-0 md:left-1/2 md:h-[28px] md:w-px ${lit ? "bg-[#F6A11A]" : "bg-white/35"}`}
-              />
-              <button
-                type="button"
-                onMouseEnter={() => setActive(index)}
-                onMouseLeave={() => setActive(null)}
-                onFocus={() => setActive(index)}
-                onBlur={() => setActive(null)}
-                onClick={() => setActive(lit ? null : index)}
-                aria-pressed={lit}
-                className={`block w-full flex-1 border p-[20px] text-left md:mt-[28px] ${lit ? "border-[#F6A11A] bg-white/[.04]" : "border-white/20"} ${FOCUS}`}
-                style={{ opacity: shown ? 1 : 0, transition: `opacity 500ms ease ${1600 + index * 150}ms, border-color 200ms ease, background-color 200ms ease` }}
-              >
-                <span className={`block font-serif text-[clamp(1.2rem,1rem+.5vw,1.45rem)] leading-[1.15] transition-colors ${lit ? "text-[#F6A11A]" : "text-white"}`}>{party}</span>
-                <span className="mt-[10px] block text-[14px] leading-[1.5] text-white/65">{STRUCTURE.partyText}</span>
-              </button>
-            </li>
-          );
-        })}
-      </ul>
-    </div>
   );
 }
 

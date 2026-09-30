@@ -58,6 +58,11 @@ export function OrangeButton({ href, children, outline = false, onDark = false }
   );
 }
 
+/** The kobbe figure panel every explainer sits in: grey fill, 10px radius, hairline ring. */
+export function FigurePanel({ children, className = "" }: { children: ReactNode; className?: string }) {
+  return <div className={`rounded-[10px] bg-[#F6F6F6] px-[clamp(16px,5vw,72px)] py-[clamp(24px,4vw,56px)] ring-1 ring-black/[.06] ${className}`}>{children}</div>;
+}
+
 /**
  * The hero's "On this page" index, shared by the five product routes. Numbers
  * stay ink (orange text on white fails contrast); the orange is the rule that

@@ -40,7 +40,7 @@ export default function SiteFooter({ explore }: { explore: readonly FooterLink[]
   const columns: readonly (readonly [string, readonly FooterLink[]])[] = [
     ["Explore", explore],
     // The regulatory links land on the investor centre's document groups (stable ids in lib/investor-centre.ts).
-    ["Investors", [["Investor login", "https://www.moneybee.in/register.php"], ["Investor Charter", "/investor-centre#investor-charter"], ["Disclosure Document", "/investor-centre#disclosure-document"], ["Grievance redressal", "/investor-centre#grievance"], ["SEBI SCORES", "/investor-centre#grievance"]]],
+    ["Investors", [["Client Login", "https://www.moneybee.in/register.php"], ["Investor Charter", "/investor-centre#investor-charter"], ["Disclosure Document", "/investor-centre#disclosure-document"], ["Grievance redressal", "/investor-centre#grievance"], ["SEBI SCORES", "/investor-centre#grievance"]]],
   ];
 
   return (

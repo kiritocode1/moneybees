@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useEffect, useId, useState } from "react";
 import { BOX, Draw, Hatch, MOVE, OUT, RM, tr } from "@/components/drawing/plate";
 import { BracketLabel } from "@/components/fact-sections/fact-section";
+import CardScroll from "@/components/motion/card-scroll";
 import { Rise } from "@/components/hero/editorial";
 import { BODY, COLUMN, EYEBROW, HEADING, SUBHEAD } from "@/components/hero/tokens";
 import { ABOUT, FOUNDER, GROUP_AREAS, STORY, TIMELINE } from "@/lib/about-v2";
@@ -181,66 +182,57 @@ export function FounderSection() {
   );
 }
 
-/**
- * The plan's dates on one track: the founder's experience as a dashed run-up
- * with no date, then 2004 and August 2007 as cells that fill in turn.
- */
-export function TimelineSection() {
-  const { ref, shown, t } = useShown<HTMLDivElement>(0.35);
-  const hatch = useId();
+/** One timeline card: the date large, the plan's sentence right under it, so a later card landing on the lower half never covers it. */
+function TimelineCard({ label, text }: { label: string; text: string }) {
   return (
-    <section id="timeline" aria-labelledby="timeline-heading" className="scroll-mt-[96px] bg-[#F7F7F8] text-black">
-      <div className={`${COLUMN} py-[120px] max-md:py-[80px]`}>
+    <div>
+      <span className="block text-[clamp(3rem,2rem+3vw,5.5rem)] leading-none font-light tracking-[-.04em] tabular-nums">{label}</span>
+      <p className="mt-6 max-w-[34ch] font-serif text-[clamp(1.3rem,1rem+.8vw,1.8rem)] leading-[1.2]">{text}</p>
+    </div>
+  );
+}
+
+/** Card tone and desktop placement for each stop, in order: full stage, right half, bottom-left. */
+const TIMELINE_CARDS = [
+  { tone: "light", place: "md:col-[1/3] md:row-[1/3]" },
+  { tone: "black", place: "md:col-[2/3] md:row-[1/3]" },
+  { tone: "orange", place: "md:col-[1/2] md:row-[2/3]" },
+] as const;
+
+/** The plan's dates as a pinned card scroll: 2004, then August 2007, then the founder's 45+ years. */
+export function TimelineSection() {
+  return (
+    <section id="timeline" aria-labelledby="timeline-heading" className="scroll-mt-[96px] bg-white text-black">
+      <div className={`${COLUMN} pt-[120px] max-md:pt-[80px]`}>
         <span className={`${EYEBROW} text-black/60`}>02</span>
         <h2 id="timeline-heading" className={`mt-[14px] ${SUBHEAD}`}>
           Timeline
         </h2>
-        <div ref={ref} className="relative mt-[64px]">
-          <svg aria-hidden="true" className="absolute h-0 w-0">
-            <defs>
-              <Hatch id={hatch} ink="#000" gap={2.6} opacity={0.5} />
-            </defs>
-          </svg>
-          {/* Desktop track: dashed before 2004, solid orange after. */}
-          <div aria-hidden="true" className="absolute top-[22px] right-0 left-0 max-md:hidden">
-            <div className="absolute left-0 h-[2px] w-[33.333%] bg-[repeating-linear-gradient(90deg,rgba(0,0,0,.35)_0_6px,transparent_6px_12px)]" style={{ clipPath: shown ? "inset(0 0 0 0)" : "inset(0 100% 0 0)", transition: `clip-path ${t(900)}` }} />
-            <div className="absolute left-[33.333%] h-[2px] w-[66.667%] origin-left bg-[#F6A11A]" style={{ transform: `scaleX(${shown ? 1 : 0})`, transition: `transform ${t(1100, 700)}` }} />
+      </div>
+      <div className="mt-12">
+        <CardScroll
+          label="Timeline"
+          cards={TIMELINE.map((stop, index) => ({
+            key: stop.label,
+            ...TIMELINE_CARDS[index],
+            children: <TimelineCard label={stop.label} text={stop.text} />,
+          }))}
+        />
+      </div>
+    </section>
+  );
+}
+
+/** The plan's "selected corporate or team photographs": the team, in a grey panel that fades to white at the foot. */
+export function TeamPhotoSection() {
+  return (
+    <section aria-label="Moneybee team" className="bg-white text-black">
+      <div className={`${COLUMN} pt-[128px] max-md:pt-[80px]`}>
+        <div className="relative overflow-hidden rounded-[10px] bg-[#F6F6F6] p-[clamp(12px,2vw,24px)] ring-1 ring-black/[.06]">
+          <div className="relative aspect-[16/9] w-full overflow-hidden rounded-[6px]">
+            <Image src="/people/moneybee-team.jpg" alt="The Moneybee team" fill sizes="(max-width: 768px) 100vw, 1272px" className="object-cover" />
           </div>
-          <ol className="relative m-0 grid list-none grid-cols-1 gap-10 p-0 md:grid-cols-3 md:gap-0">
-            {TIMELINE.map((stop, index) => {
-              const dated = stop.when !== null;
-              const lit = shown;
-              const delay = 500 + index * 450;
-              return (
-                <li key={stop.label} className="relative grid grid-cols-[44px_minmax(0,1fr)] gap-x-[18px] md:block md:pr-[40px]">
-                  {/* Phone track: each stop joined to the next, dashed before 2004. */}
-                  {index < TIMELINE.length - 1 && (
-                    <span
-                      aria-hidden="true"
-                      className={`absolute top-[22px] left-[21px] h-[calc(100%+40px)] w-[2px] md:hidden ${dated ? "bg-[#F6A11A]" : "bg-[repeating-linear-gradient(180deg,rgba(0,0,0,.35)_0_6px,transparent_6px_12px)]"}`}
-                      style={{ clipPath: shown ? "inset(0 0 0 0)" : "inset(0 0 100% 0)", transition: `clip-path ${t(700, index * 450)}` }}
-                    />
-                  )}
-                  <span aria-hidden="true" className="relative z-[1] block h-[44px] w-[44px] bg-[#F7F7F8]">
-                    <svg viewBox="0 0 44 44" className="block h-[44px] w-[44px]">
-                      {/* The undated run-up is hatched and dashed; a dated stop draws its outline, then fills orange. */}
-                      <polygon points={hexPoints(22, 22, 19)} fill={dated ? "#F7F7F8" : `url(#${hatch})`} stroke="#000" strokeOpacity={dated ? 0.3 : 0.55} strokeWidth=".8" strokeDasharray={dated ? undefined : "2 2"} />
-                      {dated && (
-                        <>
-                          <Draw d={hexPath(22, 22, 19)} on={lit} ms={520} delay={delay - 300} stroke="#000" strokeWidth="1.2" strokeLinejoin="round" />
-                          <polygon points={hexPoints(22, 22, 15.5)} fill={ORANGE} className={RM} style={{ ...BOX, transformOrigin: "center", opacity: lit ? 1 : 0, transform: lit ? "scale(1)" : "scale(.8)", ...tr("opacity, transform", 420, delay + 200) }} />
-                        </>
-                      )}
-                    </svg>
-                  </span>
-                  <div className="md:mt-[28px]" style={{ opacity: shown ? 1 : 0, transform: `translateY(${shown ? 0 : 10}px)`, transition: `opacity ${t(500, delay)}, transform ${t(500, delay)}` }}>
-                    <span className={`block text-[clamp(2.4rem,1.6rem+2.4vw,3.6rem)] leading-none font-light tracking-[-.04em] ${dated ? "text-black" : "text-black/60"}`}>{stop.label}</span>
-                    <p className="mt-[14px] max-w-[320px] font-serif text-[clamp(1.2rem,1rem+.6vw,1.5rem)] leading-[1.25]">{stop.text}</p>
-                  </div>
-                </li>
-              );
-            })}
-          </ol>
+          <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 bottom-0 h-[15%] bg-gradient-to-b from-transparent to-white" />
         </div>
       </div>
     </section>

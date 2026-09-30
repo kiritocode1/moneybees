@@ -25,9 +25,8 @@ export type ReturnRow = { period: string; short: string; ours: number | null; be
 const pms = (label: string) => PERIOD_RETURNS.find((row) => row.period === label);
 
 /**
- * The plan's PMS periods, in its order and wording. The plan also lists
- * 2 Years, but the July 2026 data does not carry it, so the row is left out
- * rather than printed as N/A.
+ * The plan's PMS periods, in its order and wording. The July 2026 data does
+ * not carry 2 Years, so that row is null on both sides and prints N/A.
  */
 export const PMS_ROWS: readonly ReturnRow[] = (
   [
@@ -35,6 +34,7 @@ export const PMS_ROWS: readonly ReturnRow[] = (
     ["3 Months", "3M", "3 months"],
     ["6 Months", "6M", "6 months"],
     ["1 Year", "1Y", "1 year"],
+    ["2 Years", "2Y", null],
     ["3 Years", "3Y", "3 year"],
     ["5 Years", "5Y", "5 year"],
     ["Since Inception", "SI", "Since Inception"],
@@ -70,7 +70,8 @@ export const GROWTH = {
   to: "Jul 2026",
 } as const;
 
-export const METHOD = { text: RECORD_METHOD, caveat: RECORD_CAVEAT } as const;
+/** The deck's method and caveat, and the content plan's own disclaimer line (§7). */
+export const METHOD = { text: RECORD_METHOD, caveat: RECORD_CAVEAT, guarantee: "Past performance does not guarantee future performance." } as const;
 
 /** The page's parts, for the hero's index. */
 export const PERFORMANCE_PARTS = [

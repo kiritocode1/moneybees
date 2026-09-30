@@ -312,7 +312,7 @@ export const FOUNDER = {
   quote:
     "If India has to grow by 7-8% yoy for the next 20 years. There will be small & medium companies that will grow by 25-30% yoy. We look for these companies and stay invested with them",
   points: [
-    "45 years in corporate advisory and wealth management",
+    "45+ years in corporate advisory and wealth management",
     "Founded Moneybee Group in 2004",
     "Advises small and medium businesses on turnarounds and growth",
     "Has advised and invested in companies that went on to reward their shareholders",
@@ -409,6 +409,20 @@ export const INTRODUCTION = {
   team: "Both are run by the same research team, from our office in Lower Parel, Mumbai.",
 } as const;
 
+/** The content plan's home page: its main heading, short introduction and key highlights, verbatim. */
+export const HOME_PLAN = {
+  heading: "KNOW VENTURE. KNOW GAIN.",
+  introduction:
+    "Moneybee is a SEBI-registered boutique portfolio management firm focused on identifying promising small and mid-sized Indian companies through research-driven investing and long-term wealth creation.",
+  highlights: [
+    "45+ years of experience of the founder.",
+    "PMS since August 2007.",
+    "Research-driven investment approach.",
+    "Focus on small and mid-cap Indian companies.",
+    "Long-term approach to wealth creation.",
+  ],
+} as const;
+
 /** PMS Bazaar rankings, December 2024, group profile p5. */
 export const RANKINGS = [
   ["3rd", "5-year returns"],
@@ -494,7 +508,7 @@ export type TeamMember = { name: string; role: string; photo: string; points: re
 export const TEAM: readonly TeamMember[] = [
   {
     name: "Shreyam Shah",
-    role: "Fund Manager, Flyingbee Investment Fund",
+    role: "AIF / Investment Team",
     photo: "/people/shreyam-shah.jpg",
     points: [
       "A chartered accountant, 14 years at Moneybee leading research on listed and unlisted companies.",
@@ -504,7 +518,7 @@ export const TEAM: readonly TeamMember[] = [
   },
   {
     name: "Suprit Shah",
-    role: "Compliance Officer, Moneybee Group",
+    role: "Compliance Officer, PMS",
     photo: "/people/suprit-shah.jpg",
     points: [
       "A law graduate who joined Moneybee in 2022 and now heads compliance.",

@@ -1,9 +1,13 @@
 import type { ReactNode } from "react";
 import Link from "next/link";
-import OverlayMenu from "./overlay-menu";
+import OverlayMenu, { type MenuLink } from "./overlay-menu";
 
-/** The content plan's pages, in its user-journey order. Insights has no page yet. */
+/** The current site's "Registration/ Log In" page. */
+const CLIENT_LOGIN_URL = "https://www.moneybee.in/register.php";
+
+/** The content plan's pages, in its user-journey order. Insights has no page yet; the investor centre is internal. */
 const primaryLinks = [
+  { label: "Home", href: "/" },
   { label: "About Us", href: "/about" },
   { label: "PMS", href: "/pms" },
   { label: "AIF", href: "/aif" },
@@ -12,22 +16,25 @@ const primaryLinks = [
   { label: "Performance", href: "/performance" },
   { label: "Case Studies", href: "/case-studies" },
   { label: "Our Team", href: "/team" },
-  { label: "Investor Centre", href: "/investor-centre" },
   { label: "Careers", href: "/careers" },
   { label: "Contact Us", href: "/contact" },
 ];
 
-/** The bar beside the logo: the two products, the approach, and the plan's Get Started. Below 480px the approach stays in the menu only. */
-const barLinks = [
+/** The content plan's bar: its pages, Client Login set apart, then Get Started. Below 900px the other pages move to the menu; below 480px Client Login does too. */
+const barLinks: MenuLink[] = [
+  { label: "Home", href: "/", hideBelow: 900 },
+  { label: "About Us", href: "/about", hideBelow: 900 },
   { label: "PMS", href: "/pms" },
   { label: "AIF", href: "/aif" },
-  { label: "Our Approach", href: "/our-approach", hideOnSmall: true },
-  { label: "Get Started", href: "/contact" },
+  { label: "Our Approach", href: "/our-approach", hideBelow: 900 },
+  { label: "Client Login", href: CLIENT_LOGIN_URL, kind: "login", hideBelow: 480 },
+  { label: "Get Started", href: "/contact", kind: "cta" },
 ];
 
-const groupLinks = [
-  { label: "Investment Banking", href: "https://moneybeeadvisors.com/" },
-  { label: "Stock Broking", href: "https://moneybeesecurities.in/" },
+/** Both logins, kept apart from the investor pages as the plan asks. Distributor Login has no URL yet, so it writes to the office. */
+const loginLinks: MenuLink[] = [
+  { label: "Client Login", href: CLIENT_LOGIN_URL },
+  { label: "Distributor Login", href: "mailto:info@moneybee.in?subject=Distributor%20login" },
 ];
 
 /** The regulatory documents, on the investor centre's document groups (stable ids in lib/investor-centre.ts). */
@@ -42,7 +49,7 @@ export default function SiteNavigation({ children }: { children: ReactNode }) {
   return (
     <OverlayMenu
       visibleLinks={barLinks}
-      showClientLogin
+      socials={[]}
       brand={
         <Link href="/" aria-label="Moneybee home" className="block">
           <svg
@@ -57,7 +64,7 @@ export default function SiteNavigation({ children }: { children: ReactNode }) {
         </Link>
       }
       primaryLinks={primaryLinks}
-      secondaryLinks={groupLinks}
+      secondaryLinks={loginLinks}
       legal={legalLinks}
       panelColors={["#9D9EA1", "#000000", "#9D9EA1", "#000000"]}
       menuColor="#000000"

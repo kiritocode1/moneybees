@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { AboutHero, FounderSection, StorySection, TimelineSection } from "@/components/about-v2/about-sections";
+import { AboutHero, FounderSection, StorySection, TeamPhotoSection, TimelineSection } from "@/components/about-v2/about-sections";
 import SiteFooter from "@/components/footer/site-footer";
 import { LetsTalkSection } from "@/components/home/home-sections";
 import SiteNavigation from "@/components/ui/site-navigation";
@@ -25,6 +25,7 @@ export default function AboutPage() {
         <AboutHero />
         <FounderSection />
         <TimelineSection />
+        <TeamPhotoSection />
         <StorySection />
         <LetsTalkSection />
       </main>

@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
-import { ContactHero, EnquirySection, OfficeSection } from "@/components/contact-v2/contact-sections";
+import { ContactScreen, OfficeSection } from "@/components/contact-v2/contact-sections";
 import SiteFooter from "@/components/footer/site-footer";
-import { LetsTalkSection } from "@/components/home/home-sections";
 import SiteNavigation from "@/components/ui/site-navigation";
 
 export const metadata: Metadata = {
@@ -14,18 +13,17 @@ export const metadata: Metadata = {
 };
 
 /**
- * /contact, built to the Content & Visual Plan §11: the heading with the
- * phone and email, the office on a map, and the four enquiry options shaping
- * a simple form that opens a mailto. Copy lives in lib/contact-v2.ts.
+ * /contact, built to the Content & Visual Plan §11 on realevate's layout: a
+ * first screen with the heading, office, phone and email beside the four
+ * enquiry options as tabs over a form that opens a mailto, then the office on
+ * a map. Copy lives in lib/contact-v2.ts.
  */
 export default function ContactPage() {
   return (
     <SiteNavigation>
       <main id="top" className="option-one bg-white text-black">
-        <ContactHero />
+        <ContactScreen />
         <OfficeSection />
-        <EnquirySection />
-        <LetsTalkSection />
       </main>
       <SiteFooter
         explore={[

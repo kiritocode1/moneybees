@@ -63,20 +63,6 @@ export const PORTFOLIO_APPROACH = [
   "Disciplined approach to rebalancing and exits.",
 ] as const;
 
-/**
- * An illustrative portfolio for the construction diagram: 18 holdings across
- * six sectors, no sector above the 30% cap. Not a real portfolio, so the
- * sectors stay unnamed.
- */
-export const ILLUSTRATIVE_SECTORS = [
-  { name: "Sector A", holdings: 5 },
-  { name: "Sector B", holdings: 4 },
-  { name: "Sector C", holdings: 3 },
-  { name: "Sector D", holdings: 3 },
-  { name: "Sector E", holdings: 2 },
-  { name: "Sector F", holdings: 1 },
-] as const;
-
 /** The controls the risk drawing marks, each tied to a line of the plan's §3. */
 export const RISK_CONTROLS = [
   { name: "Margin of safety", text: LOREM_SHORT },

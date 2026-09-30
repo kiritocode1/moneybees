@@ -36,11 +36,11 @@ export const FOUNDER = {
   photo: "/people/dhiren-shah.jpg",
 } as const;
 
-/** Timeline stops. `when` is null for the founder's experience, which the plan gives as a span, not a date. */
+/** Timeline stops, in the order the card scroll shows them. The founder's experience is a span, not a date, so it comes last. */
 export const TIMELINE = [
-  { when: null, label: "45+ years", text: "45+ years of experience in corporate advisory and wealth management." },
-  { when: "2004", label: "2004", text: "Moneybee Group was started in 2004 by Mr. Dhiren Shah." },
-  { when: "August 2007", label: "Aug 2007", text: "PMS since August 2007." },
+  { label: "2004", text: "Moneybee Group was started in 2004 by Mr. Dhiren Shah." },
+  { label: "Aug 2007", text: "PMS since August 2007." },
+  { label: "45+ years", text: "45+ years of experience in corporate advisory and wealth management." },
 ] as const;
 
 export const STORY = {

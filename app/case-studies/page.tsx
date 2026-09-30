@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { CaseStudiesHero, CaseStudyList, TimelineSection } from "@/components/case-studies/case-study-sections";
+import { CaseCardsSection, CaseStudiesHero, CaseStudyList, TimelineSection } from "@/components/case-studies/case-study-sections";
 import SiteFooter from "@/components/footer/site-footer";
 import { LetsTalkSection } from "@/components/home/home-sections";
 import SiteNavigation from "@/components/ui/site-navigation";
@@ -15,8 +15,9 @@ export const metadata: Metadata = {
 
 /**
  * /case-studies, built to the Content & Visual Plan §8: three historical
- * picks with the plan's wording, a business-model drawing and FY20 to FY24
- * financials each, then a shared timeline and the plan's disclaimer. Copy
+ * picks as a card scroll with the plan's wording, then a business-model
+ * drawing and FY20 to FY24 financials each, a shared timeline and the plan's
+ * disclaimer. Copy
  * lives in lib/case-studies.ts.
  */
 export default function CaseStudiesPage() {
@@ -24,6 +25,7 @@ export default function CaseStudiesPage() {
     <SiteNavigation>
       <main id="top" className="option-one bg-white text-black">
         <CaseStudiesHero />
+        <CaseCardsSection />
         <CaseStudyList />
         <TimelineSection />
         <LetsTalkSection />

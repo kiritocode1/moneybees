@@ -4,8 +4,8 @@ import { BracketLabel } from "@/components/fact-sections/fact-section";
 import { Rise } from "@/components/hero/editorial";
 import { BODY, COLUMN, EYEBROW, HEADING, SUBHEAD } from "@/components/hero/tokens";
 import Link from "next/link";
-import { DelayedOn, FOCUS, hexPoints, number, ORANGE, OrangeButton, PageIndex, PRESS, T, useShown, NoScriptReveal } from "@/components/pms-v2/shared";
-import { COMPARE, COMPARE_PARTS, COMPARISON, EXPLANATION } from "@/lib/compare";
+import { DelayedOn, FOCUS, hexPoints, number, ORANGE, PageIndex, PRESS, T, useShown, NoScriptReveal } from "@/components/pms-v2/shared";
+import { COMPARE, COMPARE_LINKS, COMPARE_PARTS, COMPARISON, EXPLANATION } from "@/lib/compare";
 import { AifChain, PmsChain } from "./chain-diagrams";
 import { ROW_GLYPHS } from "./row-glyphs";
 
@@ -75,15 +75,10 @@ export function ComparisonSection() {
   return (
     <section id="comparison" aria-labelledby="comparison-heading" className="scroll-mt-[96px] bg-black text-white">
       <div className={`${COLUMN} py-[120px] max-md:py-[80px]`}>
-        <div className="grid grid-cols-1 items-end gap-8 md:grid-cols-2 md:gap-16">
-          <div>
-            <BracketLabel>Comparison</BracketLabel>
-            <h2 id="comparison-heading" className={`mt-[18px] ${SUBHEAD}`}>
-              Simple Comparison
-            </h2>
-          </div>
-          <p className={`text-white/70 ${BODY}`}>{COMPARE.lead}</p>
-        </div>
+        <BracketLabel>Comparison</BracketLabel>
+        <h2 id="comparison-heading" className={`mt-[18px] ${SUBHEAD}`}>
+          Simple Comparison
+        </h2>
         <div ref={ref} className="mt-[56px]">
           <table className="w-full table-fixed border-collapse text-left">
             <caption className="sr-only">PMS compared with AIF, point by point</caption>
@@ -97,7 +92,7 @@ export function ComparisonSection() {
                   >
                     <span className="flex items-baseline gap-[12px]">
                       <span className="text-[clamp(2rem,1.4rem+2vw,3.4rem)] leading-none font-light tracking-[-.04em]">{head}</span>
-                      <i aria-hidden="true" className={`h-[10px] w-[10px] ${index ? "border border-white/60" : "bg-[#F6A11A]"}`} />
+                      <i aria-hidden="true" className="h-[10px] w-[10px] bg-[#F6A11A]" />
                     </span>
                   </th>
                 ))}
@@ -131,11 +126,13 @@ export function ComparisonSection() {
               })}
             </tbody>
           </table>
-          <div className="mt-[40px] flex flex-wrap gap-3">
-            <OrangeButton href="/pms" onDark>Portfolio Management Services</OrangeButton>
-            <Link href="/aif" className={`inline-flex w-fit items-center rounded-full border border-white/60 px-[26px] py-[14px] text-[15px] font-medium text-white no-underline hover:border-white hover:bg-white hover:text-black ${PRESS} ${FOCUS} focus-visible:outline-white`}>
-              Flyingbee Investment Fund
-            </Link>
+          {/* The two ways in, drawn identically: neither product leads. */}
+          <div className="mt-[40px] grid w-full grid-cols-1 gap-3 sm:w-fit sm:grid-cols-2">
+            {COMPARE_LINKS.map(([label, href]) => (
+              <Link key={href} href={href} className={`inline-flex items-center justify-center rounded-full border border-white/60 px-[26px] py-[14px] text-[15px] font-medium text-white no-underline hover:border-white hover:bg-white hover:text-black ${PRESS} ${FOCUS} focus-visible:outline-white`}>
+                {label}
+              </Link>
+            ))}
           </div>
         </div>
       </div>
@@ -225,7 +222,7 @@ export function ExplanationSection() {
             <article key={label} className="border border-black/15 p-[32px] max-[600px]:p-[20px]">
               <span className="flex items-baseline gap-[12px]">
                 <span className="text-[clamp(2rem,1.4rem+2vw,3.4rem)] leading-none font-light tracking-[-.04em]">{label}</span>
-                <i aria-hidden="true" className={`h-[10px] w-[10px] ${index ? "border border-black/60" : "bg-[#F6A11A]"}`} />
+                <i aria-hidden="true" className="h-[10px] w-[10px] bg-[#F6A11A]" />
               </span>
               <div className="mt-[28px] border-y border-black/10 py-[22px]">
                 <DelayedOn on={shown} delay={index * 500}>

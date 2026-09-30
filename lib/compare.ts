@@ -42,3 +42,9 @@ export const COMPARE_PARTS = [
   ["Simple comparison", "#comparison"],
   ["Simple explanation", "#explanation"],
 ] as const;
+
+/** The comparison's two ways in, shown as identical buttons. */
+export const COMPARE_LINKS = [
+  ["Portfolio Management Services", "/pms"],
+  ["Flyingbee Investment Fund", "/aif"],
+] as const;

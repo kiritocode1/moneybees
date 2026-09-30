@@ -47,12 +47,12 @@ export default function Home() {
       </main>
       <SiteFooter
         explore={[
-          ["About Moneybee", "/about"],
-          ["Our philosophy", "#philosophy-pillars"],
-          ["Our process", "#research"],
-          ["Performance", "#performance"],
-          ["Our strategies", "#invest"],
-          ["Team", "#team"],
+          ["About Us", "/about"],
+          ["Our Investment Approach", "/our-approach"],
+          ["PMS", "/pms"],
+          ["Flyingbee AIF", "/aif"],
+          ["Performance", "/performance"],
+          ["Our Team", "/team"],
         ]}
       />
     </SiteNavigation>

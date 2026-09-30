@@ -33,8 +33,9 @@ export const STRUCTURE = {
   heading: "Flyingbee Structure",
   chain: ["Investors", "Flyingbee Investment Fund", "Moneybee Investment Manager"],
   parties: ["Trustee", "Custodian and Fund Accountant", "Registrar and Transfer Agent", "Brokers"],
-  /** LOREM, one line per party */
-  partyText: LOREM_SHORT,
+  /** Card lines: the Category III sentence and the introduction, as the /preview/motion build approved them. */
+  investors: "AIF investors receive units of the fund.",
+  fund: "A Category III AIF managed by Moneybee.",
 } as const;
 
 /** The plan's seven points, verbatim, as the order the process runs in. */

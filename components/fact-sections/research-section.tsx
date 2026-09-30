@@ -216,7 +216,7 @@ export default function ResearchSection() {
   return (
     <FactSection
       id="research"
-      label="Our process"
+      label="Our Investment Approach"
       heading={HEADINGS.research}
       lead={SELECTION_LEAD}
       intro={

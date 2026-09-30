@@ -1,13 +1,16 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { type ReactNode, useEffect, useId, useRef } from "react";
 
 export interface MenuLink {
   label: string;
   href: string;
-  /** Drop this link from the bar below 480px, where the bar cannot fit every link. It stays in the menu. */
-  hideOnSmall?: boolean;
+  /** Drop this link from the bar below this width, where the bar cannot fit every link. It stays in the menu. */
+  hideBelow?: 480 | 900;
+  /** "login" sets the link apart in the bar; "cta" makes it the orange button. */
+  kind?: "login" | "cta";
 }
 
 export interface OverlayMenuProps {
@@ -22,8 +25,6 @@ export interface OverlayMenuProps {
   menuColor?: string;
   togglerColor?: string;
   visibleLinks?: MenuLink[];
-  /** Adds a Client Login entry that points to the logins on /investor-centre. */
-  showClientLogin?: boolean;
 }
 
 const ASSET_BASE = "https://ui.aryank.space/assets/overlay-menu";
@@ -62,7 +63,6 @@ const DEFAULT_PANELS: [string, string, string, string] = [
   "#F6A11A",
 ];
 
-const CLIENT_LOGIN: MenuLink = { label: "Client Login", href: "/investor-centre#logins" };
 const SHUT = "polygon(0% 0%, 100% 0%, 100% 0%, 0% 0%)";
 const FULL = "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)";
 
@@ -81,10 +81,13 @@ function loadEngine() {
 
 /** Internal routes go through next/link; hashes, mailto and other sites stay plain anchors. */
 function MenuAnchor({ link, className }: { link: MenuLink; className?: string }) {
-  const classes = [className, link.hideOnSmall ? "om-hide-small" : undefined].filter(Boolean).join(" ") || undefined;
+  const pathname = usePathname();
+  const classes =
+    [className, link.hideBelow ? `om-hide-${link.hideBelow}` : undefined, link.kind ? `om-${link.kind}` : undefined].filter(Boolean).join(" ") ||
+    undefined;
   if (link.href.startsWith("/") && !link.href.startsWith("//")) {
     return (
-      <Link href={link.href} className={classes}>
+      <Link href={link.href} className={classes} aria-current={link.href === pathname ? "page" : undefined}>
         {link.label}
       </Link>
     );
@@ -95,8 +98,6 @@ function MenuAnchor({ link, className }: { link: MenuLink; className?: string })
     </a>
   );
 }
-
-const isCta = (link: MenuLink) => (link.label === "Contact Us" || link.label === "Get Started" ? "om-contact" : undefined);
 
 export default function OverlayMenu({
   logo = `${ASSET_BASE}/logo.png`,
@@ -110,7 +111,6 @@ export default function OverlayMenu({
   menuColor = "#000000",
   togglerColor = "#ffffff",
   visibleLinks = [],
-  showClientLogin = false,
 }: OverlayMenuProps) {
   const rootRef = useRef<HTMLDivElement>(null);
   const togglerRef = useRef<HTMLButtonElement>(null);
@@ -141,7 +141,7 @@ export default function OverlayMenu({
       loadEngine().then((loaded) => {
         if (disposed || gsap) return;
         gsap = loaded.gsap;
-        lineGroups = [".om-socials a, .om-legal a", ".om-primary-links a", ".om-secondary-links a, .om-secondary-links .om-login"].map((selector) => {
+        lineGroups = [".om-socials a, .om-legal a", ".om-primary-links a", ".om-secondary-links a"].map((selector) => {
           const lines: Element[] = [];
           root.querySelectorAll(selector).forEach((node) => {
             const split = loaded.SplitText.create(node, { type: "lines", mask: "lines", linesClass: "om-line" });
@@ -278,7 +278,7 @@ export default function OverlayMenu({
         {visibleLinks.length > 0 && (
           <div className="om-visible-links">
             {visibleLinks.map((link) => (
-              <MenuAnchor key={link.label} link={link} className={isCta(link)} />
+              <MenuAnchor key={link.label} link={link} />
             ))}
           </div>
         )}
@@ -321,14 +321,13 @@ export default function OverlayMenu({
           <div className="om-items-col">
             <div className="om-primary-links">
               {primaryLinks.map((link) => (
-                <MenuAnchor key={link.label} link={link} className={isCta(link)} />
+                <MenuAnchor key={link.label} link={link} />
               ))}
             </div>
             <div className="om-secondary-links">
               {secondaryLinks.map((link) => (
                 <MenuAnchor key={link.label} link={link} />
               ))}
-              {showClientLogin && <MenuAnchor link={CLIENT_LOGIN} className="om-login" />}
             </div>
           </div>
         </div>
@@ -539,10 +538,31 @@ const styles = `
   font-size: 13px;
   text-decoration: none;
 }
-.om-root .om-visible-links .om-contact {
-  border-bottom: 2px solid #F6A11A;
+/* The page you are on: an orange rule under it in the bar, orange type on the curtain. */
+.om-root .om-visible-links a[aria-current="page"] {
+  box-shadow: inset 0 -2px 0 #F6A11A;
   padding-block: 6px;
 }
+.om-root .om-items a[aria-current="page"] { color: #F6A11A; }
+/* Client Login sits apart from the pages, behind a hairline. */
+.om-root .om-visible-links .om-login {
+  padding-left: 28px;
+  border-left: 1px solid rgba(0,0,0,.2);
+  line-height: 1.6;
+}
+.om-root .om-visible-links .om-cta {
+  display: inline-flex;
+  align-items: center;
+  min-height: 40px;
+  padding: 0 18px;
+  border-radius: 999px;
+  background: #F6A11A;
+  color: #000;
+  font-weight: 500;
+  transition: background-color 200ms ease, scale 160ms ease;
+}
+.om-root .om-visible-links .om-cta:hover { background: #000; color: #fff; text-decoration: none; }
+.om-root .om-visible-links .om-cta:active { scale: .97; }
 .om-root.om-is-open .om-visible-links { visibility: hidden; pointer-events: none; }
 .om-root.om-is-open .om-brand-link { color: #fff; }
 .om-root.om-is-open .om-brand-tagline { color: #aaa; }
@@ -552,7 +572,6 @@ const styles = `
 .om-root .om-items a:focus-visible,
 .om-root.om-is-open .om-toggler:focus-visible { outline: 2px solid #fff; outline-offset: 5px; }
 .om-root .om-nav a:hover { text-decoration: underline; text-underline-offset: 5px; }
-.om-root .om-items .om-login { margin-top: 12px; }
 @media (max-width: 1000px) {
   .om-root .om-items { overflow-y: auto; justify-content: flex-start; padding-top: 110px; }
   .om-root .om-items-col:nth-child(2) { flex-direction: column; gap: 24px; }
@@ -566,11 +585,16 @@ const styles = `
   .om-root .om-logo { padding: 8px 4px; }
   .om-root .om-visible-links { gap: 14px; margin-right: 8px; }
   .om-root .om-visible-links a { font-size: 11px; white-space: nowrap; }
+  .om-root .om-visible-links .om-login { padding-left: 14px; }
+  .om-root .om-visible-links .om-cta { min-height: 32px; padding: 0 12px; }
   .om-root .om-toggler { padding: 12px 4px 12px 8px; }
   .om-root .om-toggler span { width: 28px; }
 }
+@media (max-width: 899px) {
+  .om-root .om-visible-links .om-hide-900 { display: none; }
+}
 @media (max-width: 479px) {
-  .om-root .om-visible-links .om-hide-small { display: none; }
+  .om-root .om-visible-links .om-hide-480 { display: none; }
 }
 @media (prefers-reduced-motion: reduce) {
   .om-root .om-toggler span { transition: none; }
