@@ -1,7 +1,8 @@
 "use client";
 
 import { useInView } from "motion/react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
+import { Draw, Hatch, MOVE, OUT, RM, tr } from "@/components/drawing/plate";
 import { BracketLabel } from "@/components/fact-sections/fact-section";
 import { Rise } from "@/components/hero/editorial";
 import { BODY, COLUMN, EYEBROW, HEADING, SUBHEAD } from "@/components/hero/tokens";
@@ -136,13 +137,15 @@ function Delayed({ on, delay, children }: { on: boolean; delay: number; children
   return children(ready);
 }
 
-/** A chain arrow with a unit moving along it; on a phone it points down. */
+/** A chain arrow that draws itself on, with a unit moving along it; on a phone it points down. */
 function ChainArrow({ on, delay }: { on: boolean; delay: number }) {
   return (
     <div aria-hidden="true" className="flex items-center justify-center py-3 md:px-3 md:py-0">
-      <svg viewBox="0 0 64 14" className="h-[14px] w-[64px] max-md:w-[40px] max-md:rotate-90" style={{ opacity: on ? 1 : 0, transition: `opacity 500ms ease ${delay}ms` }}>
-        <path d="M0 7H60M54 1l6 6-6 6" fill="none" stroke="rgba(255,255,255,.55)" strokeWidth="1.6" />
-        <circle cx="4" cy="7" r="3" fill={ORANGE} className="animate-[aifv2-flow_2s_ease-in-out_infinite] motion-reduce:hidden" />
+      <svg viewBox="0 0 64 14" className="h-[14px] w-[64px] overflow-visible max-md:w-[40px] max-md:rotate-90">
+        <line x1="0" x2="0" y1="3" y2="11" stroke="rgba(255,255,255,.4)" strokeWidth="1" />
+        <Draw d="M0 7H60" on={on} ms={420} delay={delay} ease={MOVE} stroke="rgba(255,255,255,.6)" strokeWidth="1.2" />
+        <path d="M55 2.5L60 7L55 11.5" fill="none" stroke="rgba(255,255,255,.7)" strokeWidth="1.2" className={RM} style={{ opacity: on ? 1 : 0, ...tr("opacity", 200, delay + 380) }} />
+        {on && <circle cx="4" cy="7" r="2.6" fill={ORANGE} className="animate-[aifv2-flow_2s_ease-in-out_infinite] motion-reduce:hidden" style={{ animationDelay: `${delay + 500}ms`, opacity: 0 }} />}
       </svg>
     </div>
   );
@@ -262,19 +265,52 @@ const FIELD = SCORES.map((_, index) => ({
 }));
 const KEEP = [72, 48, 32, 22, 14, 10, 6] as const;
 
+/**
+ * The field in the plate language: a company dropped at this step shrinks to
+ * a hairline ring, one still in the running is engraved, and at the last step
+ * the survivors turn orange under a reticle.
+ */
 function ProcessField({ step }: { step: number }) {
+  const hatch = useId();
   const keep = KEEP[step];
   const growing = step >= 5;
   const decided = step >= 6;
   return (
     <svg viewBox="0 0 200 130" className="block h-auto w-full" aria-hidden="true">
+      <defs>
+        <Hatch id={hatch} ink="#000" gap={1.8} opacity={0.8} />
+      </defs>
+      {/* Construction: row and column ticks the field is read against. */}
+      {Array.from({ length: 6 }, (_, row) => (
+        <line key={`r${row}`} x1="2" x2="6" y1={18 + row * 19} y2={18 + row * 19} stroke="#000" strokeWidth=".5" strokeOpacity=".35" />
+      ))}
+      {Array.from({ length: 12 }, (_, col) => (
+        <line key={`c${col}`} x1={16 + col * 15.3} x2={16 + col * 15.3} y1="126" y2="130" stroke="#000" strokeWidth=".5" strokeOpacity=".35" />
+      ))}
       {FIELD.map((dot) => {
         const kept = dot.rank < keep;
-        const r = kept ? (growing ? 4.6 : 3.2) : 2;
+        const r = kept ? (growing ? 4.6 : 3.4) : 1.8;
         return (
           <g key={dot.index}>
-            <circle cx={dot.x} cy={dot.y} r={r} fill={kept ? (decided ? ORANGE : "#000") : "rgba(0,0,0,.1)"} className="transition-[r,fill] duration-500 ease-[cubic-bezier(.23,1,.32,1)] motion-reduce:!transition-none" />
-            {kept && decided && <circle cx={dot.x} cy={dot.y} r="7.2" fill="none" stroke="#000" strokeWidth=".8" />}
+            <circle
+              cx={dot.x}
+              cy={dot.y}
+              r={r}
+              fill={kept ? (decided ? ORANGE : `url(#${hatch})`) : "none"}
+              stroke="#000"
+              strokeWidth={kept ? 0.8 : 0.5}
+              strokeOpacity={kept ? 0.9 : 0.28}
+              className={RM}
+              style={tr("r, stroke-opacity, stroke-width", 480, kept ? 0 : (dot.index % 12) * 18, OUT)}
+            />
+            {kept && decided && (
+              <g className={RM} style={{ opacity: 1, ...tr("opacity", 300, 200) }}>
+                <circle cx={dot.x} cy={dot.y} r="7.4" fill="none" stroke="#000" strokeWidth=".7" />
+                {[0, 90, 180, 270].map((angle) => (
+                  <line key={angle} x1={dot.x} x2={dot.x} y1={dot.y - 8.6} y2={dot.y - 10.6} stroke="#000" strokeWidth=".7" transform={`rotate(${angle} ${dot.x} ${dot.y})`} />
+                ))}
+              </g>
+            )}
           </g>
         );
       })}

@@ -1,7 +1,8 @@
 "use client";
 
 import { useInView } from "motion/react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
+import { BOX, Draw, Hatch, MOVE, RM, tr } from "@/components/drawing/plate";
 import { BracketLabel } from "@/components/fact-sections/fact-section";
 import { Rise } from "@/components/hero/editorial";
 import { BODY, COLUMN, EYEBROW, HEADING, SUBHEAD } from "@/components/hero/tokens";
@@ -140,12 +141,18 @@ function ReturnTable({ rows, names, active, onActive }: { rows: readonly ReturnR
   );
 }
 
+/** The benchmark's legend swatch: the same hatching its bars carry. */
+const HATCH_SWATCH = "border border-black bg-[repeating-linear-gradient(45deg,#000_0_1px,transparent_1px_3px)]";
+
 /**
  * The same rows as paired horizontal bars around a zero line, so the one
- * negative period reads as falling left of it. A period with no data draws an
+ * negative period reads as falling left of it. The scale draws first (zero
+ * line, 5-point grid, ticked axis), the benchmark's hatched bars grow, then
+ * Moneybee's orange bars, then the values. A period with no data draws an
  * empty dashed slot marked N/A.
  */
 function ReturnBars({ rows, shown, active, onActive }: { rows: readonly ReturnRow[]; shown: boolean; active: number | null; onActive: (index: number | null) => void }) {
+  const hatch = useId();
   const values = rows.flatMap((row) => [row.ours, row.benchmark]).filter((value): value is number => value !== null);
   const min = Math.min(0, ...values);
   const max = Math.max(...values);
@@ -157,7 +164,10 @@ function ReturnBars({ rows, shown, active, onActive }: { rows: readonly ReturnRo
   const x = (value: number) => LABEL + NEG + ((value - min) / (max - min)) * span;
   const zero = x(0);
   const ROW = 38;
-  const H = rows.length * ROW + 14;
+  const BODY = rows.length * ROW + 8;
+  const H = BODY + 14;
+  const grid = Array.from({ length: Math.floor(max / 5) - Math.ceil(min / 5) + 1 }, (_, step) => (Math.ceil(min / 5) + step) * 5);
+  const mono = "var(--font-geist-mono), ui-monospace, monospace";
   return (
     <div>
       <div className={`${EYEBROW} mb-[14px] flex flex-wrap gap-x-[18px] gap-y-[6px] text-black/65`} aria-hidden="true">
@@ -166,16 +176,30 @@ function ReturnBars({ rows, shown, active, onActive }: { rows: readonly ReturnRo
           {PMS_NAMES.ours}
         </span>
         <span className="flex items-center gap-[8px]">
-          <i className="h-[9px] w-[9px] bg-black" />
+          <i className={`h-[9px] w-[9px] ${HATCH_SWATCH}`} />
           {PMS_NAMES.benchmark}
         </span>
       </div>
       <svg viewBox={`0 0 ${W} ${H}`} className="block h-auto w-full overflow-visible" role="img" aria-label={rows.map((row) => `${row.period}: ${PMS_NAMES.ours} ${formatReturn(row.ours)}, ${PMS_NAMES.benchmark} ${formatReturn(row.benchmark)}`).join(". ")} onMouseLeave={() => onActive(null)}>
-        <line x1={zero} x2={zero} y1="0" y2={H} stroke="#000" strokeOpacity=".35" />
+        <defs>
+          <Hatch id={hatch} ink="#000" gap={2.4} opacity={0.75} />
+        </defs>
+        {/* The scale: a 5-point grid, the ticked axis under it, and the zero line. */}
+        {grid.map((value) => (
+          <line key={value} x1={x(value)} x2={x(value)} y1="0" y2={BODY} stroke="#000" strokeWidth=".5" strokeOpacity={value === 0 ? 0 : 0.14} strokeDasharray="1.5 2.5" />
+        ))}
+        <line x1={x(min)} x2={x(max)} y1={BODY + 0.5} y2={BODY + 0.5} stroke="#000" strokeWidth=".6" strokeOpacity=".45" />
+        {grid.map((value) => (
+          <line key={value} x1={x(value)} x2={x(value)} y1={BODY} y2={BODY + (value % 10 ? 3 : 5)} stroke="#000" strokeWidth=".6" strokeOpacity=".45" />
+        ))}
+        <text x={zero} y={BODY + 13} textAnchor="middle" fontSize="8" fill="#000" fillOpacity=".6" fontFamily={mono} letterSpacing=".08em">
+          0%
+        </text>
+        <Draw d={`M${zero} 0V${BODY}`} on={shown} ms={600} stroke="#000" strokeWidth=".9" />
         {rows.map((row, index) => {
           const top = index * ROW + 6;
           const lit = active === null || active === index;
-          const bar = (value: number | null, y: number, fill: string, delay: number) => {
+          const bar = (value: number | null, y: number, ours: boolean, delay: number) => {
             if (value === null) return <rect x={zero} y={y} width={span * 0.34} height="11" fill="none" stroke="#000" strokeOpacity=".3" strokeDasharray="3 3" />;
             const left = Math.min(zero, x(value));
             const width = Math.abs(x(value) - zero);
@@ -186,9 +210,11 @@ function ReturnBars({ rows, shown, active, onActive }: { rows: readonly ReturnRo
                   y={y}
                   width={Math.max(1, width)}
                   height="11"
-                  fill={fill}
-                  style={{ transformBox: "fill-box", transformOrigin: value < 0 ? "100% 50%" : "0% 50%", transform: `scaleX(${shown ? 1 : 0})`, transition: `transform 800ms ${EASE} ${delay}ms` }}
-                  className="motion-reduce:!transition-none"
+                  fill={ours ? ORANGE : `url(#${hatch})`}
+                  stroke={ours ? "none" : "#000"}
+                  strokeWidth=".7"
+                  className={RM}
+                  style={{ ...BOX, transformOrigin: value < 0 ? "100% 50%" : "0% 50%", transform: `scaleX(${shown ? 1 : 0})`, ...tr("transform", 700, delay) }}
                 />
                 <text
                   x={value < 0 ? left - 6 : left + width + 6}
@@ -197,8 +223,9 @@ function ReturnBars({ rows, shown, active, onActive }: { rows: readonly ReturnRo
                   fontSize="10"
                   fill="#000"
                   fillOpacity=".75"
-                  fontFamily="var(--font-geist-mono), ui-monospace, monospace"
-                  style={{ opacity: shown ? 1 : 0, transition: `opacity 300ms ease ${delay + 600}ms` }}
+                  fontFamily={mono}
+                  className={RM}
+                  style={{ opacity: shown ? 1 : 0, ...tr("opacity", 300, 1250 + index * 50) }}
                 >
                   {formatReturn(value)}
                 </text>
@@ -208,13 +235,13 @@ function ReturnBars({ rows, shown, active, onActive }: { rows: readonly ReturnRo
           return (
             <g key={row.period} onMouseEnter={() => onActive(index)} style={{ opacity: lit ? 1 : 0.3, transition: "opacity 200ms ease" }}>
               <rect x="0" y={top - 4} width={W} height={ROW - 4} fill="transparent" />
-              <text x="0" y={top + 16} fontSize="10.5" fill="#000" fillOpacity=".7" fontFamily="var(--font-geist-mono), ui-monospace, monospace" letterSpacing=".06em">
+              <text x="0" y={top + 16} fontSize="10.5" fill="#000" fillOpacity=".7" fontFamily={mono} letterSpacing=".06em">
                 {row.short}
               </text>
-              {bar(row.ours, top, ORANGE, index * 70)}
-              {bar(row.benchmark, top + 13, "#000", index * 70 + 40)}
+              {bar(row.benchmark, top + 13, false, 250 + index * 60)}
+              {bar(row.ours, top, true, 650 + index * 60)}
               {row.ours === null && (
-                <text x={zero + span * 0.34 + 8} y={top + 16} fontSize="10" fill="#000" fillOpacity=".65" fontFamily="var(--font-geist-mono), ui-monospace, monospace">
+                <text x={zero + span * 0.34 + 8} y={top + 16} fontSize="10" fill="#000" fillOpacity=".65" fontFamily={mono}>
                   N/A
                 </text>
               )}
@@ -338,11 +365,13 @@ export function WealthSection() {
 }
 
 /**
- * The AIF's periods as vertical bar pairs. The fund has run 3 and 6 months;
- * the longer periods are empty dashed slots, drawn at the height they would
- * sit if filled, and marked N/A.
+ * The AIF's periods as vertical bar pairs. The baseline and a 5-point grid
+ * draw first, the benchmark's hatched bars grow, then the fund's orange ones,
+ * then the values. The fund has run 3 and 6 months; the longer periods are
+ * empty dashed slots, drawn at the height they would sit if filled, and marked N/A.
  */
 function AifBars({ shown }: { shown: boolean }) {
+  const hatch = useId();
   const W = 340;
   const H = 220;
   const BASE = 180;
@@ -350,15 +379,26 @@ function AifBars({ shown }: { shown: boolean }) {
   const max = Math.max(...values);
   const group = W / AIF_ROWS.length;
   const y = (value: number) => BASE - (value / max) * (BASE - 26);
+  const mono = "var(--font-geist-mono), ui-monospace, monospace";
+  const grid = Array.from({ length: Math.floor(max / 5) }, (_, step) => (step + 1) * 5);
   return (
     <svg viewBox={`0 0 ${W} ${H}`} className="block h-auto w-full overflow-visible" role="img" aria-label={AIF_ROWS.map((row) => `${row.period}: ${AIF_NAMES.ours} ${formatReturn(row.ours)}, ${AIF_NAMES.benchmark} ${formatReturn(row.benchmark)}`).join(". ")}>
-      <line x1="0" x2={W} y1={BASE} y2={BASE} stroke="#000" strokeOpacity=".4" />
+      <defs>
+        <Hatch id={hatch} ink="#000" gap={2.4} opacity={0.75} />
+      </defs>
+      {grid.map((value) => (
+        <g key={value}>
+          <line x1="0" x2={W} y1={y(value)} y2={y(value)} stroke="#000" strokeWidth=".5" strokeOpacity=".14" strokeDasharray="1.5 2.5" />
+          <line x1={W - (value % 10 ? 3 : 5)} x2={W} y1={y(value)} y2={y(value)} stroke="#000" strokeWidth=".6" strokeOpacity=".45" />
+        </g>
+      ))}
+      <line x1={W - 0.5} x2={W - 0.5} y1={y(grid[grid.length - 1] ?? max)} y2={BASE} stroke="#000" strokeWidth=".6" strokeOpacity=".45" />
+      <Draw d={`M0 ${BASE}H${W}`} on={shown} ms={700} stroke="#000" strokeWidth=".9" />
       {AIF_ROWS.map((row, index) => {
         const cx = group * index + group / 2;
-        const mono = "var(--font-geist-mono), ui-monospace, monospace";
         if (row.ours === null || row.benchmark === null) {
           return (
-            <g key={row.period} style={{ opacity: shown ? 1 : 0, transition: `opacity 500ms ease ${500 + index * 120}ms` }}>
+            <g key={row.period} className={RM} style={{ opacity: shown ? 1 : 0, ...tr("opacity", 500, 400 + index * 100) }}>
               <rect x={cx - 22} y={BASE - 70} width="44" height="70" fill="none" stroke="#000" strokeOpacity=".3" strokeDasharray="3 3" />
               <text x={cx} y={BASE - 31} textAnchor="middle" fontSize="10" fill="#000" fillOpacity=".65" fontFamily={mono}>
                 N/A
@@ -370,21 +410,23 @@ function AifBars({ shown }: { shown: boolean }) {
           );
         }
         const pair = [
-          { value: row.ours, fill: ORANGE, dx: -28 },
-          { value: row.benchmark, fill: "#000", dx: 6 },
+          { value: row.ours, ours: true, dx: -28, delay: 700 + index * 110 },
+          { value: row.benchmark, ours: false, dx: 6, delay: 250 + index * 110 },
         ];
         return (
           <g key={row.period}>
-            {pair.map((bar, b) => (
-              <g key={b}>
+            {pair.map((bar) => (
+              <g key={bar.dx}>
                 <rect
                   x={cx + bar.dx}
                   y={y(bar.value)}
                   width="22"
                   height={BASE - y(bar.value)}
-                  fill={bar.fill}
-                  style={{ transformBox: "fill-box", transformOrigin: "50% 100%", transform: `scaleY(${shown ? 1 : 0})`, transition: `transform 800ms ${EASE} ${index * 140 + b * 60}ms` }}
-                  className="motion-reduce:!transition-none"
+                  fill={bar.ours ? ORANGE : `url(#${hatch})`}
+                  stroke={bar.ours ? "none" : "#000"}
+                  strokeWidth=".7"
+                  className={RM}
+                  style={{ ...BOX, transformOrigin: "50% 100%", transform: `scaleY(${shown ? 1 : 0})`, ...tr("transform", 700, bar.delay) }}
                 />
                 <text
                   x={cx + bar.dx + 11}
@@ -394,7 +436,8 @@ function AifBars({ shown }: { shown: boolean }) {
                   fill="#000"
                   fillOpacity=".75"
                   fontFamily={mono}
-                  style={{ opacity: shown ? 1 : 0, transition: `opacity 300ms ease ${index * 140 + 700}ms` }}
+                  className={RM}
+                  style={{ opacity: shown ? 1 : 0, ...tr("opacity", 300, 1300 + index * 60) }}
                 >
                   {bar.value.toFixed(2)}%
                 </text>
@@ -431,7 +474,7 @@ export function AifPerformanceSection() {
                 {AIF_NAMES.ours}
               </span>
               <span className="flex items-center gap-[8px]">
-                <i className="h-[9px] w-[9px] bg-black" />
+                <i className={`h-[9px] w-[9px] ${HATCH_SWATCH}`} />
                 {AIF_NAMES.benchmark}
               </span>
             </div>
@@ -444,55 +487,59 @@ export function AifPerformanceSection() {
 }
 
 /**
- * Time-weighted return, drawn: the portfolio's line is cut at every inflow and
- * outflow, each piece keeps its own return, and the pieces are chained. So the
- * money moving in and out does not count as performance.
+ * Time-weighted return, drawn. The portfolio's value (the grey line) jumps
+ * up at an inflow and drops at an outflow; those jumps are money moving, not
+ * performance. So the line is cut at every flow, each piece keeps only its
+ * own return, measured under it, and the pieces are chained in orange.
  */
 function MethodGlyph({ on }: { on: boolean }) {
-  const cuts = [120, 230];
   const flows = [
     { x: 120, inflow: true },
     { x: 230, inflow: false },
   ];
   const pieces = [
-    { d: "M20 120 C 50 110, 80 104, 120 92", label: "r1", x: 70 },
-    { d: "M120 92 C 150 100, 190 84, 230 76", label: "r2", x: 175 },
-    { d: "M230 76 C 262 70, 300 56, 330 44", label: "r3", x: 280 },
+    { d: "M20 120 C 50 110, 80 104, 120 92", label: "r1", from: 20, to: 120 },
+    { d: "M120 92 C 150 100, 190 84, 230 76", label: "r2", from: 120, to: 230 },
+    { d: "M230 76 C 262 70, 300 56, 330 44", label: "r3", from: 230, to: 330 },
   ];
+  // The same value with the flows left in: up by the inflow at 120, down by the outflow at 230.
+  const raw = "M20 120 C 50 110, 80 104, 120 92 V72 C 150 80, 190 64, 230 56 V86 C 262 80, 300 66, 330 54";
   const mono = "var(--font-geist-mono), ui-monospace, monospace";
   return (
     <svg viewBox="0 0 350 200" className="block h-auto w-full" aria-hidden="true">
-      <line x1="10" x2="340" y1="150" y2="150" stroke="#000" strokeOpacity=".3" />
-      {cuts.map((x) => (
-        <line key={x} x1={x} x2={x} y1="30" y2="150" stroke="#000" strokeOpacity={on ? 0.35 : 0} strokeDasharray="3 3" style={{ transition: "stroke-opacity 500ms ease 300ms" }} />
+      <line x1="10" x2="340" y1="150" y2="150" stroke="#000" strokeWidth=".6" strokeOpacity=".45" />
+      {Array.from({ length: 12 }, (_, tick) => (
+        <line key={tick} x1={20 + tick * 28.2} x2={20 + tick * 28.2} y1="150" y2={tick % 3 ? 152.5 : 154} stroke="#000" strokeWidth=".5" strokeOpacity=".45" />
       ))}
-      {flows.map((flow) => (
-        <g key={flow.x} style={{ opacity: on ? 1 : 0, transition: "opacity 500ms ease 500ms" }}>
-          <path d={flow.inflow ? `M${flow.x} 8V26M${flow.x - 5} 20l5 6 5-6` : `M${flow.x} 26V8M${flow.x - 5} 14l5-6 5 6`} fill="none" stroke="#000" strokeWidth="1.4" />
-          <text x={flow.x + 9} y="20" fontSize="9" fill="#000" fillOpacity=".6" fontFamily={mono} letterSpacing=".06em">
-            {flow.inflow ? "IN" : "OUT"}
-          </text>
+      <Draw d={raw} on={on} ms={900} ease={MOVE} stroke="#000" strokeWidth=".9" strokeOpacity=".4" strokeLinejoin="round" />
+      {flows.map((flow, index) => (
+        <g key={flow.x}>
+          <line x1={flow.x} x2={flow.x} y1="30" y2="150" stroke="#000" strokeWidth=".6" strokeOpacity=".45" strokeDasharray="3 3" className={RM} style={{ ...BOX, transformOrigin: "50% 100%", transform: `scaleY(${on ? 1 : 0})`, ...tr("transform", 500, 500 + index * 120, MOVE) }} />
+          <g className={RM} style={{ opacity: on ? 1 : 0, transform: `translateY(${on ? 0 : flow.inflow ? -4 : 4}px)`, ...tr("opacity, transform", 360, 700 + index * 120) }}>
+            <path d={flow.inflow ? `M${flow.x} 8V26M${flow.x - 4} 21l4 5 4-5` : `M${flow.x} 26V8M${flow.x - 4} 13l4-5 4 5`} fill="none" stroke="#000" strokeWidth="1" />
+            <text x={flow.x + 8} y="19" fontSize="8" fill="#000" fillOpacity=".65" fontFamily={mono} letterSpacing=".12em">
+              {flow.inflow ? "IN" : "OUT"}
+            </text>
+          </g>
         </g>
       ))}
-      {pieces.map((piece, index) => (
-        <g key={piece.label}>
-          <path
-            d={piece.d}
-            fill="none"
-            stroke={ORANGE}
-            strokeWidth="2.4"
-            pathLength={1}
-            strokeDasharray="1"
-            strokeDashoffset={on ? 0 : 1}
-            style={{ transition: `stroke-dashoffset 600ms ${EASE} ${700 + index * 350}ms` }}
-            className="motion-reduce:!transition-none"
-          />
-          <text x={piece.x} y="140" textAnchor="middle" fontSize="11" fill="#000" fontFamily={mono} style={{ opacity: on ? 1 : 0, transition: `opacity 300ms ease ${900 + index * 350}ms` }}>
-            {piece.label}
-          </text>
-        </g>
-      ))}
-      <text x="175" y="186" textAnchor="middle" fontSize="11" fill="#000" fontFamily={mono} style={{ opacity: on ? 1 : 0, transition: "opacity 400ms ease 1900ms" }}>
+      {pieces.map((piece, index) => {
+        const at = 1000 + index * 260;
+        return (
+          <g key={piece.label}>
+            <Draw d={piece.d} on={on} ms={520} delay={at} stroke={ORANGE} strokeWidth="2.4" />
+            {/* Each piece's own span, measured under it. */}
+            <Draw d={`M${piece.from + 3} 128H${piece.to - 3}`} on={on} ms={380} delay={at + 120} stroke="#000" strokeWidth=".6" />
+            <g className={RM} style={{ opacity: on ? 1 : 0, ...tr("opacity", 260, at + 300) }}>
+              <path d={`M${piece.from + 6} 125.8L${piece.from + 3} 128L${piece.from + 6} 130.2M${piece.to - 6} 125.8L${piece.to - 3} 128L${piece.to - 6} 130.2`} fill="none" stroke="#000" strokeWidth=".6" />
+              <text x={(piece.from + piece.to) / 2} y="142" textAnchor="middle" fontSize="11" fill="#000" fontFamily={mono}>
+                {piece.label}
+              </text>
+            </g>
+          </g>
+        );
+      })}
+      <text x="175" y="186" textAnchor="middle" fontSize="11" fill="#000" fontFamily={mono} className={RM} style={{ opacity: on ? 1 : 0, ...tr("opacity", 400, 1900) }}>
         (1+r1)(1+r2)(1+r3) - 1
       </text>
     </svg>
