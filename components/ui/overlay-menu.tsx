@@ -566,6 +566,9 @@ const styles = `
 .om-root .om-visible-links .om-cta:active { scale: .97; }
 .om-root.om-is-open .om-visible-links { visibility: hidden; pointer-events: none; }
 .om-root.om-is-open .om-brand-link { color: #fff; }
+.om-root .om-logo-light,
+.om-root.om-is-open .om-logo-ink { display: none; }
+.om-root.om-is-open .om-logo-light { display: inline; }
 .om-root.om-is-open .om-brand-tagline { color: #aaa; }
 .om-root .om-nav a:focus-visible,
 .om-root .om-toggler:focus-visible { outline: 2px solid #000; outline-offset: 5px; }

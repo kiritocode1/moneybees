@@ -59,7 +59,9 @@ export default function SiteNavigation({ children }: { children: ReactNode }) {
             className="block max-[600px]:h-[35px] max-[600px]:w-[115px]"
             aria-hidden="true"
           >
-            <image href="/moneybee-logo.svg" width="2048" height="897" />
+            {/* The ink logo on the page; its white-lettered copy while the black menu curtain is open. */}
+            <image className="om-logo-ink" href="/moneybee-logo.svg" width="2048" height="897" />
+            <image className="om-logo-light" href="/moneybee-logo-light.svg" width="2048" height="897" />
           </svg>
         </Link>
       }
