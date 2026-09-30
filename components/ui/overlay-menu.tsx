@@ -478,8 +478,9 @@ const styles = `
   color: #9D9EA1;
 }
 
+/* Eleven links must fit the curtain's height too, so the size follows whichever of width or height is tighter. */
 .om-root .om-primary-links a {
-  font-size: clamp(2.8rem, 5.2vw, 5.7rem);
+  font-size: clamp(1.75rem, min(5.2vw, 5.4svh), 5.7rem);
   font-weight: 400;
 }
 
@@ -576,7 +577,7 @@ const styles = `
   .om-root .om-items { overflow-y: auto; justify-content: flex-start; padding-top: 110px; }
   .om-root .om-items-col:nth-child(2) { flex-direction: column; gap: 24px; }
   .om-root .om-secondary-links { display: block; }
-  .om-root .om-primary-links a { font-size: clamp(28px, 7vw, 46px); }
+  .om-root .om-primary-links a { font-size: clamp(24px, min(7vw, 5.2svh), 46px); }
   .om-root .om-socials { position: static; }
 }
 @media (max-width: 600px) {
