@@ -167,7 +167,7 @@ export default function CaseStudies() {
               </span>
               <span
                 aria-hidden="true"
-                className="absolute bottom-[-1px] left-0 h-[3px] bg-[#F7A11A] transition-all duration-500"
+                className="absolute bottom-[-1px] left-0 h-[3px] bg-[#F6A11A] transition-all duration-500"
                 style={{ width: selected ? "100%" : "0%" }}
               />
             </button>
@@ -179,7 +179,7 @@ export default function CaseStudies() {
         <dl className="grid content-start gap-[26px]">
           <div>
             <dt className={`${EYEBROW} text-black/55`}>Multibagger</dt>
-            <dd className="mt-[8px] font-serif text-[clamp(2.6rem,4vw,3.6rem)] leading-none text-[#F7A11A]">{multiple.replace(" ", "")}</dd>
+            <dd className="mt-[8px] font-serif text-[clamp(2.6rem,4vw,3.6rem)] leading-none text-[#F6A11A]">{multiple.replace(" ", "")}</dd>
           </div>
           {(
             [

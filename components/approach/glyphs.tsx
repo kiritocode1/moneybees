@@ -5,7 +5,7 @@
  * to its explained state, so a section can play them in turn.
  */
 
-export const ORANGE = "#F7A11A";
+export const ORANGE = "#F6A11A";
 
 const hexPoints = (cx: number, cy: number, r: number) =>
   Array.from({ length: 6 }, (_, corner) => {
@@ -13,7 +13,8 @@ const hexPoints = (cx: number, cy: number, r: number) =>
     return `${(cx + r * Math.cos(angle)).toFixed(2)},${(cy + r * Math.sin(angle)).toFixed(2)}`;
   }).join(" ");
 
-const T = "transition-all duration-700 ease-[cubic-bezier(.22,1,.36,1)]";
+/** Only the properties the drawings change; reduced motion jumps straight to the explained state. */
+const T = "transition-[fill,opacity,r,x,y,height,transform,stroke-opacity,stroke-dashoffset] duration-700 ease-[cubic-bezier(.22,1,.36,1)] motion-reduce:transition-none";
 
 type GlyphProps = { on: boolean; ink?: string; faint?: string };
 

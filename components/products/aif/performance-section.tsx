@@ -62,7 +62,7 @@ function SectorBars() {
               <g opacity={Math.min(1, grow * 4)} stroke={lit ? "rgba(90,50,0,.75)" : "rgba(0,0,0,.6)"} strokeWidth="0.9" strokeLinejoin="round" style={{ filter: lit && grow > 0.9 ? SOLID_GLOW : "none" }}>
                 <path d={faces.left} fill={lit ? "#c97f0c" : "#e6e4df"} />
                 <path d={faces.right} fill={lit ? "#e3920f" : "#f1efeb"} />
-                <path d={faces.top} fill="#F7A11A" />
+                <path d={faces.top} fill="#F6A11A" />
               </g>
               <text x={cx} y={topY - 14} textAnchor="middle" className={`${MONO} fill-black text-[14px] tabular-nums max-md:text-[22px]`} opacity={grow}>
                 {(sector.share * grow).toFixed(2)}
@@ -131,7 +131,7 @@ function ReturnsChart() {
     <div ref={ref} className="w-full max-w-[720px]">
       <div className={`${EYEBROW} mb-[18px] flex gap-[20px] text-black/70`} aria-hidden="true">
         <span className="flex items-center gap-[8px]">
-          <i className="h-[9px] w-[9px] bg-[#F7A11A]" />
+          <i className="h-[9px] w-[9px] bg-[#F6A11A]" />
           Flyingbee Investment Fund
         </span>
         <span className="flex items-center gap-[8px]">
@@ -179,7 +179,7 @@ function ReturnsChart() {
             );
           }
           const bars = [
-            { value: row.fund, fill: "#F7A11A", dx: -PAIR - 3 },
+            { value: row.fund, fill: "#F6A11A", dx: -PAIR - 3 },
             { value: row.benchmark, fill: "#9D9EA1", dx: 3 },
           ];
           return (
@@ -236,7 +236,7 @@ export function ReturnsSection() {
                 ).map(([label, row]) => (
                   <div key={label}>
                     <dt className={`${EYEBROW} text-black/60`}>{label}</dt>
-                    <dd className="mt-[10px] font-serif text-[clamp(2.4rem,3.6vw,3.4rem)] leading-none text-[#F7A11A] tabular-nums">{pct(row.fund)}</dd>
+                    <dd className="mt-[10px] font-serif text-[clamp(2.4rem,3.6vw,3.4rem)] leading-none text-[#F6A11A] tabular-nums">{pct(row.fund)}</dd>
                     <dd className={`${EYEBROW} mt-[10px] text-black/60`}>S&amp;P BSE 500 {pct(row.benchmark)}</dd>
                   </div>
                 ))}

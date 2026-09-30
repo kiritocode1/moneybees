@@ -1,6 +1,6 @@
 /**
  * Copy and figures for /performance, Content & Visual Plan §7. The plan's own
- * figures are blank, so the numbers come from the repo's July 31, 2026 set:
+ * figures are blank, so the numbers come from the repo's 31 July 2026 set:
  * PERIOD_RETURNS, WEALTH, RECORD_METHOD and RECORD_CAVEAT in lib/insights.ts
  * (AIF presentation p12) and AIF_RETURNS in lib/aif.ts. The plan asks for
  * "As of 31 August 2026"; the data is as of 31 July 2026, so that is the label.
@@ -24,14 +24,17 @@ export type ReturnRow = { period: string; short: string; ours: number | null; be
 /** Looks a period up in PERIOD_RETURNS by the label insights.ts prints. */
 const pms = (label: string) => PERIOD_RETURNS.find((row) => row.period === label);
 
-/** The plan's eight PMS periods, in its order and wording. 2 Years is not in the data. */
+/**
+ * The plan's PMS periods, in its order and wording. The plan also lists
+ * 2 Years, but the July 2026 data does not carry it, so the row is left out
+ * rather than printed as N/A.
+ */
 export const PMS_ROWS: readonly ReturnRow[] = (
   [
     ["1 Month", "1M", "1 month"],
     ["3 Months", "3M", "3 months"],
     ["6 Months", "6M", "6 months"],
     ["1 Year", "1Y", "1 year"],
-    ["2 Years", "2Y", null],
     ["3 Years", "3Y", "3 year"],
     ["5 Years", "5Y", "5 year"],
     ["Since Inception", "SI", "Since Inception"],
@@ -49,10 +52,16 @@ export const AIF_ROWS: readonly ReturnRow[] = AIF_RETURNS.map((row) => ({
   benchmark: row.benchmark,
 }));
 
-export const PMS_NAMES = { ours: "Moneybee", benchmark: "S&P BSE 500 TRI" } as const;
+export const PMS_NAMES = { ours: "Moneybee PMS", benchmark: "S&P BSE 500 TRI" } as const;
+/**
+ * The AIF return table (Flyingbee deck p10) labels its benchmark "S&P BSE 500"
+ * without TRI, while the fund's stated benchmark (p9, p12, /aif key terms) is
+ * the TRI. The label follows the table the figures come from until the client
+ * confirms which index they are.
+ */
 export const AIF_NAMES = { ours: "Flyingbee Investment Fund", benchmark: "S&P BSE 500" } as const;
 
-/** Rs. 1 Mn at inception (August 2007) and its value on July 31, 2026, in Rs. Mn. */
+/** Rs. 1 Mn at inception (August 2007) and its value on 31 July 2026, in Rs. Mn. */
 export const GROWTH = {
   start: WEALTH.start,
   ours: WEALTH.queenbee,

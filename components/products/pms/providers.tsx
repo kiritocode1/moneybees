@@ -92,7 +92,7 @@ function ReportingYear() {
     <div ref={ref}>
       <div className={`${EYEBROW} mb-[20px] flex flex-wrap gap-x-[22px] gap-y-[10px] text-black/70`}>
         <span className="flex items-center gap-[8px]">
-          <i className="h-[10px] w-[10px] bg-[#F7A11A]" />
+          <i className="h-[10px] w-[10px] bg-[#F6A11A]" />
           {REPORTING[0][1]}
         </span>
         <span className="flex items-center gap-[8px]">
@@ -110,7 +110,7 @@ function ReportingYear() {
             <span className={`${MONO} text-[10px] tracking-[.06em] text-black/55 uppercase`}>{month}</span>
             <div className="mt-[10px] grid gap-[4px]">
               <motion.span
-                className="block h-[18px] origin-left bg-[#F7A11A]"
+                className="block h-[18px] origin-left bg-[#F6A11A]"
                 initial={{ scaleX: 0 }}
                 animate={{ scaleX: run ? 1 : 0 }}
                 transition={at(0.1 + index * 0.08, 0.35)}

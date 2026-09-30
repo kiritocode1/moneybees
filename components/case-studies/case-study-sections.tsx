@@ -6,6 +6,7 @@ import { BracketLabel } from "@/components/fact-sections/fact-section";
 import { Rise } from "@/components/hero/editorial";
 import { BODY, COLUMN, EYEBROW, HEADING, SUBHEAD } from "@/components/hero/tokens";
 import { CASE_DISCLAIMER, CASE_LOREM, CASE_PARTS, CASE_STUDIES, CASE_STUDIES_PAGE, type CaseStudyEntry } from "@/lib/case-studies";
+import { PageIndex, NoScriptReveal } from "@/components/pms-v2/shared";
 import { DRAWINGS } from "./drawings";
 
 /*
@@ -15,7 +16,7 @@ import { DRAWINGS } from "./drawings";
  * three side by side, above the plan's disclaimer. Past examples, not advice.
  */
 
-const ORANGE = "#F7A11A";
+const ORANGE = "#F6A11A";
 const EASE = "cubic-bezier(.22,1,.36,1)";
 const number = (index: number) => String(index + 1).padStart(2, "0");
 
@@ -28,6 +29,7 @@ function useShown<T extends Element>(amount = 0.3) {
 export function CaseStudiesHero() {
   return (
     <section aria-labelledby="cases-heading" className="bg-white text-black">
+      <NoScriptReveal />
       <div className={`${COLUMN} grid grid-cols-1 items-end gap-14 pt-[150px] pb-[110px] md:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] md:gap-20 md:pt-[220px] max-md:pb-[72px]`}>
         <div>
           <Rise>
@@ -43,19 +45,7 @@ export function CaseStudiesHero() {
           </Rise>
         </div>
         <Rise delay={0.2}>
-          <nav aria-label="On this page">
-            <ol className="list-none border-t border-black p-0">
-              {CASE_PARTS.map(([label, href], index) => (
-                <li key={href} className="border-b border-black/15">
-                  <a href={href} className="group flex items-baseline gap-[18px] py-[14px] text-black no-underline">
-                    <span className="w-[34px] text-[22px] leading-none font-light tracking-[-.04em] text-[#F7A11A]">{number(index)}</span>
-                    <span className="text-[17px] text-black/75 transition-colors group-hover:text-black">{label}</span>
-                    <span className="ml-auto h-[2px] w-0 bg-[#F7A11A] transition-all duration-300 group-hover:w-[28px]" />
-                  </a>
-                </li>
-              ))}
-            </ol>
-          </nav>
+          <PageIndex parts={CASE_PARTS} />
         </Rise>
       </div>
     </section>
@@ -82,7 +72,7 @@ function FinancialsChart({ study, dark, shown }: { study: CaseStudyEntry; dark: 
   const [picked, setPicked] = useState<number | null>(null);
   const year = picked ?? rows.length - 1;
   const max = Math.max(...rows.map((row) => row.revenue));
-  const muted = dark ? "text-white/55" : "text-black/55";
+  const muted = dark ? "text-white/65" : "text-black/60";
   return (
     <div>
       <div className="flex flex-wrap items-end justify-between gap-x-[28px] gap-y-[14px]" aria-live="polite">
@@ -117,13 +107,13 @@ function FinancialsChart({ study, dark, shown }: { study: CaseStudyEntry; dark: 
               tabIndex={-1}
               onMouseEnter={() => setPicked(index)}
               onClick={() => setPicked(index)}
-              className={`flex cursor-pointer flex-col items-stretch px-[6%] transition-colors ${lit ? (dark ? "bg-white/[.06]" : "bg-black/[.035]") : ""}`}
+              className={`flex cursor-pointer flex-col items-stretch px-[6%] transition-colors duration-150 ${lit ? (dark ? "bg-white/[.06]" : "bg-black/[.035]") : ""}`}
             >
               <span className={`flex h-[260px] items-end justify-center gap-[6%] border-b pt-[12px] max-md:h-[180px] ${dark ? "border-white/40" : "border-black/40"}`}>
                 {SERIES.map((series, s) => (
                   <span
                     key={series.key}
-                    className="block w-[28%] max-w-[40px] motion-reduce:transition-none"
+                    className="block w-[28%] max-w-[40px] motion-reduce:!transition-none"
                     style={{
                       height: `${(row[series.key] / max) * 100}%`,
                       minHeight: 1,
@@ -135,7 +125,9 @@ function FinancialsChart({ study, dark, shown }: { study: CaseStudyEntry; dark: 
                   />
                 ))}
               </span>
-              <span className={`block py-[10px] text-center font-[family-name:var(--font-geist-mono)] text-[12px] tracking-[.06em] ${lit ? "text-[#F7A11A]" : muted}`}>{row.year}</span>
+              <span className={`block py-[10px] text-center font-[family-name:var(--font-geist-mono)] text-[12px] tracking-[.06em] ${lit ? (dark ? "text-white" : "text-black") : muted}`}>
+                <span className={`border-b-2 pb-[3px] ${lit ? "border-[#F6A11A]" : "border-transparent"}`}>{row.year}</span>
+              </span>
             </button>
           );
         })}
@@ -159,52 +151,64 @@ const TONES: Record<Tone, { section: string; card: string; line: string; body: s
   grey: { section: "bg-[#F7F7F8] text-black", card: "bg-white", line: "border-black/15", body: "text-black/75" },
 };
 
+/**
+ * One case, read in three steps: who (the company and its mark), the thesis
+ * (the business model as the lead sentence, with the edge and the growth
+ * prospect under it, beside the drawing of the business) and the outcome (the
+ * multiple it reached and its PAT from FY20 to FY24), then the financials.
+ */
 export function CaseStudySection({ study, index, tone }: { study: CaseStudyEntry; index: number; tone: Tone }) {
-  const { ref, shown } = useShown<HTMLDivElement>(0.25);
+  const { ref, shown } = useShown<HTMLDivElement>(0.2);
   const dark = tone === "black";
   const look = TONES[tone];
   const Drawing = DRAWINGS[study.drawing];
-  const facts = [
-    ["Business Model", study.business],
+  const label = dark ? "text-white/65" : "text-black/60";
+  const first = study.financials[0];
+  const last = study.financials[study.financials.length - 1];
+  const support = [
     ["Competitive Edge", study.edge],
     ["Growth Prospect", study.growth],
   ] as const;
   return (
     <section id={study.id} aria-labelledby={`${study.id}-heading`} className={`scroll-mt-[96px] ${look.section}`}>
       <div ref={ref} className={`${COLUMN} py-[120px] max-md:py-[80px]`}>
-        <div className="flex flex-wrap items-end justify-between gap-x-10 gap-y-6">
-          <div className="flex items-end gap-[22px]">
-            <Mark text={study.mark} dark={dark} />
-            <div>
-              <BracketLabel>Case study {number(index)}</BracketLabel>
-              <h2 id={`${study.id}-heading`} className={`mt-[14px] ${SUBHEAD}`}>
+        {/* Who, and the outcome. */}
+        <div className={`grid grid-cols-1 items-end gap-10 border-b pb-[40px] md:grid-cols-[minmax(0,1fr)_auto] ${look.line}`}>
+          <div>
+            <BracketLabel>Case study {number(index)}</BracketLabel>
+            <div className="mt-[22px] flex items-center gap-[22px]">
+              <Mark text={study.mark} dark={dark} />
+              <h2 id={`${study.id}-heading`} className={`${HEADING} text-balance text-[clamp(2.4rem,1.2rem+3.4vw,4.25rem)] leading-[1.02]`}>
                 {study.name}
               </h2>
             </div>
           </div>
-          <div className="text-right max-md:text-left">
-            <span className={`${EYEBROW} ${dark ? "text-white/55" : "text-black/55"}`}>Multibagger</span>
-            <p className="mt-[4px] text-[clamp(2.4rem,1.6rem+2.4vw,3.8rem)] leading-none font-light tracking-[-.05em] text-[#F7A11A]">{study.multiple}</p>
+          <div className="md:text-right">
+            <span className={`${EYEBROW} ${label}`}>Multibagger</span>
+            <p className={`mt-[6px] text-[clamp(2.4rem,1.6rem+2.4vw,3.6rem)] leading-none font-light tracking-[-.05em] tabular-nums ${dark ? "text-[#F6A11A]" : ""}`}>{study.multiple}</p>
+            {!dark && <span aria-hidden="true" className="mt-[10px] block h-[3px] w-[56px] bg-[#F6A11A] md:ml-auto" />}
+            <p className={`mt-[12px] font-[family-name:var(--font-geist-mono)] text-[12px] tracking-[.04em] ${label}`}>
+              PAT Rs. {first.pat} crore in {first.year} to Rs. {last.pat} crore in {last.year}
+            </p>
           </div>
         </div>
 
-        <div className="mt-[56px] grid grid-cols-1 gap-[48px] md:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] md:gap-[64px]">
-          <dl className={`m-0 border-t ${dark ? "border-white/60" : "border-black"}`}>
-            {facts.map(([term, text], factIndex) => (
-              <div key={term} className={`grid grid-cols-[34px_minmax(0,1fr)] gap-x-[14px] border-b py-[20px] ${look.line}`}>
-                <span className="text-[20px] leading-none font-light tracking-[-.04em] text-[#F7A11A]">{number(factIndex)}</span>
-                <div>
-                  <dt className={`${EYEBROW} ${dark ? "text-white/55" : "text-black/55"}`}>{term}</dt>
-                  <dd className={`mt-[10px] ml-0 font-serif text-[clamp(1.2rem,1rem+.6vw,1.5rem)] leading-[1.25] ${look.body}`}>{text}</dd>
+        {/* The thesis, beside the drawing of the business. */}
+        <div className="mt-[48px] grid grid-cols-1 gap-[48px] md:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] md:gap-[72px]">
+          <div>
+            <span className={`${EYEBROW} ${label}`}>Business Model</span>
+            <p className={`mt-[14px] ${SUBHEAD} text-[clamp(1.6rem,1.1rem+1.6vw,2.4rem)] leading-[1.15]`}>{study.business}</p>
+            <dl className="m-0 mt-[40px] grid grid-cols-1 gap-x-8 sm:grid-cols-2">
+              {support.map(([term, text]) => (
+                <div key={term} className={`border-t py-[18px] ${dark ? "border-white/40" : "border-black"}`}>
+                  <dt className={`${EYEBROW} ${label}`}>{term}</dt>
+                  <dd className={`mt-[10px] ml-0 font-serif text-[clamp(1.1rem,1rem+.4vw,1.3rem)] leading-[1.3] ${look.body}`}>{text}</dd>
                 </div>
-              </div>
-            ))}
-          </dl>
+              ))}
+            </dl>
+          </div>
           <div className={`self-start p-[28px] max-[600px]:p-[18px] ${look.card}`}>
-            <span className={`${EYEBROW} ${dark ? "text-white/55" : "text-black/55"}`}>Business model</span>
-            <div className="mt-[16px]">
-              <Drawing on={shown} dark={dark} />
-            </div>
+            <Drawing on={shown} dark={dark} />
           </div>
         </div>
 
@@ -240,7 +244,7 @@ export function TimelineSection() {
         </div>
 
         <div ref={ref} className="mt-[56px]">
-          <div className={`${EYEBROW} grid grid-cols-[minmax(0,180px)_repeat(5,minmax(0,1fr))_72px] items-end border-b border-black pb-[12px] text-black/55 max-md:grid-cols-[repeat(5,minmax(0,1fr))_56px]`}>
+          <div className={`${EYEBROW} grid grid-cols-[minmax(0,180px)_repeat(5,minmax(0,1fr))_72px] items-end border-b border-black pb-[12px] text-black/60 max-md:grid-cols-[repeat(5,minmax(0,1fr))_56px]`}>
             <span className="max-md:hidden">PAT, Rs. crore</span>
             {years.map((year) => (
               <span key={year} className="text-center">
@@ -259,26 +263,27 @@ export function TimelineSection() {
                   {study.name}
                 </a>
                 {study.financials.map((point, index) => {
-                  const delay = row * 250 + index * 140;
+                  const delay = row * 160 + index * 70;
                   return (
                     <div key={point.year} className="relative flex h-[76px] flex-col items-center justify-center">
                       {index > 0 && (
                         <span
                           aria-hidden="true"
-                          className="absolute top-[30px] right-1/2 h-[1.5px] w-full origin-left bg-black/25 motion-reduce:transition-none"
+                          className="absolute top-[30px] right-1/2 h-[1.5px] w-full origin-left bg-black/25 motion-reduce:!transition-none"
                           style={{ transform: `scaleX(${shown ? 1 : 0})`, transition: `transform 400ms ${EASE} ${delay - 100}ms` }}
                         />
                       )}
                       <span className="relative grid h-[60px] place-items-center">
                         <span
                           aria-hidden="true"
-                          className="block rounded-full motion-reduce:transition-none"
+                          className="block rounded-full motion-reduce:!transition-none"
                           style={{
                             width: size(point.pat),
                             height: size(point.pat),
                             backgroundColor: index === study.financials.length - 1 ? ORANGE : "#000",
-                            transform: `scale(${shown ? 1 : 0})`,
-                            transition: `transform 500ms ${EASE} ${delay}ms`,
+                            opacity: shown ? 1 : 0,
+                            transform: `scale(${shown ? 1 : 0.9})`,
+                            transition: `opacity 400ms ${EASE} ${delay}ms, transform 400ms ${EASE} ${delay}ms`,
                           }}
                         />
                       </span>
@@ -287,8 +292,8 @@ export function TimelineSection() {
                   );
                 })}
                 <span
-                  className="text-right text-[clamp(1.2rem,1rem+.8vw,1.7rem)] leading-none font-light tracking-[-.04em] text-[#F7A11A] motion-reduce:transition-none"
-                  style={{ opacity: shown ? 1 : 0, transition: `opacity 400ms ease ${row * 250 + 800}ms` }}
+                  className="text-right text-[clamp(1.2rem,1rem+.8vw,1.7rem)] leading-none font-normal tracking-[-.04em] tabular-nums motion-reduce:!transition-none"
+                  style={{ opacity: shown ? 1 : 0, transition: `opacity 400ms ease ${row * 160 + 500}ms` }}
                 >
                   {study.multiple}
                 </span>
@@ -304,7 +309,7 @@ export function TimelineSection() {
             </svg>
           </span>
           <div>
-            <span className={`${EYEBROW} text-black/55`}>Disclaimer</span>
+            <span className={`${EYEBROW} text-black/60`}>Disclaimer</span>
             <p className="mt-[10px] max-w-[880px] font-serif text-[clamp(1.2rem,1rem+.6vw,1.5rem)] leading-[1.3] text-black/80">{CASE_DISCLAIMER}</p>
           </div>
         </div>

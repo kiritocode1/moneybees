@@ -7,9 +7,10 @@
 
 import type { Team } from "@/lib/careers";
 
-export const ORANGE = "#F7A11A";
+export const ORANGE = "#F6A11A";
 
-const T = "transition-all duration-700 ease-[cubic-bezier(.22,1,.36,1)]";
+/** Only the properties the drawings change; reduced motion shows the explained state at once. */
+const T = "transition-[transform,opacity,fill,stroke-opacity,stroke-dashoffset,y,height] duration-700 ease-[cubic-bezier(.22,1,.36,1)] motion-reduce:!transition-none";
 
 type GlyphProps = { on: boolean; ink?: string };
 

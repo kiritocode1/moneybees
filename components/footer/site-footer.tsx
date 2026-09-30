@@ -1,16 +1,32 @@
+import Link from "next/link";
+import type { ReactNode } from "react";
 import { BracketLabel } from "@/components/fact-sections/fact-section";
 import { CONTACT, RECORD_METHOD, REGISTRATIONS } from "@/lib/insights";
 import DotMarquee from "./dot-marquee";
 import DotWordmark from "./dot-wordmark";
 import MumbaiClock from "./mumbai-clock";
 
-const FOCUS = "focus-visible:outline-2 focus-visible:outline-[#F7A11A] focus-visible:outline-offset-4";
-const GUTTER = "px-[max(32px,calc((100vw_-_1480px)/2))] max-[600px]:px-[22px]";
+const FOCUS = "focus-visible:outline-2 focus-visible:outline-[#000] focus-visible:outline-offset-4";
+/** Same left edge as COLUMN (1512px, 120px gutters) while the rules stay full width. */
+const GUTTER = "px-6 md:px-[max(120px,calc((100vw_-_1512px)/2_+_120px))]";
 
-type Link = readonly [label: string, href: string];
+type FooterLink = readonly [label: string, href: string];
+
+/** Internal routes go through next/link; hashes, mailto and tel stay plain anchors. */
+function FooterAnchor({ href, className, children }: { href: string; className: string; children: ReactNode }) {
+  return href.startsWith("/") ? (
+    <Link href={href} className={className}>
+      {children}
+    </Link>
+  ) : (
+    <a href={href} className={className}>
+      {children}
+    </a>
+  );
+}
 
 const LABEL = "text-[11px] uppercase tracking-[.08em] text-[rgba(0,0,0,.55)]";
-const LINK = `text-[16px] leading-[1.35] tracking-[-.015em] text-[#000] no-underline transition-colors duration-200 hover:text-[#F7A11A] ${FOCUS}`;
+const LINK = `text-[16px] leading-[1.35] tracking-[-.015em] text-[#000] no-underline decoration-[#F6A11A] decoration-2 underline-offset-[5px] hover:underline ${FOCUS}`;
 
 /**
  * The footer, after footer.design and Aspen Search: the brand line as a dot
@@ -20,10 +36,11 @@ const LINK = `text-[16px] leading-[1.35] tracking-[-.015em] text-[#000] no-under
  * address it belongs to. Every line is either the existing footer's or the
  * decks' own (contact p17, registrations p15).
  */
-export default function SiteFooter({ explore }: { explore: readonly Link[] }) {
-  const columns: readonly (readonly [string, readonly Link[]])[] = [
+export default function SiteFooter({ explore }: { explore: readonly FooterLink[] }) {
+  const columns: readonly (readonly [string, readonly FooterLink[]])[] = [
     ["Explore", explore],
-    ["Investors", [["Investor login", "https://www.moneybee.in/register.php"], ["Investor Charter", "#contact"], ["Disclosure Document", "#contact"], ["Grievance redressal", "#contact"], ["SEBI SCORES", "#contact"]]],
+    // The regulatory links land on the investor centre's document groups (stable ids in lib/investor-centre.ts).
+    ["Investors", [["Investor login", "https://www.moneybee.in/register.php"], ["Investor Charter", "/investor-centre#investor-charter"], ["Disclosure Document", "/investor-centre#disclosure-document"], ["Grievance redressal", "/investor-centre#grievance"], ["SEBI SCORES", "/investor-centre#grievance"]]],
   ];
 
   return (
@@ -41,9 +58,9 @@ export default function SiteFooter({ explore }: { explore: readonly Link[] }) {
             <ul className="mt-[22px] grid list-none gap-[12px] p-0">
               {links.map(([label, href]) => (
                 <li key={label}>
-                  <a href={href} className={LINK}>
+                  <FooterAnchor href={href} className={LINK}>
                     {label}
-                  </a>
+                  </FooterAnchor>
                 </li>
               ))}
             </ul>
@@ -96,10 +113,11 @@ export default function SiteFooter({ explore }: { explore: readonly Link[] }) {
             ))}
           </p>
           <nav aria-label="Legal" className="flex gap-[22px]">
-            {[["Privacy", "#top"], ["Terms", "#top"], ["Back to top", "#top"]].map(([label, href]) => (
-              <a key={label} href={href} className={`text-[#000] no-underline hover:text-[#F7A11A] ${FOCUS}`}>
+            {/* Privacy and terms sit with the policies in the investor centre's disclosures group. */}
+            {[["Privacy", "/investor-centre#disclosures"], ["Terms", "/investor-centre#disclosures"], ["Back to top", "#top"]].map(([label, href]) => (
+              <FooterAnchor key={label} href={href} className={`text-[#000] no-underline decoration-[#F6A11A] decoration-2 underline-offset-4 hover:underline ${FOCUS}`}>
                 {label}
-              </a>
+              </FooterAnchor>
             ))}
           </nav>
         </div>

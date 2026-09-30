@@ -113,9 +113,9 @@ function StepGlyph({ step }: { step: number }) {
 export default function ProcessSteps() {
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end end"] });
-  const [progress, setProgress] = useState(0);
-  useMotionValueEvent(scrollYProgress, "change", (value) => setProgress(value));
-  const active = Math.min(STEPS - 1, Math.floor(progress * STEPS));
+  // Only the step index lives in state, so scrolling re-renders six times, not every frame.
+  const [active, setActive] = useState(0);
+  useMotionValueEvent(scrollYProgress, "change", (value) => setActive(Math.max(0, Math.min(STEPS - 1, Math.floor(value * STEPS)))));
   const step = PROCESS_STEPS[active];
 
   /** Scrolls the page to the middle of a step's stretch of the pin. */
@@ -148,8 +148,8 @@ export default function ProcessSteps() {
             <div className="relative mt-[48px] max-md:mt-[32px]">
               <div className="absolute top-1/2 right-[18px] left-[18px] h-[2px] -translate-y-1/2 bg-white/15" />
               <div
-                className="absolute top-1/2 left-[18px] h-[2px] -translate-y-1/2 bg-[#F7A11A]"
-                style={{ width: `calc((100% - 36px) * ${active / (STEPS - 1)})`, transition: "width 500ms cubic-bezier(.22,1,.36,1)" }}
+                className="absolute top-1/2 right-[18px] left-[18px] h-[2px] origin-left -translate-y-1/2 bg-[#F6A11A] motion-reduce:!transition-none"
+                style={{ transform: `scaleX(${active / (STEPS - 1)})`, transition: "transform 500ms cubic-bezier(.22,1,.36,1)" }}
               />
               <ol className="relative m-0 flex list-none justify-between p-0">
                 {PROCESS_STEPS.map((item, index) => {
@@ -182,7 +182,7 @@ export default function ProcessSteps() {
             <div key={step.name} className="mt-[56px] grid animate-[approach-count_500ms_cubic-bezier(.22,1,.36,1)] grid-cols-1 items-center gap-10 motion-reduce:animate-none md:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)] md:gap-16 max-md:mt-[36px] max-md:gap-6">
               <div>
                 <div className="flex items-baseline gap-[18px]">
-                  <span className="text-[clamp(3.4rem,7vw,6.4rem)] leading-none font-light tracking-[-.05em] text-[#F7A11A] tabular-nums">{String(active + 1).padStart(2, "0")}</span>
+                  <span className="text-[clamp(3.4rem,7vw,6.4rem)] leading-none font-light tracking-[-.05em] text-[#F6A11A] tabular-nums">{String(active + 1).padStart(2, "0")}</span>
                   <h3 className="font-serif text-[clamp(2.2rem,1.4rem+2.6vw,4rem)] leading-none font-normal tracking-[-.02em]">{step.name}</h3>
                 </div>
                 <p className={`mt-[24px] max-w-[560px] text-white/75 ${BODY}`}>{step.text}</p>

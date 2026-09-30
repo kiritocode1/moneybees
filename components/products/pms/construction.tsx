@@ -49,7 +49,7 @@ function segmentsFor(key: ConstructionRule["key"], dome: boolean): Segment[] {
       return [...capped.map((d) => ({ d, stroke: ORANGE })), ...rest.map((d) => ({ d, stroke: "#e4e3e0" }))];
     }
     case "mitigation":
-      return pieces(6, dome, 3).map((d, index) => ({ d, stroke: ["#F7A11A", "#E8842C", "#D9955B"][index % 3] }));
+      return pieces(6, dome, 3).map((d, index) => ({ d, stroke: ["#F6A11A", "#E8842C", "#D9955B"][index % 3] }));
     case "rebalancing":
       return pieces(8, dome, 2).map((d) => ({ d, stroke: ORANGE }));
   }
@@ -109,7 +109,7 @@ export default function Construction() {
             </div>
             <div>
               <span className={`${EYEBROW} text-black/55`}>{rule.name}</span>
-              <strong className="mt-[8px] block font-serif text-[clamp(2rem,2.6vw,2.6rem)] leading-none font-normal text-[#F7A11A]">
+              <strong className="mt-[8px] block font-serif text-[clamp(2rem,2.6vw,2.6rem)] leading-none font-normal text-[#F6A11A]">
                 {rule.figure}
               </strong>
               <p className="mt-[14px] text-[15px] leading-[1.55] text-black/70">{rule.text}</p>

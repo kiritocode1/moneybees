@@ -59,7 +59,7 @@ const lerp = (from: Rgb, to: Rgb, t: number): Rgb => [channel(from[0], to[0], t)
 const rgb = (colour: Rgb) => `rgb(${colour.map(Math.round).join(" ")})`;
 const PAPER: Rgb = [255, 255, 255];
 const WAX_SHADE: Rgb = [214, 212, 208];
-const HONEY_TOP: Rgb = [247, 161, 26];
+const HONEY_TOP: Rgb = [246, 161, 26];
 const HONEY_SHADE: Rgb = [201, 129, 16];
 
 /**
@@ -115,7 +115,7 @@ export default function NameStory() {
             <h2 id="name-heading" className={`${SUBHEAD} mt-[18px]`}>
               {NAME_STORY.heading}
             </h2>
-            <p className={`${BODY} mt-[28px] text-[#F7A11A]`}>{NAME_STORY.line}</p>
+            <p className={`${BODY} mt-[28px] text-[#F6A11A]`}>{NAME_STORY.line}</p>
           </div>
         </Rise>
         <Honeycomb />

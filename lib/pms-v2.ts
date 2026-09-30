@@ -12,7 +12,9 @@ export const PMS_PAGE = {
   heading: "Portfolio Management Services",
   intro:
     "Moneybee PMS is focused on long-term investment in Indian equities, with a strong focus on small and mid-cap companies. The approach is research-driven, sector-agnostic and based on understanding businesses, management quality, valuations and risk.",
-  cta: { label: "Explore PMS / Get Started", href: "/contact" },
+  /** The plan's "Explore PMS / Get Started" button, split into its two actions. */
+  explore: { label: "Explore PMS", href: "/pms-vs-aif" },
+  start: { label: "Get Started", href: "/contact?enquiry=pms" },
 } as const;
 
 /** "Why Moneybee PMS?", verbatim. `glyph` picks each point's drawing. */
@@ -49,12 +51,12 @@ export const FUNNEL_STAGES = [
   { name: "Shortlist", text: LOREM_SHORT },
   { name: "Analyse", text: LOREM_SHORT },
   { name: "Decision Making", text: LOREM_SHORT },
-  { name: "15–20 high-conviction stocks", text: LOREM_SHORT },
+  { name: "15 to 20 high-conviction stocks", text: LOREM_SHORT },
 ] as const;
 
 /** "Portfolio Approach", verbatim. */
 export const PORTFOLIO_APPROACH = [
-  "Concentrated portfolio of approximately 15–20 high-conviction stocks.",
+  "Concentrated portfolio of approximately 15 to 20 high-conviction stocks.",
   "At least 3-year investment horizon or until the investment thesis remains intact.",
   "Maximum sector allocation of 30%.",
   "Regular monitoring and quarterly review.",
@@ -85,7 +87,7 @@ export const RISK_CONTROLS = [
 
 export const PERFORMANCE = {
   heading: "PMS Performance",
-  asOf: "As of July 31, 2026",
+  asOf: "As of 31 July 2026",
   pms: "Moneybee PMS",
   benchmark: "S&P BSE 500 TRI",
 } as const;

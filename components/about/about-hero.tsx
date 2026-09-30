@@ -21,7 +21,7 @@ const STRIPES: readonly (readonly ["O" | "K" | "G", number, number])[] = [
   ["K", 567, 8], ["O", 598, 5], ["K", 604, 7], ["G", 611, 20], ["O", 642, 28], ["G", 676, 10], ["O", 687, 2], ["O", 697, 7],
   ["O", 706, 2], ["K", 710, 11], ["O", 731, 3], ["K", 745, 2], ["K", 748, 2], ["G", 757, 5], ["O", 764, 6],
 ];
-const FILL = { O: "#F7A11A", K: "#000000", G: "#9D9EA1" } as const;
+const FILL = { O: "#F6A11A", K: "#000000", G: "#9D9EA1" } as const;
 /** Deterministic scatter for the order the stripes land in. */
 const scatter = (seed: number) => {
   const value = Math.sin(seed * 91.7) * 43758.5453;
@@ -80,14 +80,14 @@ export default function AboutHero() {
               <Link
                 href={business.href}
                 {...(business.external ? { target: "_blank", rel: "noreferrer" } : {})}
-                className="group block text-black no-underline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#F7A11A]"
+                className="group block text-black no-underline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#F6A11A]"
               >
-                <span className="block font-serif text-[clamp(1.6rem,2.4vw,2.2rem)] leading-[1.05] transition-colors duration-200 group-hover:text-[#F7A11A]">
+                <span className="block font-serif text-[clamp(1.6rem,2.4vw,2.2rem)] leading-[1.05] transition-colors duration-200 group-hover:text-[#F6A11A]">
                   {business.name}
                 </span>
                 <span className={`${EYEBROW} mt-[12px] flex items-center gap-[10px] text-black/60`}>
                   {business.detail}
-                  <span className="h-[2px] w-[14px] bg-[#F7A11A] transition-all duration-300 group-hover:w-[28px]" />
+                  <span className="h-[2px] w-[14px] bg-[#F6A11A] transition-all duration-300 group-hover:w-[28px]" />
                 </span>
               </Link>
             </li>

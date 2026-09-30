@@ -7,7 +7,8 @@
 const LOREM = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.";
 
 export const COMPARE = {
-  heading: "PMS vs AIF – Understanding the Difference",
+  /** The plan's heading, with its dash set as a colon (no dashes in visible copy). */
+  heading: "PMS vs AIF: Understanding the Difference",
   /** LOREM */
   lead: LOREM,
 } as const;

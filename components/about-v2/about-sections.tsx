@@ -112,11 +112,11 @@ export function FounderSection() {
           <Image src={FOUNDER.photo} alt={FOUNDER.name} fill sizes="(max-width: 768px) 100vw, 520px" className="object-cover" />
         </div>
         <div>
-          <BracketLabel>Founder</BracketLabel>
+          <BracketLabel>01 · Founder</BracketLabel>
           <h2 id="founder-heading" className={`mt-[18px] ${SUBHEAD}`}>
             {FOUNDER.name}
           </h2>
-          <p className={`mt-[10px] ${EYEBROW} text-[12px] text-[#F7A11A]`}>{FOUNDER.role}</p>
+          <p className={`mt-[10px] ${EYEBROW} text-[12px] text-[#F6A11A]`}>{FOUNDER.role}</p>
           <ul className="mt-[24px] flex list-none flex-wrap gap-[8px] p-0" aria-label="Qualifications">
             {FOUNDER.qualifications.map((item, index) => (
               <li
@@ -129,7 +129,7 @@ export function FounderSection() {
             ))}
           </ul>
           <div className="mt-[40px] flex items-end gap-[18px] border-t border-white/20 pt-[28px]">
-            <span className="text-[clamp(4rem,8vw,7rem)] leading-[.85] font-light tracking-[-.05em] text-[#F7A11A] tabular-nums">
+            <span className="text-[clamp(4rem,8vw,7rem)] leading-[.85] font-light tracking-[-.05em] text-[#F6A11A] tabular-nums">
               <CountUp to={45} on={shown} instant={instant} />+
             </span>
             <span className={`${EYEBROW} pb-[6px] text-white/60`}>Years of experience</span>
@@ -159,15 +159,15 @@ export function TimelineSection() {
   return (
     <section id="timeline" aria-labelledby="timeline-heading" className="scroll-mt-[96px] bg-[#F7F7F8] text-black">
       <div className={`${COLUMN} py-[120px] max-md:py-[80px]`}>
-        <BracketLabel>Timeline</BracketLabel>
-        <h2 id="timeline-heading" className={`mt-[18px] ${SUBHEAD}`}>
+        <span className={`${EYEBROW} text-black/60`}>02</span>
+        <h2 id="timeline-heading" className={`mt-[14px] ${SUBHEAD}`}>
           Timeline
         </h2>
         <div ref={ref} className="relative mt-[64px]">
           {/* Desktop track: dashed before 2004, solid orange after. */}
           <div aria-hidden="true" className="absolute top-[22px] right-0 left-0 max-md:hidden">
             <div className="absolute left-0 h-[2px] w-[33.333%] bg-[repeating-linear-gradient(90deg,rgba(0,0,0,.35)_0_6px,transparent_6px_12px)]" style={{ clipPath: shown ? "inset(0 0 0 0)" : "inset(0 100% 0 0)", transition: `clip-path ${t(900)}` }} />
-            <div className="absolute left-[33.333%] h-[2px] bg-[#F7A11A]" style={{ width: shown ? "66.667%" : "0%", transition: `width ${t(1100, 700)}` }} />
+            <div className="absolute left-[33.333%] h-[2px] w-[66.667%] origin-left bg-[#F6A11A]" style={{ transform: `scaleX(${shown ? 1 : 0})`, transition: `transform ${t(1100, 700)}` }} />
           </div>
           <ol className="relative m-0 grid list-none grid-cols-1 gap-10 p-0 md:grid-cols-3 md:gap-0">
             {TIMELINE.map((stop, index) => {
@@ -180,7 +180,7 @@ export function TimelineSection() {
                   {index < TIMELINE.length - 1 && (
                     <span
                       aria-hidden="true"
-                      className={`absolute top-[22px] left-[21px] h-[calc(100%+40px)] w-[2px] md:hidden ${dated ? "bg-[#F7A11A]" : "bg-[repeating-linear-gradient(180deg,rgba(0,0,0,.35)_0_6px,transparent_6px_12px)]"}`}
+                      className={`absolute top-[22px] left-[21px] h-[calc(100%+40px)] w-[2px] md:hidden ${dated ? "bg-[#F6A11A]" : "bg-[repeating-linear-gradient(180deg,rgba(0,0,0,.35)_0_6px,transparent_6px_12px)]"}`}
                       style={{ clipPath: shown ? "inset(0 0 0 0)" : "inset(0 0 100% 0)", transition: `clip-path ${t(700, index * 450)}` }}
                     />
                   )}
@@ -197,7 +197,7 @@ export function TimelineSection() {
                     </svg>
                   </span>
                   <div className="md:mt-[28px]" style={{ opacity: shown ? 1 : 0, transform: `translateY(${shown ? 0 : 10}px)`, transition: `opacity ${t(500, delay)}, transform ${t(500, delay)}` }}>
-                    <span className={`block text-[clamp(2.4rem,1.6rem+2.4vw,3.6rem)] leading-none font-light tracking-[-.04em] ${dated ? "text-[#F7A11A]" : "text-black/45"}`}>{stop.label}</span>
+                    <span className={`block text-[clamp(2.4rem,1.6rem+2.4vw,3.6rem)] leading-none font-light tracking-[-.04em] ${dated ? "text-black" : "text-black/60"}`}>{stop.label}</span>
                     <p className="mt-[14px] max-w-[320px] font-serif text-[clamp(1.2rem,1rem+.6vw,1.5rem)] leading-[1.25]">{stop.text}</p>
                   </div>
                 </li>
@@ -283,24 +283,24 @@ export function StorySection() {
   return (
     <section id="story" aria-labelledby="story-heading" className="scroll-mt-[96px] border-t border-dashed border-black/10 bg-white text-black">
       <div className={`${COLUMN} py-[120px] max-md:py-[80px]`}>
-        <BracketLabel>Our story</BracketLabel>
-        <h2 id="story-heading" className={`mt-[18px] ${SUBHEAD}`}>
+        <span className={`${EYEBROW} text-black/60`}>03</span>
+        <h2 id="story-heading" className={`mt-[14px] ${SUBHEAD}`}>
           {STORY.heading}
         </h2>
         <blockquote className="mt-[40px] max-w-[980px] font-serif text-[clamp(1.9rem,1.2rem+2.4vw,3.4rem)] leading-[1.12] tracking-[-.015em]">
-          <span className="text-[#F7A11A]">&ldquo;</span>
+          <span className="text-[#F6A11A]">&ldquo;</span>
           {STORY.line}
-          <span className="text-[#F7A11A]">&rdquo;</span>
+          <span className="text-[#F6A11A]">&rdquo;</span>
         </blockquote>
         <div ref={ref} className="mt-[64px] grid grid-cols-1 gap-[2px] bg-black/10 md:grid-cols-2">
           <div className="bg-white p-[32px] max-[600px]:p-[20px]">
-            <span className={`${EYEBROW} text-black/50`}>Bees</span>
+            <span className={`${EYEBROW} text-black/60`}>Bees</span>
             <div className="mx-auto mt-[18px] max-w-[440px]">
               <NectarDrawing on={shown} t={t} />
             </div>
           </div>
           <div className="bg-white p-[32px] max-[600px]:p-[20px]">
-            <span className={`${EYEBROW} text-[#F7A11A]`}>Moneybee</span>
+            <span className={`${EYEBROW} text-black`}>Moneybee</span>
             <div className="mx-auto mt-[18px] max-w-[440px]">
               <MoneyDrawing on={shown} t={t} />
             </div>

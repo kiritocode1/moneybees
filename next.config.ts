@@ -1,6 +1,8 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  // Pin the workspace root so Turbopack does not pick up a lockfile further up the tree.
+  turbopack: { root: __dirname },
   images: {
     remotePatterns: [
       {

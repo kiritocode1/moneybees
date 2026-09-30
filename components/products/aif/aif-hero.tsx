@@ -22,7 +22,7 @@ const WEDGES = [
     key: "listed",
     from: FRONT - LISTED_SPAN / 2,
     to: FRONT + LISTED_SPAN / 2,
-    top: "#F7A11A",
+    top: "#F6A11A",
     side: "#d98c10",
     edge: "rgba(90,50,0,.72)",
   },
@@ -78,8 +78,8 @@ function MixPlate() {
             <line x1="0" y1="0" x2="0" y2="7" stroke="rgba(0,0,0,.22)" strokeWidth="1.2" />
           </pattern>
           <radialGradient id="aif-hero-bloom">
-            <stop offset="0%" stopColor="#F7A11A" stopOpacity="0.34" />
-            <stop offset="100%" stopColor="#F7A11A" stopOpacity="0" />
+            <stop offset="0%" stopColor="#F6A11A" stopOpacity="0.34" />
+            <stop offset="100%" stopColor="#F6A11A" stopOpacity="0" />
           </radialGradient>
         </defs>
         <ellipse cx={CX} cy={CY + 30} rx={RADIUS * 1.05} ry={RADIUS * 0.5} fill="url(#aif-hero-bloom)" opacity={progress} />
@@ -106,7 +106,7 @@ function MixPlate() {
             <path
               d={`M${start[0].toFixed(2)} ${start[1].toFixed(2)} L${(start[0] + 40).toFixed(2)} ${y} L560 ${y}`}
               fill="none"
-              stroke={key === "listed" ? "#F7A11A" : "rgba(0,0,0,.4)"}
+              stroke={key === "listed" ? "#F6A11A" : "rgba(0,0,0,.4)"}
               strokeDasharray={key === "listed" ? undefined : "2 5"}
               strokeLinecap="round"
             />
@@ -122,7 +122,7 @@ function MixPlate() {
             style={{ left: `${(566 / 700) * 100}%`, top: `${(y / 460) * 100}%`, translate: "0 -58%", opacity: labels }}
           >
             <span className={`${EYEBROW} text-black/60`}>{label}</span>
-            <span className={`font-serif text-[clamp(1.8rem,3vw,2.8rem)] leading-none tabular-nums ${key === "listed" ? "text-[#F7A11A]" : "text-black"}`}>
+            <span className={`font-serif text-[clamp(1.8rem,3vw,2.8rem)] leading-none tabular-nums ${key === "listed" ? "text-[#F6A11A]" : "text-black"}`}>
               {figure}
             </span>
           </div>
@@ -133,7 +133,7 @@ function MixPlate() {
         {leaders.map(({ key, figure, label }) => (
           <div key={key} className="flex flex-col gap-1" style={{ opacity: labels }}>
             <span className={`${EYEBROW} text-black/60`}>{label}</span>
-            <span className={`font-serif text-[2.2rem] leading-none tabular-nums ${key === "listed" ? "text-[#F7A11A]" : "text-black"}`}>{figure}</span>
+            <span className={`font-serif text-[2.2rem] leading-none tabular-nums ${key === "listed" ? "text-[#F6A11A]" : "text-black"}`}>{figure}</span>
           </div>
         ))}
       </div>
@@ -180,7 +180,7 @@ export default function AifHero() {
       <dl className={`${COLUMN} grid grid-cols-4 gap-x-10 gap-y-8 border-t border-dashed border-black/10 pt-[32px] pb-[64px] max-md:grid-cols-2`}>
         {FIGURES.map(([figure, caption], index) => (
           <Rise key={caption} onView delay={index * 0.06}>
-            <dt className="font-serif text-[clamp(2rem,3.2vw,3rem)] leading-none text-[#F7A11A]">{figure}</dt>
+            <dt className="font-serif text-[clamp(2rem,3.2vw,3rem)] leading-none text-[#F6A11A]">{figure}</dt>
             <dd className={`${EYEBROW} mt-[12px] text-black/60`}>{caption}</dd>
           </Rise>
         ))}

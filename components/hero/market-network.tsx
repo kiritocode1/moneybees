@@ -33,7 +33,7 @@ const CYCLE = (HOLD + MORPH) * STAGES.length;
 
 const INK = [0, 0, 0] as const;
 const GREY = [157, 158, 161] as const;
-const ORANGE = [247, 161, 26] as const;
+const ORANGE = [246, 161, 26] as const;
 
 /** Seeded so server and client agree and the figure is the same every visit. */
 function random(seed: number) {
@@ -317,7 +317,7 @@ export default function MarketNetwork({ className = "" }: { className?: string }
       <svg className="pointer-events-none absolute inset-0 h-full w-full overflow-visible">
         <line
           ref={leaderRef}
-          stroke="rgba(247,161,26,.8)"
+          stroke="rgba(246, 161, 26,.8)"
           strokeWidth="1"
           strokeDasharray="4 4"
           className="transition-opacity duration-300"
@@ -327,7 +327,7 @@ export default function MarketNetwork({ className = "" }: { className?: string }
       <div
         ref={pillRef}
         data-shown="false"
-        className="pointer-events-none absolute top-0 right-0 flex min-h-[32px] origin-left scale-y-[.4] items-center gap-[12px] rounded-[7px] border border-[rgba(0,0,0,.08)] bg-[rgba(255,255,255,.55)] px-[18px] py-[9px] font-[family-name:var(--font-geist-mono)] text-[12px] font-medium tracking-[.1em] whitespace-nowrap text-black uppercase opacity-0 backdrop-blur-[14px] transition-[opacity,scale] duration-300 before:h-[13px] before:w-[13px] before:shrink-0 before:rounded-full before:bg-[#F7A11A] before:content-[''] data-[shown=true]:scale-y-100 data-[shown=true]:opacity-100 max-[600px]:text-[10px]"
+        className="pointer-events-none absolute top-0 right-0 flex min-h-[32px] origin-left scale-y-[.4] items-center gap-[12px] rounded-[7px] border border-[rgba(0,0,0,.08)] bg-[rgba(255,255,255,.55)] px-[18px] py-[9px] font-[family-name:var(--font-geist-mono)] text-[12px] font-medium tracking-[.1em] whitespace-nowrap text-black uppercase opacity-0 backdrop-blur-[14px] transition-[opacity,scale] duration-300 before:h-[13px] before:w-[13px] before:shrink-0 before:rounded-full before:bg-[#F6A11A] before:content-[''] data-[shown=true]:scale-y-100 data-[shown=true]:opacity-100 max-[600px]:text-[10px]"
       >
         <span ref={pillTextRef} />
       </div>

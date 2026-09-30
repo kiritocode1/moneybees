@@ -96,7 +96,7 @@ export default function PinnedStats() {
                 initial={reduceMotion ? false : "hidden"}
                 whileInView="shown"
                 viewport={{ once: true, amount: 0.35 }}
-                className="relative overflow-hidden bg-[#F7A11A]"
+                className="relative overflow-hidden bg-[#F6A11A]"
               >
                 <motion.div
                   variants={{

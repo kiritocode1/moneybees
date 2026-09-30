@@ -22,7 +22,8 @@ export const GROUP_AREAS = [
 ] as const;
 
 export const FOUNDER = {
-  name: "Mr. Dhiren Shah",
+  /** The plan writes "Mr. Dhiren Shah"; as a name label the title is dropped. It stays inside the plan's verbatim sentences. */
+  name: "Dhiren Shah",
   role: "Managing Director",
   qualifications: ["FCA", "Grad CWA", "LLB", "M.Com."],
   points: [

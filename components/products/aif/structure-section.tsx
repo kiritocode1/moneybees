@@ -124,7 +124,7 @@ function StructureFigure({ lit, onSelect }: { lit: number; onSelect: (index: num
           const on = index === lit;
           const [px, py] = fund ? [0, 0] : plan(index);
           const [lx, ly] = fund ? at(-FUND, -FUND, 64, OX, OY) : at(px, py, 30, OX, OY);
-          const top = fund ? "#F7A11A" : on ? "#F7A11A" : "#fbfaf8";
+          const top = fund ? "#F6A11A" : on ? "#F6A11A" : "#fbfaf8";
           return (
             <g
               key={key}
@@ -241,7 +241,7 @@ export default function StructureSection() {
                     <span className={`block text-[17px] leading-[1.3] transition-colors ${open ? "text-black" : "text-black/55"}`}>{party.name}</span>
                     <span className={`${EYEBROW} mt-[4px] block text-black/50`}>{party.role}</span>
                   </span>
-                  <i className={`h-[8px] w-[8px] shrink-0 self-center transition-colors ${open ? "bg-[#F7A11A]" : "bg-black/15"}`} aria-hidden="true" />
+                  <i className={`h-[8px] w-[8px] shrink-0 self-center transition-colors ${open ? "bg-[#F6A11A]" : "bg-black/15"}`} aria-hidden="true" />
                 </button>
                 <div className="grid transition-[grid-template-rows] duration-300 ease-out" style={{ gridTemplateRows: open ? "1fr" : "0fr" }}>
                   <div className="overflow-hidden">

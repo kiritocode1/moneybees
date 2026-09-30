@@ -17,8 +17,9 @@ export const FLYINGBEE = {
   heading: "Flyingbee Investment Fund",
   intro:
     "Flyingbee Investment Fund is a Category III AIF managed by Moneybee. The fund focuses on opportunities in high-growth listed and pre-IPO/unlisted companies.",
-  explore: { label: "Explore Flyingbee", href: "/contact" },
-  start: { label: "Get Started", href: "/contact" },
+  /** The plan's "Explore Flyingbee / Get Started" button, split into its two actions. */
+  explore: { label: "Explore Flyingbee", href: "#structure" },
+  start: { label: "Get Started", href: "/contact?enquiry=aif" },
 } as const;
 
 /** The plan's explanation, with its "the presentation explains that" dropped. */
@@ -49,8 +50,8 @@ export const APPROACH_STEPS = [
 
 /** The plan's key terms. `label` and `value` split each line; `glyph` picks its drawing. */
 export const KEY_TERMS = [
-  { label: "Minimum investment", value: "₹1 Crore", glyph: "minimum" },
-  { label: "Suitable time frame", value: "3–5 years", glyph: "horizon" },
+  { label: "Minimum investment", value: "Rs. 1 crore", glyph: "minimum" },
+  { label: "Suitable time frame", value: "3 to 5 years", glyph: "horizon" },
   { label: "Investment in", value: "Listed and pre-IPO/unlisted opportunities", glyph: "universe" },
   { label: "Benchmark", value: "S&P BSE 500 TRI", glyph: "benchmark" },
   { label: "Exit load", value: "No exit load, subject to approved fund documents", glyph: "exit" },

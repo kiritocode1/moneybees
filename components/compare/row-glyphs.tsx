@@ -100,7 +100,7 @@ const PAIRS: Record<ComparisonGlyph, Pair> = {
       <Svg>
         <rect x="10" y="8" width="100" height="48" rx="3" fill="none" stroke={WHITE} strokeWidth="1.4" />
         {[0, 1, 2, 3].map((slot) => (
-          <rect key={slot} x={16 + slot * 23} y="14" width="19" height="36" fill={on ? (slot === 0 ? ORANGE : "rgba(247,161,26,.45)") : DIM} className={T} style={{ transitionDelay: `${slot * 80}ms` }} />
+          <rect key={slot} x={16 + slot * 23} y="14" width="19" height="36" fill={on ? (slot === 0 ? ORANGE : "rgba(246, 161, 26,.45)") : DIM} className={T} style={{ transitionDelay: `${slot * 80}ms` }} />
         ))}
       </Svg>
     ),

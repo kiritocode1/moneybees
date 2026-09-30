@@ -154,7 +154,7 @@ export default function DealTimeline() {
                       {index < count - 1 && (
                         <span
                           aria-hidden="true"
-                          className="absolute top-1/2 left-[28px] h-[2px] w-full origin-left bg-[#F7A11A] transition-transform duration-500 ease-out motion-reduce:transition-none"
+                          className="absolute top-1/2 left-[28px] h-[2px] w-full origin-left bg-[#F6A11A] transition-transform duration-500 ease-out motion-reduce:transition-none"
                           style={{
                             transform: `translateY(-50%) scaleX(${reduceMotion || index < active ? 1 : 0})`,
                           }}
@@ -169,13 +169,13 @@ export default function DealTimeline() {
                       >
                         <polygon
                           points={hexPoints(0, 0, 26)}
-                          fill={reached ? "#F7A11A" : "#ffffff"}
-                          stroke={reached ? "#F7A11A" : "rgba(0,0,0,.35)"}
+                          fill={reached ? "#F6A11A" : "#ffffff"}
+                          stroke={reached ? "#F6A11A" : "rgba(0,0,0,.35)"}
                           strokeWidth="1.2"
                           className="transition-[fill,stroke] duration-300 motion-reduce:transition-none"
                           style={{
                             filter: lit
-                              ? "drop-shadow(0 0 12px rgba(247,161,26,.55))"
+                              ? "drop-shadow(0 0 12px rgba(246, 161, 26,.55))"
                               : "none",
                           }}
                         />

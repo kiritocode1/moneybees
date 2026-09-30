@@ -18,6 +18,7 @@ import {
   PMS_ROWS,
   type ReturnRow,
 } from "@/lib/performance";
+import { PageIndex, NoScriptReveal } from "@/components/pms-v2/shared";
 import { useReducedMotion } from "@/lib/use-reduced-motion";
 
 /*
@@ -27,9 +28,8 @@ import { useReducedMotion } from "@/lib/use-reduced-motion";
  * Figures are as of 31 July 2026 (lib/performance.ts).
  */
 
-const ORANGE = "#F7A11A";
+const ORANGE = "#F6A11A";
 const EASE = "cubic-bezier(.22,1,.36,1)";
-const number = (index: number) => String(index + 1).padStart(2, "0");
 
 function useShown<T extends Element>(amount = 0.35) {
   const ref = useRef<T>(null);
@@ -41,7 +41,7 @@ function useShown<T extends Element>(amount = 0.35) {
 function AsOf({ dark = false }: { dark?: boolean }) {
   return (
     <span className={`${EYEBROW} inline-flex items-center gap-[10px] border px-[12px] py-[7px] text-[11px] ${dark ? "border-white/25 text-white" : "border-black/20 text-black"}`}>
-      <i className="h-[8px] w-[8px] bg-[#F7A11A]" aria-hidden="true" />
+      <i className="h-[8px] w-[8px] bg-[#F6A11A]" aria-hidden="true" />
       {PERFORMANCE.asOf}
     </span>
   );
@@ -50,6 +50,7 @@ function AsOf({ dark = false }: { dark?: boolean }) {
 export function PerformanceHero() {
   return (
     <section aria-labelledby="performance-heading" className="bg-white text-black">
+      <NoScriptReveal />
       <div className={`${COLUMN} grid grid-cols-1 items-end gap-14 pt-[150px] pb-[110px] md:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] md:gap-20 md:pt-[220px] max-md:pb-[72px]`}>
         <div>
           <Rise>
@@ -70,19 +71,7 @@ export function PerformanceHero() {
           </Rise>
         </div>
         <Rise delay={0.2}>
-          <nav aria-label="On this page">
-            <ol className="list-none border-t border-black p-0">
-              {PERFORMANCE_PARTS.map(([label, href], index) => (
-                <li key={href} className="border-b border-black/15">
-                  <a href={href} className="group flex items-baseline gap-[18px] py-[14px] text-black no-underline">
-                    <span className="w-[34px] text-[22px] leading-none font-light tracking-[-.04em] text-[#F7A11A]">{number(index)}</span>
-                    <span className="text-[17px] text-black/75 transition-colors group-hover:text-black">{label}</span>
-                    <span className="ml-auto h-[2px] w-0 bg-[#F7A11A] transition-all duration-300 group-hover:w-[28px]" />
-                  </a>
-                </li>
-              ))}
-            </ol>
-          </nav>
+          <PageIndex parts={PERFORMANCE_PARTS} />
         </Rise>
       </div>
     </section>
@@ -131,16 +120,16 @@ function ReturnTable({ rows, names, active, onActive }: { rows: readonly ReturnR
               onMouseEnter={() => onActive(index)}
               onFocus={() => onActive(index)}
               onBlur={() => onActive(null)}
-              className="border-b border-black/12 outline-none transition-colors focus-visible:bg-black/[.04]"
-              style={{ backgroundColor: lit ? "rgba(247,161,26,.10)" : undefined }}
+              className="border-b border-black/12 transition-colors duration-150 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-black"
+              style={{ backgroundColor: lit ? "rgba(246, 161, 26,.10)" : undefined }}
             >
               <th scope="row" className="py-[14px] pr-[12px] text-[16px] font-normal whitespace-nowrap">
                 {row.period}
               </th>
-              <td className={`py-[14px] pr-[12px] text-right font-[family-name:var(--font-geist-mono)] text-[15px] tabular-nums ${row.ours === null ? "text-black/35" : "text-black"}`}>
+              <td className={`py-[14px] pr-[12px] text-right font-[family-name:var(--font-geist-mono)] text-[15px] tabular-nums ${row.ours === null ? "text-black/60" : "text-black"}`}>
                 {formatReturn(row.ours)}
               </td>
-              <td className={`py-[14px] text-right font-[family-name:var(--font-geist-mono)] text-[15px] tabular-nums ${row.benchmark === null ? "text-black/35" : "text-black/60"}`}>
+              <td className={`py-[14px] text-right font-[family-name:var(--font-geist-mono)] text-[15px] tabular-nums ${row.benchmark === null ? "text-black/60" : "text-black/70"}`}>
                 {formatReturn(row.benchmark)}
               </td>
             </tr>
@@ -173,7 +162,7 @@ function ReturnBars({ rows, shown, active, onActive }: { rows: readonly ReturnRo
     <div>
       <div className={`${EYEBROW} mb-[14px] flex flex-wrap gap-x-[18px] gap-y-[6px] text-black/65`} aria-hidden="true">
         <span className="flex items-center gap-[8px]">
-          <i className="h-[9px] w-[9px] bg-[#F7A11A]" />
+          <i className="h-[9px] w-[9px] bg-[#F6A11A]" />
           {PMS_NAMES.ours}
         </span>
         <span className="flex items-center gap-[8px]">
@@ -199,7 +188,7 @@ function ReturnBars({ rows, shown, active, onActive }: { rows: readonly ReturnRo
                   height="11"
                   fill={fill}
                   style={{ transformBox: "fill-box", transformOrigin: value < 0 ? "100% 50%" : "0% 50%", transform: `scaleX(${shown ? 1 : 0})`, transition: `transform 800ms ${EASE} ${delay}ms` }}
-                  className="motion-reduce:transition-none"
+                  className="motion-reduce:!transition-none"
                 />
                 <text
                   x={value < 0 ? left - 6 : left + width + 6}
@@ -219,13 +208,13 @@ function ReturnBars({ rows, shown, active, onActive }: { rows: readonly ReturnRo
           return (
             <g key={row.period} onMouseEnter={() => onActive(index)} style={{ opacity: lit ? 1 : 0.3, transition: "opacity 200ms ease" }}>
               <rect x="0" y={top - 4} width={W} height={ROW - 4} fill="transparent" />
-              <text x="0" y={top + 16} fontSize="10.5" fill="#000" fillOpacity=".6" fontFamily="var(--font-geist-mono), ui-monospace, monospace" letterSpacing=".06em">
+              <text x="0" y={top + 16} fontSize="10.5" fill="#000" fillOpacity=".7" fontFamily="var(--font-geist-mono), ui-monospace, monospace" letterSpacing=".06em">
                 {row.short}
               </text>
               {bar(row.ours, top, ORANGE, index * 70)}
               {bar(row.benchmark, top + 13, "#000", index * 70 + 40)}
               {row.ours === null && (
-                <text x={zero + span * 0.34 + 8} y={top + 16} fontSize="10" fill="#000" fillOpacity=".45" fontFamily="var(--font-geist-mono), ui-monospace, monospace">
+                <text x={zero + span * 0.34 + 8} y={top + 16} fontSize="10" fill="#000" fillOpacity=".65" fontFamily="var(--font-geist-mono), ui-monospace, monospace">
                   N/A
                 </text>
               )}
@@ -287,13 +276,14 @@ function UnitGrid({ total, fill, on, columns = 10 }: { total: number; fill: stri
         return (
           <span key={index} className="relative block aspect-square border border-white/20">
             <span
-              className="absolute inset-y-0 left-0 block motion-reduce:transition-none"
+              className="absolute inset-y-0 left-0 block motion-reduce:!transition-none"
               style={{
                 width: `${part * 100}%`,
                 backgroundColor: index === 0 ? "#fff" : fill,
-                transform: `scale(${on ? 1 : 0})`,
+                opacity: on ? 1 : 0,
+                transform: `scale(${on ? 1 : 0.9})`,
                 transformOrigin: "0 100%",
-                transition: `transform 450ms ${EASE} ${index * 45}ms`,
+                transition: `opacity 300ms ${EASE} ${index * 30}ms, transform 300ms ${EASE} ${index * 30}ms`,
               }}
             />
           </span>
@@ -309,7 +299,7 @@ export function WealthSection() {
   const ours = useCount(GROWTH.ours, shown);
   const benchmark = useCount(GROWTH.benchmark, shown);
   const sides = [
-    { name: PMS_NAMES.ours, value: ours, total: GROWTH.ours, fill: ORANGE, tone: "text-[#F7A11A]" },
+    { name: PMS_NAMES.ours, value: ours, total: GROWTH.ours, fill: ORANGE, tone: "text-[#F6A11A]" },
     { name: PMS_NAMES.benchmark, value: benchmark, total: GROWTH.benchmark, fill: "rgba(255,255,255,.55)", tone: "text-white" },
   ];
   return (
@@ -336,7 +326,7 @@ export function WealthSection() {
               <div className="mt-[28px]">
                 <UnitGrid total={side.total} fill={side.fill} on={shown} />
               </div>
-              <span className={`${EYEBROW} mt-[16px] text-white/45`}>
+              <span className={`${EYEBROW} mt-[16px] text-white/60`}>
                 {GROWTH.from} to {GROWTH.to}
               </span>
             </div>
@@ -370,10 +360,10 @@ function AifBars({ shown }: { shown: boolean }) {
           return (
             <g key={row.period} style={{ opacity: shown ? 1 : 0, transition: `opacity 500ms ease ${500 + index * 120}ms` }}>
               <rect x={cx - 22} y={BASE - 70} width="44" height="70" fill="none" stroke="#000" strokeOpacity=".3" strokeDasharray="3 3" />
-              <text x={cx} y={BASE - 31} textAnchor="middle" fontSize="10" fill="#000" fillOpacity=".45" fontFamily={mono}>
+              <text x={cx} y={BASE - 31} textAnchor="middle" fontSize="10" fill="#000" fillOpacity=".65" fontFamily={mono}>
                 N/A
               </text>
-              <text x={cx} y={BASE + 22} textAnchor="middle" fontSize="11" fill="#000" fillOpacity=".55" fontFamily={mono} letterSpacing=".06em">
+              <text x={cx} y={BASE + 22} textAnchor="middle" fontSize="11" fill="#000" fillOpacity=".7" fontFamily={mono} letterSpacing=".06em">
                 {row.short}
               </text>
             </g>
@@ -394,7 +384,7 @@ function AifBars({ shown }: { shown: boolean }) {
                   height={BASE - y(bar.value)}
                   fill={bar.fill}
                   style={{ transformBox: "fill-box", transformOrigin: "50% 100%", transform: `scaleY(${shown ? 1 : 0})`, transition: `transform 800ms ${EASE} ${index * 140 + b * 60}ms` }}
-                  className="motion-reduce:transition-none"
+                  className="motion-reduce:!transition-none"
                 />
                 <text
                   x={cx + bar.dx + 11}
@@ -410,7 +400,7 @@ function AifBars({ shown }: { shown: boolean }) {
                 </text>
               </g>
             ))}
-            <text x={cx} y={BASE + 22} textAnchor="middle" fontSize="11" fill="#000" fillOpacity=".55" fontFamily={mono} letterSpacing=".06em">
+            <text x={cx} y={BASE + 22} textAnchor="middle" fontSize="11" fill="#000" fillOpacity=".7" fontFamily={mono} letterSpacing=".06em">
               {row.short}
             </text>
           </g>
@@ -437,7 +427,7 @@ export function AifPerformanceSection() {
           <div className="bg-white p-[28px] max-[600px]:p-[18px]">
             <div className={`${EYEBROW} mb-[18px] flex flex-wrap gap-x-[18px] gap-y-[6px] text-black/65`} aria-hidden="true">
               <span className="flex items-center gap-[8px]">
-                <i className="h-[9px] w-[9px] bg-[#F7A11A]" />
+                <i className="h-[9px] w-[9px] bg-[#F6A11A]" />
                 {AIF_NAMES.ours}
               </span>
               <span className="flex items-center gap-[8px]">
@@ -495,7 +485,7 @@ function MethodGlyph({ on }: { on: boolean }) {
             strokeDasharray="1"
             strokeDashoffset={on ? 0 : 1}
             style={{ transition: `stroke-dashoffset 600ms ${EASE} ${700 + index * 350}ms` }}
-            className="motion-reduce:transition-none"
+            className="motion-reduce:!transition-none"
           />
           <text x={piece.x} y="140" textAnchor="middle" fontSize="11" fill="#000" fontFamily={mono} style={{ opacity: on ? 1 : 0, transition: `opacity 300ms ease ${900 + index * 350}ms` }}>
             {piece.label}
@@ -523,7 +513,7 @@ export function MethodologySection() {
             <AsOf />
           </div>
           <p className="mt-[28px] text-[15px] leading-[1.6] text-black/70">{METHOD.text}</p>
-          <p className="mt-[20px] border-l-2 border-[#F7A11A] pl-[16px] font-serif text-[clamp(1.25rem,1rem+.7vw,1.6rem)] leading-[1.25]">{METHOD.caveat}</p>
+          <p className="mt-[20px] border-l-2 border-[#F6A11A] pl-[16px] font-serif text-[clamp(1.25rem,1rem+.7vw,1.6rem)] leading-[1.25]">{METHOD.caveat}</p>
         </div>
         <div className="self-center border border-black/15 p-[28px] max-[600px]:p-[18px]">
           <MethodGlyph on={shown} />

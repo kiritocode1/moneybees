@@ -35,7 +35,7 @@ export default function QuotePanel() {
       className="grid min-h-[600px] grid-cols-2 max-[900px]:min-h-0 max-[900px]:grid-cols-1"
     >
       <div className="flex flex-col bg-[#000000] p-[52px] text-white max-[600px]:p-[28px]">
-        <i className="not-italic text-[#F7A11A]" aria-hidden="true">
+        <i className="not-italic text-[#F6A11A]" aria-hidden="true">
           <QuoteUp size={54} />
         </i>
         <motion.div {...reveal(0.1)} className="mx-auto mt-[80px] max-[900px]:mt-[42px] max-[900px]:mx-0">

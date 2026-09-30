@@ -6,7 +6,7 @@ import { clamp, easeOut, r2, riseAt } from "@/components/fact-sections/fact-sect
 import { barFaces, path, project, type Point } from "@/components/iso/geometry";
 import { useReducedMotion } from "@/lib/use-reduced-motion";
 
-const ORANGE = "#F7A11A";
+const ORANGE = "#F6A11A";
 const GREY = "#9D9EA1";
 
 /** One block of the business park, in plan units: corner, footprint side and height. */

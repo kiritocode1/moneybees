@@ -1,8 +1,8 @@
 "use client";
 
-import { useInView } from "motion/react";
+import { useInView, useMotionValueEvent } from "motion/react";
 import { useReducedMotion } from "@/lib/use-reduced-motion";
-import { useRef, useState } from "react";
+import { useCallback, useLayoutEffect, useRef, useState } from "react";
 import { path, type Point } from "@/components/iso/geometry";
 import {
   PYRAMID_NORMALS,
@@ -24,7 +24,7 @@ import FactSection, {
   PanelTitle,
   riseAt,
   SOLID_GLOW,
-  useFigureClock,
+  useFigureClockValue,
 } from "./fact-section";
 
 /** The resting view: one corner of the pyramid pointing at the viewer. */
@@ -46,9 +46,10 @@ function faceFill(shade: number, selected: boolean) {
 }
 
 /**
- * The visible slope faces of one tier at `rotation`, far to near. Culled the
- * same way as the card: by the winding of the whole face from apex to base, so
- * a face does not vanish while its slope still leans toward the viewer.
+ * All four slope faces of one tier at `rotation`, in side order. `visible` is
+ * culled the same way as the card: by the winding of the whole face from apex
+ * to base, so a face does not vanish while its slope still leans toward the
+ * viewer. `depth` orders them far to near.
  */
 function tierFaces(index: number, rotation: number) {
   const tier = PYRAMID_TIERS[index];
@@ -62,9 +63,7 @@ function tierFaces(index: number, rotation: number) {
     shade: (1 + Math.cos(normal + rotation)) / 2,
     depth: (bottom[side][1] + bottom[(side + 1) % 4][1]) / 2,
     d: path([top[side], top[(side + 1) % 4], bottom[(side + 1) % 4], bottom[side]]),
-  }))
-    .filter((face) => face.visible)
-    .sort((a, b) => a.depth - b.depth);
+  }));
 }
 
 /**
@@ -79,14 +78,60 @@ function labelAnchor(index: number, rotation: number): Point {
   return [r2(Math.max(...corners.map(([x]) => x))), -midZ];
 }
 
+const SIDES = [0, 1, 2, 3] as const;
+
+/**
+ * The pyramid. React renders the structure (tiers, their rise, the lit tier);
+ * the continuous spin writes each face's outline, fill and paint order, and the
+ * leader lines, straight to the SVG, so the turning figure never re-renders.
+ */
 export function PicksFigure({ progress, selected, onSelect }: FigureState) {
   const settled = progress > 0.8;
   const svgRef = useRef<SVGSVGElement>(null);
   const inView = useInView(svgRef);
   const reduceMotion = useReducedMotion();
-  const spin = useFigureClock(settled && inView && !reduceMotion) * PYRAMID_SPIN;
-  // One full turn while the tiers rise, then the card's continuous spin.
-  const rotation = REST + (1 - easeOut(clamp(progress / 0.82))) * Math.PI * 2 + spin;
+  const clock = useFigureClockValue(settled && inView && !reduceMotion);
+  // One full turn while the tiers rise, then the card's continuous spin on top.
+  const build = REST + (1 - easeOut(clamp(progress / 0.82))) * Math.PI * 2;
+
+  const faceRefs = useRef<(SVGPathElement | null)[][]>(PYRAMID_TIERS.map(() => []));
+  const leaderRefs = useRef<(SVGPathElement | null)[]>([]);
+  const paintOrder = useRef<string[]>([]);
+  const latest = useRef({ build, selected, settled });
+
+  const draw = useCallback(() => {
+    const { build: turned, selected: lit, settled: ready } = latest.current;
+    const rotation = turned + clock.get() * PYRAMID_SPIN;
+    PYRAMID_TIERS.forEach((_, index) => {
+      const active = index === lit && ready;
+      const elements = faceRefs.current[index];
+      const faces = tierFaces(index, rotation);
+      for (const face of faces) {
+        const element = elements[face.side];
+        if (!element) continue;
+        element.setAttribute("d", face.d);
+        element.setAttribute("fill", faceFill(face.shade, active));
+        element.style.display = face.visible ? "" : "none";
+      }
+      // Far faces first. Only move nodes when the order actually changes.
+      const order = [...faces].sort((a, b) => a.depth - b.depth).map((face) => face.side);
+      const key = order.join("");
+      if (paintOrder.current[index] !== key) {
+        paintOrder.current[index] = key;
+        const parent = elements[0]?.parentNode;
+        if (parent) order.forEach((side) => elements[side] && parent.appendChild(elements[side]));
+      }
+      const [x, y] = labelAnchor(index, rotation);
+      leaderRefs.current[index]?.setAttribute("d", `M${x + 8} ${y}H252`);
+    });
+  }, [clock]);
+
+  // After every render (a new lit tier, a build step), then on every clock tick.
+  useLayoutEffect(() => {
+    latest.current = { build, selected, settled };
+    draw();
+  });
+  useMotionValueEvent(clock, "change", draw);
 
   return (
     <svg ref={svgRef} viewBox="-230 -236 520 356" className="h-auto w-full overflow-visible" role="group" aria-label="Historical picks by multiple">
@@ -103,7 +148,7 @@ export function PicksFigure({ progress, selected, onSelect }: FigureState) {
         ry="78"
         fill="url(#picks-bloom)"
         style={{
-          transform: `translateY(${labelAnchor(selected, rotation)[1]}px)`,
+          transform: `translateY(${-(PYRAMID_TIERS[selected].bottomZ + PYRAMID_TIERS[selected].topZ) / 2}px)`,
           opacity: settled ? 1 : 0,
           transition: "transform 450ms cubic-bezier(.16,1,.3,1), rx 450ms cubic-bezier(.16,1,.3,1), opacity 500ms ease",
         }}
@@ -129,11 +174,13 @@ export function PicksFigure({ progress, selected, onSelect }: FigureState) {
               transition: "filter 300ms ease",
             }}
           >
-            {tierFaces(index, rotation).map((face) => (
+            {/* Outline, fill and order are written by draw(); React only owns the stroke. */}
+            {SIDES.map((side) => (
               <path
-                key={face.side}
-                d={face.d}
-                fill={faceFill(face.shade, active)}
+                key={side}
+                ref={(element) => {
+                  faceRefs.current[index][side] = element;
+                }}
                 stroke={active ? "#9a6208" : "rgba(0,0,0,.72)"}
                 strokeWidth="1.1"
                 strokeLinejoin="round"
@@ -145,12 +192,18 @@ export function PicksFigure({ progress, selected, onSelect }: FigureState) {
       })}
       {/* Leader lines and multiples, only once the pyramid has stopped turning. */}
       <g style={{ opacity: settled ? 1 : 0, transition: "opacity 400ms ease" }} aria-hidden="true">
-        {PYRAMID_TIERS.map((_, index) => {
-          const [x, y] = labelAnchor(index, rotation);
+        {PYRAMID_TIERS.map((tier, index) => {
+          const y = -(tier.bottomZ + tier.topZ) / 2;
           const active = index === selected;
           return (
             <g key={index} style={{ transition: "opacity 240ms ease" }} opacity={active ? 1 : 0.55}>
-              <path d={`M${x + 8} ${y}H252`} stroke={active ? "#F7A11A" : "rgba(0,0,0,.4)"} strokeWidth="1" strokeDasharray={active ? undefined : "2 4"}
+              <path
+                ref={(element) => {
+                  leaderRefs.current[index] = element;
+                }}
+                stroke={active ? "#F6A11A" : "rgba(0,0,0,.4)"}
+                strokeWidth="1"
+                strokeDasharray={active ? undefined : "2 4"}
                 // `fig-route--active` from the card.
                 style={{ filter: active ? LINE_GLOW : "none" }}
               />
@@ -177,7 +230,7 @@ function FinancialsChart({ caseStudy }: { caseStudy: CaseStudy }) {
         {rows.map((row) => (
           <div key={row.year} className="flex h-full flex-1 items-end gap-[3px]">
             <span className="block flex-1 bg-[#D9D8D6]" style={{ height: `${(row.revenue / max) * 100}%` }} />
-            <span className="block flex-1 bg-[#F7A11A]" style={{ height: `${Math.max(1.5, (row.profit / max) * 100)}%` }} />
+            <span className="block flex-1 bg-[#F6A11A]" style={{ height: `${Math.max(1.5, (row.profit / max) * 100)}%` }} />
           </div>
         ))}
       </div>
@@ -189,7 +242,7 @@ function FinancialsChart({ caseStudy }: { caseStudy: CaseStudy }) {
       <figcaption className="mt-[12px] flex gap-[16px] text-[10px] text-[rgba(0,0,0,.65)]">
         <span>All Amt in Cr</span>
         <span><i className="mr-[5px] inline-block h-[8px] w-[8px] bg-[#D9D8D6]" />Revenue {first.revenue} to {last.revenue}</span>
-        <span><i className="mr-[5px] inline-block h-[8px] w-[8px] bg-[#F7A11A]" />PAT {first.profit} to {last.profit}</span>
+        <span><i className="mr-[5px] inline-block h-[8px] w-[8px] bg-[#F6A11A]" />PAT {first.profit} to {last.profit}</span>
       </figcaption>
     </figure>
   );

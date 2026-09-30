@@ -6,9 +6,10 @@ import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { TEAM } from "@/lib/insights";
 import { EASE_OUT } from "@/lib/ease";
+import { COLUMN } from "@/components/hero/tokens";
 import { BracketLabel } from "./fact-section";
 
-const FOCUS = "focus-visible:outline-2 focus-visible:outline-[#F7A11A] focus-visible:outline-offset-4";
+const FOCUS = "focus-visible:outline-2 focus-visible:outline-black focus-visible:outline-offset-4";
 const pad = (index: number) => String(index + 1).padStart(2, "0");
 const PITCH = 5;
 
@@ -92,7 +93,7 @@ export default function TeamSection() {
 
   return (
     <section id="team" aria-labelledby="team-heading" className="bg-white">
-      <div className="px-[max(32px,calc((100vw_-_1480px)/2))] pt-[120px] max-[600px]:px-[22px] max-[600px]:pt-[72px]">
+      <div className={`${COLUMN} pt-[120px] max-[600px]:pt-[80px]`}>
         <BracketLabel>The people behind the portfolio</BracketLabel>
         <div className="mt-[18px] flex items-end justify-between gap-[40px] border-b border-b-[rgba(0,0,0,.13)] pb-[28px] max-[900px]:flex-col max-[900px]:items-start">
           <h2 id="team-heading" className="text-[clamp(3.6rem,6.4vw,7rem)] leading-[.9] font-light tracking-[-.06em]">
@@ -102,17 +103,17 @@ export default function TeamSection() {
             <span className="font-mono text-[rgba(0,0,0,.5)] normal-case">
               {pad(active)} / {pad(TEAM.length - 1)}
             </span>
-            <button type="button" onClick={() => step(-1)} className={`hover:text-[#F7A11A] ${FOCUS}`}>
+            <button type="button" onClick={() => step(-1)} className={`transition-[color,scale] duration-200 hover:text-black/60 active:scale-[.97] ${FOCUS}`}>
               Previous
             </button>
-            <button type="button" onClick={() => step(1)} className={`hover:text-[#F7A11A] ${FOCUS}`}>
+            <button type="button" onClick={() => step(1)} className={`transition-[color,scale] duration-200 hover:text-black/60 active:scale-[.97] ${FOCUS}`}>
               Next
             </button>
           </div>
         </div>
       </div>
 
-      <div className="grid grid-cols-[minmax(260px,.34fr)_1fr] gap-[40px] px-[max(32px,calc((100vw_-_1480px)/2))] pt-[40px] max-[1000px]:grid-cols-1 max-[600px]:px-[22px]">
+      <div className={`${COLUMN} grid grid-cols-[minmax(260px,.34fr)_1fr] gap-[40px] pt-[40px] max-[1000px]:grid-cols-1`}>
         {/* The selected person's bio, left of the row as in the reference. */}
         <div className="min-h-[300px] max-[1000px]:order-2 max-[1000px]:min-h-0">
           <AnimatePresence mode="wait">
@@ -124,7 +125,10 @@ export default function TeamSection() {
               transition={{ duration: reduceMotion ? 0 : 0.3, ease: EASE_OUT }}
             >
               <h3 className="text-[clamp(1.8rem,2.4vw,2.4rem)] leading-[1] font-normal tracking-[-.045em]">{member.name}</h3>
-              <p className="mt-[8px] text-[11px] uppercase tracking-[.08em] text-[#c98110]">{member.role}</p>
+              <p className="mt-[10px] flex items-center gap-[8px] text-[11px] uppercase tracking-[.08em] text-black/60">
+                <i aria-hidden="true" className="h-[6px] w-[6px] shrink-0 bg-[#F6A11A]" />
+                {member.role}
+              </p>
               <ul className="mt-[22px] grid list-none gap-[12px] border-t border-t-[rgba(0,0,0,.13)] p-0 pt-[16px] text-[14px] leading-[1.6] text-[rgba(0,0,0,.76)]">
                 {member.points.map((point) => (
                   <li key={point}>{point}</li>
@@ -152,14 +156,14 @@ export default function TeamSection() {
                     <Halftone src={person.photo} />
                     <Image
                       src={person.photo}
-                      alt=""
+                      alt={person.name}
                       fill
                       sizes="(max-width: 600px) 45vw, (max-width: 1000px) 30vw, 200px"
-                      className="object-cover object-[50%_20%] grayscale transition-opacity duration-500"
+                      className="object-cover object-[50%_20%] grayscale transition-opacity duration-300"
                       style={{ opacity: on ? 1 : 0 }}
                     />
                     <i
-                      className="absolute top-[8px] right-[8px] h-[8px] w-[8px] bg-[#F7A11A] transition-opacity duration-300"
+                      className="absolute top-[8px] right-[8px] h-[8px] w-[8px] bg-[#F6A11A] transition-opacity duration-300"
                       style={{ opacity: on ? 1 : 0 }}
                     />
                   </span>

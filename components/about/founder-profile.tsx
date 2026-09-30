@@ -38,7 +38,7 @@ export default function FounderProfile() {
             <ul className="mt-[36px] grid list-none gap-0 border-t border-t-[rgba(0,0,0,.13)] p-0">
               {FOUNDER_PROFILE.points.map((point) => (
                 <li key={point} className="flex gap-[14px] border-b border-b-[rgba(0,0,0,.13)] py-[16px] text-[17px] leading-[1.5] text-black/80">
-                  <span className="mt-[.55em] h-[6px] w-[6px] shrink-0 bg-[#F7A11A]" />
+                  <span className="mt-[.55em] h-[6px] w-[6px] shrink-0 bg-[#F6A11A]" />
                   {point}
                 </li>
               ))}

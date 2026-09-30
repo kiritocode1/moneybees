@@ -5,7 +5,7 @@ import { useReducedMotion } from "@/lib/use-reduced-motion";
 import { useEffect, useRef, useState } from "react";
 import { BracketLabel } from "@/components/fact-sections/fact-section";
 import { HEADINGS, PILLARS } from "@/lib/insights";
-import { COLUMN_COUNT, DESCENT_END, ORBIT_END, pillarCentre } from "./tholos";
+import { COLUMN_COUNT, DESCENT_END, ORBIT_END, pillarCentre } from "./tholos-path";
 
 /**
  * Our philosophy as a camera move. The section is pinned while you scroll
@@ -52,14 +52,20 @@ function PillarCard({ index, progress }: { index: number; progress: MotionValue<
   const opacity = useTransform(progress, (value) => between(value, range, [0, 1, 1, 0]));
   const y = useTransform(progress, (value) => between(value, range, [24, 0, 0, -24]));
   const pillar = PILLARS[index];
+  // Visual only: the six are read once, from the list at the foot of the section.
   return (
-    <motion.article
+    <motion.div
+      aria-hidden="true"
       style={{ opacity, y }}
-      className="pointer-events-none absolute bottom-[max(48px,8svh)] left-[max(32px,calc((100vw_-_1480px)/2))] w-[min(600px,calc(100vw_-_64px))] motion-reduce:hidden max-[600px]:left-[14px] max-[600px]:w-[calc(100vw_-_28px)] max-[600px]:bg-white/88 max-[600px]:p-[16px] max-[600px]:backdrop-blur-[6px]"
+      className="pointer-events-none absolute bottom-[max(48px,8svh)] left-[max(120px,calc((100vw_-_1512px)/2_+_120px))] w-[min(600px,calc(100vw_-_240px))] max-md:left-6 max-md:w-[calc(100vw_-_48px)] motion-reduce:hidden max-[600px]:left-[14px] max-[600px]:w-[calc(100vw_-_28px)] max-[600px]:bg-white/88 max-[600px]:p-[16px] max-[600px]:backdrop-blur-[6px]"
     >
-      <h3 className="text-[clamp(2.2rem,4.4vw,4.4rem)] leading-[.95] font-light tracking-[-.05em] text-[#F7A11A]">{pillar.name}</h3>
+      <p className="flex items-center gap-[12px] font-[family-name:var(--font-geist-mono)] text-[11px] tracking-[.1em] text-black/60 tabular-nums">
+        <i className="h-[2px] w-[28px] bg-[#F6A11A]" />
+        {String(index + 1).padStart(2, "0")} / {String(PILLARS.length).padStart(2, "0")}
+      </p>
+      <p className="mt-[18px] text-[clamp(2.2rem,4.4vw,4.4rem)] leading-[.95] font-light tracking-[-.05em] text-black">{pillar.name}</p>
       <p className="mt-[20px] max-w-[34ch] text-[clamp(1.15rem,1.55vw,1.45rem)] leading-[1.45] text-[rgba(0,0,0,.82)]">{pillar.text}</p>
-    </motion.article>
+    </motion.div>
   );
 }
 
@@ -136,7 +142,7 @@ export default function PhilosophyFlythrough() {
     // One structure for both motion settings, switched by `motion-reduce:` in CSS: the server cannot
     // know the setting, so branching in React would render a different tree on the client.
     <section ref={sectionRef} id="philosophy-pillars" aria-labelledby="philosophy-pillars-heading" className="relative h-[500svh] bg-white motion-reduce:h-auto">
-      <div className="sticky top-0 h-svh overflow-hidden motion-reduce:static motion-reduce:h-[70svh]">
+      <div className="sticky top-0 h-svh overflow-hidden motion-reduce:relative motion-reduce:h-[70svh]">
         <motion.canvas
           ref={canvasRef}
           style={{ opacity: sceneOpacity }}
@@ -151,7 +157,7 @@ export default function PhilosophyFlythrough() {
 
         <motion.div
           style={{ opacity: introOpacity }}
-          className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center px-[22px] text-center motion-reduce:hidden"
+          className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center px-[22px] text-center motion-reduce:sr-only"
         >
           <BracketLabel>Our philosophy</BracketLabel>
           <h2 id="philosophy-pillars-heading" className="mt-[22px] text-[clamp(3rem,7vw,7.6rem)] leading-[.92] font-light tracking-[-.055em]">
@@ -171,30 +177,35 @@ export default function PhilosophyFlythrough() {
 
         {/* The six as a rail, so you always know which one you are on and how many are left. */}
         <motion.ol
+          aria-hidden="true"
           style={{ opacity: railOpacity }}
-          className="pointer-events-none absolute top-1/2 right-[max(32px,calc((100vw_-_1480px)/2))] grid -translate-y-1/2 list-none gap-[10px] p-0 max-[900px]:hidden motion-reduce:hidden"
+          className="pointer-events-none absolute top-1/2 right-[max(32px,calc((100vw_-_1512px)/2_+_32px))] grid -translate-y-1/2 list-none gap-[10px] p-0 max-[900px]:hidden motion-reduce:hidden"
         >
           {PILLARS.map((pillar, index) => (
             <li
               key={pillar.name}
-              className="flex items-center justify-end gap-[12px] text-[15px] transition-colors duration-300"
+              className="flex items-center justify-end gap-[12px] text-[15px] transition-colors duration-200"
               style={{ color: index === active ? "#000" : "rgba(0,0,0,.45)" }}
             >
               {pillar.name}
-              <span className={`h-[8px] w-[8px] transition-colors duration-300 ${index === active ? "bg-[#F7A11A]" : "bg-[rgba(0,0,0,.18)]"}`} />
+              <span className={`h-[8px] w-[8px] transition-colors duration-200 ${index === active ? "bg-[#F6A11A]" : "bg-[rgba(0,0,0,.18)]"}`} />
             </li>
           ))}
         </motion.ol>
       </div>
 
-      {/* Reduced motion: the still opening view above, and the six as a plain list. */}
-      <div className="hidden grid-cols-3 gap-[40px] px-[max(32px,calc((100vw_-_1480px)/2))] pb-[100px] motion-reduce:grid max-[900px]:grid-cols-1 max-[600px]:px-[22px]">
+      {/* The six as the section's one semantic list: read by screen readers under either
+          motion setting, and shown under the still opening view when motion is reduced. */}
+      <div className="sr-only motion-reduce:not-sr-only motion-reduce:grid motion-reduce:grid-cols-3 motion-reduce:gap-x-[40px] motion-reduce:gap-y-[48px] motion-reduce:mx-auto motion-reduce:max-w-[1512px] motion-reduce:px-6 motion-reduce:pb-[120px] md:motion-reduce:px-[120px] max-[900px]:motion-reduce:grid-cols-1">
         <p aria-hidden="true" className="col-span-full text-[clamp(2.6rem,5vw,5rem)] leading-[.95] font-light tracking-[-.05em]">
           {HEADINGS.philosophy}
         </p>
         {PILLARS.map((pillar) => (
-          <div key={pillar.name}>
-            <h3 className="text-[1.6rem] font-light tracking-[-.03em] text-[#F7A11A]">{pillar.name}</h3>
+          <div key={pillar.name} className="border-t border-t-black/15 pt-[18px]">
+            <h3 className="flex items-center gap-[12px] text-[1.6rem] font-light tracking-[-.03em] text-black">
+              <i aria-hidden="true" className="h-[8px] w-[8px] shrink-0 bg-[#F6A11A]" />
+              {pillar.name}
+            </h3>
             <p className="mt-[10px] text-[14px] leading-[1.55] text-[rgba(0,0,0,.72)]">{pillar.text}</p>
           </div>
         ))}

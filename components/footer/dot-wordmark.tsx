@@ -10,7 +10,7 @@ const DOT = 3.3;
 const REACH = 120;
 const PUSH = 28;
 const INK = [0, 0, 0] as const;
-const ORANGE = [247, 161, 26] as const;
+const ORANGE = [246, 161, 26] as const;
 
 type Dot = { hx: number; hy: number; x: number; y: number; hollow: boolean };
 
@@ -42,6 +42,12 @@ export default function DotWordmark({ word = "MONEYBEE" }: { word?: string }) {
       const ratio = window.devicePixelRatio || 1;
       width = canvas.clientWidth;
       height = canvas.clientHeight;
+      // Not laid out yet (or collapsed): getImageData throws on a 0-sized probe.
+      // The ResizeObserver calls layout again once the canvas has a size.
+      if (width === 0 || height === 0) {
+        dots = [];
+        return;
+      }
       canvas.width = Math.round(width * ratio);
       canvas.height = Math.round(height * ratio);
       context.setTransform(ratio, 0, 0, ratio, 0, 0);
@@ -156,9 +162,13 @@ export default function DotWordmark({ word = "MONEYBEE" }: { word?: string }) {
       canvas.addEventListener("pointerleave", leave);
     }
     // The face has to be loaded before the word is sampled, or the fallback's shapes are used.
-    void document.fonts.ready.then(start);
+    let alive = true;
+    void document.fonts.ready.then(() => {
+      if (alive) start();
+    });
 
     return () => {
+      alive = false;
       cancelAnimationFrame(raf);
       observer.disconnect();
       resize.disconnect();
@@ -167,5 +177,5 @@ export default function DotWordmark({ word = "MONEYBEE" }: { word?: string }) {
     };
   }, [word, reduceMotion]);
 
-  return <canvas ref={canvasRef} className="block h-[clamp(120px,19vw,290px)] w-full cursor-none max-[600px]:cursor-auto" aria-label={word} role="img" />;
+  return <canvas ref={canvasRef} className="block h-[clamp(120px,19vw,290px)] w-full" aria-label={word} role="img" />;
 }

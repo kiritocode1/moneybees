@@ -100,7 +100,7 @@ export default function Strategy() {
           {CLIENT_FIRST.map(([term, text]) => (
             <div key={term} className="border-b border-b-[rgba(0,0,0,.13)] py-[22px] pr-[24px] max-[700px]:pr-0">
               <dt className={`${EYEBROW} text-black/55`}>{term}</dt>
-              <dd className={term === "Exit load" ? "mt-[12px] font-serif text-[2.4rem] leading-none text-[#F7A11A]" : "mt-[12px] text-[16px] leading-[1.5]"}>
+              <dd className={term === "Exit load" ? "mt-[12px] font-serif text-[2.4rem] leading-none text-[#F6A11A]" : "mt-[12px] text-[16px] leading-[1.5]"}>
                 {text}
               </dd>
             </div>

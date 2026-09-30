@@ -9,5 +9,5 @@ import { PixelReveal } from "./pixel-reveal";
  * blocks, then focus and cool into the heading's own ink.
  */
 export function Materialize(props: ComponentProps<typeof PixelReveal>) {
-  return <PixelReveal preset="materialize" accent="#F7A11A" {...props} />;
+  return <PixelReveal preset="materialize" accent="#F6A11A" {...props} />;
 }

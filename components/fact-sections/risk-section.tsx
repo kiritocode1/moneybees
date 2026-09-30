@@ -89,7 +89,7 @@ function ConcentrationPanel() {
           stroke={capped ? ORANGE : "rgba(0,0,0,.45)"}
           strokeWidth={capped ? 1.6 : 1}
           strokeDasharray={capped ? undefined : "4 4"}
-          style={{ filter: capped ? "drop-shadow(0 0 6px rgba(247,161,26,.7))" : "none", transition: "stroke 300ms ease" }}
+          style={{ filter: capped ? "drop-shadow(0 0 6px rgba(246, 161, 26,.7))" : "none", transition: "stroke 300ms ease" }}
         />
         <line x1="24" x2="300" y1={baseY - GAP / 2} y2={baseY - GAP / 2} stroke="rgba(0,0,0,.35)" />
       </svg>
@@ -158,7 +158,7 @@ function MarketPanel() {
   return (
     <div ref={ref} className="h-full">
       <svg viewBox="0 0 672 180" preserveAspectRatio="none" className="absolute inset-x-0 top-[34%] h-[46%] w-full" aria-hidden="true">
-        <path d={line} fill="none" stroke={ORANGE} strokeWidth="1.5" style={{ filter: "drop-shadow(0 0 6px rgba(247,161,26,.6))" }} />
+        <path d={line} fill="none" stroke={ORANGE} strokeWidth="1.5" style={{ filter: "drop-shadow(0 0 6px rgba(246, 161, 26,.6))" }} />
       </svg>
       <PanelHead name={MARKET.name} rule={MARKET.rule} />
       <strong

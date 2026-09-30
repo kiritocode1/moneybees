@@ -15,10 +15,10 @@ export const CONTACT_PAGE = {
   lead: LOREM,
 } as const;
 
-/** The plan's office address, verbatim, split where it reads best on two lines. */
+/** The plan's office address, split where it reads best on two lines; the dash before the PIN is dropped. */
 export const OFFICE = {
   name: "Moneybee Group",
-  lines: ["303, Tower A, Peninsula Business Park,", "G.K. Marg, Lower Parel, Mumbai – 400013"],
+  lines: ["303, Tower A, Peninsula Business Park,", "G.K. Marg, Lower Parel, Mumbai 400013"],
   /** LOREM */
   text: LOREM,
   /** Peninsula Business Park, from OpenStreetMap (way 441268787). */
@@ -46,12 +46,14 @@ export type EnquiryField = {
   readonly type?: "text" | "email" | "tel" | "textarea";
   readonly options?: readonly string[];
   readonly required?: boolean;
+  /** The browser autofill token, so saved details fill in. */
+  readonly autoComplete?: string;
 };
 
-const NAME: EnquiryField = { name: "name", label: "Full name", required: true };
-const MAIL: EnquiryField = { name: "email", label: "Email", type: "email", required: true };
-const TEL: EnquiryField = { name: "phone", label: "Phone", type: "tel" };
-const MESSAGE: EnquiryField = { name: "message", label: "Message", type: "textarea" };
+const NAME: EnquiryField = { name: "name", label: "Full name", required: true, autoComplete: "name" };
+const MAIL: EnquiryField = { name: "email", label: "Email", type: "email", required: true, autoComplete: "email" };
+const TEL: EnquiryField = { name: "phone", label: "Phone", type: "tel", autoComplete: "tel" };
+const MESSAGE: EnquiryField = { name: "message", label: "Message", type: "textarea", required: true };
 
 /**
  * The plan's four enquiry options, names verbatim. Each one shapes the form:
@@ -65,7 +67,7 @@ export const ENQUIRIES = [
     name: "PMS Enquiry",
     glyph: "pms",
     text: LOREM_SHORT,
-    fields: [NAME, MAIL, TEL, { name: "amount", label: "Investment amount", options: ["50 lakh to 1 crore", "1 crore to 5 crore", "Above 5 crore"] }, { name: "city", label: "City" }, MESSAGE],
+    fields: [NAME, MAIL, TEL, { name: "amount", label: "Investment amount", options: ["50 lakh to 1 crore", "1 crore to 5 crore", "Above 5 crore"] }, { name: "city", label: "City", autoComplete: "address-level2" }, MESSAGE],
   },
   {
     id: "aif",
@@ -86,7 +88,7 @@ export const ENQUIRIES = [
     name: "Investor Support",
     glyph: "support",
     text: LOREM_SHORT,
-    fields: [NAME, MAIL, TEL, { name: "client", label: "Client code" }, { name: "topic", label: "Topic", options: ["Statements", "Onboarding", "Withdrawal", "Something else"] }, MESSAGE],
+    fields: [NAME, MAIL, TEL, { name: "client", label: "Client code", autoComplete: "off" }, { name: "topic", label: "Topic", options: ["Statements", "Onboarding", "Withdrawal", "Something else"] }, MESSAGE],
   },
   {
     id: "general",
@@ -104,6 +106,11 @@ export const ENQUIRIES = [
 }[];
 
 export type Enquiry = (typeof ENQUIRIES)[number];
+
+/** Reads an `?enquiry=` value (pms, aif, support, general) into an option id, or null. */
+export function enquiryFromParam(value: string | null): Enquiry["id"] | null {
+  return ENQUIRIES.find((enquiry) => enquiry.id === value)?.id ?? null;
+}
 
 /** The mailto an enquiry opens: the option as the subject line, every filled field in the body. */
 export function enquiryMailto(enquiry: Enquiry, values: Readonly<Record<string, string>>): string {

@@ -4,7 +4,7 @@ import { DashedRule } from "@/components/hero/editorial";
 import { CONTACT } from "@/lib/insights";
 import { GROUP_COMPANIES } from "@/lib/about";
 
-const FOCUS = "focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#F7A11A]";
+const FOCUS = "focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#F6A11A]";
 
 /**
  * The office, group profile p32: the address both group companies share, the
@@ -32,7 +32,7 @@ export default function OfficeSection() {
               </li>
             ))}
           </ul>
-          <a href={`tel:${CONTACT.phones[0].replace(/\s/g, "")}`} className={`mt-[22px] inline-block font-serif text-[clamp(1.6rem,2.2vw,2rem)] text-black no-underline hover:text-[#F7A11A] ${FOCUS}`}>
+          <a href={`tel:${CONTACT.phones[0].replace(/\s/g, "")}`} className={`mt-[22px] inline-block font-serif text-[clamp(1.6rem,2.2vw,2rem)] text-black no-underline hover:text-[#F6A11A] ${FOCUS}`}>
             {CONTACT.phones[0]}
           </a>
         </div>

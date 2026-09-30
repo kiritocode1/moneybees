@@ -8,8 +8,8 @@
 
 import type { CSSProperties } from "react";
 
-const ORANGE = "#F7A11A";
-const T = "transition-all duration-700 ease-[cubic-bezier(.22,1,.36,1)] motion-reduce:transition-none";
+const ORANGE = "#F6A11A";
+const T = "transition-[opacity,fill,stroke,fill-opacity,stroke-opacity,stroke-dashoffset,transform,x,y,width,height,r,cx,cy] duration-700 ease-[cubic-bezier(.23,1,.32,1)] motion-reduce:!transition-none";
 const MONO = "var(--font-geist-mono), ui-monospace, monospace";
 /** Rounds trig output so the server and the browser print the same attribute. */
 const r2 = (value: number) => Math.round(value * 100) / 100;
@@ -103,7 +103,7 @@ export function CastingDrawing({ on, dark }: DrawingProps) {
         SPINNING MOULD
       </Label>
       {/* The tube that comes out. */}
-      <g style={{ opacity: on ? 1 : 0, transform: `translateX(${on ? 0 : -16}px)`, transition: "all 700ms cubic-bezier(.22,1,.36,1) 400ms" }}>
+      <g style={{ opacity: on ? 1 : 0, transform: `translateX(${on ? 0 : -16}px)`, transition: "opacity 700ms cubic-bezier(.23,1,.32,1) 400ms, transform 700ms cubic-bezier(.23,1,.32,1) 400ms" }} className="motion-reduce:!transition-none">
         <path d="M180 84 H222 M180 108 H222" stroke={ink} strokeWidth="1.2" />
         <ellipse cx="180" cy="96" rx="5" ry="12" fill="none" stroke={ink} strokeWidth="1.2" />
         <ellipse cx="222" cy="96" rx="5" ry="12" fill={ORANGE} stroke={ink} strokeWidth="1.2" />
@@ -133,7 +133,7 @@ export function LaminationsDrawing({ on, dark }: DrawingProps) {
       {Array.from({ length: sheets }, (_, sheet) => {
         const settled = 112 - sheet * 6;
         return (
-          <g key={sheet} style={{ transform: `translateY(${on ? 0 : -24 - sheet * 4}px)`, opacity: on ? 1 : 0.25, transition: `all 600ms cubic-bezier(.22,1,.36,1) ${sheet * 80}ms` }} className="motion-reduce:transition-none">
+          <g key={sheet} style={{ transform: `translateY(${on ? 0 : -24 - sheet * 4}px)`, opacity: on ? 1 : 0.25, transition: `opacity 600ms cubic-bezier(.23,1,.32,1) ${sheet * 80}ms, transform 600ms cubic-bezier(.23,1,.32,1) ${sheet * 80}ms` }} className="motion-reduce:!transition-none">
             <ellipse cx="54" cy={settled} rx="38" ry="11" fill={dark ? "#000" : "#fff"} stroke={sheet === sheets - 1 ? ORANGE : ink} strokeWidth="1.1" />
             {sheet === sheets - 1 && <ellipse cx="54" cy={settled} rx="16" ry="4.6" fill="none" stroke={ORANGE} strokeWidth="1.1" />}
           </g>

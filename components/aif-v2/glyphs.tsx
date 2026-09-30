@@ -5,7 +5,7 @@
  * switches a drawing from its resting state to its explained state.
  */
 
-export const ORANGE = "#F7A11A";
+export const ORANGE = "#F6A11A";
 
 export const hexPoints = (cx: number, cy: number, r: number) =>
   Array.from({ length: 6 }, (_, corner) => {
@@ -13,7 +13,7 @@ export const hexPoints = (cx: number, cy: number, r: number) =>
     return `${(cx + r * Math.cos(angle)).toFixed(2)},${(cy + r * Math.sin(angle)).toFixed(2)}`;
   }).join(" ");
 
-const T = "transition-all duration-700 ease-[cubic-bezier(.22,1,.36,1)]";
+const T = "transition-[opacity,fill,stroke,fill-opacity,stroke-opacity,stroke-dashoffset,transform,x,y,width,height,r,cx,cy] duration-700 ease-[cubic-bezier(.23,1,.32,1)] motion-reduce:!transition-none";
 const MONO = "var(--font-geist-mono), ui-monospace, monospace";
 
 /** A centre cell and its six neighbours, pointy-top. */
@@ -50,8 +50,8 @@ export function FundGraphic({ on }: { on: boolean }) {
       <path d="M150 170H200M280 170H330" stroke="#000" strokeWidth="1.2" strokeDasharray="3 4" opacity={on ? 0.6 : 0} className={T} style={{ transitionDelay: "900ms" }} />
       {on && (
         <g className="motion-reduce:hidden">
-          <circle cx="146" cy="170" r="3.5" fill={ORANGE} className="animate-[aifv2-feed-l_2.6s_ease-in-out_infinite]" />
-          <circle cx="334" cy="170" r="3.5" fill={ORANGE} className="animate-[aifv2-feed-r_2.6s_ease-in-out_1.3s_infinite]" />
+          <circle cx="146" cy="170" r="3.5" fill={ORANGE} className="animate-[aifv2-feed-l_2.6s_ease-in-out_infinite] motion-reduce:hidden" />
+          <circle cx="334" cy="170" r="3.5" fill={ORANGE} className="animate-[aifv2-feed-r_2.6s_ease-in-out_1.3s_infinite] motion-reduce:hidden" />
         </g>
       )}
       {listed.map(([x, y], index) => (
@@ -152,7 +152,7 @@ export function AifUnitsGlyph({ on }: { on: boolean }) {
           <path d={`M${x} 48L120 ${104}`} stroke="#000" strokeWidth="1" strokeOpacity=".4" strokeDasharray="90" strokeDashoffset={on ? 0 : 90} style={{ transitionDelay: `${index * 150}ms` }} className={T} />
           {on && (
             <g className="motion-reduce:hidden" style={{ ["--dx" as string]: `${x - 120}px` }}>
-              <polygon points={hexPoints(120, 110, 5)} fill={ORANGE} className="animate-[aifv2-unit_2.4s_ease-in-out_infinite]" style={{ animationDelay: `${900 + index * 500}ms`, opacity: 0 }} />
+              <polygon points={hexPoints(120, 110, 5)} fill={ORANGE} className="animate-[aifv2-unit_2.4s_ease-in-out_infinite] motion-reduce:animate-none" style={{ animationDelay: `${900 + index * 500}ms`, opacity: 0 }} />
             </g>
           )}
         </g>
@@ -173,14 +173,14 @@ export function AifUnitsGlyph({ on }: { on: boolean }) {
 
 type GlyphProps = { on: boolean };
 
-/** Minimum investment: a commitment rising until it meets the ₹1 Crore line. */
+/** Minimum investment: a commitment rising until it meets the Rs. 1 crore line. */
 function MinimumGlyph({ on }: GlyphProps) {
   return (
     <svg viewBox="0 0 150 90" className="block h-auto w-full" aria-hidden="true">
       <line x1="10" x2="146" y1="80" y2="80" stroke="#000" strokeOpacity=".3" />
       <line x1="10" x2="146" y1="24" y2="24" stroke="#000" strokeDasharray="3 3" strokeOpacity=".6" />
       <text x="146" y="18" textAnchor="end" fontSize="7" fill="#000" opacity=".6" letterSpacing=".08em" fontFamily={MONO}>
-        ₹1 CR
+        RS. 1 CR
       </text>
       {[22, 34, 46].map((height, index) => (
         <rect key={index} x={22 + index * 22} y={80 - height} width="14" height={height} fill="#000" opacity=".15" />

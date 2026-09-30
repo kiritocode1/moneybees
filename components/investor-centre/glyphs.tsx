@@ -7,9 +7,10 @@
 
 import type { DocumentGlyph } from "@/lib/investor-centre";
 
-export const ORANGE = "#F7A11A";
+export const ORANGE = "#F6A11A";
 
-const T = "transition-all duration-700 ease-[cubic-bezier(.22,1,.36,1)]";
+/** Only the properties the drawings change; reduced motion shows the explained state at once. */
+const T = "transition-[transform,opacity,fill,stroke,stroke-dashoffset,r,cx,y,width,height] duration-700 ease-[cubic-bezier(.22,1,.36,1)] motion-reduce:!transition-none";
 
 const hexPoints = (cx: number, cy: number, r: number) =>
   Array.from({ length: 6 }, (_, corner) => {

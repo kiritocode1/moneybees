@@ -33,12 +33,12 @@ const TONES = {
       "--stroke": "rgba(255,255,255,.6)",
       "--face": "#0f0f0f",
       "--face-lit": "#1c1c1c",
-      "--accent": "#F7A11A",
+      "--accent": "#F6A11A",
       "--accent-wall": "#b3730d",
-      "--lamp": "#F7A11A",
+      "--lamp": "#F6A11A",
       "--bloom": "0.6",
     },
-    glow: "#F7A11A",
+    glow: "#F6A11A",
   },
   grey: {
     vars: {
@@ -47,12 +47,12 @@ const TONES = {
       "--stroke": "rgba(0,0,0,.68)",
       "--face": "#b1b2b5",
       "--face-lit": "#8f9093",
-      "--accent": "#F7A11A",
+      "--accent": "#F6A11A",
       "--accent-wall": "#c98110",
-      "--lamp": "#F7A11A",
+      "--lamp": "#F6A11A",
       "--bloom": "0.7",
     },
-    glow: "#F7A11A",
+    glow: "#F6A11A",
   },
 } as const;
 

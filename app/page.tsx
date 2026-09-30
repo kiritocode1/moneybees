@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import FounderSection from "@/components/fact-sections/founder-section";
 import PicksSection from "@/components/fact-sections/picks-section";
 import RecordSection from "@/components/fact-sections/record-section";
@@ -8,6 +9,15 @@ import { HeroSection, WhoWeAreSection } from "@/components/hero/hero-sections";
 import { FaqSection, LetsTalkSection, RecognitionSection, TwoWaysSection } from "@/components/home/home-sections";
 import PhilosophyFlythrough from "@/components/philosophy/philosophy-flythrough";
 import SiteNavigation from "@/components/ui/site-navigation";
+
+export const metadata: Metadata = {
+  // The root layout's default title is the homepage's.
+  description:
+    "Moneybee finds small and mid-sized Indian companies that lead their niche and owns them while they grow, through Moneybee PMS and Flyingbee, a Category III AIF.",
+  alternates: { canonical: "/" },
+  // Page openGraph replaces the layout one, so it restates the site fields.
+  openGraph: { siteName: "Moneybee", locale: "en_IN", type: "website", url: "/", images: [{ url: "/opengraph-image", width: 1200, height: 630 }], title: "Moneybee | Small-cap PMS and Category III AIF, Mumbai", description: "Moneybee finds small and mid-sized Indian companies that lead their niche and owns them while they grow, through Moneybee PMS and Flyingbee, a Category III AIF." },
+};
 
 /**
  * The Moneybee homepage. Facts come from the client decks (lib/insights.ts):
@@ -34,18 +44,17 @@ export default function Home() {
         <TeamSection />
         <LetsTalkSection />
         <FaqSection />
-
-        <SiteFooter
-          explore={[
-            ["About Moneybee", "/about"],
-            ["Our philosophy", "#philosophy-pillars"],
-            ["Our process", "#research"],
-            ["Performance", "#performance"],
-            ["Our strategies", "#invest"],
-            ["Team", "#team"],
-          ]}
-        />
       </main>
+      <SiteFooter
+        explore={[
+          ["About Moneybee", "/about"],
+          ["Our philosophy", "#philosophy-pillars"],
+          ["Our process", "#research"],
+          ["Performance", "#performance"],
+          ["Our strategies", "#invest"],
+          ["Team", "#team"],
+        ]}
+      />
     </SiteNavigation>
   );
 }

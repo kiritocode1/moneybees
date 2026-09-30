@@ -26,7 +26,7 @@ export function FundTeamSection() {
             <Rise key={person.name} onView delay={index * 0.08}>
               <article className="grid grid-cols-[minmax(0,180px)_1fr] gap-[32px] max-[520px]:grid-cols-1">
                 <div className="relative aspect-[4/5] w-full max-w-[180px]">
-                  <i aria-hidden="true" className="absolute top-[12px] left-[12px] h-full w-full bg-[#F7A11A]" />
+                  <i aria-hidden="true" className="absolute top-[12px] left-[12px] h-full w-full bg-[#F6A11A]" />
                   <Image src={person.photo} alt={person.name} fill sizes="180px" className="relative object-cover grayscale" />
                 </div>
                 <div>
@@ -67,7 +67,7 @@ export default function TermsSection() {
             {AIF_HEADINGS.terms}
           </h2>
           <p className={`${EYEBROW} mt-[48px] text-black/60`}>{minimumLabel}</p>
-          <p className="mt-[12px] font-serif text-[clamp(3rem,5.4vw,5.2rem)] leading-none text-[#F7A11A]">{minimum.replace(/ \(.*\)/, "")}</p>
+          <p className="mt-[12px] font-serif text-[clamp(3rem,5.4vw,5.2rem)] leading-none text-[#F6A11A]">{minimum.replace(/ \(.*\)/, "")}</p>
           <p className={`${EYEBROW} mt-[12px] text-black/60`}>{minimum.match(/\((.*)\)/)?.[1]}</p>
         </div>
         <dl className="border-t border-t-black">

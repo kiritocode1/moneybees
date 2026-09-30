@@ -80,7 +80,7 @@ function Comb() {
                   {fill.front.map((wall) => (
                     <path key={wall.k} d={wall.d} fill={honey(wall.shade)} stroke="rgba(90,50,0,.6)" strokeWidth="0.7" strokeLinejoin="round" />
                   ))}
-                  <path d={fill.top} fill="#F7A11A" stroke="rgba(90,50,0,.6)" strokeWidth="0.7" strokeLinejoin="round" />
+                  <path d={fill.top} fill="#F6A11A" stroke="rgba(90,50,0,.6)" strokeWidth="0.7" strokeLinejoin="round" />
                 </g>
               )}
               {/* The near walls as glass, so the honey shows through them. */}

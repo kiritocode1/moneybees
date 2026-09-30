@@ -30,17 +30,21 @@ export const TEAM_NAMES: Record<Team, string> = {
   services: "Financial services",
 };
 
-/** PLACEHOLDER openings, one per discipline, until HR supplies the real roles. */
-export const OPENINGS = [
-  { role: "Equity Research Analyst", team: "research", experience: "2 to 5 years", text: LOREM_SHORT },
-  { role: "Portfolio Management Associate", team: "portfolio", experience: "3 to 6 years", text: LOREM_SHORT },
-  { role: "Relationship Manager", team: "advisory", experience: "4 to 8 years", text: LOREM_SHORT },
-  { role: "Compliance Executive", team: "compliance", experience: "1 to 3 years", text: LOREM_SHORT },
-  { role: "Operations Associate", team: "services", experience: "1 to 3 years", text: LOREM_SHORT },
-] as const satisfies readonly { role: string; team: Team; experience: string; text: string }[];
-
-export const OPENING_PLACE = "Lower Parel, Mumbai";
-export const OPENING_TYPE = "Full time";
+/**
+ * PLACEHOLDER openings, one per discipline the plan names. The role, its
+ * details and its text are lorem until HR supplies real roles; only the team
+ * names come from the plan.
+ */
+export const OPENINGS = (Object.keys(TEAM_NAMES) as Team[]).map((team) => ({
+  role: "Role title",
+  team,
+  text: LOREM_SHORT,
+  details: [
+    ["Location", "Lorem ipsum"],
+    ["Type", "Lorem ipsum"],
+    ["Experience", "Lorem ipsum"],
+  ] as const,
+}));
 
 /** The mailto an opening's Apply link opens. */
 export const applyHref = (role: string) => `mailto:${RESUME_EMAIL}?subject=${encodeURIComponent(`Application: ${role}`)}`;
@@ -54,13 +58,13 @@ export const LIFE = {
 
 /** PLACEHOLDER culture points. `glyph` picks each point's drawing. */
 export const CULTURE = [
-  { name: "Research first", glyph: "research", text: LOREM_SHORT },
-  { name: "Long-term thinking", glyph: "long", text: LOREM_SHORT },
-  { name: "Ownership", glyph: "owner", text: LOREM_SHORT },
-  { name: "Learning together", glyph: "learn", text: LOREM_SHORT },
+  { name: "Lorem ipsum", glyph: "research", text: LOREM_SHORT },
+  { name: "Dolor sit amet", glyph: "long", text: LOREM_SHORT },
+  { name: "Consectetur", glyph: "owner", text: LOREM_SHORT },
+  { name: "Adipiscing elit", glyph: "learn", text: LOREM_SHORT },
 ] as const;
 
-/** PLACEHOLDER application steps. */
+/** The application steps: practical site copy, the 10 to 20% the plan allows beyond the decks. */
 export const APPLY_STEPS = [
   { name: "Find a role", text: LOREM_SHORT },
   { name: "Send your resume", text: LOREM_SHORT },

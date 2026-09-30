@@ -6,7 +6,7 @@ import { BracketLabel } from "@/components/fact-sections/fact-section";
 import { COLUMN, DashedRule, Rise, SUBHEAD } from "@/components/hero/editorial";
 import { useReducedMotion } from "@/lib/use-reduced-motion";
 
-export const ORANGE = "#F7A11A";
+export const ORANGE = "#F6A11A";
 export const GREY = "#9D9EA1";
 export const MONO = "font-[family-name:var(--font-geist-mono)]";
 /** The pyramid's ink edge, shared by every solid on the page. */

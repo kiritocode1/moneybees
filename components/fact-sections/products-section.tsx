@@ -72,9 +72,9 @@ export function ProductHero({ product }: { product: Product }) {
       </div>
       <dl className={`${COLUMN} grid grid-cols-4 gap-x-10 gap-y-8 border-t border-dashed border-black/10 pt-[32px] pb-[64px] max-md:grid-cols-2`}>
         {figures.map(([figure, caption]) => (
-          <div key={caption}>
-            <dt className="font-serif text-[clamp(2.2rem,3.4vw,3.2rem)] leading-none text-[#F7A11A] tabular-nums">{figure}</dt>
-            <dd className={`${EYEBROW} mt-[12px] max-w-[26ch] leading-[1.5] text-black/60`}>{caption}</dd>
+          <div key={caption} className="flex flex-col-reverse">
+            <dt className={`${EYEBROW} mt-[12px] max-w-[26ch] leading-[1.5] text-black/60`}>{caption}</dt>
+            <dd className="m-0 font-serif text-[clamp(2.2rem,3.4vw,3.2rem)] leading-none text-black tabular-nums">{figure}</dd>
           </div>
         ))}
       </dl>
@@ -94,7 +94,7 @@ export function PmsDetails() {
         <ul className="list-none border-t border-t-black p-0">
           {PMS_PRODUCT.points.map((point) => (
             <li key={point} className={`flex gap-[16px] border-b border-b-[rgba(0,0,0,.13)] py-[18px] ${BODY}`}>
-              <span className="mt-[.45em] h-[7px] w-[7px] shrink-0 bg-[#F7A11A]" />
+              <span className="mt-[.45em] h-[7px] w-[7px] shrink-0 bg-[#F6A11A]" />
               {point}
             </li>
           ))}
@@ -134,7 +134,7 @@ export function AifDetails() {
               {AIF_PRODUCT.performance.map(([period, fund, index]) => (
                 <tr key={period} className="border-t border-t-[rgba(0,0,0,.13)]">
                   <td className="py-[14px] text-[17px]">{period}</td>
-                  <td className="py-[14px] text-right font-serif text-[1.6rem] text-[#F7A11A] tabular-nums">{fund}</td>
+                  <td className="py-[14px] text-right font-serif text-[1.6rem] text-black tabular-nums">{fund}</td>
                   <td className="py-[14px] text-right text-[17px] text-black/60 tabular-nums">{index}</td>
                 </tr>
               ))}
@@ -158,7 +158,7 @@ export function CompareBand({ product }: { product: Product }) {
           <p className={BODY}>{PMS_VS_AIF}</p>
           <Link href={other.href} className="group inline-flex w-fit items-center gap-[10px] text-[16px] font-medium text-black no-underline">
             See {other.name}
-            <span className="h-[2px] w-[22px] bg-[#F7A11A] transition-all duration-300 group-hover:w-[40px]" />
+            <span className="h-[2px] w-[40px] origin-left scale-x-[.55] bg-[#F6A11A] transition-transform duration-200 ease-[cubic-bezier(.23,1,.32,1)] group-hover:scale-x-100" />
           </Link>
         </div>
       </div>

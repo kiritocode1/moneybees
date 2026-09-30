@@ -14,8 +14,6 @@ import {
   CULTURE,
   DISCIPLINES,
   LIFE,
-  OPENING_PLACE,
-  OPENING_TYPE,
   OPENINGS,
   RESUME_HREF,
   type Team,
@@ -25,14 +23,15 @@ import { CombGlyph, CULTURE_GLYPHS, ORANGE, TEAM_GLYPHS } from "./glyphs";
 
 /*
  * /careers, content plan §10: the heading with both CTAs, the current
- * openings as clean cards, life at Moneybee around the team photograph, the
- * work culture beside the boardroom, and how to apply. Every section has a
- * drawing; the openings, culture and steps are placeholders until HR writes
- * them.
+ * openings as the page's one card grid, life at Moneybee around the team
+ * photograph, the work culture as a white and black split, and how to apply
+ * on a progress rail. Every section has a drawing; the openings and culture
+ * points are lorem until HR writes them.
  */
 
-const FOCUS = "focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#F7A11A]";
-const CTA = `inline-flex w-fit items-center rounded-full bg-[#F7A11A] px-[26px] py-[14px] text-[15px] font-medium text-black no-underline transition-colors hover:bg-black hover:text-white ${FOCUS}`;
+const FOCUS = "focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-current";
+const CTA = `inline-flex w-fit items-center rounded-full bg-[#F6A11A] px-[26px] py-[14px] text-[15px] font-medium text-black no-underline transition-[color,background-color,transform,scale] duration-200 ease-[cubic-bezier(.23,1,.32,1)] hover:bg-black hover:text-white active:scale-[0.97] motion-reduce:transition-none ${FOCUS}`;
+const CTA_OUTLINE = `inline-flex w-fit items-center rounded-full border border-black/25 px-[26px] py-[14px] text-[15px] font-medium text-black no-underline transition-[border-color,transform,scale] duration-200 ease-[cubic-bezier(.23,1,.32,1)] hover:border-black active:scale-[0.97] motion-reduce:transition-none ${FOCUS}`;
 const number = (index: number) => String(index + 1).padStart(2, "0");
 
 function useShown<T extends Element>(amount = 0.45) {
@@ -61,7 +60,7 @@ function Ctas() {
       <a href="#openings" className={CTA}>
         View Open Positions
       </a>
-      <a href={RESUME_HREF} className={CTA}>
+      <a href={RESUME_HREF} className={CTA_OUTLINE}>
         Send Your Resume
       </a>
     </div>
@@ -115,7 +114,7 @@ export function OpeningsSection() {
       type="button"
       aria-pressed={filter === value}
       onClick={() => setFilter(value)}
-      className={`cursor-pointer rounded-full border px-[16px] py-[8px] text-[14px] transition-colors ${filter === value ? "border-black bg-black text-white" : "border-black/20 bg-white text-black hover:border-black"} ${FOCUS}`}
+      className={`cursor-pointer rounded-full border px-[16px] py-[8px] text-[14px] transition-[color,background-color,border-color,transform,scale] duration-200 active:scale-[0.97] motion-reduce:transition-none ${filter === value ? "border-black bg-black text-white" : "border-black/20 bg-white text-black hover:border-black"} ${FOCUS}`}
     >
       {label}
     </button>
@@ -125,8 +124,8 @@ export function OpeningsSection() {
       <div className={`${COLUMN} py-[120px] max-md:py-[80px]`}>
         <div className="grid grid-cols-1 items-end gap-8 md:grid-cols-2 md:gap-16">
           <div>
-            <BracketLabel>Current Openings</BracketLabel>
-            <h2 id="openings-heading" className={`mt-[18px] ${SUBHEAD}`}>
+            <span className={`${EYEBROW} text-black/60`}>01</span>
+            <h2 id="openings-heading" className={`mt-[14px] ${SUBHEAD}`}>
               Current Openings
             </h2>
           </div>
@@ -140,9 +139,9 @@ export function OpeningsSection() {
           {visible.map((opening, index) => {
             const Glyph = TEAM_GLYPHS[opening.team];
             return (
-              <article key={opening.role} className="flex animate-[careers-in_450ms_cubic-bezier(.22,1,.36,1)_both] flex-col bg-white p-[28px] motion-reduce:animate-none max-[600px]:p-[22px]" style={{ animationDelay: `${index * 60}ms` }}>
+              <article key={opening.team} className="flex animate-[careers-in_450ms_cubic-bezier(.22,1,.36,1)_both] flex-col bg-white p-[28px] motion-reduce:animate-none max-[600px]:p-[22px]" style={{ animationDelay: `${index * 60}ms` }}>
                 <div className="flex items-start justify-between gap-4">
-                  <span className={`${EYEBROW} text-black/50`}>{TEAM_NAMES[opening.team]}</span>
+                  <span className={`${EYEBROW} text-black/60`}>{TEAM_NAMES[opening.team]}</span>
                   <span className="block h-[48px] w-[64px] shrink-0">
                     <DelayedGlyph Glyph={Glyph} on={shown} delay={index * 180} />
                   </span>
@@ -150,27 +149,23 @@ export function OpeningsSection() {
                 <h3 className="mt-[18px] font-serif text-[clamp(1.5rem,1.1rem+.8vw,1.9rem)] leading-[1.1] font-normal">{opening.role}</h3>
                 <p className="mt-[10px] text-[15px] leading-[1.55] text-black/65">{opening.text}</p>
                 <dl className="mt-[22px] grid grid-cols-3 gap-3 border-t border-black/10 pt-[16px] text-[13px]">
-                  {[
-                    ["Location", OPENING_PLACE],
-                    ["Type", OPENING_TYPE],
-                    ["Experience", opening.experience],
-                  ].map(([term, detail]) => (
+                  {opening.details.map(([term, detail]) => (
                     <div key={term}>
-                      <dt className={`${EYEBROW} text-black/45`}>{term}</dt>
+                      <dt className={`${EYEBROW} text-black/60`}>{term}</dt>
                       <dd className="m-0 mt-[4px] leading-[1.35]">{detail}</dd>
                     </div>
                   ))}
                 </dl>
-                <a href={applyHref(opening.role)} className={`group mt-[22px] inline-flex w-fit items-center gap-[10px] text-[15px] font-medium text-black no-underline ${FOCUS}`}>
-                  Apply
-                  <span className="h-[2px] w-[18px] bg-[#F7A11A] transition-all duration-300 group-hover:w-[32px]" aria-hidden="true" />
+                <a href={applyHref(TEAM_NAMES[opening.team])} className={`group mt-auto inline-flex w-fit items-center gap-[10px] pt-[22px] text-[15px] font-medium text-black no-underline ${FOCUS}`}>
+                  Apply<span className="sr-only">, {TEAM_NAMES[opening.team]}</span>
+                  <span className="h-[2px] w-[18px] bg-[#F6A11A] transition-transform duration-200 ease-[cubic-bezier(.23,1,.32,1)] group-hover:translate-x-[4px] motion-reduce:transition-none" aria-hidden="true" />
                 </a>
               </article>
             );
           })}
           {filter === "all" && (
             <article className="flex animate-[careers-in_450ms_cubic-bezier(.22,1,.36,1)_both] flex-col border border-dashed border-black/25 p-[28px] motion-reduce:animate-none max-[600px]:p-[22px]" style={{ animationDelay: `${visible.length * 60}ms` }}>
-              <span className={`${EYEBROW} text-black/50`}>Any team</span>
+              <span className={`${EYEBROW} text-black/60`}>Any team</span>
               <svg viewBox="0 0 64 48" className="mt-[18px] h-[48px] w-[64px]" aria-hidden="true">
                 <polygon points="32,4 52,15.5 52,38.5 32,50 12,38.5 12,15.5" transform="scale(.9) translate(3.5,0)" fill="none" stroke={ORANGE} strokeWidth="2" strokeDasharray="4 4" />
               </svg>
@@ -190,31 +185,40 @@ export function OpeningsSection() {
   );
 }
 
-/** Life at Moneybee on black: the team photograph opens from the centre as the band comes into view. */
+/** Life at Moneybee on white: the team photograph opens from the centre as the section comes into view. */
 export function LifeSection() {
   const { ref, shown } = useShown<HTMLDivElement>(0.3);
   return (
-    <section id="life" aria-labelledby="life-heading" className="scroll-mt-[96px] bg-black text-white">
+    <section id="life" aria-labelledby="life-heading" className="scroll-mt-[96px] bg-white text-black">
       <div className={`${COLUMN} py-[120px] max-md:py-[80px]`}>
         <div className="grid grid-cols-1 items-end gap-8 md:grid-cols-2 md:gap-16">
           <div>
-            <BracketLabel>Life at Moneybee</BracketLabel>
-            <h2 id="life-heading" className={`mt-[18px] ${SUBHEAD}`}>
+            <span className={`${EYEBROW} text-black/60`}>02</span>
+            <h2 id="life-heading" className={`mt-[14px] ${SUBHEAD}`}>
               Life at Moneybee
             </h2>
           </div>
-          <p className={`text-white/70 ${BODY}`}>{LIFE.text}</p>
+          <p className={`text-black/70 ${BODY}`}>{LIFE.text}</p>
         </div>
-        <div ref={ref} className="relative mt-[56px] aspect-[16/9] w-full overflow-hidden bg-white/5 max-md:aspect-[4/3]">
-          <div className="absolute inset-0" style={{ clipPath: shown ? "inset(0 0 0 0)" : "inset(18% 30% 18% 30%)", transition: "clip-path 1200ms cubic-bezier(.22,1,.36,1)" }}>
+        <div ref={ref} className="relative mt-[56px] aspect-[16/9] w-full overflow-hidden bg-[#F7F7F8] max-md:aspect-[4/3]">
+          <div
+            className="absolute inset-0 motion-reduce:!transition-none"
+            style={{ clipPath: shown ? "inset(0 0 0 0)" : "inset(18% 30% 18% 30%)", transition: "clip-path 1200ms cubic-bezier(.22,1,.36,1)" }}
+          >
             <Image src="/people/moneybee-team.jpg" alt="The Moneybee team at the Lower Parel office" fill sizes="(max-width: 1512px) 100vw, 1272px" className="object-cover object-[50%_40%]" />
           </div>
         </div>
-        <ol className="mt-[2px] grid list-none grid-cols-1 gap-[2px] p-0 md:grid-cols-3">
+        <ol className="mt-[32px] grid list-none grid-cols-1 gap-x-10 gap-y-6 p-0 md:grid-cols-3">
           {LIFE.notes.map((note, index) => (
-            <li key={index} className="border-t-2 bg-white/[.04] p-[24px]" style={{ borderColor: shown ? ORANGE : "rgba(255,255,255,.15)", transition: `border-color 500ms ease ${900 + index * 200}ms` }}>
-              <span className={`${EYEBROW} text-[#F7A11A]`}>{number(index)}</span>
-              <p className="mt-[10px] text-[15px] leading-[1.55] text-white/65">{note}</p>
+            <li key={index} className="relative pt-[18px]">
+              <span aria-hidden="true" className="absolute top-0 left-0 h-[2px] w-full bg-black/10" />
+              <span
+                aria-hidden="true"
+                className="absolute top-0 left-0 h-[2px] w-full origin-left bg-[#F6A11A] motion-reduce:!transition-none"
+                style={{ transform: `scaleX(${shown ? 1 : 0})`, transition: `transform 600ms cubic-bezier(.23,1,.32,1) ${900 + index * 80}ms` }}
+              />
+              <span className={`${EYEBROW} text-black/60`}>{number(index)}</span>
+              <p className="mt-[10px] text-[15px] leading-[1.55] text-black/65">{note}</p>
             </li>
           ))}
         </ol>
@@ -223,102 +227,99 @@ export function LifeSection() {
   );
 }
 
-/** Our work culture: the boardroom beside four drawn culture points. */
+/** Our work culture as a split: the heading and the boardroom on white, the four culture points drawn on black. */
 export function CultureSection() {
   const { ref, shown } = useShown<HTMLDivElement>(0.3);
   return (
     <section id="culture" aria-labelledby="culture-heading" className="scroll-mt-[96px] bg-white text-black">
-      <div className={`${COLUMN} py-[120px] max-md:py-[80px]`}>
-        <div className="grid grid-cols-1 items-end gap-8 md:grid-cols-2 md:gap-16">
-          <div>
-            <BracketLabel>Our Work Culture</BracketLabel>
-            <h2 id="culture-heading" className={`mt-[18px] ${SUBHEAD}`}>
-              Our Work Culture
-            </h2>
+      <div ref={ref} className="grid grid-cols-1 md:grid-cols-2">
+        <div className="border-t border-black/10 py-[110px] pl-[max(120px,calc((100vw_-_1512px)/2_+_120px))] md:pr-[64px] max-md:px-6 max-md:py-[72px]">
+          <span className={`${EYEBROW} text-black/60`}>03</span>
+          <h2 id="culture-heading" className={`mt-[14px] ${SUBHEAD}`}>
+            Our Work Culture
+          </h2>
+          <p className={`mt-[28px] max-w-[480px] text-black/70 ${BODY}`}>{CAREERS_LOREM.long}</p>
+          <div className="relative mt-[40px] aspect-[4/3] w-full overflow-hidden">
+            <Image src="/people/moneybee-boardroom.jpg" alt="A meeting in the Moneybee boardroom" fill sizes="(max-width: 768px) 100vw, 560px" className="object-cover" />
           </div>
-          <p className={`text-black/70 ${BODY}`}>{CAREERS_LOREM.long}</p>
         </div>
-        <div ref={ref} className="mt-[56px] grid grid-cols-1 gap-[2px] border border-black/10 bg-black/10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)]">
-          <div className="relative min-h-[320px] overflow-hidden bg-white">
-            <Image src="/people/moneybee-boardroom.jpg" alt="A meeting in the Moneybee boardroom" fill sizes="(max-width: 1024px) 100vw, 560px" className="object-cover" />
-          </div>
-          <div className="grid grid-cols-1 gap-[2px] sm:grid-cols-2">
+        <div className="bg-black py-[110px] pr-[max(120px,calc((100vw_-_1512px)/2_+_120px))] text-white md:pl-[64px] max-md:px-6 max-md:py-[72px]">
+          <ol className="m-0 list-none border-t border-white/40 p-0">
             {CULTURE.map((point, index) => {
               const Glyph = CULTURE_GLYPHS[point.glyph];
               return (
-                <article key={point.name} className="flex flex-col bg-white p-[28px] max-[600px]:p-[22px]">
-                  <span className={`${EYEBROW} text-black/50`}>{number(index)}</span>
-                  <span className="mt-[16px] block h-[60px] w-[80px]">
-                    <DelayedGlyph Glyph={Glyph} on={shown} delay={index * 260} />
+                <li key={point.name} className="grid grid-cols-[80px_minmax(0,1fr)] items-start gap-x-[24px] border-b border-white/15 py-[28px]">
+                  <span className="block h-[60px] w-[80px]">
+                    <DelayedGlyph Glyph={Glyph} on={shown} delay={index * 260} ink="#fff" />
                   </span>
-                  <h3 className="mt-[18px] font-serif text-[clamp(1.4rem,1.1rem+.7vw,1.75rem)] leading-[1.1] font-normal">{point.name}</h3>
-                  <p className="mt-[8px] text-[15px] leading-[1.55] text-black/65">{point.text}</p>
-                </article>
+                  <div>
+                    <span className={`${EYEBROW} text-white/60`}>{number(index)}</span>
+                    <h3 className="mt-[6px] font-serif text-[clamp(1.4rem,1.1rem+.7vw,1.75rem)] leading-[1.1] font-normal">{point.name}</h3>
+                    <p className="mt-[8px] text-[15px] leading-[1.55] text-white/65">{point.text}</p>
+                  </div>
+                </li>
               );
             })}
-          </div>
+          </ol>
         </div>
       </div>
     </section>
   );
 }
 
-/** How to apply: four steps on a track, a resume travelling along it to the last. */
+/**
+ * How to apply: the steps down a progress rail. As the list comes into view
+ * the rail fills orange from the top and lights each node as it passes.
+ */
 export function ApplySection() {
-  const { ref, shown } = useShown<HTMLDivElement>(0.4);
+  const { ref, shown } = useShown<HTMLOListElement>(0.4);
   const last = APPLY_STEPS.length - 1;
+  const fill = 1500;
   return (
     <section id="apply" aria-labelledby="apply-heading" className="scroll-mt-[96px] bg-[#F7F7F8] text-black">
-      <div className={`${COLUMN} py-[120px] max-md:py-[80px]`}>
-        <div className="grid grid-cols-1 items-end gap-8 md:grid-cols-2 md:gap-16">
-          <div>
-            <BracketLabel>How to Apply</BracketLabel>
-            <h2 id="apply-heading" className={`mt-[18px] ${SUBHEAD}`}>
-              How to Apply
-            </h2>
-          </div>
-          <p className={`text-black/70 ${BODY}`}>{CAREERS_LOREM.long}</p>
-        </div>
-        <div ref={ref} className="mt-[64px]">
-          {/* The track: a sheet moves from the first node to the last, lighting each it passes. */}
-          <div className="relative h-[48px] max-lg:hidden">
-            <div className="absolute top-1/2 left-[34px] h-[2px] w-[75%] -translate-y-1/2 bg-black/10" />
-            <div className="absolute top-1/2 left-[34px] h-[2px] -translate-y-1/2 bg-[#F7A11A]" style={{ width: shown ? "75%" : "0%", transition: "width 2400ms cubic-bezier(.45,0,.2,1) 200ms" }} />
-            {APPLY_STEPS.map((step, index) => (
-              <span
-                key={step.name}
-                className="absolute top-1/2 h-[14px] w-[14px] -translate-x-1/2 -translate-y-1/2 rounded-full border-2"
-                style={{
-                  left: `calc(${(index / APPLY_STEPS.length) * 100}% + 34px)`,
-                  borderColor: shown ? ORANGE : "rgba(0,0,0,.25)",
-                  backgroundColor: shown ? ORANGE : "#F7F7F8",
-                  transition: `all 300ms ease ${200 + (index / last) * 2400}ms`,
-                }}
-              />
-            ))}
-            <svg viewBox="0 0 28 36" className="absolute top-1/2 h-[36px] w-[28px] -translate-x-1/2 -translate-y-[130%]" style={{ left: shown ? "calc(75% + 34px)" : "34px", transition: "left 2400ms cubic-bezier(.45,0,.2,1) 200ms" }} aria-hidden="true">
-              <path d="M2 2h17l7 7v25H2Z" fill="#fff" stroke="#000" strokeWidth="1.4" strokeLinejoin="round" />
-              <path d="M19 2v7h7" fill="none" stroke="#000" strokeWidth="1.4" />
-              <path d="M7 16h14M7 21h14M7 26h9" stroke={ORANGE} strokeWidth="1.8" />
-            </svg>
-          </div>
-          <ol className="mt-[20px] grid list-none grid-cols-1 gap-[2px] p-0 sm:grid-cols-2 lg:grid-cols-4">
-            {APPLY_STEPS.map((step, index) => (
-              <li
-                key={step.name}
-                className="border-t-2 bg-white p-[28px] max-[600px]:p-[22px] lg:border-t-0"
-                style={{ borderTopColor: shown ? ORANGE : "rgba(0,0,0,.1)", transition: `border-color 400ms ease ${200 + index * 450}ms` }}
-              >
-                <span className="text-[clamp(2.4rem,4vw,3.4rem)] leading-none font-light tracking-[-.05em] text-[#F7A11A] tabular-nums">{number(index)}</span>
-                <h3 className="mt-[16px] font-serif text-[clamp(1.4rem,1.1rem+.7vw,1.75rem)] leading-[1.1] font-normal">{step.name}</h3>
-                <p className="mt-[8px] text-[15px] leading-[1.55] text-black/65">{step.text}</p>
-              </li>
-            ))}
-          </ol>
-          <div className="mt-[48px]">
+      <div className={`${COLUMN} grid grid-cols-1 gap-12 py-[120px] md:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)] md:gap-20 max-md:py-[80px]`}>
+        <div className="md:sticky md:top-[120px] md:self-start">
+          <span className={`${EYEBROW} text-black/60`}>04</span>
+          <h2 id="apply-heading" className={`mt-[14px] ${SUBHEAD}`}>
+            How to Apply
+          </h2>
+          <p className={`mt-[28px] max-w-[480px] text-black/70 ${BODY}`}>{CAREERS_LOREM.long}</p>
+          <div className="mt-[40px]">
             <Ctas />
           </div>
         </div>
+        <ol ref={ref} className="relative m-0 list-none p-0">
+          {APPLY_STEPS.map((step, index) => (
+            <li key={step.name} className="relative grid grid-cols-[28px_minmax(0,1fr)] gap-x-[24px] pb-[44px] last:pb-0">
+              {/* The rail segment from this node's centre to the next one's, filled in turn. */}
+              {index < last && (
+                <>
+                  <span aria-hidden="true" className="absolute top-[16px] -bottom-[16px] left-[13px] w-[2px] bg-black/10" />
+                  <span
+                    aria-hidden="true"
+                    className="absolute top-[16px] -bottom-[16px] left-[13px] w-[2px] origin-top bg-[#F6A11A] motion-reduce:!transition-none"
+                    style={{ transform: `scaleY(${shown ? 1 : 0})`, transition: `transform ${fill / last}ms linear ${200 + (index / last) * fill}ms` }}
+                  />
+                </>
+              )}
+              <span
+                aria-hidden="true"
+                className="relative z-[1] mt-[2px] grid h-[28px] w-[28px] place-items-center rounded-full border-2 font-[family-name:var(--font-geist-mono)] text-[11px] tabular-nums motion-reduce:!transition-none"
+                style={{
+                  borderColor: shown ? ORANGE : "rgba(0,0,0,.25)",
+                  backgroundColor: shown ? ORANGE : "#F7F7F8",
+                  transition: `background-color 250ms ease ${200 + (index / last) * fill}ms, border-color 250ms ease ${200 + (index / last) * fill}ms`,
+                }}
+              >
+                {index + 1}
+              </span>
+              <div>
+                <h3 className="font-serif text-[clamp(1.5rem,1.1rem+.8vw,1.9rem)] leading-[1.1] font-normal">{step.name}</h3>
+                <p className="mt-[8px] max-w-[440px] text-[15px] leading-[1.55] text-black/65">{step.text}</p>
+              </div>
+            </li>
+          ))}
+        </ol>
       </div>
     </section>
   );

@@ -1,15 +1,16 @@
 "use client";
 
-import { useMotionValueEvent, useScroll } from "motion/react";
+import { type MotionValue, useMotionValue, useMotionValueEvent, useScroll } from "motion/react";
 import { useReducedMotion } from "@/lib/use-reduced-motion";
+import { COLUMN } from "@/components/hero/tokens";
 import { type ComponentType, type ReactNode, useEffect, useRef, useState } from "react";
 
-export const FOCUS = "focus-visible:outline-2 focus-visible:outline-[#F7A11A] focus-visible:outline-offset-4";
-export const ORANGE = "#F7A11A";
+export const FOCUS = "focus-visible:outline-2 focus-visible:outline-[#F6A11A] focus-visible:outline-offset-4";
+export const ORANGE = "#F6A11A";
 /** The card's `fig-route--active` glow, for lit lines. */
-export const LINE_GLOW = "drop-shadow(0 0 7px color-mix(in srgb, #F7A11A 65%, transparent))";
+export const LINE_GLOW = "drop-shadow(0 0 7px color-mix(in srgb, #F6A11A 65%, transparent))";
 /** The glow the card's highlighted solids carry. */
-export const SOLID_GLOW = "drop-shadow(0 0 14px rgba(247,161,26,.55))";
+export const SOLID_GLOW = "drop-shadow(0 0 14px rgba(246, 161, 26,.55))";
 
 export const clamp = (value: number) => Math.min(1, Math.max(0, value));
 /**
@@ -37,8 +38,35 @@ export function Bloom({ id }: { id: string }) {
 }
 
 /**
- * A clock that runs while `running`, eased in the way the cards spin up and
- * kept when it pauses so nothing snaps back. Returns seconds of motion.
+ * The figure clock as a MotionValue: seconds of motion, eased in the way the
+ * cards spin up and kept when it pauses so nothing snaps back. Nothing
+ * re-renders as it ticks; subscribe with useMotionValueEvent and write to the
+ * DOM directly.
+ */
+export function useFigureClockValue(running: boolean): MotionValue<number> {
+  const seconds = useMotionValue(0);
+  useEffect(() => {
+    if (!running) return;
+    let raf = 0;
+    let energy = 0;
+    let previous = performance.now();
+    const tick = (now: number) => {
+      const dt = Math.min(0.05, (now - previous) / 1000);
+      previous = now;
+      energy += (1 - energy) * Math.min(1, dt / 0.4);
+      seconds.set(seconds.get() + dt * energy);
+      raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [running, seconds]);
+  return seconds;
+}
+
+/**
+ * The same clock as React state, for figures still drawn in render. It
+ * re-renders its component every frame while running; prefer
+ * useFigureClockValue.
  */
 export function useFigureClock(running: boolean) {
   const [seconds, setSeconds] = useState(0);
@@ -114,7 +142,7 @@ export function BracketLabel({ children }: { children: ReactNode }) {
 /** The heading block every fact section opens with. */
 export function SectionHeading({ id, label, heading, lead }: { id: string; label: string; heading: string; lead?: ReactNode }) {
   return (
-    <div className="px-[max(32px,calc((100vw_-_1480px)/2))] pt-[120px] max-[600px]:px-[22px] max-[600px]:pt-[72px]">
+    <div className={`${COLUMN} pt-[120px] max-[600px]:pt-[80px]`}>
       <BracketLabel>{label}</BracketLabel>
       <div className="mt-[18px] grid grid-cols-[1fr_.8fr] items-end gap-[60px] max-[900px]:grid-cols-1 max-[900px]:gap-[28px]">
         {/* Deck lines run from three words to a full sentence; a long one steps down a size so it holds four lines at most. */}
@@ -166,6 +194,9 @@ export function DetailRows({ rows }: { rows: readonly (readonly [string, ReactNo
   );
 }
 
+/** How many steps the scroll-driven build is cut into. */
+const BUILD_STEPS = 48;
+
 /**
  * The scroll pattern every fact section shares: text first, then the figure
  * pinned (beside the panels on desktop, above them on a phone) while one panel
@@ -204,9 +235,12 @@ export default function FactSection({
   // The build runs while the panel column scrolls up to a third of the screen,
   // so the figure is standing before the first panel reaches the trigger line.
   const { scrollYProgress } = useScroll({ target: panelsRef, offset: ["start end", "start 0.3"] });
-  const [progress, setProgress] = useState(0);
+  // The build in whole steps, so the section re-renders a bounded number of times
+  // on the way in rather than on every scroll event.
+  const [step, setStep] = useState(0);
   const [selected, setSelected] = useState(panels[0].part);
-  useMotionValueEvent(scrollYProgress, "change", (value) => setProgress(clamp(value)));
+  useMotionValueEvent(scrollYProgress, "change", (value) => setStep(Math.round(clamp(value) * BUILD_STEPS)));
+  const progress = step / BUILD_STEPS;
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -232,7 +266,7 @@ export default function FactSection({
       {heading && <SectionHeading id={id} label={label} heading={heading} lead={lead} />}
       {intro}
 
-      <div className="grid grid-cols-[1.15fr_.85fr] gap-[60px] px-[max(32px,calc((100vw_-_1480px)/2))] max-[900px]:grid-cols-1 max-[900px]:gap-0 max-[600px]:px-[22px]">
+      <div className={`${COLUMN} grid grid-cols-[1.15fr_.85fr] gap-[60px] max-[900px]:grid-cols-1 max-[900px]:gap-0`}>
         <div className="sticky top-0 flex h-svh items-center self-start max-[900px]:z-[2] max-[900px]:h-[42svh] max-[900px]:bg-white max-[900px]:pt-[64px]">
           <Figure progress={reduceMotion ? 1 : progress} selected={selected} onSelect={onSelect} />
         </div>

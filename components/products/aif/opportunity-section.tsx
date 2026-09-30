@@ -14,7 +14,7 @@ const OY = 300;
 const SLIDE = 70;
 
 const PAPER = { top: "#fbfaf8", left: "#e6e4df", right: "#f1efeb" };
-const LIT = { top: "#F7A11A", left: "#c97f0c", right: "#e3920f" };
+const LIT = { top: "#F6A11A", left: "#c97f0c", right: "#e3920f" };
 
 /** One benefit's slab. It glides out and back as the lit panel changes. */
 function Slab({ index, lit, rise, labels, onSelect }: { index: number; lit: boolean; rise: number; labels: boolean; onSelect: () => void }) {
@@ -45,7 +45,7 @@ function Slab({ index, lit, rise, labels, onSelect }: { index: number; lit: bool
       </g>
       {labels && (
         <>
-      <path d={`M${(cornerX + 8).toFixed(2)} ${cornerY.toFixed(2)} L${(cornerX + 30).toFixed(2)} ${labelY.toFixed(2)} L590 ${labelY.toFixed(2)}`} fill="none" stroke={lit ? "#F7A11A" : "rgba(0,0,0,.3)"} strokeDasharray={lit ? undefined : "2 5"} strokeLinecap="round" />
+      <path d={`M${(cornerX + 8).toFixed(2)} ${cornerY.toFixed(2)} L${(cornerX + 30).toFixed(2)} ${labelY.toFixed(2)} L590 ${labelY.toFixed(2)}`} fill="none" stroke={lit ? "#F6A11A" : "rgba(0,0,0,.3)"} strokeDasharray={lit ? undefined : "2 5"} strokeLinecap="round" />
       <text x={600} y={labelY + 4} className={`font-[family-name:var(--font-geist-mono)] text-[12px] tracking-[.08em] uppercase ${lit ? "fill-black" : "fill-black/45"}`}>
         {String(index + 1).padStart(2, "0")} {OPPORTUNITIES[index].name}
       </text>

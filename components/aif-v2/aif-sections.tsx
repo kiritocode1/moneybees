@@ -7,6 +7,7 @@ import { Rise } from "@/components/hero/editorial";
 import { BODY, COLUMN, EYEBROW, HEADING, SUBHEAD } from "@/components/hero/tokens";
 import { AIF_LOREM, AIF_PARTS, APPROACH_STEPS, CATEGORY_III, FLYINGBEE, KEY_TERMS, STRUCTURE } from "@/lib/aif-v2";
 import { useReducedMotion } from "@/lib/use-reduced-motion";
+import { OrangeButton, NoScriptReveal } from "@/components/pms-v2/shared";
 import { AifUnitsGlyph, FundGraphic, ORANGE, PmsHoldingGlyph, TERM_GLYPHS } from "./glyphs";
 
 /*
@@ -17,8 +18,7 @@ import { AifUnitsGlyph, FundGraphic, ORANGE, PmsHoldingGlyph, TERM_GLYPHS } from
  */
 
 const number = (index: number) => String(index + 1).padStart(2, "0");
-const FOCUS = "focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#F7A11A]";
-const CTA = `inline-flex w-fit items-center rounded-full bg-[#F7A11A] px-[26px] py-[14px] text-[15px] font-medium text-black no-underline transition-colors hover:bg-black hover:text-white ${FOCUS}`;
+const FOCUS = "focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-current";
 
 /** Plays its children's explained state once the block is `amount` in view. */
 function useShown<T extends Element>(amount = 0.45) {
@@ -35,6 +35,7 @@ export function AifHero() {
   }, []);
   return (
     <section aria-labelledby="aif-heading" className="bg-white text-black">
+      <NoScriptReveal />
       <div className={`${COLUMN} pt-[150px] pb-[96px] md:pt-[200px] max-md:pb-[64px]`}>
         <div className="grid grid-cols-1 items-center gap-12 md:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] md:gap-20">
           <div>
@@ -50,9 +51,12 @@ export function AifHero() {
               <p className={`mt-8 max-w-[540px] text-black/70 ${BODY}`}>{FLYINGBEE.intro}</p>
             </Rise>
             <Rise delay={0.18}>
-              <a href={FLYINGBEE.explore.href} className={`mt-10 ${CTA}`}>
-                {FLYINGBEE.explore.label}
-              </a>
+              <div className="mt-10 flex flex-wrap gap-3">
+                <OrangeButton href={FLYINGBEE.explore.href}>{FLYINGBEE.explore.label}</OrangeButton>
+                <OrangeButton href={FLYINGBEE.start.href} outline>
+                  {FLYINGBEE.start.label}
+                </OrangeButton>
+              </div>
             </Rise>
           </div>
           <div className="mx-auto w-full max-w-[560px]">
@@ -64,9 +68,10 @@ export function AifHero() {
             <ol className="m-0 grid list-none grid-cols-1 border-t border-black p-0 sm:grid-cols-2 lg:grid-cols-4">
               {AIF_PARTS.map(([label, href], index) => (
                 <li key={href} className="border-b border-black/15 lg:border-b-0">
-                  <a href={href} className="group flex items-baseline gap-[14px] py-[16px] pr-4 text-black no-underline">
-                    <span className="text-[22px] leading-none font-light tracking-[-.04em] text-[#F7A11A]">{number(index)}</span>
-                    <span className="text-[16px] text-black/75 transition-colors group-hover:text-black">{label}</span>
+                  <a href={href} className={`group flex items-baseline gap-[14px] py-[16px] pr-4 text-black no-underline ${FOCUS}`}>
+                    <span className="font-[family-name:var(--font-geist-mono)] text-[13px] leading-none text-black/60 tabular-nums">{number(index)}</span>
+                    <span className="text-[16px] text-black/75 transition-colors duration-200 group-hover:text-black">{label}</span>
+                    <span aria-hidden="true" className="ml-auto h-[2px] w-[24px] origin-left scale-x-0 bg-[#F6A11A] transition-transform duration-200 ease-[cubic-bezier(.23,1,.32,1)] group-hover:scale-x-100 group-focus-visible:scale-x-100" />
                   </a>
                 </li>
               ))}
@@ -86,7 +91,7 @@ export function CategoryThreeSection() {
       <div className={`${COLUMN} py-[120px] max-md:py-[80px]`}>
         <div className="grid grid-cols-1 items-end gap-8 md:grid-cols-2 md:gap-16">
           <div>
-            <BracketLabel>The vehicle</BracketLabel>
+            <BracketLabel>Category III</BracketLabel>
             <h2 id="category-heading" className={`mt-[18px] ${SUBHEAD}`}>
               {CATEGORY_III.heading}
             </h2>
@@ -101,7 +106,10 @@ export function CategoryThreeSection() {
             <article key={name} className="bg-white p-[32px] max-[600px]:p-[22px]">
               <div className="flex items-baseline justify-between">
                 <h3 className="font-serif text-[clamp(1.8rem,1.3rem+1.2vw,2.6rem)] leading-none font-normal">{name}</h3>
-                <span className={`${EYEBROW} ${index === 1 ? "text-[#F7A11A]" : "text-black/45"}`}>{index === 1 ? "Flyingbee" : "Direct"}</span>
+                <span className={`${EYEBROW} flex items-center gap-[8px] text-black/60`}>
+                  {index === 1 && <i aria-hidden="true" className="h-[8px] w-[8px] bg-[#F6A11A]" />}
+                  {index === 1 ? "Flyingbee" : "Direct"}
+                </span>
               </div>
               <div className="mt-[24px] border-t border-black/10 pt-[20px]">
                 <div className="mx-auto max-w-[420px]">
@@ -170,10 +178,10 @@ export function StructureSection() {
                 <li key={name} className="contents">
                   {index > 0 && <ChainArrow on={shown} delay={index * 350} />}
                   <div
-                    className={`flex min-h-[132px] flex-col justify-between p-[24px] ${fund ? "border-2 border-[#F7A11A]" : "border border-white/25"}`}
+                    className={`flex min-h-[132px] flex-col justify-between p-[24px] ${fund ? "border-2 border-[#F6A11A]" : "border border-white/25"}`}
                     style={{ opacity: shown ? 1 : 0.25, transition: `opacity 600ms ease ${index * 350}ms` }}
                   >
-                    <span className={`${EYEBROW} ${fund ? "text-[#F7A11A]" : "text-white/45"}`}>{number(index)}</span>
+                    <span className={`${EYEBROW} ${fund ? "text-[#F6A11A]" : "text-white/60"}`}>{number(index)}</span>
                     <span className="mt-6 font-serif text-[clamp(1.4rem,1rem+1vw,2rem)] leading-[1.1]">{name}</span>
                   </div>
                   {/* Phone: the parties hang straight off the fund, before the arrow to the manager. */}
@@ -214,7 +222,7 @@ function Parties({ shown, active, setActive }: { shown: boolean; active: number 
             <li key={party} className="relative flex flex-col">
               <span
                 aria-hidden="true"
-                className={`absolute transition-colors max-md:top-1/2 max-md:left-[-24px] max-md:h-px max-md:w-[24px] md:top-0 md:left-1/2 md:h-[28px] md:w-px ${lit ? "bg-[#F7A11A]" : "bg-white/35"}`}
+                className={`absolute transition-colors max-md:top-1/2 max-md:left-[-24px] max-md:h-px max-md:w-[24px] md:top-0 md:left-1/2 md:h-[28px] md:w-px ${lit ? "bg-[#F6A11A]" : "bg-white/35"}`}
               />
               <button
                 type="button"
@@ -224,11 +232,11 @@ function Parties({ shown, active, setActive }: { shown: boolean; active: number 
                 onBlur={() => setActive(null)}
                 onClick={() => setActive(lit ? null : index)}
                 aria-pressed={lit}
-                className={`block w-full flex-1 border p-[20px] text-left md:mt-[28px] ${lit ? "border-[#F7A11A] bg-white/[.04]" : "border-white/20"} ${FOCUS}`}
+                className={`block w-full flex-1 border p-[20px] text-left md:mt-[28px] ${lit ? "border-[#F6A11A] bg-white/[.04]" : "border-white/20"} ${FOCUS}`}
                 style={{ opacity: shown ? 1 : 0, transition: `opacity 500ms ease ${1600 + index * 150}ms, border-color 200ms ease, background-color 200ms ease` }}
               >
-                <span className={`block font-serif text-[clamp(1.2rem,1rem+.5vw,1.45rem)] leading-[1.15] transition-colors ${lit ? "text-[#F7A11A]" : "text-white"}`}>{party}</span>
-                <span className="mt-[10px] block text-[14px] leading-[1.5] text-white/55">{STRUCTURE.partyText}</span>
+                <span className={`block font-serif text-[clamp(1.2rem,1rem+.5vw,1.45rem)] leading-[1.15] transition-colors ${lit ? "text-[#F6A11A]" : "text-white"}`}>{party}</span>
+                <span className="mt-[10px] block text-[14px] leading-[1.5] text-white/65">{STRUCTURE.partyText}</span>
               </button>
             </li>
           );
@@ -265,7 +273,7 @@ function ProcessField({ step }: { step: number }) {
         const r = kept ? (growing ? 4.6 : 3.2) : 2;
         return (
           <g key={dot.index}>
-            <circle cx={dot.x} cy={dot.y} r={r} fill={kept ? (decided ? ORANGE : "#000") : "rgba(0,0,0,.1)"} className="transition-all duration-500 ease-[cubic-bezier(.22,1,.36,1)]" />
+            <circle cx={dot.x} cy={dot.y} r={r} fill={kept ? (decided ? ORANGE : "#000") : "rgba(0,0,0,.1)"} className="transition-[r,fill] duration-500 ease-[cubic-bezier(.23,1,.32,1)] motion-reduce:!transition-none" />
             {kept && decided && <circle cx={dot.x} cy={dot.y} r="7.2" fill="none" stroke="#000" strokeWidth=".8" />}
           </g>
         );
@@ -319,9 +327,9 @@ export function ApproachSection() {
                     aria-current={current ? "step" : undefined}
                     className={`group grid w-full grid-cols-[40px_minmax(0,1fr)_auto] items-center gap-x-[14px] py-[14px] text-left ${FOCUS}`}
                   >
-                    <span className={`text-[20px] leading-none font-light tracking-[-.04em] tabular-nums transition-colors ${current || passed ? "text-[#F7A11A]" : "text-black/30"}`}>{number(index)}</span>
-                    <span className={`font-serif text-[clamp(1.2rem,1rem+.6vw,1.55rem)] leading-[1.2] transition-colors ${current ? "text-black" : "text-black/50 group-hover:text-black"}`}>{name}</span>
-                    <span className={`h-[2px] bg-[#F7A11A] transition-all duration-300 ${current ? "w-[28px]" : "w-0"}`} />
+                    <span className={`text-[20px] leading-none font-light tracking-[-.04em] tabular-nums transition-colors ${current ? "text-black" : passed ? "text-black/60" : "text-black/40"}`}>{number(index)}</span>
+                    <span className={`font-serif text-[clamp(1.2rem,1rem+.6vw,1.55rem)] leading-[1.2] transition-colors ${current ? "text-black" : "text-black/60 group-hover:text-black"}`}>{name}</span>
+                    <span aria-hidden="true" className={`h-[2px] w-[28px] origin-left bg-[#F6A11A] transition-transform duration-200 ease-[cubic-bezier(.23,1,.32,1)] ${current ? "scale-x-100" : "scale-x-0"}`} />
                   </button>
                 </li>
               );
@@ -329,10 +337,13 @@ export function ApproachSection() {
           </ol>
           <div className="border border-black/15 p-[28px] max-md:order-first max-[600px]:p-[18px]">
             <div className="flex items-baseline justify-between gap-4">
-              <span className={`${EYEBROW} text-black/50`}>
+              <span className={`${EYEBROW} text-black/60`}>
                 Step {step + 1} of {APPROACH_STEPS.length}
               </span>
-              <span className={`${EYEBROW} text-right text-[#F7A11A]`}>{APPROACH_STEPS[step]}</span>
+              <span className={`${EYEBROW} flex items-center gap-[8px] text-right text-black`}>
+                <i aria-hidden="true" className="h-[8px] w-[8px] bg-[#F6A11A]" />
+                {APPROACH_STEPS[step]}
+              </span>
             </div>
             <div className="mt-[20px] border-t border-black/10 pt-[20px]">
               <ProcessField step={step} />
@@ -364,24 +375,22 @@ export function KeyTermsSection() {
             const Glyph = TERM_GLYPHS[term.glyph];
             return (
               <article key={term.label} className="flex flex-col bg-white p-[24px] max-[600px]:p-[22px]">
-                <span className={`${EYEBROW} text-[#F7A11A]`}>{number(index)}</span>
+                <span className={`${EYEBROW} text-black/60`}>{number(index)}</span>
                 <div className="mt-[16px] border-b border-black/10 pb-[16px]">
                   <div className="max-w-[260px] max-sm:mx-auto">
-                    <Delayed on={shown} delay={index * 240}>
+                    <Delayed on={shown} delay={index * 80}>
                       {(ready) => <Glyph on={ready} />}
                     </Delayed>
                   </div>
                 </div>
-                <span className={`mt-[18px] ${EYEBROW} text-black/55`}>{term.label}</span>
+                <span className={`mt-[18px] ${EYEBROW} text-black/60`}>{term.label}</span>
                 <p className="mt-[8px] font-serif text-[clamp(1.3rem,1.05rem+.5vw,1.6rem)] leading-[1.15]">{term.value}</p>
               </article>
             );
           })}
         </div>
         <div className="mt-[56px] flex justify-start">
-          <a href={FLYINGBEE.start.href} className={CTA}>
-            {FLYINGBEE.start.label}
-          </a>
+          <OrangeButton href={FLYINGBEE.start.href}>{FLYINGBEE.start.label}</OrangeButton>
         </div>
       </div>
     </section>

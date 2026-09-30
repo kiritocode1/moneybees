@@ -20,7 +20,7 @@ const AT = [0.06, 0.3, 0.5, 0.7, 0.9, 1.06];
 const END = 1.12;
 /** Segment edges: halfway between steps, so each step owns the stretch around it. */
 const EDGES = [0, ...AT.slice(1).map((u, i) => (u + AT[i]) / 2), END];
-const COLOURS = ["#b8650a", "#d98c10", "#F7A11A", "#f9b84a", "#fbcb7e", "#fddfb0"];
+const COLOURS = ["#b8650a", "#d98c10", "#F6A11A", "#f9b84a", "#fbcb7e", "#fddfb0"];
 
 type Layout = { width: number; height: number; stroke: number; point: (u: number) => readonly [number, number] };
 

@@ -3,7 +3,8 @@
 import { BracketLabel } from "@/components/fact-sections/fact-section";
 import { Rise } from "@/components/hero/editorial";
 import { BODY, COLUMN, EYEBROW, HEADING, SUBHEAD } from "@/components/hero/tokens";
-import { DelayedOn, FOCUS, hexPoints, number, ORANGE, T, useShown } from "@/components/pms-v2/shared";
+import Link from "next/link";
+import { DelayedOn, FOCUS, hexPoints, number, ORANGE, OrangeButton, PageIndex, PRESS, T, useShown, NoScriptReveal } from "@/components/pms-v2/shared";
 import { COMPARE, COMPARE_PARTS, COMPARISON, EXPLANATION } from "@/lib/compare";
 import { AifChain, PmsChain } from "./chain-diagrams";
 import { ROW_GLYPHS } from "./row-glyphs";
@@ -23,6 +24,7 @@ export function CompareHero() {
   const { ref, shown } = useShown<HTMLDivElement>(0.3);
   return (
     <section aria-labelledby="compare-heading" className="bg-white text-black">
+      <NoScriptReveal />
       <div className={`${COLUMN} grid grid-cols-1 items-end gap-14 pt-[150px] pb-[72px] md:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] md:gap-20 md:pt-[220px]`}>
         <div>
           <Rise>
@@ -38,26 +40,17 @@ export function CompareHero() {
           </Rise>
         </div>
         <Rise delay={0.2}>
-          <nav aria-label="On this page">
-            <ol className="list-none border-t border-black p-0">
-              {COMPARE_PARTS.map(([label, href], index) => (
-                <li key={href} className="border-b border-black/15">
-                  <a href={href} className={`group flex items-baseline gap-[18px] py-[14px] text-black no-underline ${FOCUS}`}>
-                    <span className="w-[34px] text-[22px] leading-none font-light tracking-[-.04em] text-[#F7A11A]">{number(index)}</span>
-                    <span className="text-[17px] text-black/75 transition-colors group-hover:text-black">{label}</span>
-                    <span className="ml-auto h-[2px] w-0 bg-[#F7A11A] transition-all duration-300 group-hover:w-[28px]" />
-                  </a>
-                </li>
-              ))}
-            </ol>
-          </nav>
+          <PageIndex parts={COMPARE_PARTS} />
         </Rise>
       </div>
       <div id="structures" ref={ref} className={`${COLUMN} scroll-mt-[96px] pb-[120px] max-md:pb-[80px]`}>
         <div className="grid grid-cols-1 gap-[2px] bg-[#F7F7F8] p-[2px] md:grid-cols-2">
           {CHAIN_DIAGRAMS.map(({ label, Diagram, delay }) => (
             <div key={label} className="bg-white p-[32px] max-[600px]:p-[18px]">
-              <span className={`${EYEBROW} text-[#F7A11A]`}>{label}</span>
+              <span className={`${EYEBROW} flex items-center gap-[8px] text-black`}>
+                <i aria-hidden="true" className="h-[8px] w-[8px] bg-[#F6A11A]" />
+                {label}
+              </span>
               <div className="mt-[18px]">
                 <DelayedOn on={shown} delay={delay}>
                   {(ready) => <Diagram on={ready} />}
@@ -71,46 +64,79 @@ export function CompareHero() {
   );
 }
 
-/** The simple comparison on black: PMS and AIF side by side, each cell with its drawing, rows played in turn. */
+/**
+ * The simple comparison on black, as a real table: PMS and AIF columns, one
+ * row per point of the plan, each cell with its drawing. `table-fixed` keeps
+ * the two columns equal, so at 390px each cell is half the column and nothing
+ * overflows the page; the drawing drops under the text below lg.
+ */
 export function ComparisonSection() {
   const { ref, shown } = useShown<HTMLDivElement>(0.2);
   return (
     <section id="comparison" aria-labelledby="comparison-heading" className="scroll-mt-[96px] bg-black text-white">
       <div className={`${COLUMN} py-[120px] max-md:py-[80px]`}>
-        <BracketLabel>Comparison</BracketLabel>
-        <h2 id="comparison-heading" className={`mt-[18px] ${SUBHEAD}`}>
-          Simple Comparison
-        </h2>
-        <div ref={ref} className="mt-[56px]" role="table" aria-label="PMS compared with AIF">
-          <div role="row" className="grid grid-cols-2 border-b border-white/40">
-            {["PMS", "AIF"].map((head, index) => (
-              <div role="columnheader" key={head} className={`pb-[16px] text-[clamp(2rem,1.4rem+2vw,3.4rem)] leading-none font-light tracking-[-.04em] ${index ? "border-l border-white/15 pl-[32px] max-md:pl-[14px]" : "pr-[32px] max-md:pr-[14px]"}`}>
-                <span className={index ? "text-white" : "text-[#F7A11A]"}>{head}</span>
-              </div>
-            ))}
+        <div className="grid grid-cols-1 items-end gap-8 md:grid-cols-2 md:gap-16">
+          <div>
+            <BracketLabel>Comparison</BracketLabel>
+            <h2 id="comparison-heading" className={`mt-[18px] ${SUBHEAD}`}>
+              Simple Comparison
+            </h2>
           </div>
-          {COMPARISON.map((row, index) => {
-            const pair = ROW_GLYPHS[row.glyph];
-            return (
-              <div role="row" key={row.glyph} className="grid grid-cols-2 border-b border-white/15" style={{ opacity: shown ? 1 : 0.3, transition: `opacity 500ms ease ${index * 180}ms` }}>
-                {([
-                  [row.pms, pair.pms],
-                  [row.aif, pair.aif],
-                ] as const).map(([text, Glyph], side) => (
-                  <div
-                    role="cell"
-                    key={side}
-                    className={`grid grid-cols-[minmax(0,1fr)_150px] items-center gap-6 py-[22px] max-lg:grid-cols-1 max-lg:gap-3 ${side ? "border-l border-white/15 pl-[32px] max-md:pl-[14px]" : "pr-[32px] max-md:pr-[14px]"}`}
+          <p className={`text-white/70 ${BODY}`}>{COMPARE.lead}</p>
+        </div>
+        <div ref={ref} className="mt-[56px]">
+          <table className="w-full table-fixed border-collapse text-left">
+            <caption className="sr-only">PMS compared with AIF, point by point</caption>
+            <thead>
+              <tr className="border-b border-white/50">
+                {(["PMS", "AIF"] as const).map((head, index) => (
+                  <th
+                    key={head}
+                    scope="col"
+                    className={`pb-[18px] align-bottom font-normal ${index ? "border-l border-white/15 pl-[32px] max-md:pl-[14px]" : "pr-[32px] max-md:pr-[14px]"}`}
                   >
-                    <span className="font-serif text-[clamp(1.1rem,.9rem+.8vw,1.75rem)] leading-[1.2]">{text}</span>
-                    <DelayedOn on={shown} delay={index * 180 + side * 90 + 200}>
-                      {(ready) => <Glyph on={ready} />}
-                    </DelayedOn>
-                  </div>
+                    <span className="flex items-baseline gap-[12px]">
+                      <span className="text-[clamp(2rem,1.4rem+2vw,3.4rem)] leading-none font-light tracking-[-.04em]">{head}</span>
+                      <i aria-hidden="true" className={`h-[10px] w-[10px] ${index ? "border border-white/60" : "bg-[#F6A11A]"}`} />
+                    </span>
+                  </th>
                 ))}
-              </div>
-            );
-          })}
+              </tr>
+            </thead>
+            <tbody>
+              {COMPARISON.map((row, index) => {
+                const pair = ROW_GLYPHS[row.glyph];
+                return (
+                  <tr key={row.glyph} className="border-b border-white/15" style={{ opacity: shown ? 1 : 0.3, transition: `opacity 400ms ease ${index * 80}ms` }}>
+                    {([
+                      [row.pms, pair.pms],
+                      [row.aif, pair.aif],
+                    ] as const).map(([text, Glyph], side) => (
+                      <td key={side} className={`py-[24px] align-top ${side ? "border-l border-white/15 pl-[32px] max-md:pl-[14px]" : "pr-[32px] max-md:pr-[14px]"}`}>
+                        <div className="grid grid-cols-[minmax(0,1fr)_150px] items-center gap-6 max-lg:grid-cols-1 max-lg:gap-4">
+                          <div>
+                            <span aria-hidden="true" className={`${EYEBROW} block text-white/60`}>
+                              {number(index)}
+                            </span>
+                            <span className="mt-[8px] block font-serif text-[clamp(1.1rem,.9rem+.8vw,1.75rem)] leading-[1.2]">{text}</span>
+                          </div>
+                          <DelayedOn on={shown} delay={index * 80 + side * 40 + 200}>
+                            {(ready) => <Glyph on={ready} />}
+                          </DelayedOn>
+                        </div>
+                      </td>
+                    ))}
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+          <div className="mt-[40px] flex flex-wrap gap-3">
+            <OrangeButton href="/pms" onDark>Portfolio Management Services</OrangeButton>
+            <Link href="/aif" className={`inline-flex w-fit items-center rounded-full border border-white/60 px-[26px] py-[14px] text-[15px] font-medium text-white no-underline hover:border-white hover:bg-white hover:text-black ${PRESS} ${FOCUS} focus-visible:outline-white`}>
+              Flyingbee Investment Fund
+            </Link>
+          </div>
         </div>
       </div>
     </section>
@@ -197,7 +223,10 @@ export function ExplanationSection() {
         <div ref={ref} className="mt-[56px] grid grid-cols-1 gap-8 md:grid-cols-2">
           {cards.map(({ label, text, Drawing }, index) => (
             <article key={label} className="border border-black/15 p-[32px] max-[600px]:p-[20px]">
-              <span className="text-[clamp(2rem,1.4rem+2vw,3.4rem)] leading-none font-light tracking-[-.04em] text-[#F7A11A]">{label}</span>
+              <span className="flex items-baseline gap-[12px]">
+                <span className="text-[clamp(2rem,1.4rem+2vw,3.4rem)] leading-none font-light tracking-[-.04em]">{label}</span>
+                <i aria-hidden="true" className={`h-[10px] w-[10px] ${index ? "border border-black/60" : "bg-[#F6A11A]"}`} />
+              </span>
               <div className="mt-[28px] border-y border-black/10 py-[22px]">
                 <DelayedOn on={shown} delay={index * 500}>
                   {(ready) => <Drawing on={ready} />}

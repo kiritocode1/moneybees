@@ -47,9 +47,9 @@ export function ApproachHero() {
               {APPROACH_PARTS.map(([label, href], index) => (
                 <li key={href} className="border-b border-black/15">
                   <a href={href} className="group flex items-baseline gap-[18px] py-[14px] text-black no-underline">
-                    <span className="w-[34px] text-[22px] leading-none font-light tracking-[-.04em] text-[#F7A11A]">{number(index)}</span>
+                    <span className="w-[34px] text-[22px] leading-none font-light tracking-[-.04em] text-[#F6A11A]">{number(index)}</span>
                     <span className="text-[17px] text-black/75 transition-colors group-hover:text-black">{label}</span>
-                    <span className="ml-auto h-[2px] w-0 bg-[#F7A11A] transition-all duration-300 group-hover:w-[28px]" />
+                    <span className="ml-auto h-[2px] w-[28px] origin-left scale-x-0 bg-[#F6A11A] transition-transform duration-300 ease-[cubic-bezier(.23,1,.32,1)] group-hover:scale-x-100 group-focus-visible:scale-x-100 motion-reduce:transition-none" />
                   </a>
                 </li>
               ))}
@@ -95,7 +95,7 @@ export function PhilosophySection() {
               <div key={stage.word} className="contents">
                 {index > 0 && <StageArrow on={on} delay={index * 450 - 150} />}
                 <div className="border border-black/15 p-[28px] max-[600px]:p-[22px]" style={{ opacity: on ? 1 : 0.35, transition: `opacity 600ms ease ${index * 450}ms` }}>
-                  <span className={`${EYEBROW} text-[#F7A11A]`}>{number(index)}</span>
+                  <span className={`${EYEBROW} text-[#F6A11A]`}>{number(index)}</span>
                   <h3 className="mt-[10px] text-[clamp(1.5rem,1rem+1.6vw,2.3rem)] leading-none font-light tracking-[-.04em] uppercase md:min-h-[2em]">{stage.word}</h3>
                   <div className="mt-[28px] border-y border-black/10 py-[18px]">
                     <DelayedGlyph Glyph={Glyph} on={on} delay={index * 450 + 200} />
@@ -175,8 +175,8 @@ export function ListsSection() {
                     {item}
                     <span
                       aria-hidden="true"
-                      className="absolute top-[55%] left-0 h-[1.5px] bg-[#F7A11A]"
-                      style={{ width: shown ? "100%" : "0%", transition: `width 500ms cubic-bezier(.22,1,.36,1) ${1000 + index * 160}ms` }}
+                      className="absolute top-[55%] left-0 h-[1.5px] w-full origin-left bg-[#F6A11A] motion-reduce:!transition-none"
+                      style={{ transform: `scaleX(${shown ? 1 : 0})`, transition: `transform 500ms cubic-bezier(.22,1,.36,1) ${1000 + index * 160}ms` }}
                     />
                   </span>
                   <p className="mt-[6px] text-[14px] leading-[1.5] text-white/50">{APPROACH_LOREM.short}</p>
@@ -210,7 +210,7 @@ export function RiskSection() {
             const Glyph = RISK_GLYPHS[risk.glyph];
             return (
               <article key={risk.name} className="flex flex-col bg-white p-[28px] max-[600px]:p-[22px]">
-                <span className={`${EYEBROW} text-[#F7A11A]`}>{number(index)}</span>
+                <span className={`${EYEBROW} text-[#F6A11A]`}>{number(index)}</span>
                 <div className="mt-[18px] border-b border-black/10 pb-[18px]">
                   <DelayedGlyph Glyph={Glyph} on={shown} delay={index * 260} />
                 </div>

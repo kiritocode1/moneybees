@@ -17,7 +17,7 @@ function Marked({ text, word }: { text: string; word: string | null | undefined 
   return (
     <>
       {text.slice(0, at + 1)}
-      <span className="underline decoration-[#F7A11A] decoration-2 underline-offset-[5px]">{word}</span>
+      <span className="underline decoration-[#F6A11A] decoration-2 underline-offset-[5px]">{word}</span>
       {text.slice(at + 1 + word.length)}
     </>
   );
@@ -31,7 +31,7 @@ function Marked({ text, word }: { text: string; word: string | null | undefined 
 function Glyph({ row, column }: { row: string; column: number }) {
   const cat3 = column === 2;
   const stroke = cat3 ? "#000" : "rgba(0,0,0,.4)";
-  const accent = cat3 ? "#F7A11A" : "rgba(0,0,0,.4)";
+  const accent = cat3 ? "#F6A11A" : "rgba(0,0,0,.4)";
   let body: ReactNode = null;
   if (row === "Leverage") {
     body = cat3 ? (
@@ -95,7 +95,7 @@ export default function CategorySection() {
             transition={time(0.05, 0.8)}
           >
             <motion.i
-              className="absolute top-[-1px] left-[-1px] h-[4px] w-[calc(100%+2px)] origin-left bg-[#F7A11A]"
+              className="absolute top-[-1px] left-[-1px] h-[4px] w-[calc(100%+2px)] origin-left bg-[#F6A11A]"
               initial={{ scaleX: 0 }}
               animate={{ scaleX: inView ? 1 : 0 }}
               transition={time(0.5, 0.9)}
@@ -114,7 +114,7 @@ export default function CategorySection() {
                 {AIF_CATEGORIES.map((category, column) => (
                   <th
                     key={category}
-                    className={`pb-[22px] font-serif text-[clamp(1.6rem,2.2vw,2.2rem)] leading-none font-normal ${column === 2 ? "px-[26px] pt-[18px] text-[#F7A11A]" : "pr-[24px] text-black/45"}`}
+                    className={`pb-[22px] font-serif text-[clamp(1.6rem,2.2vw,2.2rem)] leading-none font-normal ${column === 2 ? "px-[26px] pt-[18px] text-[#F6A11A]" : "pr-[24px] text-black/45"}`}
                   >
                     {category}
                   </th>
@@ -160,7 +160,7 @@ export default function CategorySection() {
                   <p
                     key={column}
                     className={`grid grid-cols-[64px_1fr] gap-[12px] text-[15px] leading-[1.45] ${
-                      column === 2 ? "border-l-[3px] border-l-[#F7A11A] bg-[#FDEFE2]/60 py-[8px] pl-[10px] text-black" : "pl-[13px] text-black/50"
+                      column === 2 ? "border-l-[3px] border-l-[#F6A11A] bg-[#FDEFE2]/60 py-[8px] pl-[10px] text-black" : "pl-[13px] text-black/50"
                     }`}
                   >
                     <span className={`${EYEBROW} pt-[3px] ${column === 2 ? "text-black" : "text-black/45"}`}>{AIF_CATEGORIES[column].replace(" AIF", "")}</span>

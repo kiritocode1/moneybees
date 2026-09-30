@@ -42,7 +42,7 @@ function DealTile({ valuation, raise, progress }: { valuation: number; raise: nu
       <g style={{ opacity: drop, transform: `translateY(${-SLAB - (1 - drop) * 30}px)` }}>
         <path d={tile.left} fill="#d98c10" stroke="rgba(90,50,0,.7)" strokeWidth=".9" strokeLinejoin="round" />
         <path d={tile.right} fill="#c98110" stroke="rgba(90,50,0,.7)" strokeWidth=".9" strokeLinejoin="round" />
-        <path d={tile.top} fill="#F7A11A" stroke="rgba(90,50,0,.7)" strokeWidth=".9" strokeLinejoin="round" />
+        <path d={tile.top} fill="#F6A11A" stroke="rgba(90,50,0,.7)" strokeWidth=".9" strokeLinejoin="round" />
       </g>
     </svg>
   );
@@ -67,7 +67,7 @@ export default function RecentDeals() {
           </Rise>
           <div className={`${EYEBROW} flex flex-wrap gap-x-[20px] gap-y-[8px] text-black/70`} aria-hidden="true">
             <span className="flex items-center gap-[8px]">
-              <i className="h-[9px] w-[9px] bg-[#F7A11A]" />
+              <i className="h-[9px] w-[9px] bg-[#F6A11A]" />
               Raised
             </span>
             <span className="flex items-center gap-[8px]">
@@ -96,7 +96,7 @@ export default function RecentDeals() {
               <dl className="mt-[20px] grid gap-[12px]">
                 <div>
                   <dt className={`${EYEBROW} text-black/55`}>{deal.kind}</dt>
-                  <dd className="mt-[4px] font-serif text-[clamp(1.8rem,2.4vw,2.3rem)] leading-none text-[#F7A11A] tabular-nums">{crore(deal.raise)}</dd>
+                  <dd className="mt-[4px] font-serif text-[clamp(1.8rem,2.4vw,2.3rem)] leading-none text-[#F6A11A] tabular-nums">{crore(deal.raise)}</dd>
                 </div>
                 <div>
                   <dt className={`${EYEBROW} text-black/55`}>{deal.preMoney ? "Pre-money valuation" : "Valuation"}</dt>

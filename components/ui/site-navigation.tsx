@@ -17,17 +17,25 @@ const primaryLinks = [
   { label: "Contact Us", href: "/contact" },
 ];
 
-/** The bar beside the logo: the two products, the approach, and the plan's Get Started. */
+/** The bar beside the logo: the two products, the approach, and the plan's Get Started. Below 480px the approach stays in the menu only. */
 const barLinks = [
   { label: "PMS", href: "/pms" },
   { label: "AIF", href: "/aif" },
-  { label: "Our Approach", href: "/our-approach" },
+  { label: "Our Approach", href: "/our-approach", hideOnSmall: true },
   { label: "Get Started", href: "/contact" },
 ];
 
 const groupLinks = [
   { label: "Investment Banking", href: "https://moneybeeadvisors.com/" },
   { label: "Stock Broking", href: "https://moneybeesecurities.in/" },
+];
+
+/** The regulatory documents, on the investor centre's document groups (stable ids in lib/investor-centre.ts). */
+const legalLinks = [
+  { label: "Investor Charter", href: "/investor-centre#investor-charter" },
+  { label: "Disclosures", href: "/investor-centre#disclosures" },
+  { label: "Grievance Redressal", href: "/investor-centre#grievance" },
+  { label: "Disclosure Document", href: "/investor-centre#disclosure-document" },
 ];
 
 export default function SiteNavigation({ children }: { children: ReactNode }) {
@@ -50,6 +58,7 @@ export default function SiteNavigation({ children }: { children: ReactNode }) {
       }
       primaryLinks={primaryLinks}
       secondaryLinks={groupLinks}
+      legal={legalLinks}
       panelColors={["#9D9EA1", "#000000", "#9D9EA1", "#000000"]}
       menuColor="#000000"
       togglerColor="#000000"

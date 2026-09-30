@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import { COLUMN_COUNT, DESCENT_END, ORBIT_END, pillarCentre } from "./tholos-path";
 
 /**
  * The philosophy tholos: six Ionic columns on a stepped round base, and the
@@ -9,28 +10,21 @@ import * as THREE from "three";
  * each column in turn, then in to the centre.
  */
 
-export const COLUMN_COUNT = 6;
 const RING = 3.2;
 const STEP_TOP = 0.45;
 const MARBLE = new THREE.Color("#f3f1ec");
-const ORANGE = new THREE.Color("#F7A11A");
+const ORANGE = new THREE.Color("#F6A11A");
 const LINE_INK = new THREE.Color("#000000");
 const LINE_LIT = new THREE.Color("#9a6208");
 
 /* ------------------------------------------------------------- path --- */
 
-/** Progress where the descent ends and the orbit begins, and where the orbit hands over to the centre. */
-export const DESCENT_END = 0.14;
-export const ORBIT_END = 0.86;
 const START_ANGLE = Math.PI / 4;
 const ORBIT_RADIUS = 9.8;
 /** Each column sits a little ahead of the camera at its pillar's moment, so it is seen three-quarter on. */
 const LEAD = 0.26;
 
 export const columnAngle = (index: number) => START_ANGLE - ((index + 0.5) * Math.PI * 2) / COLUMN_COUNT - LEAD;
-
-/** The scroll progress at which pillar `index` is centred on screen. */
-export const pillarCentre = (index: number) => DESCENT_END + ((index + 0.5) / COLUMN_COUNT) * (ORBIT_END - DESCENT_END);
 
 const clamp01 = (value: number) => Math.min(1, Math.max(0, value));
 const easeInOut = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - (-2 * t + 2) ** 3 / 2);
@@ -534,6 +528,11 @@ export function createTholos(canvas: HTMLCanvasElement) {
   const eye = new THREE.Vector3();
   const look = new THREE.Vector3();
   let first = true;
+  /** Set by resize; cleared once a frame is drawn. */
+  let dirty = true;
+  let drawnProgress = Number.NaN;
+  /** Squared distance under which the eased camera counts as arrived. */
+  const SETTLED = 1e-8;
 
   return {
     resize(width: number, height: number) {
@@ -542,10 +541,20 @@ export function createTholos(canvas: HTMLCanvasElement) {
       camera.aspect = width / height;
       // Narrow screens pull the lens wider so the ring still fits.
       narrow = width / height < 0.8;
+      dirty = true;
     },
     /** Draws one frame at scroll `progress`, easing the camera toward its pose over `seconds`. */
     frame(progress: number, seconds: number) {
       const pose = cameraPose(progress);
+      // Nothing to draw when the scroll has not moved and the eased camera has already arrived.
+      if (
+        !dirty &&
+        progress === drawnProgress &&
+        eye.distanceToSquared(pose.position) < SETTLED &&
+        look.distanceToSquared(pose.target) < SETTLED
+      ) {
+        return;
+      }
       const k = first ? 1 : 1 - Math.exp(-seconds * 7);
       first = false;
       eye.lerp(pose.position, k);
@@ -566,17 +575,25 @@ export function createTholos(canvas: HTMLCanvasElement) {
         column.light.intensity = glow * 3;
       });
       renderer.render(scene, camera);
+      dirty = false;
+      drawnProgress = progress;
     },
     dispose() {
-      renderer.dispose();
       texture.dispose();
       scene.traverse((object) => {
         if (object instanceof THREE.Mesh || object instanceof THREE.LineSegments || object instanceof THREE.Line) {
           object.geometry.dispose();
           const material = object.material as THREE.Material | THREE.Material[];
           (Array.isArray(material) ? material : [material]).forEach((m) => m.dispose());
+        } else if (object instanceof THREE.Sprite) {
+          // Sprites share one geometry inside three.js; only their materials are ours.
+          object.material.dispose();
         }
       });
+      renderer.dispose();
+      // Frees the GL context now rather than whenever the browser collects it,
+      // so remounts (route changes, fast refresh) do not pile up live contexts.
+      renderer.forceContextLoss();
     },
   };
 }

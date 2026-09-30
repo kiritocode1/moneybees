@@ -4,7 +4,7 @@ import Image from "next/image";
 import { useRef } from "react";
 import { BracketLabel } from "./fact-section";
 
-const FOCUS = "focus-visible:outline-2 focus-visible:outline-[#F7A11A] focus-visible:outline-offset-4";
+const FOCUS = "focus-visible:outline-2 focus-visible:outline-[#F6A11A] focus-visible:outline-offset-4";
 
 /**
  * Who runs what for Flyingbee, after Wonder Vision's "Kind words" band: a

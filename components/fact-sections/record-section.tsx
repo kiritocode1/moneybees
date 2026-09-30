@@ -66,7 +66,7 @@ function WealthStacks() {
   const base = 452;
   const stacks = [
     { key: "index", name: "S&P BSE 500 TRI", value: WEALTH.benchmark, cx: 170, top: "#eeece8", wall: "#d8d6d1", edge: "rgba(0,0,0,.55)" },
-    { key: "moneybee", name: "Moneybee PMS", value: WEALTH.queenbee, cx: 440, top: "#F7A11A", wall: "#d98c10", edge: "rgba(90,50,0,.7)" },
+    { key: "moneybee", name: "Moneybee PMS", value: WEALTH.queenbee, cx: 440, top: "#F6A11A", wall: "#d98c10", edge: "rgba(90,50,0,.7)" },
   ] as const;
 
   return (
@@ -188,7 +188,7 @@ function ReturnsBars() {
     <div ref={ref} className="w-full max-w-[680px]">
       <div className={`${EYEBROW} mb-[18px] flex gap-[20px] text-black/70`} aria-hidden="true">
         <span className="flex items-center gap-[8px]">
-          <i className="h-[9px] w-[9px] bg-[#F7A11A]" />
+          <i className="h-[9px] w-[9px] bg-[#F6A11A]" />
           Moneybee PMS
         </span>
         <span className="flex items-center gap-[8px]">
@@ -215,7 +215,7 @@ function ReturnsBars() {
           const labelY = (value: number) => (value >= 0 ? y(value) - 8 : y(value) + 16);
           return (
             <g key={row.period}>
-              {bar(row.queenbee, x, "#F7A11A", index * 0.08)}
+              {bar(row.queenbee, x, "#F6A11A", index * 0.08)}
               {bar(row.benchmark, x + BAR + 4, "#9D9EA1", index * 0.08 + 0.04)}
               <motion.text
                 x={x + BAR / 2}
@@ -266,7 +266,7 @@ export default function RecordSection() {
         <Rise onView>
           <div className="flex flex-col gap-5">
             <p className={BODY}>
-              As on July 31, 2026, Moneybee PMS has returned {pct(FIVE_YEAR.queenbee)} a year over five years, against{" "}
+              As on 31 July 2026, Moneybee PMS has returned {pct(FIVE_YEAR.queenbee)} a year over five years, against{" "}
               {pct(FIVE_YEAR.benchmark)} for the S&amp;P BSE 500 TRI. Since it began in August 2007, {pct(SINCE_INCEPTION.queenbee)} a year
               against {pct(SINCE_INCEPTION.benchmark)}.
             </p>

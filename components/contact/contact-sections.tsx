@@ -18,9 +18,9 @@ import OfficeFigure from "./office-figure";
  */
 
 const EASE = [0.22, 1, 0.36, 1] as const;
-const FOCUS = "focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#F7A11A]";
+const FOCUS = "focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#F6A11A]";
 /** An inline contact link: turns orange and draws an orange underline on hover. */
-const LINK = `bg-[linear-gradient(#F7A11A,#F7A11A)] bg-[length:0%_1px] bg-[position:0_100%] bg-no-repeat pb-[2px] text-black no-underline transition-[background-size,color] duration-300 hover:bg-[length:100%_1px] hover:text-[#F7A11A] ${FOCUS}`;
+const LINK = `bg-[linear-gradient(#F6A11A,#F6A11A)] bg-[length:0%_1px] bg-[position:0_100%] bg-no-repeat pb-[2px] text-black no-underline transition-[background-size,color] duration-300 hover:bg-[length:100%_1px] hover:text-[#F6A11A] ${FOCUS}`;
 
 /** The page opens on how to reach us, the office model to the right and the office's details at its foot. */
 export function ContactHero() {
@@ -36,7 +36,7 @@ export function ContactHero() {
           <Rise delay={0.08}>
             <p className={`${EYEBROW} mt-10 text-black/60 md:mt-16`}>Call or write to us at</p>
             <div className="mt-5 flex flex-wrap items-center gap-4">
-              <a href={`mailto:${GENERAL_EMAIL}`} className={`${BUTTON} bg-black text-white hover:bg-[#F7A11A] hover:text-black`}>
+              <a href={`mailto:${GENERAL_EMAIL}`} className={`${BUTTON} bg-black text-white hover:bg-[#F6A11A] hover:text-black`}>
                 {GENERAL_EMAIL}
               </a>
               <a href={telHref(PHONES[0])} className={`${BUTTON} border border-dashed border-black/15 text-black hover:bg-black/[.03]`}>
@@ -111,7 +111,7 @@ export function DesksSection() {
         <div className="mt-[48px] grid grid-cols-2 gap-[24px] max-[900px]:grid-cols-1">
           {DESKS.map((desk, index) => (
             <Rise key={desk.id} onView delay={index * 0.08}>
-              <article className="h-full border border-[rgba(0,0,0,.14)] p-[36px] transition-colors duration-300 hover:border-[#F7A11A] max-[600px]:p-[22px]">
+              <article className="h-full border border-[rgba(0,0,0,.14)] p-[36px] transition-colors duration-300 hover:border-[#F6A11A] max-[600px]:p-[22px]">
                 <p className={`${EYEBROW} text-black/60`}>{desk.business}</p>
                 <h3 className="mt-[16px] font-serif text-[clamp(2rem,3vw,2.8rem)] leading-[1.05] font-normal">{desk.name}</h3>
                 <ul className="mt-[28px] list-none border-t border-t-black p-0">
@@ -119,13 +119,13 @@ export function DesksSection() {
                     <li key={line.value} className="border-b border-b-[rgba(0,0,0,.13)]">
                       <a
                         href={lineHref(line)}
-                        className={`group grid grid-cols-[minmax(0,.9fr)_minmax(0,1.1fr)] items-baseline gap-[16px] py-[16px] text-black no-underline transition-colors duration-300 hover:bg-[#F7A11A]/[.07] max-[600px]:grid-cols-1 max-[600px]:gap-[4px] ${FOCUS}`}
+                        className={`group grid grid-cols-[minmax(0,.9fr)_minmax(0,1.1fr)] items-baseline gap-[16px] py-[16px] text-black no-underline transition-colors duration-300 hover:bg-[#F6A11A]/[.07] max-[600px]:grid-cols-1 max-[600px]:gap-[4px] ${FOCUS}`}
                       >
                         <span className={`${EYEBROW} flex items-center gap-[10px] text-black/60`}>
-                          <span className="h-[6px] w-[6px] shrink-0 bg-black/20 transition-colors duration-300 group-hover:bg-[#F7A11A]" />
+                          <span className="h-[6px] w-[6px] shrink-0 bg-black/20 transition-colors duration-300 group-hover:bg-[#F6A11A]" />
                           {line.label}
                         </span>
-                        <span className="text-[16px] leading-[1.4] tracking-[-.01em] break-words transition-colors duration-300 group-hover:text-[#F7A11A] tabular-nums">
+                        <span className="text-[16px] leading-[1.4] tracking-[-.01em] break-words transition-colors duration-300 group-hover:text-[#F6A11A] tabular-nums">
                           {line.value}
                         </span>
                       </a>
@@ -225,7 +225,7 @@ export function GrievanceSection() {
               return (
                 <motion.span
                   key={index}
-                  className={`absolute bg-[#F7A11A] ${tread ? "h-[2px] origin-left" : "w-[2px] origin-bottom"}`}
+                  className={`absolute bg-[#F6A11A] ${tread ? "h-[2px] origin-left" : "w-[2px] origin-bottom"}`}
                   style={{
                     left: `calc(${segment.left}% - 1px)`,
                     top: tread ? segment.top - 1 : segment.top,
@@ -240,7 +240,7 @@ export function GrievanceSection() {
             {NODES.map(([left, top], index) => (
               <motion.span
                 key={left}
-                className="absolute h-[13px] w-[13px] -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-[#F7A11A] bg-white"
+                className="absolute h-[13px] w-[13px] -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-[#F6A11A] bg-white"
                 style={{ left: `${left}%`, top }}
                 initial={{ scale: 0 }}
                 animate={inView ? { scale: 1 } : undefined}
@@ -252,7 +252,7 @@ export function GrievanceSection() {
           {/* Mobile: the same path as a line down the left edge. */}
           <motion.span
             aria-hidden="true"
-            className="absolute top-[8px] bottom-[8px] left-[6px] w-[2px] origin-top bg-[#F7A11A] md:hidden"
+            className="absolute top-[8px] bottom-[8px] left-[6px] w-[2px] origin-top bg-[#F6A11A] md:hidden"
             initial={{ scaleY: 0 }}
             animate={inView ? { scaleY: 1 } : undefined}
             transition={draw}
@@ -261,9 +261,9 @@ export function GrievanceSection() {
           <ol className="grid list-none grid-cols-3 items-start gap-[24px] p-0 max-md:grid-cols-1 max-md:gap-[40px] max-md:pl-[36px]">
             {GRIEVANCE_STEPS.map((step, index) => (
               <li key={step.title} className={`relative ${TREAD_TOP[index]}`}>
-                <span aria-hidden="true" className="absolute top-[10px] -left-[36px] h-[14px] w-[14px] rounded-full border-2 border-[#F7A11A] bg-white md:hidden" />
+                <span aria-hidden="true" className="absolute top-[10px] -left-[36px] h-[14px] w-[14px] rounded-full border-2 border-[#F6A11A] bg-white md:hidden" />
                 <Rise onView delay={index * 2 * SEGMENT_TIME}>
-                  <span className="font-serif text-[clamp(2.4rem,3.4vw,3.4rem)] leading-none text-[#F7A11A] tabular-nums">
+                  <span className="font-serif text-[clamp(2.4rem,3.4vw,3.4rem)] leading-none text-[#F6A11A] tabular-nums">
                     {String(index + 1).padStart(2, "0")}
                   </span>
                   <h3 className="mt-[16px] font-serif text-[clamp(1.6rem,2.2vw,2rem)] leading-[1.1] font-normal">{step.title}</h3>
@@ -313,9 +313,9 @@ export function GroupSection() {
                   className={`group flex flex-wrap items-baseline justify-between gap-x-[24px] gap-y-[6px] py-[24px] max-[600px]:flex-col text-white no-underline ${FOCUS}`}
                 >
                   <span className={`${EYEBROW} text-white/60`}>{business}</span>
-                  <span className="flex items-center gap-[14px] font-serif text-[clamp(1.6rem,2.6vw,2.4rem)] leading-none transition-colors duration-300 group-hover:text-[#F7A11A]">
+                  <span className="flex items-center gap-[14px] font-serif text-[clamp(1.6rem,2.6vw,2.4rem)] leading-none transition-colors duration-300 group-hover:text-[#F6A11A]">
                     {domain}
-                    <span className="h-[2px] w-[18px] bg-[#F7A11A] transition-all duration-300 group-hover:w-[36px]" />
+                    <span className="h-[2px] w-[18px] bg-[#F6A11A] transition-all duration-300 group-hover:w-[36px]" />
                   </span>
                 </a>
               </Rise>

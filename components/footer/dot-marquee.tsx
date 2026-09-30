@@ -11,7 +11,7 @@ const REACH = 110;
 const PUSH = 24;
 /** Pixels per second the line travels left. */
 const SPEED = 42;
-const ORANGE = [247, 161, 26] as const;
+const ORANGE = [246, 161, 26] as const;
 const INK = [0, 0, 0] as const;
 
 type Dot = { hx: number; hy: number; hollow: boolean };
@@ -47,6 +47,13 @@ export default function DotMarquee({ text }: { text: string }) {
       const ratio = window.devicePixelRatio || 1;
       width = canvas.clientWidth;
       height = canvas.clientHeight;
+      // Not laid out yet (or collapsed): getImageData throws on a 0-sized probe.
+      // The ResizeObserver calls layout again once the canvas has a size.
+      if (width === 0 || height === 0) {
+        dots = [];
+        pushed = new Float32Array(0);
+        return;
+      }
       canvas.width = Math.round(width * ratio);
       canvas.height = Math.round(height * ratio);
       context.setTransform(ratio, 0, 0, ratio, 0, 0);
@@ -113,7 +120,7 @@ export default function DotMarquee({ text }: { text: string }) {
           context.beginPath();
           hexagon(context, hx + pushed[slot], hy + pushed[slot + 1], DOT);
           if (dot.hollow && heat < 0.2) {
-            context.strokeStyle = "rgba(247,161,26,.6)";
+            context.strokeStyle = "rgba(246, 161, 26,.6)";
             context.lineWidth = 1;
             context.stroke();
           } else {
@@ -171,9 +178,13 @@ export default function DotMarquee({ text }: { text: string }) {
       canvas.addEventListener("pointerleave", leave);
     }
     // The face has to be loaded before the text is sampled, or the fallback's shapes are used.
-    void document.fonts.ready.then(start);
+    let alive = true;
+    void document.fonts.ready.then(() => {
+      if (alive) start();
+    });
 
     return () => {
+      alive = false;
       cancelAnimationFrame(raf);
       observer.disconnect();
       resize.disconnect();
@@ -182,5 +193,5 @@ export default function DotMarquee({ text }: { text: string }) {
     };
   }, [text, reduceMotion]);
 
-  return <canvas ref={canvasRef} className="block h-[clamp(120px,16vw,240px)] w-full cursor-none max-[600px]:cursor-auto" aria-label={text} role="img" />;
+  return <canvas ref={canvasRef} className="block h-[clamp(120px,16vw,240px)] w-full" aria-label={text} role="img" />;
 }

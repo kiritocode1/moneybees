@@ -18,7 +18,7 @@ const OUTER = 150;
 const INNER = 60;
 const GAP = 5;
 /** Clockwise from the top: segment 0 is upper right, 3 is lower left. */
-const SHADES = ["#E8842C", "#D9955B", "#F7A11A", "#E8842C", "#D9955B", "#F7A11A"] as const;
+const SHADES = ["#E8842C", "#D9955B", "#F6A11A", "#E8842C", "#D9955B", "#F6A11A"] as const;
 /** Statement order (left column top to bottom, then right) to segment. */
 const SEGMENT_FOR = [5, 4, 3, 0, 1, 2] as const;
 

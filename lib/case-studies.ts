@@ -18,9 +18,9 @@ export const CASE_STUDIES_PAGE = {
   lead: LOREM,
 } as const;
 
-/** The plan's disclaimer, verbatim. */
+/** The plan's disclaimer, with its "The presentation states that" dropped. */
 export const CASE_DISCLAIMER =
-  "The presentation states that the stocks/sectors shown are for illustration only and are not recommendations. Moneybee may or may not hold them in the future. Past performance may or may not be sustained.";
+  "The stocks and sectors shown are for illustration only and are not recommendations. Moneybee may or may not hold them in the future. Past performance may or may not be sustained.";
 
 export type CaseStudyEntry = {
   id: string;
@@ -45,7 +45,7 @@ const entry = (key: CaseName, study: Omit<CaseStudyEntry, "multiple" | "financia
   financials: CASE_FINANCIALS[key],
 });
 
-/** The plan's three case studies, in its order, with its text verbatim. */
+/** The plan's three case studies, in its order, with its text (the plan's "presented in the PMS deck" source notes dropped). */
 export const CASE_STUDIES: readonly CaseStudyEntry[] = [
   entry("KPI Green Energy", {
     id: "kpi-green-energy",
@@ -54,7 +54,7 @@ export const CASE_STUDIES: readonly CaseStudyEntry[] = [
     drawing: "power",
     business: "Renewable power generation through IPP and CPP operations.",
     edge: "Established power evacuation infrastructure, revenue realisation and promoter execution experience.",
-    growth: "Order book and development pipeline presented in the PMS deck.",
+    growth: "Order book and development pipeline.",
   }),
   entry("Uni Abex Alloy", {
     id: "uni-abex",
@@ -72,7 +72,7 @@ export const CASE_STUDIES: readonly CaseStudyEntry[] = [
     drawing: "laminations",
     business: "Manufacturer of electrical steel laminations, motor cores, sub-assemblies, die-cast rotors and machined components.",
     edge: "Exposure to railway, renewable energy and power-related applications.",
-    growth: "Capacity expansion, order book and long-term growth visibility presented in the PMS deck.",
+    growth: "Capacity expansion, order book and long-term growth visibility.",
   }),
 ];
 

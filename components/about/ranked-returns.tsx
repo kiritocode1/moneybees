@@ -31,10 +31,10 @@ function RankRow({ rank, field, progress }: { rank: number; field: number; progr
           <g key={place}>
             <polygon
               points={hexPoints(cx, 0, R - 1)}
-              fill={landed || here ? "#F7A11A" : passed ? "#f3f2ef" : "#ffffff"}
-              stroke={landed || here ? "#F7A11A" : "rgba(0,0,0,.3)"}
+              fill={landed || here ? "#F6A11A" : passed ? "#f3f2ef" : "#ffffff"}
+              stroke={landed || here ? "#F6A11A" : "rgba(0,0,0,.3)"}
               strokeWidth="1"
-              style={{ filter: landed ? "drop-shadow(0 0 8px rgba(247,161,26,.55))" : "none" }}
+              style={{ filter: landed ? "drop-shadow(0 0 8px rgba(246, 161, 26,.55))" : "none" }}
             />
             <text
               x={cx}
@@ -77,7 +77,7 @@ export default function RankedReturns() {
               </dt>
               <dd className="mt-[18px]">
                 <RankRow rank={row.rank} field={row.field} progress={clamp(progress * 1.5 - index * 0.25)} />
-                <p className="mt-[26px] font-serif text-[clamp(3rem,5vw,4.6rem)] leading-none text-[#F7A11A] tabular-nums">{row.returns.toFixed(2)}%</p>
+                <p className="mt-[26px] font-serif text-[clamp(3rem,5vw,4.6rem)] leading-none text-[#F6A11A] tabular-nums">{row.returns.toFixed(2)}%</p>
               </dd>
             </div>
           ))}

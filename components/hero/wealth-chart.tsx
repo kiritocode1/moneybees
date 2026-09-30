@@ -84,7 +84,7 @@ export default function WealthChart() {
         <motion.path
           d={curve(WEALTH.queenbee)}
           fill="none"
-          stroke="#F7A11A"
+          stroke="#F6A11A"
           strokeWidth="2.2"
           strokeLinecap="round"
           initial={false}
@@ -94,7 +94,7 @@ export default function WealthChart() {
         {(
           [
             [WEALTH.benchmark, "#9D9EA1"],
-            [WEALTH.queenbee, "#F7A11A"],
+            [WEALTH.queenbee, "#F6A11A"],
           ] as const
         ).map(([value, fill]) => (
           <motion.circle
@@ -105,7 +105,7 @@ export default function WealthChart() {
             fill={fill}
             style={{ transformBox: "fill-box", transformOrigin: "50% 50%" }}
             initial={false}
-            animate={{ scale: run ? 1 : 0, opacity: run ? 1 : 0 }}
+            animate={{ scale: run ? 1 : 0.5, opacity: run ? 1 : 0 }}
             transition={{ ...at(1.9, 0.5), ease: POP }}
           />
         ))}

@@ -16,7 +16,7 @@ const CHAPTERS = [
     label: "The letter",
     title: ["What we publish when", "we are not selling"],
     copy: "A quarterly letter to investors, sector notes on small and ultra-small caps, and commentary on what we own and why. Written whether the quarter was good or not, because a manager who only writes after a strong year has told you nothing.",
-    tone: "bg-[#F7A11A] text-[#000000]",
+    tone: "bg-[#F6A11A] text-[#000000]",
     rule: "border-t-[rgba(0,0,0,.35)]",
     sub: "text-[rgba(0,0,0,.72)]",
   },

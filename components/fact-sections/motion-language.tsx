@@ -200,7 +200,7 @@ export function SplitFrame({ children, cross = true, cols = 2 }: { children: Rea
     >
       {children}
       {cross && (
-        <span className="pointer-events-none absolute top-1/2 left-1/2 z-[1] h-[14px] w-[14px] -translate-x-1/2 -translate-y-1/2 bg-[#F7A11A] max-[900px]:hidden" />
+        <span className="pointer-events-none absolute top-1/2 left-1/2 z-[1] h-[14px] w-[14px] -translate-x-1/2 -translate-y-1/2 bg-[#F6A11A] max-[900px]:hidden" />
       )}
     </div>
   );

@@ -51,7 +51,7 @@ function SectorBars() {
             <g key={name}>
               <path d={faces.left} fill={lit ? "#b87408" : "#e4e3e0"} stroke={stroke} strokeWidth="0.9" strokeLinejoin="round" />
               <path d={faces.right} fill={lit ? "#d98c10" : "#d6d5d2"} stroke={stroke} strokeWidth="0.9" strokeLinejoin="round" />
-              <path d={faces.top} fill={lit ? "#F7A11A" : "#fbfaf8"} stroke={stroke} strokeWidth="0.9" strokeLinejoin="round" />
+              <path d={faces.top} fill={lit ? "#F6A11A" : "#fbfaf8"} stroke={stroke} strokeWidth="0.9" strokeLinejoin="round" />
               <motion.text
                 x={r2(tx)}
                 y={r2(ty) - 18}

@@ -9,7 +9,7 @@ import { stagger, useBuild } from "./use-build";
 
 const INK = "rgba(0,0,0,.7)";
 const FACE = { top: "#fbfaf8", left: "#e9e7e2", right: "#f3f1ed" };
-const OWN = { top: "#F7A11A", left: "#c97f0c", right: "#e3920f" };
+const OWN = { top: "#F6A11A", left: "#c97f0c", right: "#e3920f" };
 
 /** Six holdings on a 3 by 2 grid, heights as drawn only: this figure shows ownership, not weights. */
 const HOLDINGS = [58, 92, 44, 110, 70, 52].map((height, index) => ({ col: index % 3, row: Math.floor(index / 3), height }));
@@ -87,7 +87,7 @@ function OwnershipFigure() {
         <path
           d={`M${link[0][0].toFixed(2)} ${link[0][1].toFixed(2)} L${link[1][0].toFixed(2)} ${link[1][1].toFixed(2)}`}
           fill="none"
-          stroke="#F7A11A"
+          stroke="#F6A11A"
           strokeWidth="1.4"
           strokeDasharray="3 6"
           strokeLinecap="round"

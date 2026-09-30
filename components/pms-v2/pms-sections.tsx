@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 import { BracketLabel } from "@/components/fact-sections/fact-section";
 import { Rise } from "@/components/hero/editorial";
@@ -7,7 +8,7 @@ import { BODY, COLUMN, EYEBROW, HEADING, SUBHEAD } from "@/components/hero/token
 import { ILLUSTRATIVE_SECTORS, PHILOSOPHY_POINTS, PHILOSOPHY_WORDS, PMS_LOREM, PMS_PAGE, PMS_PARTS, PORTFOLIO_APPROACH, WHY_PMS } from "@/lib/pms-v2";
 import { RISKS } from "@/lib/approach";
 import { RISK_GLYPHS } from "@/components/approach/glyphs";
-import { DelayedOn, FOCUS, hexPoints, number, ORANGE, OrangeButton, T, useShown } from "./shared";
+import { DelayedOn, FOCUS, hexPoints, number, ORANGE, OrangeButton, PageIndex, PRESS, T, useShown, NoScriptReveal } from "./shared";
 import { WHY_GLYPHS } from "./why-glyphs";
 
 /*
@@ -20,6 +21,7 @@ import { WHY_GLYPHS } from "./why-glyphs";
 export function PmsHero() {
   return (
     <section aria-labelledby="pms-heading" className="bg-white text-black">
+      <NoScriptReveal />
       <div className={`${COLUMN} grid grid-cols-1 items-end gap-14 pt-[150px] pb-[110px] md:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] md:gap-20 md:pt-[220px] max-md:pb-[72px]`}>
         <div>
           <Rise>
@@ -34,25 +36,16 @@ export function PmsHero() {
             <p className={`mt-8 max-w-[560px] text-black/70 ${BODY}`}>{PMS_PAGE.intro}</p>
           </Rise>
           <Rise delay={0.16}>
-            <div className="mt-10">
-              <OrangeButton href={PMS_PAGE.cta.href}>{PMS_PAGE.cta.label}</OrangeButton>
+            <div className="mt-10 flex flex-wrap gap-3">
+              <OrangeButton href={PMS_PAGE.explore.href}>{PMS_PAGE.explore.label}</OrangeButton>
+              <OrangeButton href={PMS_PAGE.start.href} outline>
+                {PMS_PAGE.start.label}
+              </OrangeButton>
             </div>
           </Rise>
         </div>
         <Rise delay={0.2}>
-          <nav aria-label="On this page">
-            <ol className="list-none border-t border-black p-0">
-              {PMS_PARTS.map(([label, href], index) => (
-                <li key={href} className="border-b border-black/15">
-                  <a href={href} className={`group flex items-baseline gap-[18px] py-[14px] text-black no-underline ${FOCUS}`}>
-                    <span className="w-[34px] text-[22px] leading-none font-light tracking-[-.04em] text-[#F7A11A]">{number(index)}</span>
-                    <span className="text-[17px] text-black/75 transition-colors group-hover:text-black">{label}</span>
-                    <span className="ml-auto h-[2px] w-0 bg-[#F7A11A] transition-all duration-300 group-hover:w-[28px]" />
-                  </a>
-                </li>
-              ))}
-            </ol>
-          </nav>
+          <PageIndex parts={PMS_PARTS} />
         </Rise>
       </div>
     </section>
@@ -79,25 +72,25 @@ export function WhySection() {
             const Glyph = WHY_GLYPHS[point.glyph];
             return (
               <article key={point.name} className="flex flex-col bg-white p-[28px] max-[600px]:p-[22px]">
-                <span className={`${EYEBROW} text-[#F7A11A]`}>{number(index)}</span>
+                <span className={`${EYEBROW} text-black/60`}>{number(index)}</span>
                 <div className="mt-[18px] border-b border-black/10 pb-[18px]">
-                  <DelayedOn on={shown} delay={index * 180}>
+                  <DelayedOn on={shown} delay={index * 80}>
                     {(ready) => <Glyph on={ready} />}
                   </DelayedOn>
                 </div>
                 <h3 className="mt-[20px] font-serif text-[clamp(1.4rem,1.05rem+.7vw,1.75rem)] leading-[1.12] font-normal">{point.name}</h3>
-                <p className="mt-[10px] text-[15px] leading-[1.55] text-black/65">{PMS_LOREM.short}</p>
+                <p className="mt-[10px] text-[15px] leading-[1.55] text-black/70">{PMS_LOREM.short}</p>
               </article>
             );
           })}
           <div className="flex flex-col justify-between gap-8 bg-black p-[28px] text-white max-[600px]:p-[22px]">
             <p className="font-serif text-[clamp(1.4rem,1.05rem+.7vw,1.75rem)] leading-[1.12]">{PMS_LOREM.short}</p>
-            <a
-              href={PMS_PAGE.cta.href}
-              className={`inline-flex w-fit items-center rounded-full bg-[#F7A11A] px-[22px] py-[12px] text-[14px] font-medium text-black no-underline transition-colors hover:bg-white ${FOCUS}`}
+            <Link
+              href={PMS_PAGE.start.href}
+              className={`inline-flex w-fit items-center rounded-full bg-[#F6A11A] px-[22px] py-[12px] text-[14px] font-medium text-black no-underline hover:bg-white ${PRESS} ${FOCUS} focus-visible:outline-white`}
             >
-              {PMS_PAGE.cta.label}
-            </a>
+              {PMS_PAGE.start.label}
+            </Link>
           </div>
         </div>
       </div>
@@ -124,7 +117,7 @@ function PhilosophyGraphic({ on }: { on: boolean }) {
       <text x="852" y="78" textAnchor="end" fontSize="16" fill="#000" letterSpacing=".1em" className="max-md:text-[30px]">
         VALUE
       </text>
-      <text x="852" y="222" textAnchor="end" fontSize="16" fill={ORANGE} letterSpacing=".1em" opacity={on ? 1 : 0} className={`${T} max-md:text-[30px]`} style={{ transitionDelay: "900ms" }}>
+      <text x="852" y="222" textAnchor="end" fontSize="16" fill="#000" letterSpacing=".1em" opacity={on ? 1 : 0} className={`${T} max-md:text-[30px]`} style={{ transitionDelay: "900ms" }}>
         PRICE
       </text>
       <g opacity={on ? 1 : 0} className={T} style={{ transitionDelay: "1100ms" }}>
@@ -136,9 +129,9 @@ function PhilosophyGraphic({ on }: { on: boolean }) {
       {/* Below: the reports written on the company, thinning out from left to right. */}
       <line x1="40" x2="860" y1="340" y2="340" stroke="#000" strokeOpacity=".3" />
       {reports.map((report, index) => (
-        <rect key={index} x={report.x} y={on ? 340 - report.h : 340} width="14" height={on ? report.h : 0} fill="#000" fillOpacity=".75" className={T} style={{ transitionDelay: `${index * 30}ms` }} />
+        <rect key={index} x={report.x} y={340 - report.h} width="14" height={report.h} fill="#000" fillOpacity=".75" className={T} style={{ transformBox: "fill-box", transformOrigin: "50% 100%", transform: `scaleY(${on ? 1 : 0})`, transitionDelay: `${index * 30}ms` }} />
       ))}
-      <text x="48" y="248" fontSize="15" fill="#000" opacity=".6" letterSpacing=".1em" className="max-md:text-[30px]">
+      <text x="48" y="248" fontSize="15" fill="#000" opacity=".7" letterSpacing=".1em" className="max-md:text-[30px]">
         ATTENTION
       </text>
     </svg>
@@ -163,7 +156,7 @@ export function PhilosophySection() {
           <ol className="m-0 grid list-none grid-cols-3 border-b border-black/15 p-0">
             {PHILOSOPHY_WORDS.map((word, index) => (
               <li key={word} className="flex items-baseline gap-2 border-black/15 px-[20px] py-[18px] not-first:border-l max-md:flex-col max-md:gap-1 max-md:px-[10px]">
-                <span className={`${EYEBROW} text-[#F7A11A]`}>{number(index)}</span>
+                <span className={`${EYEBROW} text-black/60`}>{number(index)}</span>
                 <span className="text-[clamp(.72rem,.45rem+1.2vw,1.6rem)] leading-none font-light tracking-[-.02em] uppercase">{word}</span>
               </li>
             ))}
@@ -174,8 +167,8 @@ export function PhilosophySection() {
         </div>
         <ol className="mt-[48px] grid list-none grid-cols-1 gap-x-8 p-0 md:grid-cols-5">
           {PHILOSOPHY_POINTS.map((point, index) => (
-            <li key={point} className="border-t border-black py-[16px]">
-              <span className={`${EYEBROW} text-[#F7A11A]`}>{number(index)}</span>
+            <li key={point} className="border-t border-black py-[16px] first:border-t-2 first:border-[#F6A11A]">
+              <span className={`${EYEBROW} text-black/60`}>{number(index)}</span>
               <p className="mt-[10px] font-serif text-[clamp(1.2rem,1rem+.5vw,1.4rem)] leading-[1.2]">{point}</p>
             </li>
           ))}
@@ -215,8 +208,8 @@ export function PortfolioSection() {
           </h2>
           <div className="mt-[40px] border border-black/15 p-[28px] max-[600px]:p-[16px]">
             <div className="flex items-baseline justify-between">
-              <span className={`${EYEBROW} text-black/55`}>Illustration</span>
-              <span className={`${EYEBROW} text-black/55`}>{TOTAL_HOLDINGS} holdings</span>
+              <span className={`${EYEBROW} text-black/60`}>Illustration</span>
+              <span className={`${EYEBROW} text-black/60`}>Sector weights against the 30% cap</span>
             </div>
             <svg viewBox="0 0 368 170" className="mt-[16px] block h-auto w-full" aria-hidden="true">
               {CELLS.map((cell) => {
@@ -224,11 +217,11 @@ export function PortfolioSection() {
                 return (
                   <polygon
                     key={cell.index}
-                    points={hexPoints(cell.x, cell.y, shown ? 27 : 8)}
+                    points={hexPoints(cell.x, cell.y, 27)}
                     fill={active === cell.sector ? ORANGE : SHADES[cell.sector]}
-                    opacity={lit ? 1 : 0.15}
-                    className={T}
-                    style={{ transitionDelay: active === null ? `${cell.index * 40}ms` : "0ms" }}
+                    opacity={shown ? (lit ? 1 : 0.15) : 0}
+                    className="transition-[opacity,fill,transform] duration-500 ease-[cubic-bezier(.23,1,.32,1)] motion-reduce:!transition-none"
+                    style={{ transformBox: "fill-box", transformOrigin: "center", transform: `scale(${shown ? 1 : 0.9})`, transitionDelay: active === null && !shown ? "0ms" : active === null ? `${cell.index * 30}ms` : "0ms" }}
                   />
                 );
               })}
@@ -252,15 +245,15 @@ export function PortfolioSection() {
                       </span>
                       <span className="relative h-[10px] bg-black/[.06]">
                         <span
-                          className="absolute inset-y-0 left-0 transition-[width] duration-700 ease-[cubic-bezier(.22,1,.36,1)] motion-reduce:duration-0"
-                          style={{ width: shown ? `${(share / 35) * 100}%` : "0%", backgroundColor: active === index ? ORANGE : "#000", transitionDelay: `${index * 80}ms` }}
+                          className="absolute inset-y-0 left-0 origin-left transition-[transform,background-color] duration-700 ease-[cubic-bezier(.23,1,.32,1)] motion-reduce:!transition-none"
+                          style={{ width: `${(share / 35) * 100}%`, transform: `scaleX(${shown ? 1 : 0})`, backgroundColor: active === index ? ORANGE : "#000", transitionDelay: `${index * 60}ms` }}
                         />
                         {index === 0 && (
-                          <span className="absolute -top-[18px] -translate-x-1/2 text-[10px] tracking-[.08em] text-[#F7A11A]" style={{ left: `${(CAP / 35) * 100}%` }}>
+                          <span className="absolute -top-[18px] -translate-x-1/2 text-[10px] tracking-[.08em] text-black/70" style={{ left: `${(CAP / 35) * 100}%` }}>
                             CAP
                           </span>
                         )}
-                        <span className="absolute -inset-y-[4px] w-[2px] bg-[#F7A11A]" style={{ left: `${(CAP / 35) * 100}%` }} />
+                        <span className="absolute -inset-y-[4px] w-[2px] bg-[#F6A11A]" style={{ left: `${(CAP / 35) * 100}%` }} />
                       </span>
                       <span className="text-right text-[13px] tabular-nums text-black/70">{share.toFixed(1)}%</span>
                     </button>
@@ -275,7 +268,7 @@ export function PortfolioSection() {
           <ol className="mt-[40px] list-none border-t border-black p-0">
             {PORTFOLIO_APPROACH.map((item, index) => (
               <li key={item} className="grid grid-cols-[34px_minmax(0,1fr)] items-baseline gap-x-[14px] border-b border-black/15 py-[16px]">
-                <span className="text-[20px] leading-none font-light tracking-[-.04em] text-[#F7A11A]">{number(index)}</span>
+                <span className="font-[family-name:var(--font-geist-mono)] text-[13px] leading-none text-black/60 tabular-nums">{number(index)}</span>
                 <span className="font-serif text-[clamp(1.2rem,1rem+.5vw,1.45rem)] leading-[1.25]">{item}</span>
               </li>
             ))}
@@ -287,43 +280,47 @@ export function PortfolioSection() {
 }
 
 
-/** Where each numbered control sits on the risk drawing. */
 /**
  * The risk-management graphic: the four risks the content plan names (§6),
- * each drawn by the same explainer as /our-approach, played in turn.
+ * each drawn by the same explainer as /our-approach. A pinned black band: the
+ * heading holds on the left while the four risks run down a ruled list, each
+ * row playing its drawing as it comes into view.
  */
 export function RiskSection() {
-  const { ref, shown } = useShown<HTMLDivElement>(0.3);
   return (
     <section id="risk" aria-labelledby="risk-heading" className="scroll-mt-[96px] bg-black text-white">
-      <div className={`${COLUMN} py-[120px] max-md:py-[80px]`}>
-        <div className="grid grid-cols-1 items-end gap-8 md:grid-cols-2 md:gap-16">
-          <div>
-            <BracketLabel>Risk management</BracketLabel>
-            <h2 id="risk-heading" className={`mt-[18px] ${SUBHEAD}`}>
-              Risk Management
-            </h2>
-          </div>
-          <p className={`text-white/70 ${BODY}`}>{PMS_LOREM.long}</p>
+      <div className={`${COLUMN} grid grid-cols-1 gap-12 py-[120px] md:grid-cols-[minmax(0,.85fr)_minmax(0,1.15fr)] md:gap-20 max-md:py-[80px]`}>
+        <div className="md:sticky md:top-[120px] md:self-start">
+          <BracketLabel>Risk management</BracketLabel>
+          <h2 id="risk-heading" className={`mt-[18px] ${SUBHEAD}`}>
+            Risk Management
+          </h2>
+          <p className={`mt-8 text-white/70 ${BODY}`}>{PMS_LOREM.long}</p>
+          <span aria-hidden="true" className="mt-10 block h-[3px] w-[64px] bg-[#F6A11A]" />
         </div>
-        <div ref={ref} className="mt-[56px] grid grid-cols-1 gap-[2px] sm:grid-cols-2 lg:grid-cols-4">
-          {RISKS.map((risk, index) => {
-            const Glyph = RISK_GLYPHS[risk.glyph];
-            return (
-              <article key={risk.name} className="flex flex-col bg-white p-[28px] text-black max-[600px]:p-[22px]">
-                <span className={`${EYEBROW} text-[#F7A11A]`}>{number(index)}</span>
-                <div className="mt-[18px] border-b border-black/10 pb-[18px]">
-                  <DelayedOn on={shown} delay={index * 260}>
-                    {(ready) => <Glyph on={ready} />}
-                  </DelayedOn>
-                </div>
-                <h3 className="mt-[20px] font-serif text-[clamp(1.5rem,1.1rem+.8vw,1.9rem)] leading-[1.1] font-normal">{risk.name}</h3>
-                <p className="mt-[10px] text-[15px] leading-[1.55] text-black/65">{risk.text}</p>
-              </article>
-            );
-          })}
-        </div>
+        <ol className="m-0 list-none border-t border-white/40 p-0">
+          {RISKS.map((risk, index) => (
+            <RiskRow key={risk.name} risk={risk} index={index} />
+          ))}
+        </ol>
       </div>
     </section>
+  );
+}
+
+function RiskRow({ risk, index }: { risk: (typeof RISKS)[number]; index: number }) {
+  const { ref, shown } = useShown<HTMLLIElement>(0.5);
+  const Glyph = RISK_GLYPHS[risk.glyph];
+  return (
+    <li ref={ref} className="grid grid-cols-[minmax(0,1fr)_minmax(0,180px)] items-center gap-x-8 gap-y-5 border-b border-white/20 py-[32px] max-sm:grid-cols-1">
+      <div>
+        <span className={`${EYEBROW} text-[#F6A11A]`}>{number(index)}</span>
+        <h3 className="mt-[12px] font-serif text-[clamp(1.6rem,1.2rem+1vw,2.2rem)] leading-[1.1] font-normal">{risk.name}</h3>
+        <p className="mt-[10px] max-w-[440px] text-[15px] leading-[1.55] text-white/70">{risk.text}</p>
+      </div>
+      <div className="bg-white p-[14px] max-sm:max-w-[220px]">
+        <Glyph on={shown} />
+      </div>
+    </li>
   );
 }

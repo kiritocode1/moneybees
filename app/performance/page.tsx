@@ -1,9 +1,17 @@
+import type { Metadata } from "next";
 import SiteFooter from "@/components/footer/site-footer";
 import { LetsTalkSection } from "@/components/home/home-sections";
 import { AifPerformanceSection, MethodologySection, PerformanceHero, PmsPerformanceSection, WealthSection } from "@/components/performance/performance-sections";
 import SiteNavigation from "@/components/ui/site-navigation";
 
-export const metadata = { title: "Performance" };
+export const metadata: Metadata = {
+  title: "Performance: Moneybee PMS and Flyingbee returns",
+  description:
+    "Moneybee PMS returns against the S&P BSE 500 TRI and Flyingbee Investment Fund returns against the S&P BSE 500, period by period, as of 31 July 2026.",
+  alternates: { canonical: "/performance" },
+  // Page openGraph replaces the layout one, so it restates the site fields.
+  openGraph: { siteName: "Moneybee", locale: "en_IN", type: "website", url: "/performance", images: [{ url: "/opengraph-image", width: 1200, height: 630 }], title: "Performance: Moneybee PMS and Flyingbee returns | Moneybee", description: "Moneybee PMS returns against the S&P BSE 500 TRI and Flyingbee Investment Fund returns against the S&P BSE 500, period by period, as of 31 July 2026." },
+};
 
 /**
  * /performance, built to the Content & Visual Plan §7: the PMS table and chart
@@ -20,17 +28,17 @@ export default function PerformancePage() {
         <AifPerformanceSection />
         <MethodologySection />
         <LetsTalkSection />
-        <SiteFooter
-          explore={[
-            ["PMS performance", "#pms"],
-            ["Wealth growth", "#wealth"],
-            ["AIF performance", "#aif"],
-            ["Case studies", "/case-studies"],
-            ["Our approach", "/our-approach"],
-            ["About Moneybee", "/about"],
-          ]}
-        />
       </main>
+      <SiteFooter
+        explore={[
+          ["PMS performance", "#pms"],
+          ["Wealth growth", "#wealth"],
+          ["AIF performance", "#aif"],
+          ["Case studies", "/case-studies"],
+          ["Our approach", "/our-approach"],
+          ["About Moneybee", "/about"],
+        ]}
+      />
     </SiteNavigation>
   );
 }

@@ -8,7 +8,7 @@ import { ArrowLeft, ArrowRight, Play } from "reicon-react";
 import { EASE_OUT } from "@/lib/ease";
 
 const FOCUS =
-  "focus-visible:outline-2 focus-visible:outline-[#F7A11A] focus-visible:outline-offset-4";
+  "focus-visible:outline-2 focus-visible:outline-[#F6A11A] focus-visible:outline-offset-4";
 
 /**
  * PLACEHOLDER CONTENT. These are Business Insider's own films, published on the
@@ -76,7 +76,7 @@ function InterviewCard({ interview }: { interview: (typeof INTERVIEWS)[number] }
             <span className="absolute top-[14px] left-[14px] text-[10px] uppercase tracking-[.1em] text-white drop-shadow-[0_1px_3px_rgba(0,0,0,.6)]">
               {interview.source}
             </span>
-            <span className="absolute bottom-[14px] left-[14px] grid h-[42px] w-[42px] place-items-center bg-[#F7A11A] text-white transition-transform duration-300 ease-[ease] group-hover:scale-110">
+            <span className="absolute bottom-[14px] left-[14px] grid h-[42px] w-[42px] place-items-center bg-[#F6A11A] text-white transition-transform duration-300 ease-[ease] group-hover:scale-110">
               <Play size={18} aria-hidden="true" />
             </span>
           </button>
@@ -84,14 +84,14 @@ function InterviewCard({ interview }: { interview: (typeof INTERVIEWS)[number] }
       </div>
       {/* The colour bar under the thumbnail is the reference's device for tying a
           card back to the palette. Moneybees orange replaces the reference lilac. */}
-      <div className="h-[7px] bg-[#F7A11A]" />
+      <div className="h-[7px] bg-[#F6A11A]" />
       <h3 className="mt-[22px] text-[22px] font-normal tracking-[-.025em] text-[#000000]">{interview.name}</h3>
       <p className="mt-[8px] max-w-[300px] text-[12px] leading-[1.5] text-[rgba(0,0,0,.6)]">{interview.note}</p>
       <a
         href={`https://www.youtube.com/watch?v=${interview.id}`}
         target="_blank"
         rel="noreferrer"
-        className={`group mt-[26px] flex items-center justify-between gap-[20px] border-t border-t-[rgba(0,0,0,.2)] pt-[14px] text-[12px] text-[#000000] no-underline transition-colors duration-200 ease-[ease] hover:text-[#F7A11A] ${FOCUS}`}
+        className={`group mt-[26px] flex items-center justify-between gap-[20px] border-t border-t-[rgba(0,0,0,.2)] pt-[14px] text-[12px] text-[#000000] no-underline transition-colors duration-200 ease-[ease] hover:text-[#F6A11A] ${FOCUS}`}
       >
         Watch on YouTube
         <i className="not-italic transition-transform duration-200 ease-[ease] group-hover:translate-x-[3px] group-hover:-translate-y-[3px]">
@@ -132,7 +132,7 @@ export default function InterviewCarousel() {
     });
   };
 
-  const arrow = "grid h-[46px] w-[46px] place-items-center border border-[rgba(0,0,0,.22)] bg-white text-[#000000] transition-[background-color,color,border-color,opacity] duration-200 ease-[ease] enabled:hover:border-[#F7A11A] enabled:hover:bg-[#F7A11A] enabled:hover:text-white disabled:opacity-30";
+  const arrow = "grid h-[46px] w-[46px] place-items-center border border-[rgba(0,0,0,.22)] bg-white text-[#000000] transition-[background-color,color,border-color,opacity] duration-200 ease-[ease] enabled:hover:border-[#F6A11A] enabled:hover:bg-[#F6A11A] enabled:hover:text-white disabled:opacity-30";
 
   return (
     <section

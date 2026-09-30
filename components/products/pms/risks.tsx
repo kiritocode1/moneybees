@@ -34,7 +34,7 @@ function Wedge({ index, lit, rise }: { index: number; lit: boolean; rise: number
     <g style={{ opacity: rise, transform: `translateY(${(1 - rise) * -40}px)`, filter: lit ? SOLID_GLOW : "none", transition: "filter 300ms ease" }}>
       <path d={faces.cut} fill={lit ? "#b87408" : "#e4e3e0"} stroke={stroke} strokeWidth="0.9" strokeLinejoin="round" />
       <path d={faces.rim} fill={lit ? "#d98c10" : "#d6d5d2"} stroke={stroke} strokeWidth="0.9" strokeLinejoin="round" />
-      <path d={faces.top} fill={lit ? "#F7A11A" : "#fbfaf8"} stroke={stroke} strokeWidth="0.9" strokeLinejoin="round" />
+      <path d={faces.top} fill={lit ? "#F6A11A" : "#fbfaf8"} stroke={stroke} strokeWidth="0.9" strokeLinejoin="round" />
       <text x={r2(lx)} y={r2(ly) + 5} textAnchor="middle" className="fill-black font-serif text-[18px]">
         {String(index + 1).padStart(2, "0")}
       </text>
@@ -78,7 +78,7 @@ function RiskFigure({ progress, selected, onSelect }: FigureState) {
             key={risk.name}
             className="border-t pt-[8px] transition-colors duration-300"
             style={{
-              borderColor: settled && selected === index ? "#F7A11A" : "rgba(0,0,0,.2)",
+              borderColor: settled && selected === index ? "#F6A11A" : "rgba(0,0,0,.2)",
               color: settled && selected === index ? "#000" : "rgba(0,0,0,.5)",
             }}
           >

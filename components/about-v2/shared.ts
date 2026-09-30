@@ -4,7 +4,7 @@ import { useInView } from "motion/react";
 import { useRef } from "react";
 import { useReducedMotion } from "@/lib/use-reduced-motion";
 
-export const ORANGE = "#F7A11A";
+export const ORANGE = "#F6A11A";
 export const EASE = "cubic-bezier(.22,1,.36,1)";
 
 /** Points of a pointy-top hexagon, the lattice cell used across the site. */

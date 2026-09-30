@@ -147,7 +147,7 @@ function PeriodDumbbells() {
     >
       <div className={`${EYEBROW} mb-[18px] flex gap-[20px] text-black/70`} aria-hidden="true">
         <span className="flex items-center gap-[8px]">
-          <i className="h-[9px] w-[9px] rounded-full bg-[#F7A11A]" />
+          <i className="h-[9px] w-[9px] rounded-full bg-[#F6A11A]" />
           Moneybee PMS
         </span>
         <span className="flex items-center gap-[8px]">

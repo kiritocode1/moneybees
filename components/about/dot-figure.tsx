@@ -75,7 +75,7 @@ export default function DotFigure({ text, className = "" }: { text: string; clas
         if (lit <= 0) continue;
         context.beginPath();
         hexagon(context, cell.x, cell.y, DOT * (0.4 + lit * 0.6));
-        context.fillStyle = `rgba(247,161,26,${lit})`;
+        context.fillStyle = `rgba(246, 161, 26,${lit})`;
         context.fill();
       }
     };

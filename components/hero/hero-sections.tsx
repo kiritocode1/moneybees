@@ -1,5 +1,4 @@
-"use client";
-
+import Link from "next/link";
 import { INTRODUCTION, PERIOD_RETURNS } from "@/lib/insights";
 import CornerBrackets from "./corner-brackets";
 import { BODY, BUTTON, COLUMN, DashedRule, EYEBROW, HEADING, Rise } from "./editorial";
@@ -12,7 +11,8 @@ import WealthChart from "./wealth-chart";
  * gutters, the type scale (.text-heading, .text-body, .text-eyebrow), the
  * dashed rule, the pill buttons and the corner-bracket box. Section order is
  * the source's minus its quote: hero, then the manifesto. Colours
- * are ours: white paper, black, #F7A11A and grey.
+ * are ours: white paper, black, #F6A11A and grey. A server component; the
+ * pyramid, the chart and the Rise wrappers are the client parts.
  */
 
 
@@ -45,9 +45,9 @@ export function HeroSection() {
           </Rise>
           <Rise delay={0.16}>
             <div className="mt-10 flex flex-wrap items-center gap-4 md:mt-20">
-              <a href="#talk" className={`${BUTTON} pointer-events-auto bg-black text-white hover:bg-black/85`}>
+              <Link href="/contact" className={`${BUTTON} pointer-events-auto bg-black text-white hover:bg-black/85`}>
                 Schedule a conversation
-              </a>
+              </Link>
               <a
                 href="#research"
                 className={`${BUTTON} pointer-events-auto border border-dashed border-black/10 text-black hover:bg-black/[.03]`}
@@ -61,11 +61,16 @@ export function HeroSection() {
         {/* The source reserves the figure's footprint in the flow; the figure sits behind. */}
         <div aria-hidden="true" className="hidden h-[400px] w-[417px] md:block" />
       </div>
-      <dl className={`${COLUMN} relative z-10 grid grid-cols-4 gap-x-10 gap-y-8 border-t border-dashed border-black/10 pt-[32px] pb-[56px] max-md:order-last max-md:grid-cols-2`}>
+      {/* The label names each figure, so it is the <dt>; the figure is its value, shown above it.
+          Figures are ink; a short orange rule marks the top of each. */}
+      <dl className={`${COLUMN} relative z-10 grid grid-cols-4 gap-x-10 gap-y-10 pt-[40px] pb-[64px] max-md:order-last max-md:grid-cols-2`}>
         {HERO_FIGURES.map(([figure, label]) => (
-          <div key={label}>
-            <dt className="font-serif text-[clamp(2.2rem,3.4vw,3.2rem)] leading-none text-[#F7A11A] tabular-nums">{figure}</dt>
-            <dd className={`${EYEBROW} mt-[12px] max-w-[26ch] leading-[1.5] text-black/60`}>{label}</dd>
+          <div key={label} className="flex flex-col-reverse justify-end border-t border-black/15 pt-[22px]">
+            <dt className={`${EYEBROW} mt-[12px] max-w-[26ch] leading-[1.5] text-black/60`}>{label}</dt>
+            <dd className="relative m-0 font-serif text-[clamp(2.2rem,3.4vw,3.2rem)] leading-none text-black tabular-nums">
+              <i aria-hidden="true" className="absolute top-[-24px] left-0 h-[3px] w-[24px] bg-[#F6A11A]" />
+              {figure}
+            </dd>
           </div>
         ))}
       </dl>
@@ -85,8 +90,9 @@ export function WhoWeAreSection() {
             <div className="flex flex-col gap-5">
               <p className={BODY}>
                 {/* The bracketed drop cap: two lines tall, floated, dashed box with corner marks. */}
-                <span className="relative float-left mr-3 flex h-[2lh] items-center justify-center border border-dashed border-black/10 px-2">
-                  <span className="font-serif text-[50px] leading-none text-[#F7A11A]">{first}</span>
+                {/* Ink letter; the corner marks carry the orange. */}
+                <span className="relative float-left mr-3 flex h-[2lh] items-center justify-center border border-dashed border-black/10 px-2 text-[#F6A11A]">
+                  <span className="font-serif text-[50px] leading-none text-black">{first}</span>
                   <CornerBrackets />
                 </span>
                 {rest.join("")}

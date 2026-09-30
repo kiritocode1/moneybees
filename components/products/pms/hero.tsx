@@ -74,7 +74,7 @@ function DematTray() {
             >
               <path d={faces.left} fill="#b87408" stroke="rgba(90,50,0,.75)" strokeWidth="0.9" strokeLinejoin="round" />
               <path d={faces.right} fill="#d98c10" stroke="rgba(90,50,0,.75)" strokeWidth="0.9" strokeLinejoin="round" />
-              <path d={faces.top} fill="#F7A11A" stroke="rgba(90,50,0,.75)" strokeWidth="0.9" strokeLinejoin="round" />
+              <path d={faces.top} fill="#F6A11A" stroke="rgba(90,50,0,.75)" strokeWidth="0.9" strokeLinejoin="round" />
             </motion.g>
           ) : (
             <motion.g

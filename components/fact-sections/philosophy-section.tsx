@@ -106,7 +106,7 @@ export default function PhilosophySection() {
                 >
                   <span className="font-mono text-[10px]">{String(index + 1).padStart(2, "0")}</span>
                   {pillar.name}
-                  {index === front && <span className="h-[7px] w-[7px] bg-[#F7A11A]" />}
+                  {index === front && <span className="h-[7px] w-[7px] bg-[#F6A11A]" />}
                 </li>
               ))}
             </ul>
