@@ -2,6 +2,7 @@
 
 import { useId } from "react";
 import { useShown } from "@/components/about-v2/shared";
+import { PERSON_HEIGHT, Walker } from "@/components/drawing/lookout";
 
 /*
  * Three steps as study 07 (reference/visual-language/07/STUDY.md): a solid of
@@ -71,22 +72,6 @@ const target = (edge: readonly [P3, P3], down: number) => {
   return [a[0] + (b[0] - a[0]) * down, a[1] + (b[1] - a[1]) * down] as const;
 };
 
-/** A figure walking to the right, feet at the origin, 100 units tall. */
-function Walker() {
-  return (
-    <g fill="#000">
-      <circle cx="3" cy="-91" r="7.2" />
-      <path d="M-4.5-82.5H8.5L7-49H-4Z" />
-      <path d="M-4-51.5H1.5L-10.5-.5H-16.5Z" />
-      <path d="M1-51.5H6.5L15.5-.5H9.5Z" />
-      <path d="M-16.5-3H-8.5L-9.5 0H-17.5Z" />
-      <path d="M9.5-3H18.5L19 0H9.8Z" />
-      <path d="M-3-79-9-58" stroke="#000" strokeWidth="4" strokeLinecap="round" fill="none" />
-      <path d="M7-79 12-59" stroke="#000" strokeWidth="4" strokeLinecap="round" fill="none" />
-    </g>
-  );
-}
-
 type Tone = "light" | "black" | "orange";
 
 const PALETTE: Record<Tone, { lit: string; shade: string; ink: string; leader: string; muted: string }> = {
@@ -118,7 +103,7 @@ function Solid({ tone, shown, t, viewBox }: { tone: Tone; shown: boolean; t: (ms
           d={`M${feet[0] - 3} ${feet[1] - 1.5}L${feet[0] + reach * 0.964} ${feet[1] + reach * 0.267 - 3}L${feet[0] + reach} ${feet[1] + reach * 0.267 + 3}L${feet[0] - 2} ${feet[1] + 2}Z`}
           fill={colours.shade}
         />
-        <g transform={`translate(${feet[0]} ${feet[1]}) scale(${tall / 100})`}>
+        <g transform={`translate(${feet[0]} ${feet[1]}) scale(${tall / PERSON_HEIGHT})`}>
           <Walker />
         </g>
       </g>

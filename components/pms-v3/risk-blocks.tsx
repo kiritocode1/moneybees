@@ -5,6 +5,7 @@ import { useShown } from "@/components/about-v2/shared";
 import { BracketLabel } from "@/components/fact-sections/fact-section";
 import { COLUMN, SUBHEAD } from "@/components/hero/tokens";
 import { PMS_RISKS } from "@/lib/pms-v3-hero";
+import { PERSON_HEIGHT, Standing } from "@/components/drawing/lookout";
 
 /*
  * Risk Management as the measured stacked-blocks figure
@@ -114,10 +115,10 @@ function Tower({ layout, shown, t, className }: { layout: keyof typeof LAYOUTS; 
       </g>
       {/* The study's plain standing figure on the roof, for scale. */}
       <g fill="#000" style={{ opacity: shown ? 1 : 0, transition: `opacity ${t(400, timing(3).callout + 150)}` }}>
-        <circle cx="335" cy="103.06" r="2.66" />
-        <rect x="330.44" y="107.24" width="9.12" height="15.2" rx="2.66" />
-        <rect x="330.82" y="119.4" width="3.8" height="19" />
-        <rect x="335.38" y="119.4" width="3.8" height="19" />
+        {/* The study's 38-unit figure, feet at y 138.4 and centred on x 335. */}
+        <g transform={`translate(337.2 138.4) scale(${(38 / PERSON_HEIGHT).toFixed(4)})`}>
+          <Standing />
+        </g>
       </g>
       {numerals &&
         BLOCKS.map((block, index) => (

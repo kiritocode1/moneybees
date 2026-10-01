@@ -1,6 +1,6 @@
 "use client";
 
-import { type RefObject, useEffect, useRef, useState } from "react";
+import { type RefObject, useEffect, useId, useRef, useState } from "react";
 import { MOVE, OUT, RM, tr } from "@/components/drawing/plate";
 import { BracketLabel } from "@/components/fact-sections/fact-section";
 import { Rise } from "@/components/hero/editorial";
@@ -16,7 +16,8 @@ import { Person } from "@/components/drawing/lookout";
  * figure looking ahead. The four steps sit on the left as the reference sets
  * them. As each step enters, the curves still in play draw the next stretch
  * and the companies dropped at that step fade out where they stopped; the
- * survivors reach the point and the orange line draws last.
+ * survivors turn orange as they reach the point and the orange line, the same
+ * width, carries on from them.
  */
 
 /** Screen, Shortlist, Analyse and Decision Making; Monitor and Exit come after the portfolio is built. */
@@ -82,7 +83,9 @@ function layout({ w, top, bottom }: Box) {
     ] as const;
     return BREAKS.slice(1).map((to, part) => stretch(curve, BREAKS[part], to));
   });
-  return { stroke, yc, ex, figureX, figureScale: (FIGURE_HEIGHT * H) / 98.4, curves };
+  // Where the survivors' run into the point starts turning orange, as an x on every curve (x depends only on t).
+  const at = (t: number) => (1 - t) ** 2 * x0 + 2 * t * (1 - t) * cx + t ** 2 * ex;
+  return { stroke, yc, ex, blendFrom: at(0.8), figureX, figureScale: (FIGURE_HEIGHT * H) / 98.4, curves };
 }
 
 /** A first guess for the server render, replaced by the measured box on the client. */
@@ -92,13 +95,21 @@ const GUESS: Box = { w: 640, h: 600, top: 6, bottom: 594 };
 const inward = (i: number) => (5 - Math.floor(Math.abs(i - (CURVES - 1) / 2))) * 40;
 
 function Lines({ box, stage }: { box: Box; stage: number }) {
-  const { stroke, yc, ex, figureX, figureScale, curves } = layout(box);
+  const { stroke, yc, ex, blendFrom, figureX, figureScale, curves } = layout(box);
   const final = stage >= LAST_STEP;
-  // The orange line starts inside the black tip so no gap shows, and runs to the figure's front foot.
-  const lineStart = ex - 12 * (stroke / 1.5);
+  const blend = useId();
+  // The survivors arrive at the point already orange and one stroke wide, so the portfolio line carries on
+  // from them at the same width and colour; it starts a stroke inside the tip so no seam shows.
+  const lineStart = ex - stroke;
   const lineEnd = figureX + 10.6 * figureScale;
   return (
     <svg viewBox={`0 0 ${box.w} ${box.h}`} className="absolute inset-0 block h-full w-full overflow-visible" aria-hidden="true">
+      <defs>
+        <linearGradient id={blend} gradientUnits="userSpaceOnUse" x1={r2(blendFrom)} y1={0} x2={r2(ex)} y2={0}>
+          <stop offset="0" stopColor="#000" />
+          <stop offset="1" stopColor={ORANGE} />
+        </linearGradient>
+      </defs>
       {curves.map((parts, i) => {
         const reach = REACH[i];
         const dropped = reach <= LAST_STEP;
@@ -121,6 +132,7 @@ function Lines({ box, stage }: { box: Box; stage: number }) {
                   key={part}
                   data-draw=""
                   d={d}
+                  stroke={part === LAST_STEP ? `url(#${blend})` : undefined}
                   pathLength={1}
                   strokeDasharray="1 1"
                   strokeDashoffset={drawn ? 0 : 1}
@@ -138,13 +150,13 @@ function Lines({ box, stage }: { box: Box; stage: number }) {
         pathLength={1}
         fill="none"
         stroke={ORANGE}
-        strokeWidth={stroke * 2}
+        strokeWidth={stroke}
         strokeDasharray="1 1"
         strokeDashoffset={final ? 0 : 1}
         className={RM}
         style={tr("stroke-dashoffset", 720, 1480, MOVE)}
       />
-      <g transform={`translate(${r2(figureX)} ${r2(yc - stroke)}) scale(${r2(figureScale)})`}>
+      <g transform={`translate(${r2(figureX)} ${r2(yc - stroke / 2)}) scale(${r2(figureScale)})`}>
         <g data-late="" className={RM} style={{ opacity: final ? 1 : 0, ...tr("opacity", 420, 2050) }}>
           <Person />
         </g>
