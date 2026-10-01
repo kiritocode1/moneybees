@@ -1,0 +1,101 @@
+/*
+ * The Tres Mares page transition, measured in reference/page-transitions/NOTES.md.
+ * Every rule is scoped to the mb-page transition type, which only
+ * <PageTransition> navigations carry, so no other navigation is affected.
+ *
+ * Desktop (> 1100px), class `fp`: the old page drifts to -50vh and dims to 0.8
+ * over #000 while the new page rises from translateY(100vh) scale(.8); both
+ * 1400ms expo.inOut, the new page above the old.
+ * Up to 1100px, class `np`: old fades out 400ms, new fades in 400ms, power1.out.
+ */
+:root {
+  /* GSAP 3.14 expo.inOut, sampled; max error 0.0015 (NOTES.md §3.1). */
+  --mb-ease-expo-in-out: linear(0 0%, 0.0001 5%, 0.0004 10%, 0.0014 15%, 0.0044 20%, 0.0117 25%, 0.0281 30%,
+    0.033 31%, 0.0388 32%, 0.0453 33%, 0.0528 34%, 0.0614 35%, 0.0712 36%, 0.0824 37%, 0.0951 38%,
+    0.1097 39%, 0.1262 40%, 0.1451 41%, 0.1667 42%, 0.1913 43%, 0.2194 44%, 0.2516 45%, 0.2885 46%,
+    0.3308 47%, 0.3794 48%, 0.4354 49%, 0.5 50%, 0.5646 51%, 0.6206 52%, 0.6692 53%, 0.7115 54%,
+    0.7484 55%, 0.7806 56%, 0.8087 57%, 0.8333 58%, 0.8549 59%, 0.8738 60%, 0.8903 61%, 0.9049 62%,
+    0.9176 63%, 0.9288 64%, 0.9386 65%, 0.9472 66%, 0.9547 67%, 0.9612 68%, 0.967 69%, 0.9719 70%,
+    0.9883 75%, 0.9956 80%, 0.9986 85%, 0.9996 90%, 0.9999 95%, 1 100%);
+  /* GSAP power1.out. */
+  --mb-ease-power1-out: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* The ground under both pages: Tres Mares' #app black. React collapses
+   ::view-transition to 0x0 when the root itself does not change, which would
+   drop the ground, so the size is pinned. The full-size overlay also takes
+   every pointer event for the whole run, like html.loading. */
+html:active-view-transition-type(mb-page)::view-transition {
+  width: auto !important;
+  height: auto !important;
+  background: #000;
+  cursor: progress;
+}
+
+/* The new page paints above the old, as the later sibling does on Tres Mares. */
+html:active-view-transition-type(mb-page)::view-transition-group(.mb-page-out) {
+  z-index: 1;
+}
+html:active-view-transition-type(mb-page)::view-transition-group(.mb-page-in) {
+  z-index: 2;
+}
+
+/* Old page, at the scroll offset it was left at. */
+html:active-view-transition-type(mb-page)::view-transition-old(.mb-page-out) {
+  animation: mb-page-out 1400ms var(--mb-ease-expo-in-out) both;
+}
+/* New page, scaled about the centre of its full height, as GSAP scales the
+   full-height fixed view on Tres Mares. */
+html:active-view-transition-type(mb-page)::view-transition-new(.mb-page-in) {
+  transform-origin: 50% 50%;
+  animation: mb-page-in 1400ms var(--mb-ease-expo-in-out) both;
+}
+
+@keyframes mb-page-out {
+  to {
+    transform: translateY(-50vh);
+    opacity: 0.8;
+  }
+}
+@keyframes mb-page-in {
+  from {
+    transform: translateY(100vh) scale(0.8);
+  }
+}
+
+@media (max-width: 1100px) {
+  html:active-view-transition-type(mb-page)::view-transition {
+    background: #fff;
+  }
+  html:active-view-transition-type(mb-page)::view-transition-old(.mb-page-out) {
+    animation: mb-fade-out 400ms var(--mb-ease-power1-out) both;
+  }
+  html:active-view-transition-type(mb-page)::view-transition-new(.mb-page-in) {
+    animation: mb-fade-in 400ms var(--mb-ease-power1-out) 400ms both;
+  }
+}
+
+/* Reduced motion: the new page fades in over the old, 200ms, no movement.
+   (Tres Mares has no reduced-motion handling.) */
+@media (prefers-reduced-motion: reduce) {
+  html:active-view-transition-type(mb-page)::view-transition {
+    background: #fff;
+  }
+  html:active-view-transition-type(mb-page)::view-transition-old(.mb-page-out) {
+    animation: none;
+  }
+  html:active-view-transition-type(mb-page)::view-transition-new(.mb-page-in) {
+    animation: mb-fade-in 200ms linear both;
+  }
+}
+
+@keyframes mb-fade-out {
+  to {
+    opacity: 0;
+  }
+}
+@keyframes mb-fade-in {
+  from {
+    opacity: 0;
+  }
+}

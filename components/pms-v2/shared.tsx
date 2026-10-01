@@ -1,7 +1,7 @@
 "use client";
 
 import { useInView } from "motion/react";
-import Link from "next/link";
+import Link from "@/components/transition/transition-link";
 import { type ReactNode, useEffect, useRef, useState } from "react";
 
 /* Helpers shared by the /pms sections. */

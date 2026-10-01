@@ -1,9 +1,12 @@
 import type { Metadata } from "next";
-import { ApproachHero, ListsSection, PhilosophySection, RiskSection } from "@/components/approach/approach-sections";
-import ProcessSteps from "@/components/approach/process-steps";
+import { CriteriaLists } from "@/components/approach-v3/criteria-lists";
+import { PhilosophyDiscs } from "@/components/approach-v3/philosophy-discs";
+import { ProcessSheet } from "@/components/approach-v3/process-sheet";
+import { RiskRings } from "@/components/approach-v3/risk-rings";
 import SiteFooter from "@/components/footer/site-footer";
-import { LetsTalkSection } from "@/components/home/home-sections";
+import ProductHero from "@/components/pms-v3/product-hero";
 import SiteNavigation from "@/components/ui/site-navigation";
+import { APPROACH_HERO } from "@/lib/page-heroes";
 
 export const metadata: Metadata = {
   title: "Our investment approach: screen, analyse, monitor, exit",
@@ -15,20 +18,20 @@ export const metadata: Metadata = {
 };
 
 /**
- * /our-approach, built to the Content & Visual Plan §6: the
- * heading, the core philosophy, the six-step orange-and-black process, what
- * we look for and don't do, and risk management. Copy lives in lib/approach.ts.
+ * /our-approach, built to the Content & Visual Plan §6 on study 09's process
+ * sheet: the core philosophy on study 08's discs, then the six steps each drawn
+ * from its own sentence, what we look for and don't do, and risk management
+ * as concentric half-rings. Copy lives in lib/approach.ts.
  */
 export default function OurApproachPage() {
   return (
     <SiteNavigation>
       <main id="top" className="option-one bg-white text-black">
-        <ApproachHero />
-        <PhilosophySection />
-        <ProcessSteps />
-        <ListsSection />
-        <RiskSection />
-        <LetsTalkSection />
+        <ProductHero data={APPROACH_HERO} />
+        <PhilosophyDiscs />
+        <ProcessSheet />
+        <CriteriaLists />
+        <RiskRings />
       </main>
       <SiteFooter
         explore={[

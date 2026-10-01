@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "motion/react";
-import Link from "next/link";
+import Link from "@/components/transition/transition-link";
 import CornerBrackets from "@/components/hero/corner-brackets";
 import { BODY, BUTTON, COLUMN, EYEBROW, HEADING, Rise } from "@/components/hero/editorial";
 import { path, project } from "@/components/iso/geometry";

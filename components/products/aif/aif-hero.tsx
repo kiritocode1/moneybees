@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import Link from "@/components/transition/transition-link";
 import { useRef } from "react";
 import CornerBrackets from "@/components/hero/corner-brackets";
 import { BODY, BUTTON, COLUMN, EYEBROW, HEADING, Rise } from "@/components/hero/editorial";

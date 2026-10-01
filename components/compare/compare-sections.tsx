@@ -1,12 +1,10 @@
 "use client";
 
 import { BracketLabel } from "@/components/fact-sections/fact-section";
-import { Rise } from "@/components/hero/editorial";
-import { BODY, COLUMN, EYEBROW, HEADING, SUBHEAD } from "@/components/hero/tokens";
-import Link from "next/link";
-import { DelayedOn, FOCUS, hexPoints, number, ORANGE, PageIndex, PRESS, T, useShown, NoScriptReveal } from "@/components/pms-v2/shared";
-import { COMPARE, COMPARE_LINKS, COMPARE_PARTS, COMPARISON, EXPLANATION } from "@/lib/compare";
-import { AifChain, PmsChain } from "./chain-diagrams";
+import { COLUMN, EYEBROW, SUBHEAD } from "@/components/hero/tokens";
+import Link from "@/components/transition/transition-link";
+import { DelayedOn, FOCUS, hexPoints, number, ORANGE, PRESS, T, useShown } from "@/components/pms-v2/shared";
+import { COMPARE_LINKS, COMPARISON, EXPLANATION } from "@/lib/compare";
 import { ROW_GLYPHS } from "./row-glyphs";
 
 /*
@@ -14,55 +12,6 @@ import { ROW_GLYPHS } from "./row-glyphs";
  * simple comparison row by row, and the simple explanation. Every row and
  * card draws what its words say.
  */
-
-const CHAIN_DIAGRAMS = [
-  { label: "PMS", Diagram: PmsChain, delay: 0 },
-  { label: "AIF", Diagram: AifChain, delay: 400 },
-] as const;
-
-export function CompareHero() {
-  const { ref, shown } = useShown<HTMLDivElement>(0.3);
-  return (
-    <section aria-labelledby="compare-heading" className="bg-white text-black">
-      <NoScriptReveal />
-      <div className={`${COLUMN} grid grid-cols-1 items-end gap-14 pt-[150px] pb-[72px] md:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] md:gap-20 md:pt-[220px]`}>
-        <div>
-          <Rise>
-            <BracketLabel>PMS vs AIF</BracketLabel>
-          </Rise>
-          <Rise delay={0.05}>
-            <h1 id="compare-heading" className={`${HEADING} mt-[22px] text-balance text-[clamp(2.75rem,1.2rem+4.4vw,5rem)]`}>
-              {COMPARE.heading}
-            </h1>
-          </Rise>
-          <Rise delay={0.12}>
-            <p className={`mt-8 max-w-[520px] text-black/70 ${BODY}`}>{COMPARE.lead}</p>
-          </Rise>
-        </div>
-        <Rise delay={0.2}>
-          <PageIndex parts={COMPARE_PARTS} />
-        </Rise>
-      </div>
-      <div id="structures" ref={ref} className={`${COLUMN} scroll-mt-[96px] pb-[120px] max-md:pb-[80px]`}>
-        <div className="grid grid-cols-1 gap-[2px] bg-[#F7F7F8] p-[2px] md:grid-cols-2">
-          {CHAIN_DIAGRAMS.map(({ label, Diagram, delay }) => (
-            <div key={label} className="bg-white p-[32px] max-[600px]:p-[18px]">
-              <span className={`${EYEBROW} flex items-center gap-[8px] text-black`}>
-                <i aria-hidden="true" className="h-[8px] w-[8px] bg-[#F6A11A]" />
-                {label}
-              </span>
-              <div className="mt-[18px]">
-                <DelayedOn on={shown} delay={delay}>
-                  {(ready) => <Diagram on={ready} />}
-                </DelayedOn>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
 
 /**
  * The simple comparison on black, as a real table: PMS and AIF columns, one

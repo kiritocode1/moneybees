@@ -2,118 +2,17 @@
 
 import Image from "next/image";
 import { useEffect, useId, useState } from "react";
-import { BOX, Draw, Hatch, MOVE, OUT, RM, tr } from "@/components/drawing/plate";
+import { Draw, Hatch, MOVE, OUT, RM, tr } from "@/components/drawing/plate";
 import { BracketLabel } from "@/components/fact-sections/fact-section";
-import CardScroll from "@/components/motion/card-scroll";
-import { Rise } from "@/components/hero/editorial";
-import { BODY, COLUMN, EYEBROW, HEADING, SUBHEAD } from "@/components/hero/tokens";
-import { ABOUT, FOUNDER, GROUP_AREAS, STORY, TIMELINE } from "@/lib/about-v2";
+import { COLUMN, EYEBROW, SUBHEAD } from "@/components/hero/tokens";
+import { FOUNDER, STORY } from "@/lib/about-v2";
 import { hexPoints, ORANGE, useShown } from "./shared";
 
 /*
- * /about, content plan §2: the heading and company information beside a
- * drawing of the group and its four areas, the founder on a black band, a
- * timeline of the plan's dates on grey, and the Moneybee story as a drawing of
- * nectar into honey beside money into wealth.
+ * The two /about sections kept from the first build, content plan §2: the
+ * founder on a black band, and the Moneybee story as a drawing of nectar into
+ * honey beside money into wealth. The rest of the page is in components/about-v3.
  */
-
-/** A hexagon as a path, so it can draw itself on with `Draw`. */
-const hexPath = (cx: number, cy: number, r: number) => `M${hexPoints(cx, cy, r).replace(/ /g, "L")}Z`;
-
-/**
- * The group as a cell with its four areas around it. The construction (the
- * axes, the circle the areas sit on, their faint outlines) is there at rest;
- * the group cell lands, each area draws its outline in turn and is joined to
- * the group across the shared edge, and the orange ring closes last.
- */
-function GroupDrawing() {
-  const { ref, shown: on } = useShown<SVGSVGElement>(0.35);
-  const R = 60;
-  const cx = 180;
-  const cy = 165;
-  // Neighbours of a pointy-top cell sit across its sloped sides: 60 degrees off the horizontal.
-  const dx = 55;
-  const dy = 95;
-  const spots = [
-    [cx - dx, cy - dy],
-    [cx + dx, cy - dy],
-    [cx - dx, cy + dy],
-    [cx + dx, cy + dy],
-  ] as const;
-  const reach = Math.hypot(dx, dy);
-  return (
-    <svg ref={ref} viewBox="60 0 240 330" className="block h-auto w-full max-w-[400px]" role="img" aria-label="Moneybee Group and its four areas: portfolio management, equity broking, investment advisory and related financial services">
-      {/* Construction: the two axes and the circle the four areas sit on. */}
-      <circle cx={cx} cy={cy} r={reach} fill="none" stroke="#000" strokeWidth=".5" strokeOpacity=".35" strokeDasharray="1.5 3" />
-      <path d={`M${cx} 4V326M64 ${cy}H296`} stroke="#000" strokeWidth=".5" strokeOpacity=".3" strokeDasharray="6 2 1 2" />
-      {spots.map(([x, y], index) => {
-        const delay = 380 + index * 120;
-        const angle = Math.atan2(y - cy, x - cx);
-        // The joint across the gap between the group's ring and this area's edge.
-        const from = (R + 2) * 0.866 + 1;
-        const to = reach - (R - 3) * 0.866;
-        const along = (distance: number, side: number) =>
-          `${(cx + Math.cos(angle) * distance - Math.sin(angle) * side).toFixed(2)} ${(cy + Math.sin(angle) * distance + Math.cos(angle) * side).toFixed(2)}`;
-        return (
-          <g key={index}>
-            <polygon points={hexPoints(x, y, R - 3)} fill="#fff" stroke="#000" strokeWidth=".5" strokeOpacity=".3" />
-            <Draw d={hexPath(x, y, R - 3)} on={on} ms={720} delay={delay} stroke="#000" strokeWidth="1.1" strokeLinejoin="round" />
-            <Draw d={hexPath(x, y, R - 9)} on={on} ms={620} delay={delay + 200} stroke="#000" strokeWidth=".5" strokeOpacity=".55" />
-            <path d={`M${along(from, -5)}L${along(to, -5)}M${along(from, 5)}L${along(to, 5)}`} stroke="#000" strokeWidth=".8" className={RM} style={{ opacity: on ? 1 : 0, ...tr("opacity", 260, delay + 560) }} />
-            <g className={RM} style={{ opacity: on ? 1 : 0, transform: on ? "translateY(0)" : "translateY(3px)", ...tr("opacity, transform", 420, delay + 380) }}>
-              {GROUP_AREAS[index].map((word, line, words) => (
-                <text key={word} x={x} y={y + 4 + (line - (words.length - 1) / 2) * 14} textAnchor="middle" fontSize="11" fill="#000" fontFamily="var(--font-geist-mono), ui-monospace, monospace">
-                  {word}
-                </text>
-              ))}
-            </g>
-          </g>
-        );
-      })}
-      <g className={RM} style={{ ...BOX, transformOrigin: "center", opacity: on ? 1 : 0, transform: on ? "scale(1)" : "scale(.9)", ...tr("opacity, transform", 520, 80) }}>
-        <polygon points={hexPoints(cx, cy, R - 3)} fill="#000" />
-      </g>
-      <Draw d={hexPath(cx, cy, R + 2)} on={on} ms={700} delay={1150} ease={MOVE} stroke={ORANGE} strokeWidth="2.4" strokeLinejoin="round" />
-      <g className={RM} style={{ opacity: on ? 1 : 0, ...tr("opacity", 400, 300) }}>
-        <text x={cx} y={cy - 4} textAnchor="middle" fontSize="14" fill="#fff" className="font-serif">
-          Moneybee Group
-        </text>
-        <text x={cx} y={cy + 16} textAnchor="middle" fontSize="12" fill={ORANGE} fontFamily="var(--font-geist-mono), ui-monospace, monospace">
-          2004
-        </text>
-      </g>
-    </svg>
-  );
-}
-
-export function AboutHero() {
-  return (
-    <section aria-labelledby="about-heading" className="bg-white text-black">
-      <div className={`${COLUMN} grid grid-cols-1 items-center gap-14 pt-[150px] pb-[110px] md:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] md:gap-20 md:pt-[220px] max-md:pb-[72px]`}>
-        <div>
-          <Rise>
-            <BracketLabel>About us</BracketLabel>
-          </Rise>
-          <Rise delay={0.05}>
-            <h1 id="about-heading" className={`${HEADING} mt-[22px] text-balance text-[clamp(2.75rem,1.2rem+4.4vw,5rem)]`}>
-              {ABOUT.heading}
-            </h1>
-          </Rise>
-          {ABOUT.company.map((paragraph, index) => (
-            <Rise key={paragraph} delay={0.12 + index * 0.06}>
-              <p className={`mt-8 max-w-[560px] text-black/70 ${BODY}`}>{paragraph}</p>
-            </Rise>
-          ))}
-        </div>
-        <Rise delay={0.2}>
-          <div className="flex justify-center md:justify-end">
-            <GroupDrawing />
-          </div>
-        </Rise>
-      </div>
-    </section>
-  );
-}
 
 /** Counts up to `to` once `on` turns true. */
 function CountUp({ to, on, instant }: { to: number; on: boolean; instant: boolean }) {
@@ -176,63 +75,6 @@ export function FounderSection() {
               </li>
             ))}
           </ol>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-/** One timeline card: the date large, the plan's sentence right under it, so a later card landing on the lower half never covers it. */
-function TimelineCard({ label, text }: { label: string; text: string }) {
-  return (
-    <div>
-      <span className="block text-[clamp(3rem,2rem+3vw,5.5rem)] leading-none font-light tracking-[-.04em] tabular-nums">{label}</span>
-      <p className="mt-6 max-w-[34ch] font-serif text-[clamp(1.3rem,1rem+.8vw,1.8rem)] leading-[1.2]">{text}</p>
-    </div>
-  );
-}
-
-/** Card tone and desktop placement for each stop, in order: full stage, right half, bottom-left. */
-const TIMELINE_CARDS = [
-  { tone: "light", place: "md:col-[1/3] md:row-[1/3]" },
-  { tone: "black", place: "md:col-[2/3] md:row-[1/3]" },
-  { tone: "orange", place: "md:col-[1/2] md:row-[2/3]" },
-] as const;
-
-/** The plan's dates as a pinned card scroll: 2004, then August 2007, then the founder's 45+ years. */
-export function TimelineSection() {
-  return (
-    <section id="timeline" aria-labelledby="timeline-heading" className="scroll-mt-[96px] bg-white text-black">
-      <div className={`${COLUMN} pt-[120px] max-md:pt-[80px]`}>
-        <span className={`${EYEBROW} text-black/60`}>02</span>
-        <h2 id="timeline-heading" className={`mt-[14px] ${SUBHEAD}`}>
-          Timeline
-        </h2>
-      </div>
-      <div className="mt-12">
-        <CardScroll
-          label="Timeline"
-          cards={TIMELINE.map((stop, index) => ({
-            key: stop.label,
-            ...TIMELINE_CARDS[index],
-            children: <TimelineCard label={stop.label} text={stop.text} />,
-          }))}
-        />
-      </div>
-    </section>
-  );
-}
-
-/** The plan's "selected corporate or team photographs": the team, in a grey panel that fades to white at the foot. */
-export function TeamPhotoSection() {
-  return (
-    <section aria-label="Moneybee team" className="bg-white text-black">
-      <div className={`${COLUMN} pt-[128px] max-md:pt-[80px]`}>
-        <div className="relative overflow-hidden rounded-[10px] bg-[#F6F6F6] p-[clamp(12px,2vw,24px)] ring-1 ring-black/[.06]">
-          <div className="relative aspect-[16/9] w-full overflow-hidden rounded-[6px]">
-            <Image src="/people/moneybee-team.jpg" alt="The Moneybee team" fill sizes="(max-width: 768px) 100vw, 1272px" className="object-cover" />
-          </div>
-          <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 bottom-0 h-[15%] bg-gradient-to-b from-transparent to-white" />
         </div>
       </div>
     </section>
@@ -358,13 +200,13 @@ function MoneyDrawing({ on }: { on: boolean; t: (ms: number, delay?: number) => 
   );
 }
 
-/** The plan's story line, drawn as its two halves side by side. */
-export function StorySection() {
+/** The plan's story line, drawn as its two halves side by side. `index` is its number in the page's order. */
+export function StorySection({ index = "03" }: { index?: string }) {
   const { ref, shown, t } = useShown<HTMLDivElement>(0.35);
   return (
     <section id="story" aria-labelledby="story-heading" className="scroll-mt-[96px] border-t border-dashed border-black/10 bg-white text-black">
       <div className={`${COLUMN} py-[120px] max-md:py-[80px]`}>
-        <span className={`${EYEBROW} text-black/60`}>03</span>
+        <span className={`${EYEBROW} text-black/60`}>{index}</span>
         <h2 id="story-heading" className={`mt-[14px] ${SUBHEAD}`}>
           {STORY.heading}
         </h2>

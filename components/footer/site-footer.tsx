@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "@/components/transition/transition-link";
 import type { ReactNode } from "react";
 import { BracketLabel } from "@/components/fact-sections/fact-section";
 import { CONTACT, RECORD_METHOD, REGISTRATIONS } from "@/lib/insights";

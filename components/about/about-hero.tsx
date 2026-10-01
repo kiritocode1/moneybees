@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import Link from "@/components/transition/transition-link";
 import { useRef } from "react";
 import { BODY, COLUMN, EYEBROW, HEADING, Rise } from "@/components/hero/editorial";
 import { clamp, easeOut } from "@/components/fact-sections/fact-section";

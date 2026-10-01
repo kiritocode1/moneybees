@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import SiteFooter from "@/components/footer/site-footer";
-import { LetsTalkSection } from "@/components/home/home-sections";
-import { FounderBand, KeyMembersSection, TeamHero } from "@/components/team/team-sections";
+import { FounderBand, KeyMembersSection } from "@/components/team/team-sections";
+import ProductHero from "@/components/pms-v3/product-hero";
 import SiteNavigation from "@/components/ui/site-navigation";
+import { TEAM_HERO } from "@/lib/page-heroes";
 
 export const metadata: Metadata = {
   title: "Our team: the people behind Moneybee",
@@ -22,10 +23,9 @@ export default function TeamPage() {
   return (
     <SiteNavigation>
       <main id="top" className="option-one bg-white text-black">
-        <TeamHero />
+        <ProductHero data={TEAM_HERO} />
         <FounderBand />
         <KeyMembersSection />
-        <LetsTalkSection />
       </main>
       <SiteFooter
         explore={[

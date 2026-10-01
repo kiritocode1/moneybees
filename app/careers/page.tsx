@@ -1,8 +1,11 @@
 import type { Metadata } from "next";
-import { ApplySection, CareersHero, CultureSection, LifeSection, OpeningsSection } from "@/components/careers/careers-sections";
+import { ApplySection, LifeSection } from "@/components/careers/careers-sections";
+import { CultureColumns } from "@/components/careers-v3/culture-columns";
+import { OpeningCards } from "@/components/careers-v3/opening-cards";
 import SiteFooter from "@/components/footer/site-footer";
-import { LetsTalkSection } from "@/components/home/home-sections";
+import ProductHero from "@/components/pms-v3/product-hero";
 import SiteNavigation from "@/components/ui/site-navigation";
+import { CAREERS_HERO } from "@/lib/page-heroes";
 
 export const metadata: Metadata = {
   title: "Careers at Moneybee, Mumbai",
@@ -23,12 +26,11 @@ export default function CareersPage() {
   return (
     <SiteNavigation>
       <main id="top" className="option-one bg-white text-black">
-        <CareersHero />
-        <OpeningsSection />
+        <ProductHero data={CAREERS_HERO} />
+        <OpeningCards />
         <LifeSection />
-        <CultureSection />
+        <CultureColumns />
         <ApplySection />
-        <LetsTalkSection />
       </main>
       <SiteFooter
         explore={[

@@ -1,0 +1,133 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="736" height="992" viewBox="0 0 736 992" role="img" aria-label="Portfolio, PMS and AIF, team, compounding">
+<rect width="736" height="992" fill="#FFFFFF"/>
+<g id="panel-1" transform="translate(56 56)">
+<rect width="300" height="420" fill="#000000"/>
+<g fill="none" stroke="#FFFFFF" stroke-width="1.3">
+<circle cx="42.00" cy="98.00" r="11.35"/>
+<circle cx="66.00" cy="98.00" r="11.35"/>
+<circle cx="210.00" cy="98.00" r="11.35"/>
+<circle cx="234.00" cy="98.00" r="11.35"/>
+<circle cx="42.00" cy="122.00" r="11.35"/>
+<circle cx="66.00" cy="122.00" r="11.35"/>
+<circle cx="138.00" cy="122.00" r="11.35"/>
+<circle cx="186.00" cy="122.00" r="11.35"/>
+<circle cx="210.00" cy="122.00" r="11.35"/>
+<circle cx="234.00" cy="122.00" r="11.35"/>
+<circle cx="42.00" cy="146.00" r="11.35"/>
+<circle cx="66.00" cy="146.00" r="11.35"/>
+<circle cx="90.00" cy="146.00" r="11.35"/>
+<circle cx="114.00" cy="146.00" r="11.35"/>
+<circle cx="138.00" cy="146.00" r="11.35"/>
+<circle cx="162.00" cy="146.00" r="11.35"/>
+<circle cx="234.00" cy="146.00" r="11.35"/>
+<circle cx="258.00" cy="146.00" r="11.35"/>
+<circle cx="42.00" cy="170.00" r="11.35"/>
+<circle cx="66.00" cy="170.00" r="11.35"/>
+<circle cx="114.00" cy="170.00" r="11.35"/>
+<circle cx="138.00" cy="170.00" r="11.35"/>
+<circle cx="162.00" cy="170.00" r="11.35"/>
+<circle cx="186.00" cy="170.00" r="11.35"/>
+<circle cx="234.00" cy="170.00" r="11.35"/>
+<circle cx="258.00" cy="170.00" r="11.35"/>
+<circle cx="42.00" cy="194.00" r="11.35"/>
+<circle cx="90.00" cy="194.00" r="11.35"/>
+<circle cx="114.00" cy="194.00" r="11.35"/>
+<circle cx="138.00" cy="194.00" r="11.35"/>
+<circle cx="162.00" cy="194.00" r="11.35"/>
+<circle cx="210.00" cy="194.00" r="11.35"/>
+<circle cx="234.00" cy="194.00" r="11.35"/>
+<circle cx="258.00" cy="194.00" r="11.35"/>
+<circle cx="66.00" cy="218.00" r="11.35"/>
+<circle cx="90.00" cy="218.00" r="11.35"/>
+<circle cx="114.00" cy="218.00" r="11.35"/>
+<circle cx="138.00" cy="218.00" r="11.35"/>
+<circle cx="162.00" cy="218.00" r="11.35"/>
+<circle cx="186.00" cy="218.00" r="11.35"/>
+<circle cx="210.00" cy="218.00" r="11.35"/>
+<circle cx="258.00" cy="218.00" r="11.35"/>
+<circle cx="42.00" cy="242.00" r="11.35"/>
+<circle cx="66.00" cy="242.00" r="11.35"/>
+<circle cx="90.00" cy="242.00" r="11.35"/>
+<circle cx="114.00" cy="242.00" r="11.35"/>
+<circle cx="138.00" cy="242.00" r="11.35"/>
+<circle cx="162.00" cy="242.00" r="11.35"/>
+<circle cx="186.00" cy="242.00" r="11.35"/>
+<circle cx="210.00" cy="242.00" r="11.35"/>
+<circle cx="234.00" cy="242.00" r="11.35"/>
+<circle cx="258.00" cy="242.00" r="11.35"/>
+</g>
+<g fill="#F6A11A">
+<circle cx="90.00" cy="98.00" r="12.00"/>
+<circle cx="114.00" cy="98.00" r="12.00"/>
+<circle cx="138.00" cy="98.00" r="12.00"/>
+<circle cx="162.00" cy="98.00" r="12.00"/>
+<circle cx="186.00" cy="98.00" r="12.00"/>
+<circle cx="258.00" cy="98.00" r="12.00"/>
+<circle cx="90.00" cy="122.00" r="12.00"/>
+<circle cx="114.00" cy="122.00" r="12.00"/>
+<circle cx="162.00" cy="122.00" r="12.00"/>
+<circle cx="258.00" cy="122.00" r="12.00"/>
+<circle cx="186.00" cy="146.00" r="12.00"/>
+<circle cx="210.00" cy="146.00" r="12.00"/>
+<circle cx="90.00" cy="170.00" r="12.00"/>
+<circle cx="210.00" cy="170.00" r="12.00"/>
+<circle cx="66.00" cy="194.00" r="12.00"/>
+<circle cx="186.00" cy="194.00" r="12.00"/>
+<circle cx="42.00" cy="218.00" r="12.00"/>
+<circle cx="234.00" cy="218.00" r="12.00"/>
+</g>
+<text x="20" y="31" font-family="Instrument Serif" font-size="17" fill="#FFFFFF">Moneybee</text>
+<text x="280" y="29" font-family="Geist Mono" font-size="7" letter-spacing="0.4" text-anchor="end" fill="#FFFFFF">01 / 04</text>
+<text transform="translate(278 391.6) rotate(-90)" font-family="Geist Mono" font-size="7" letter-spacing="0.4" fill="#FFFFFF">moneybee.in</text>
+<text x="19" y="391.6" font-family="Instrument Serif" font-size="48" fill="#FFFFFF">portfolio</text>
+</g>
+<g id="panel-2" transform="translate(380 56)">
+<rect width="300" height="420" fill="#000000"/>
+<defs><clipPath id="lensA"><circle cx="106.10" cy="170.0" r="81.72"/></clipPath></defs>
+<circle cx="193.90" cy="170.0" r="81.72" fill="#F6A11A" clip-path="url(#lensA)"/>
+<g fill="none" stroke="#FFFFFF" stroke-width="2.15"><circle cx="106.10" cy="170.0" r="81.72"/><circle cx="193.90" cy="170.0" r="81.72"/></g>
+<g font-family="Geist Mono" font-size="9" letter-spacing="0.6" fill="#FFFFFF" text-anchor="middle"><text x="68.28" y="173.2">PMS</text><text x="231.72" y="173.2">AIF</text></g>
+<text x="20" y="31" font-family="Instrument Serif" font-size="17" fill="#FFFFFF">Moneybee</text>
+<text x="280" y="29" font-family="Geist Mono" font-size="7" letter-spacing="0.4" text-anchor="end" fill="#FFFFFF">02 / 04</text>
+<text transform="translate(278 391.6) rotate(-90)" font-family="Geist Mono" font-size="7" letter-spacing="0.4" fill="#FFFFFF">moneybee.in</text>
+<text x="19" y="391.6" font-family="Instrument Serif" font-size="48" fill="#FFFFFF">PMS · AIF</text>
+</g>
+<g id="panel-3" transform="translate(56 498)">
+<rect width="300" height="420" fill="#000000"/>
+<g fill="none" stroke="#FFFFFF" stroke-width="2.15">
+<circle cx="76.60" cy="133.30" r="51.90"/>
+<circle cx="150.00" cy="133.30" r="51.90"/>
+<circle cx="223.40" cy="133.30" r="51.90"/>
+<circle cx="76.60" cy="206.70" r="51.90"/>
+<circle cx="150.00" cy="206.70" r="51.90"/>
+<circle cx="223.40" cy="206.70" r="51.90"/>
+</g>
+<g fill="#F6A11A"><circle cx="113.30" cy="170.0" r="4"/><circle cx="186.70" cy="170.0" r="4"/></g>
+<text x="20" y="31" font-family="Instrument Serif" font-size="17" fill="#FFFFFF">Moneybee</text>
+<text x="280" y="29" font-family="Geist Mono" font-size="7" letter-spacing="0.4" text-anchor="end" fill="#FFFFFF">03 / 04</text>
+<text transform="translate(278 391.6) rotate(-90)" font-family="Geist Mono" font-size="7" letter-spacing="0.4" fill="#FFFFFF">moneybee.in</text>
+<text x="19" y="391.6" font-family="Instrument Serif" font-size="48" fill="#FFFFFF">team</text>
+</g>
+<g id="panel-4" transform="translate(380 498)">
+<rect width="300" height="420" fill="#000000"/>
+<g fill="none" stroke-width="2.15">
+<circle cx="104.70" cy="244.02" r="73.64" stroke="#141414"/>
+<circle cx="112.84" cy="235.87" r="73.64" stroke="#272727"/>
+<circle cx="120.99" cy="227.71" r="73.64" stroke="#3B3B3B"/>
+<circle cx="129.13" cy="219.56" r="73.64" stroke="#4E4E4E"/>
+<circle cx="137.28" cy="211.40" r="73.64" stroke="#626262"/>
+<circle cx="145.43" cy="203.25" r="73.64" stroke="#767676"/>
+<circle cx="153.57" cy="195.09" r="73.64" stroke="#898989"/>
+<circle cx="161.72" cy="186.94" r="73.64" stroke="#9D9D9D"/>
+<circle cx="169.86" cy="178.78" r="73.64" stroke="#B1B1B1"/>
+<circle cx="178.00" cy="170.63" r="73.64" stroke="#C4C4C4"/>
+<circle cx="186.15" cy="162.47" r="73.64" stroke="#D8D8D8"/>
+<circle cx="194.29" cy="154.32" r="73.64" stroke="#EBEBEB"/>
+<circle cx="202.44" cy="146.16" r="73.64" stroke="#F6A11A"/>
+</g>
+<text x="20" y="31" font-family="Instrument Serif" font-size="17" fill="#FFFFFF">Moneybee</text>
+<text x="280" y="29" font-family="Geist Mono" font-size="7" letter-spacing="0.4" text-anchor="end" fill="#FFFFFF">04 / 04</text>
+<text transform="translate(278 391.6) rotate(-90)" font-family="Geist Mono" font-size="7" letter-spacing="0.4" fill="#FFFFFF">moneybee.in</text>
+<text x="19" y="391.6" font-family="Instrument Serif" font-size="48" fill="#FFFFFF">compounding</text>
+</g>
+</svg>

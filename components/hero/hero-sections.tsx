@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "@/components/transition/transition-link";
 import { HOME_PLAN, INTRODUCTION, PERIOD_RETURNS } from "@/lib/insights";
 import CornerBrackets from "./corner-brackets";
 import { BODY, BUTTON, COLUMN, DashedRule, EYEBROW, HEADING, Rise, SUBHEAD } from "./editorial";

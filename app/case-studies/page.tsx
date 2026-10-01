@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
-import { CaseCardsSection, CaseStudiesHero, CaseStudyList, TimelineSection } from "@/components/case-studies/case-study-sections";
+import { CaseStudyList, TimelineSection } from "@/components/case-studies/case-study-sections";
+import { CaseCards } from "@/components/case-studies-v3/case-cards";
 import SiteFooter from "@/components/footer/site-footer";
-import { LetsTalkSection } from "@/components/home/home-sections";
+import ProductHero from "@/components/pms-v3/product-hero";
 import SiteNavigation from "@/components/ui/site-navigation";
+import { CASES_HERO } from "@/lib/page-heroes";
 
 export const metadata: Metadata = {
   title: "Case studies: KPI Green, Uni Abex, Pitti Engineering",
@@ -15,7 +17,7 @@ export const metadata: Metadata = {
 
 /**
  * /case-studies, built to the Content & Visual Plan §8: three historical
- * picks as a card scroll with the plan's wording, then a business-model
+ * picks as a card scroll, each company a study-07 solid carrying the plan's wording, then a business-model
  * drawing and FY20 to FY24 financials each, a shared timeline and the plan's
  * disclaimer. Copy
  * lives in lib/case-studies.ts.
@@ -24,11 +26,10 @@ export default function CaseStudiesPage() {
   return (
     <SiteNavigation>
       <main id="top" className="option-one bg-white text-black">
-        <CaseStudiesHero />
-        <CaseCardsSection />
+        <ProductHero data={CASES_HERO} />
+        <CaseCards />
         <CaseStudyList />
         <TimelineSection />
-        <LetsTalkSection />
       </main>
       <SiteFooter
         explore={[

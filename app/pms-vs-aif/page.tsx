@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
-import { CompareHero, ComparisonSection, ExplanationSection } from "@/components/compare/compare-sections";
+import { ComparisonSection, ExplanationSection } from "@/components/compare/compare-sections";
 import SiteFooter from "@/components/footer/site-footer";
-import { LetsTalkSection } from "@/components/home/home-sections";
+import ProductHero from "@/components/pms-v3/product-hero";
 import SiteNavigation from "@/components/ui/site-navigation";
+import { COMPARE_HERO } from "@/lib/page-heroes";
 
 export const metadata: Metadata = {
   title: "PMS vs AIF: how the two structures differ",
@@ -22,10 +23,9 @@ export default function PmsVsAifPage() {
   return (
     <SiteNavigation>
       <main id="top" className="option-one bg-white text-black">
-        <CompareHero />
+        <ProductHero data={COMPARE_HERO} />
         <ComparisonSection />
         <ExplanationSection />
-        <LetsTalkSection />
       </main>
       <SiteFooter
         explore={[

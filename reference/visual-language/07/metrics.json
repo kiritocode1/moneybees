@@ -1,0 +1,48 @@
+{
+ "mask_rects": [
+  [
+   140,
+   158,
+   262,
+   195,
+   "title"
+  ],
+  [
+   420,
+   158,
+   560,
+   280,
+   "03 text"
+  ],
+  [
+   112,
+   388,
+   245,
+   516,
+   "01 text"
+  ],
+  [
+   525,
+   422,
+   650,
+   543,
+   "02 text"
+  ],
+  [
+   256,
+   464,
+   318,
+   526,
+   "figure + its shadow"
+  ]
+ ],
+ "masked_fraction_pct": 10.630870451323252,
+ "mae_unmasked_0_255": 0.34472952716571403,
+ "pct_pixels_maxchannel_diff_gt24_unmasked": 0.4738602256929741,
+ "mae_all_0_255": 1.6342124241887208,
+ "pct_gt24_all": 1.9791543596408316,
+ "red_mask_def": "nearest of {paper F2EFE8, lit DF2914, shade 7C1F17, ink 141414} is lit or shade; text/figure rects excluded",
+ "iou_red_solid": 0.9986847966738084,
+ "iou_lit": 0.9898449103657905,
+ "iou_shade": 0.9871906209292227
+}

@@ -2,13 +2,10 @@
 
 import { useInView } from "motion/react";
 import { useSearchParams } from "next/navigation";
-import { type FormEvent, type KeyboardEvent, Suspense, useEffect, useId, useRef, useState } from "react";
+import { type FormEvent, type KeyboardEvent, Suspense, useId, useRef, useState } from "react";
 import { BracketLabel } from "@/components/fact-sections/fact-section";
-import { Rise } from "@/components/hero/editorial";
-import { COLUMN, EYEBROW, HEADING, SUBHEAD } from "@/components/hero/tokens";
+import { COLUMN, SUBHEAD } from "@/components/hero/tokens";
 import {
-  CONTACT_PAGE,
-  EMAIL,
   ENQUIRIES,
   type Enquiry,
   type EnquiryField,
@@ -17,19 +14,14 @@ import {
   MAP_EMBED,
   MAP_LINK,
   OFFICE,
-  PHONE,
-  PHONE_HREF,
 } from "@/lib/contact-v2";
-import { MailIcon, PhoneIcon } from "./glyphs";
 
 /*
- * /contact, content plan §11, on realevate.agency/contact's layout
- * (reference/realevate-contact/NOTES.md). From 1024px the first screen is
- * three columns: a slow vertical "Contact" marquee, the heading over the
- * office, phone and email, and the four enquiry options as tabs over an
- * underline-only form. The form has no backend: sending it opens a mailto to
- * info@moneybee.in with the filled fields. `?enquiry=pms` (or aif, support,
- * general) preselects a tab, so product pages can link here.
+ * /contact below its hero, content plan §11: the four enquiry options as tabs
+ * over an underline-only form, then the office on a map. The form has no
+ * backend: sending it opens a mailto to info@moneybee.in with the filled
+ * fields. `?enquiry=pms` (or aif, support, general) preselects a tab, so
+ * product pages can link here.
  */
 
 const FOCUS = "focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-current";
@@ -42,157 +34,25 @@ function useShown<T extends Element>(amount = 0.45) {
   return { ref, shown };
 }
 
-/**
- * The first screen. Below 1024px the columns stack: the marquee as one
- * horizontal line, then the details, then the tabs and form.
- */
-export function ContactScreen() {
+/** The plan's four enquiry options as tabs over one form, the section under the contact hero (lib/page-heroes.ts carries the address, phone and email). */
+export function EnquirySection() {
   return (
-    <section aria-labelledby="contact-heading" className="relative bg-white pt-[112px] text-black lg:grid lg:pt-0 lg:min-h-[max(100svh,880px)] lg:grid-cols-[minmax(220px,.62fr)_minmax(0,1fr)_minmax(0,1.15fr)] lg:items-end">
-      <Marquee />
-      <ContactDetails />
-      <div id="enquiry" className="scroll-mt-[96px] px-6 pt-[64px] pb-[96px] md:px-[120px] lg:pt-[168px] lg:pr-[max(64px,calc((100vw_-_1512px)/2_+_120px))] lg:pl-[24px] lg:pb-[88px]">
-        <Suspense fallback={<EnquiryTabs initial={ENQUIRIES[0].id} />}>
-          <EnquiryFromParams />
-        </Suspense>
+    <section id="enquiry" aria-labelledby="enquiry-heading" className="scroll-mt-[96px] bg-white text-black">
+      <div className={`${COLUMN} grid grid-cols-1 gap-10 py-[120px] md:grid-cols-12 md:gap-x-6 max-md:py-[80px]`}>
+        <div className="md:col-span-4">
+          <BracketLabel>Get Started</BracketLabel>
+          <h2 id="enquiry-heading" className={`mt-[18px] ${SUBHEAD}`}>
+            Enquiry Options
+          </h2>
+        </div>
+        <div className="md:col-span-7 md:col-start-6">
+          <Suspense fallback={<EnquiryTabs initial={ENQUIRIES[0].id} />}>
+            <EnquiryFromParams />
+          </Suspense>
+        </div>
       </div>
     </section>
   );
-}
-
-/**
- * The word "Contact" in orange outline, repeated along a track that moves at
- * about 110px/s (Realevate measured 111px/s). The track holds two identical
- * halves and moves by one half, so the loop has no seam. Vertical from
- * 1024px, reading bottom to top; one horizontal line below that.
- */
-function Marquee() {
-  const words = Array.from({ length: 3 }, (_, index) => (
-    <span key={index} className="contact-marquee-word">
-      Contact
-    </span>
-  ));
-  return (
-    <div aria-hidden="true" className="contact-marquee pointer-events-none relative overflow-hidden select-none lg:self-stretch">
-      <div className="contact-marquee-track">
-        <div className="contact-marquee-half">{words}</div>
-        <div className="contact-marquee-half">{words}</div>
-      </div>
-      <style>{MARQUEE_CSS}</style>
-    </div>
-  );
-}
-
-/*
- * Instrument Serif "Contact" measures about 3.3em plus a .35em gap, so one
- * half of three words measures 1864px at 220px type (17s at about 110px/s)
- * and 1017px at 120px type (9s).
- */
-const MARQUEE_CSS = `
-.contact-marquee{height:132px}
-.contact-marquee-track{display:flex;width:max-content;animation:contact-marquee-x 9s linear infinite}
-.contact-marquee-half{display:flex;flex:none}
-.contact-marquee-word{font-family:var(--font-instrument-serif),Georgia,serif;font-size:120px;line-height:1.1;padding-inline:.175em;color:transparent;-webkit-text-stroke:1.5px #F6A11A;white-space:nowrap;letter-spacing:-.02em}
-@keyframes contact-marquee-x{from{transform:translateX(0)}to{transform:translateX(-50%)}}
-@keyframes contact-marquee-y{from{transform:translateY(-50%)}to{transform:translateY(0)}}
-@media (min-width:1024px){
-.contact-marquee{height:auto;margin-top:128px}
-.contact-marquee-track{position:absolute;top:0;left:50%;margin-left:-.5em;font-size:220px;flex-direction:column;width:auto;animation:contact-marquee-y 17s linear infinite}
-.contact-marquee-half{display:block;writing-mode:vertical-rl;white-space:nowrap;transform:rotate(180deg)}
-.contact-marquee-word{display:inline-block;font-size:220px;line-height:1}
-}
-@media (prefers-reduced-motion:reduce){.contact-marquee-track{animation:none}}
-`;
-
-/** The heading over the office, phone and email. The email button copies the address and says so in a chip. */
-function ContactDetails() {
-  const { ref, shown } = useShown<HTMLDListElement>(0.5);
-  const [copied, setCopied] = useState(false);
-  useEffect(() => {
-    if (!copied) return;
-    const timer = setTimeout(() => setCopied(false), 1800);
-    return () => clearTimeout(timer);
-  }, [copied]);
-  const copy = async () => {
-    try {
-      await navigator.clipboard.writeText(EMAIL);
-      setCopied(true);
-    } catch {
-      window.location.href = `mailto:${EMAIL}`;
-    }
-  };
-  const label = `${EYEBROW} text-black/55`;
-  const value = "mt-[6px] block font-serif text-[clamp(1.35rem,1.1rem+.6vw,1.7rem)] leading-[1.2]";
-  return (
-    <div className="px-6 pt-[40px] md:px-[120px] lg:px-[24px] lg:pt-[168px] lg:pb-[88px] xl:pl-[48px]">
-      <Rise>
-        <h1 id="contact-heading" className={`${HEADING} max-w-[440px] text-balance`}>
-          {CONTACT_PAGE.heading}
-        </h1>
-      </Rise>
-      <Rise delay={0.08}>
-        <dl ref={ref} className="m-0 mt-[48px] grid gap-[32px] lg:mt-[72px]">
-          <div>
-            <dt className={label}>Office address</dt>
-            <dd className="m-0">
-              <address className={`${value} not-italic`}>
-                {OFFICE.name}
-                {OFFICE.lines.map((line) => (
-                  <span key={line} className="block text-[clamp(1.05rem,.95rem+.3vw,1.2rem)] leading-[1.45] text-black/70 font-sans">
-                    {line}
-                  </span>
-                ))}
-              </address>
-            </dd>
-          </div>
-          <div className="grid grid-cols-[44px_minmax(0,1fr)] items-center gap-x-[16px]">
-            <span className="row-span-2 block h-[44px] w-[44px]">
-              <DelayedIcon Icon={PhoneIcon} on={shown} delay={0} />
-            </span>
-            <dt className={label}>Phone</dt>
-            <dd className="m-0">
-              <a href={PHONE_HREF} className={`${value} w-fit text-black underline decoration-transparent decoration-2 underline-offset-[5px] transition-[text-decoration-color] duration-200 hover:decoration-[#F6A11A] ${FOCUS}`}>
-                {PHONE}
-              </a>
-            </dd>
-          </div>
-          <div className="grid grid-cols-[44px_minmax(0,1fr)] items-center gap-x-[16px]">
-            <span className="row-span-2 block h-[44px] w-[44px]">
-              <DelayedIcon Icon={MailIcon} on={shown} delay={350} />
-            </span>
-            <dt className={label}>Email</dt>
-            <dd className="relative m-0 flex flex-wrap items-center gap-x-[12px]">
-              <button
-                type="button"
-                onClick={copy}
-                aria-label={`Copy ${EMAIL}`}
-                className={`${value} cursor-pointer border-0 bg-transparent p-0 text-left text-black underline decoration-transparent decoration-2 underline-offset-[5px] transition-[text-decoration-color] duration-200 hover:decoration-[#F6A11A] ${FOCUS}`}
-              >
-                {EMAIL}
-              </button>
-              <span
-                role="status"
-                className="mt-[6px] rounded-[3px] bg-black px-[8px] py-[3px] text-[12px] leading-[1.4] text-white transition-opacity duration-200 motion-reduce:transition-none"
-                style={{ opacity: copied ? 1 : 0 }}
-              >
-                {copied ? "Copied" : ""}
-              </span>
-            </dd>
-          </div>
-        </dl>
-      </Rise>
-    </div>
-  );
-}
-
-function DelayedIcon({ Icon, on, delay }: { Icon: typeof PhoneIcon; on: boolean; delay: number }) {
-  const [ready, setReady] = useState(false);
-  useEffect(() => {
-    if (!on) return;
-    const timer = setTimeout(() => setReady(true), delay);
-    return () => clearTimeout(timer);
-  }, [on, delay]);
-  return <Icon on={ready} />;
 }
 
 /** The office address on black beside the map; the map drops its colour to sit in the band. */
@@ -267,8 +127,9 @@ function EnquiryTabs({ initial }: { initial: Enquiry["id"] }) {
     tabs.current[next]?.focus();
   };
   return (
-    <div className="lg:max-w-[540px]">
-      <div role="tablist" aria-label="Enquiry options" onKeyDown={onKeyDown} className="grid grid-cols-2 sm:grid-cols-4">
+    <div className="@container lg:max-w-[540px]">
+      {/* Two by two until the column fits all four labels at their own widths (about 420px), then one row on a shared rule. */}
+      <div role="tablist" aria-label="Enquiry options" onKeyDown={onKeyDown} className="grid grid-cols-2 @min-[27rem]:flex @min-[27rem]:justify-between @min-[27rem]:gap-x-5 @min-[27rem]:border-b @min-[27rem]:border-solid @min-[27rem]:border-black/15">
         {ENQUIRIES.map((enquiry, index) => {
           const selected = enquiry.id === active.id;
           return (
@@ -284,7 +145,7 @@ function EnquiryTabs({ initial }: { initial: Enquiry["id"] }) {
               aria-controls={`${base}-panel`}
               tabIndex={selected ? 0 : -1}
               onClick={() => setActiveId(enquiry.id)}
-              className={`relative min-h-[48px] cursor-pointer border-0 border-b border-solid border-b-black/15 bg-transparent px-[4px] pb-[14px] pt-[10px] text-[15px] leading-[1.25] font-medium sm:whitespace-nowrap hover:text-black ${selected ? "text-black" : "text-black/55"} focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-black`}
+              className={`relative min-h-[48px] cursor-pointer border-0 border-b border-solid border-b-black/15 bg-transparent px-[4px] pb-[14px] pt-[10px] text-[14px] leading-[1.25] font-medium @min-[27rem]:flex-none @min-[27rem]:border-b-0 @min-[27rem]:px-0 @min-[27rem]:whitespace-nowrap hover:text-black ${selected ? "text-black" : "text-black/55"} focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-black`}
               style={{ transition: `color .25s ${UI_EASE}` }}
             >
               {enquiry.name}

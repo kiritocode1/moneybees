@@ -1,8 +1,11 @@
 import type { Metadata } from "next";
-import { AifHero, ApproachSection, CategoryThreeSection, KeyTermsSection, StructureSection } from "@/components/aif-v2/aif-sections";
+import { ApproachWheelSection } from "@/components/aif-v3/approach-wheel";
+import { KeyTermsSection } from "@/components/aif-v3/key-terms-section";
+import { PoolingSection } from "@/components/aif-v3/pooling-section";
 import SiteFooter from "@/components/footer/site-footer";
-import { LetsTalkSection } from "@/components/home/home-sections";
+import ProductHero from "@/components/pms-v3/product-hero";
 import SiteNavigation from "@/components/ui/site-navigation";
+import { AIF_HERO } from "@/lib/pms-v3-hero";
 
 export const metadata: Metadata = {
   title: "Flyingbee: Category III AIF for small-cap equity",
@@ -14,27 +17,27 @@ export const metadata: Metadata = {
 };
 
 /**
- * /aif, built to the Content & Visual Plan §4: the Flyingbee heading and fund
- * graphic, why a Category III AIF, the fund structure, the investment approach
- * as a process, and the key terms. Copy lives in lib/aif-v2.ts.
+ * /aif, built to the Content & Visual Plan §4 and approved in
+ * .plannotator/aif-v3/plan.md: the product hero shared with /pms, why a
+ * Category III AIF as a pinned pooling scene, the investment approach as a
+ * pinned wedge wheel, and the key terms as line cards. Copy lives in
+ * lib/aif-v2.ts.
  */
 export default function AifPage() {
   return (
     <SiteNavigation>
       <main id="top" className="option-one bg-white text-black">
-        <AifHero />
-        <CategoryThreeSection />
-        <StructureSection />
-        <ApproachSection />
+        <ProductHero data={AIF_HERO} />
+        <PoolingSection />
+        <ApproachWheelSection />
         <KeyTermsSection />
-        <LetsTalkSection />
       </main>
       <SiteFooter
         explore={[
           ["About Moneybee", "/about"],
           ["PMS", "/pms"],
           ["Our approach", "/our-approach"],
-          ["Fund structure", "#structure"],
+          ["Investment approach", "#approach"],
           ["Key terms", "#key-terms"],
           ["Investor Centre", "/investor-centre"],
         ]}

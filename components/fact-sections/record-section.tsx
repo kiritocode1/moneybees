@@ -5,7 +5,7 @@ import { useRef } from "react";
 import { BODY, COLUMN, DashedRule, EYEBROW, Rise, SUBHEAD } from "@/components/hero/editorial";
 import { HEADINGS, RECORD_LEAD, WEALTH } from "@/lib/insights";
 import { useReducedMotion } from "@/lib/use-reduced-motion";
-import Link from "next/link";
+import Link from "@/components/transition/transition-link";
 import LitRows from "@/components/motion/lit-rows";
 import { PMS_NAMES, PMS_ROWS } from "@/lib/performance";
 import { FRONT_FROM, FRONT_TO, onCircle, path, type Point } from "@/components/iso/geometry";

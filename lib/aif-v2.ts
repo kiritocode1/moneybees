@@ -18,7 +18,6 @@ export const FLYINGBEE = {
   intro:
     "Flyingbee Investment Fund is a Category III AIF managed by Moneybee. The fund focuses on opportunities in high-growth listed and pre-IPO/unlisted companies.",
   /** The plan's "Explore Flyingbee / Get Started" button, split into its two actions. */
-  explore: { label: "Explore Flyingbee", href: "#structure" },
   start: { label: "Get Started", href: "/contact?enquiry=aif" },
 } as const;
 
@@ -28,14 +27,11 @@ export const CATEGORY_III = {
   text: "An AIF is a privately pooled investment vehicle. Unlike PMS, where investors directly hold securities in their own demat accounts, AIF investors receive units of the fund.",
 } as const;
 
-/** Investors → Flyingbee Investment Fund → Moneybee Investment Manager, and the four parties around the fund. */
+/** Investors → Flyingbee Investment Fund → Moneybee Investment Manager, and the four parties around the fund. Not on /aif (removed 2026-09-30); /preview/motion still draws it. */
 export const STRUCTURE = {
   heading: "Flyingbee Structure",
   chain: ["Investors", "Flyingbee Investment Fund", "Moneybee Investment Manager"],
   parties: ["Trustee", "Custodian and Fund Accountant", "Registrar and Transfer Agent", "Brokers"],
-  /** Card lines: the Category III sentence and the introduction, as the /preview/motion build approved them. */
-  investors: "AIF investors receive units of the fund.",
-  fund: "A Category III AIF managed by Moneybee.",
 } as const;
 
 /** The plan's seven points, verbatim, as the order the process runs in. */
@@ -56,14 +52,6 @@ export const KEY_TERMS = [
   { label: "Investment in", value: "Listed and pre-IPO/unlisted opportunities", glyph: "universe" },
   { label: "Benchmark", value: "S&P BSE 500 TRI", glyph: "benchmark" },
   { label: "Exit load", value: "No exit load, subject to approved fund documents", glyph: "exit" },
-] as const;
-
-/** The page's parts, for the hero's index. */
-export const AIF_PARTS = [
-  ["Why Category III AIF?", "#category-iii"],
-  ["Flyingbee structure", "#structure"],
-  ["Investment approach", "#approach"],
-  ["Key terms", "#key-terms"],
 ] as const;
 
 export const AIF_LOREM = { long: LOREM, short: LOREM_SHORT } as const;

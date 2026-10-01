@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import SiteFooter from "@/components/footer/site-footer";
-import { LetsTalkSection } from "@/components/home/home-sections";
-import { AifPerformanceSection, MethodologySection, PerformanceHero, PmsPerformanceSection, WealthSection } from "@/components/performance/performance-sections";
+import { AifPerformanceSection, MethodologySection, PmsPerformanceSection } from "@/components/performance/performance-sections";
+import { WealthDiscs } from "@/components/performance-v3/wealth-discs";
+import ProductHero from "@/components/pms-v3/product-hero";
 import SiteNavigation from "@/components/ui/site-navigation";
+import { PERFORMANCE_HERO } from "@/lib/page-heroes";
 
 export const metadata: Metadata = {
   title: "Performance: Moneybee PMS and Flyingbee returns",
@@ -22,12 +24,11 @@ export default function PerformancePage() {
   return (
     <SiteNavigation>
       <main id="top" className="option-one bg-white text-black">
-        <PerformanceHero />
+        <ProductHero data={PERFORMANCE_HERO} />
         <PmsPerformanceSection />
-        <WealthSection />
+        <WealthDiscs />
         <AifPerformanceSection />
         <MethodologySection />
-        <LetsTalkSection />
       </main>
       <SiteFooter
         explore={[

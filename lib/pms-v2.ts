@@ -1,21 +1,13 @@
 /**
- * Copy for /pms, from the Content & Visual Plan §3 "PMS Page". Headings, the
- * introduction and every list are the plan's wording. Body copy marked LOREM
+ * Copy for /pms, from the Content & Visual Plan §3 "PMS Page": the lists and
+ * performance labels the sections read. The hero's copy is in
+ * lib/pms-v3-hero.ts. Body copy marked LOREM
  * is placeholder until the client supplies it. Performance figures are read
  * from lib/insights.ts, not typed here.
  */
 
 const LOREM = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.";
 const LOREM_SHORT = "Lorem ipsum dolor sit amet, consectetur adipiscing elit.";
-
-export const PMS_PAGE = {
-  heading: "Portfolio Management Services",
-  intro:
-    "Moneybee PMS is focused on long-term investment in Indian equities, with a strong focus on small and mid-cap companies. The approach is research-driven, sector-agnostic and based on understanding businesses, management quality, valuations and risk.",
-  /** The plan's "Explore PMS / Get Started" button, split into its two actions. */
-  explore: { label: "Explore PMS", href: "/pms-vs-aif" },
-  start: { label: "Get Started", href: "/contact?enquiry=pms" },
-} as const;
 
 /** "Why Moneybee PMS?", verbatim. `glyph` picks each point's drawing. */
 export const WHY_PMS = [
@@ -42,18 +34,6 @@ export const PHILOSOPHY_POINTS = [
   "Focus on consistent performance while protecting downside",
 ] as const;
 
-/**
- * The funnel's stages. Names are the plan's stock selection steps (§6); the
- * last stage is the plan's portfolio size (§3). No counts: the deck gives none.
- */
-export const FUNNEL_STAGES = [
-  { name: "Screen", text: LOREM_SHORT },
-  { name: "Shortlist", text: LOREM_SHORT },
-  { name: "Analyse", text: LOREM_SHORT },
-  { name: "Decision Making", text: LOREM_SHORT },
-  { name: "15 to 20 high-conviction stocks", text: LOREM_SHORT },
-] as const;
-
 /** "Portfolio Approach", verbatim. */
 export const PORTFOLIO_APPROACH = [
   "Concentrated portfolio of approximately 15 to 20 high-conviction stocks.",
@@ -63,29 +43,11 @@ export const PORTFOLIO_APPROACH = [
   "Disciplined approach to rebalancing and exits.",
 ] as const;
 
-/** The controls the risk drawing marks, each tied to a line of the plan's §3. */
-export const RISK_CONTROLS = [
-  { name: "Margin of safety", text: LOREM_SHORT },
-  { name: "Sector cap of 30%", text: LOREM_SHORT },
-  { name: "Quarterly review", text: LOREM_SHORT },
-  { name: "Exit when the thesis changes", text: LOREM_SHORT },
-] as const;
-
 export const PERFORMANCE = {
   heading: "PMS Performance",
   asOf: "As of 31 July 2026",
   pms: "Moneybee PMS",
   benchmark: "S&P BSE 500 TRI",
 } as const;
-
-/** The page's parts, for the hero's index. */
-export const PMS_PARTS = [
-  ["Why Moneybee PMS?", "#why"],
-  ["Investment philosophy", "#philosophy"],
-  ["Stock selection", "#selection"],
-  ["Portfolio approach", "#portfolio"],
-  ["Risk management", "#risk"],
-  ["PMS performance", "#performance"],
-] as const;
 
 export const PMS_LOREM = { long: LOREM, short: LOREM_SHORT } as const;

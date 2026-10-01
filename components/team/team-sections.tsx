@@ -5,9 +5,8 @@ import { useId } from "react";
 import { BOX, Draw, Hatch, MOVE, OUT, RM, tr } from "@/components/drawing/plate";
 import { hexPoints, ORANGE, useShown } from "@/components/about-v2/shared";
 import { BracketLabel } from "@/components/fact-sections/fact-section";
-import { Rise } from "@/components/hero/editorial";
 import { BODY, COLUMN, EYEBROW, HEADING, SUBHEAD } from "@/components/hero/tokens";
-import { FOUNDER_PERSON, KEY_MEMBERS, TEAM } from "@/lib/team";
+import { FOUNDER_PERSON, KEY_MEMBERS } from "@/lib/team";
 
 /*
  * /team, content plan §9: the heading beside a chart of the three people that
@@ -18,75 +17,6 @@ import { FOUNDER_PERSON, KEY_MEMBERS, TEAM } from "@/lib/team";
 
 const MONO = "var(--font-geist-mono), ui-monospace, monospace";
 type Timing = (ms: number, delay?: number) => string;
-
-/** Founder above, the two key members below, joined by lines drawn in turn. Each cell links to its person. */
-function TeamChart() {
-  const { ref, shown, t } = useShown<SVGSVGElement>(0.35);
-  const R = 58;
-  const nodes = [
-    { person: FOUNDER_PERSON, x: 180, y: 70 },
-    { person: KEY_MEMBERS[0], x: 88, y: 252 },
-    { person: KEY_MEMBERS[1], x: 272, y: 252 },
-  ];
-  return (
-    <svg ref={ref} viewBox="0 0 360 340" className="block h-auto w-full max-w-[460px]" role="group" aria-label="Team">
-      <defs>
-        {nodes.map((node) => (
-          <clipPath key={node.person.id} id={`team-cell-${node.person.id}`}>
-            <polygon points={hexPoints(node.x, node.y, R - 4)} />
-          </clipPath>
-        ))}
-      </defs>
-      {nodes.slice(1).map((node, index) => (
-        <path
-          key={node.person.id}
-          d={`M180 158V174H${node.x}V${node.y - R}`}
-          fill="none"
-          stroke={ORANGE}
-          strokeWidth="2"
-          strokeDasharray="220"
-          strokeDashoffset={shown ? 0 : 220}
-          style={{ transition: `stroke-dashoffset ${t(800, 300 + index * 200)}` }}
-        />
-      ))}
-      {nodes.map((node, index) => (
-        <a key={node.person.id} href={`#${node.person.id}`} aria-label={`${node.person.name}, ${node.person.designation}`} className="group cursor-pointer outline-none">
-          <g style={{ opacity: shown ? 1 : 0, transition: `opacity ${t(600, index * 250)}` }}>
-            <image href={node.person.photo} x={node.x - R} y={node.y - R} width={R * 2} height={R * 2} preserveAspectRatio="xMidYMin slice" clipPath={`url(#team-cell-${node.person.id})`} />
-            <polygon points={hexPoints(node.x, node.y, R - 1)} fill="none" stroke="currentColor" strokeWidth="3" strokeLinejoin="round" className="text-black/15 transition-colors duration-300 group-hover:text-[#F6A11A] group-focus-visible:text-black" />
-            <text x={node.x} y={node.y + R + 18} textAnchor="middle" fontSize="11" fill="#000" fontFamily={MONO} letterSpacing=".04em">
-              {node.person.name.toUpperCase()}
-            </text>
-          </g>
-        </a>
-      ))}
-    </svg>
-  );
-}
-
-export function TeamHero() {
-  return (
-    <section aria-labelledby="team-heading" className="bg-white text-black">
-      <div className={`${COLUMN} grid grid-cols-1 items-center gap-14 pt-[150px] pb-[110px] md:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] md:gap-20 md:pt-[220px] max-md:pb-[72px]`}>
-        <div>
-          <Rise>
-            <BracketLabel>Our team</BracketLabel>
-          </Rise>
-          <Rise delay={0.05}>
-            <h1 id="team-heading" className={`${HEADING} mt-[22px] text-balance text-[clamp(2.75rem,1.2rem+4.4vw,5rem)]`}>
-              {TEAM.heading}
-            </h1>
-          </Rise>
-        </div>
-        <Rise delay={0.2}>
-          <div className="flex justify-center md:justify-end">
-            <TeamChart />
-          </div>
-        </Rise>
-      </div>
-    </section>
-  );
-}
 
 function Qualifications({ items, dark }: { items: string; dark?: boolean }) {
   return (

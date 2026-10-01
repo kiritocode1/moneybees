@@ -1,0 +1,58 @@
+{
+ "mask_rects": [
+  [
+   112,
+   122,
+   300,
+   172,
+   "title"
+  ],
+  [
+   552,
+   326,
+   646,
+   394,
+   "figure+shadow"
+  ],
+  [
+   92,
+   236,
+   286,
+   290,
+   "step 1 text"
+  ],
+  [
+   92,
+   313,
+   286,
+   367,
+   "step 2 text"
+  ],
+  [
+   92,
+   390,
+   286,
+   444,
+   "step 3 text"
+  ],
+  [
+   92,
+   467,
+   286,
+   521,
+   "step 4 text"
+  ]
+ ],
+ "masked_fraction_pct": 10.650992438563327,
+ "mae_unmasked_0_255": 0.5961584022038567,
+ "pct_pixels_maxchannel_diff_gt24_unmasked": 0.878099173553719,
+ "mae_all_0_255": 2.227310151819471,
+ "pct_gt24_all": 2.8575067934782608,
+ "red_mask_def": "R-(G+B)/2 > 40 (hard); soft = sum(min)/sum(max) of red coverage clip((239-G)/198) where R-G>=25",
+ "iou_red_hard": 0.7839206583667441,
+ "iou_red_soft": 0.6807768739993402,
+ "tol1px_recall": 0.9977733795150915,
+ "tol1px_precision": 0.9678150498640072,
+ "tol1px_F": 0.9825659111693239,
+ "iou_red_hard_1px_dilated": 0.8892788768347161
+}

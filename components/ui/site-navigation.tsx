@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import Link from "next/link";
+import Link from "@/components/transition/transition-link";
 import OverlayMenu, { type MenuLink } from "./overlay-menu";
 
 /** The current site's "Registration/ Log In" page. */

@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import SiteFooter from "@/components/footer/site-footer";
-import { LetsTalkSection } from "@/components/home/home-sections";
-import { DocumentsSection, InvestorHero, LoginsSection } from "@/components/investor-centre/investor-sections";
+import { LoginsSection } from "@/components/investor-centre/investor-sections";
+import { DocumentCards } from "@/components/investor-v3/document-cards";
+import ProductHero from "@/components/pms-v3/product-hero";
 import SiteNavigation from "@/components/ui/site-navigation";
+import { INVESTOR_HERO } from "@/lib/page-heroes";
 
 export const metadata: Metadata = {
   title: "Investor Centre: logins, disclosures and grievances",
@@ -22,10 +24,9 @@ export default function InvestorCentrePage() {
   return (
     <SiteNavigation>
       <main id="top" className="option-one bg-white text-black">
-        <InvestorHero />
+        <ProductHero data={INVESTOR_HERO} />
         <LoginsSection />
-        <DocumentsSection />
-        <LetsTalkSection />
+        <DocumentCards />
       </main>
       <SiteFooter
         explore={[

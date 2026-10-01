@@ -12,6 +12,8 @@ const rethinkSans = Rethink_Sans({
 
 const instrumentSerif = Instrument_Serif({
   weight: "400",
+  // The italic sets one word of a heading, as study 03's columns do (careers culture).
+  style: ["normal", "italic"],
   subsets: ["latin"],
   variable: "--font-instrument-serif",
   display: "swap",

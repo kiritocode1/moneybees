@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
-import { ContactScreen, OfficeSection } from "@/components/contact-v2/contact-sections";
+import { EnquirySection, OfficeSection } from "@/components/contact-v2/contact-sections";
 import SiteFooter from "@/components/footer/site-footer";
+import ProductHero from "@/components/pms-v3/product-hero";
 import SiteNavigation from "@/components/ui/site-navigation";
+import { CONTACT_HERO } from "@/lib/page-heroes";
 
 export const metadata: Metadata = {
   title: "Contact Moneybee: Lower Parel, Mumbai",
@@ -22,7 +24,8 @@ export default function ContactPage() {
   return (
     <SiteNavigation>
       <main id="top" className="option-one bg-white text-black">
-        <ContactScreen />
+        <ProductHero data={CONTACT_HERO} />
+        <EnquirySection />
         <OfficeSection />
       </main>
       <SiteFooter

@@ -1,10 +1,14 @@
 import type { Metadata } from "next";
 import SiteFooter from "@/components/footer/site-footer";
-import { LetsTalkSection } from "@/components/home/home-sections";
 import PerformanceChart from "@/components/pms-v2/performance-chart";
-import { PhilosophySection, PmsHero, PortfolioSection, RiskSection, WhySection } from "@/components/pms-v2/pms-sections";
-import SelectionFunnel from "@/components/pms-v2/selection-funnel";
+import { PhilosophySection } from "@/components/pms-v3/philosophy";
+import { PortfolioApproachSection } from "@/components/pms-v3/portfolio-stats";
+import ProductHero from "@/components/pms-v3/product-hero";
+import { RiskSection } from "@/components/pms-v3/risk-blocks";
+import { SelectionSection } from "@/components/pms-v3/selection-lines";
+import { WhySection } from "@/components/pms-v3/why-sticky";
 import SiteNavigation from "@/components/ui/site-navigation";
+import { PMS_HERO } from "@/lib/pms-v3-hero";
 
 export const metadata: Metadata = {
   title: "Moneybee PMS: small and mid-cap portfolio management",
@@ -16,23 +20,23 @@ export const metadata: Metadata = {
 };
 
 /**
- * /pms, built to the Content & Visual Plan §3: heading and introduction, why
- * Moneybee PMS, the investment philosophy, the stock-selection funnel, the
- * portfolio approach, risk management and PMS performance. Copy lives in
- * lib/pms-v2.ts; figures come from lib/insights.ts.
+ * /pms, built to the Content & Visual Plan §3 and approved in
+ * .plannotator/pms-v3/plan.md: the Tres Mares product hero, why Moneybee PMS
+ * as a sticky split, the philosophy, stock selection as converging lines,
+ * the portfolio approach as Titan Gate's stats band, risk management on
+ * stacked blocks, and the PMS performance chart.
  */
 export default function PmsPage() {
   return (
     <SiteNavigation>
       <main id="top" className="option-one bg-white text-black">
-        <PmsHero />
+        <ProductHero data={PMS_HERO} />
         <WhySection />
         <PhilosophySection />
-        <SelectionFunnel />
-        <PortfolioSection />
+        <SelectionSection />
+        <PortfolioApproachSection />
         <RiskSection />
         <PerformanceChart />
-        <LetsTalkSection />
       </main>
       <SiteFooter
         explore={[

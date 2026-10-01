@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import Link from "@/components/transition/transition-link";
 import CornerBrackets from "@/components/hero/corner-brackets";
 import { BODY, BUTTON, COLUMN, DashedRule, EYEBROW, HEADING, Rise, SUBHEAD } from "@/components/hero/editorial";
 import { AIF_PRODUCT, PERIOD_RETURNS, PMS_PRODUCT, PMS_VS_AIF } from "@/lib/insights";

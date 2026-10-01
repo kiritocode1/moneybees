@@ -1,27 +1,13 @@
 "use client";
 
 import { useInView } from "motion/react";
-import { useEffect, useRef, useState } from "react";
+import { useRef } from "react";
 import { BOX, Draw, MOVE, RM, tr } from "@/components/drawing/plate";
 import { BracketLabel } from "@/components/fact-sections/fact-section";
-import { Rise } from "@/components/hero/editorial";
-import { BODY, COLUMN, EYEBROW, HEADING, SUBHEAD } from "@/components/hero/tokens";
-import {
-  AIF_NAMES,
-  AIF_ROWS,
-  formatReturn,
-  GROWTH,
-  METHOD,
-  PERFORMANCE,
-  PERFORMANCE_LOREM,
-  PERFORMANCE_PARTS,
-  PMS_NAMES,
-  PMS_ROWS,
-  type ReturnRow,
-} from "@/lib/performance";
+import { BODY, COLUMN, EYEBROW, SUBHEAD } from "@/components/hero/tokens";
+import { AIF_NAMES, AIF_ROWS, formatReturn, METHOD, PERFORMANCE, PERFORMANCE_LOREM, PMS_NAMES, PMS_ROWS, type ReturnRow } from "@/lib/performance";
 import LitRows from "@/components/motion/lit-rows";
-import { FigurePanel, PageIndex, NoScriptReveal } from "@/components/pms-v2/shared";
-import { useReducedMotion } from "@/lib/use-reduced-motion";
+import { FigurePanel } from "@/components/pms-v2/shared";
 
 /*
  * /performance, content plan §7 and the section plan's §7: each fund's periods
@@ -32,7 +18,6 @@ import { useReducedMotion } from "@/lib/use-reduced-motion";
  */
 
 const ORANGE = "#F6A11A";
-const EASE = "cubic-bezier(.22,1,.36,1)";
 
 function useShown<T extends Element>(amount = 0.35) {
   const ref = useRef<T>(null);
@@ -47,37 +32,6 @@ function AsOf({ dark = false }: { dark?: boolean }) {
       <i className="h-[8px] w-[8px] bg-[#F6A11A]" aria-hidden="true" />
       {PERFORMANCE.asOf}
     </span>
-  );
-}
-
-export function PerformanceHero() {
-  return (
-    <section aria-labelledby="performance-heading" className="bg-white text-black">
-      <NoScriptReveal />
-      <div className={`${COLUMN} grid grid-cols-1 items-end gap-14 pt-[150px] pb-[110px] md:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] md:gap-20 md:pt-[220px] max-md:pb-[72px]`}>
-        <div>
-          <Rise>
-            <BracketLabel>Performance</BracketLabel>
-          </Rise>
-          <Rise delay={0.05}>
-            <h1 id="performance-heading" className={`${HEADING} mt-[22px] text-[clamp(2.75rem,1.2rem+4.4vw,5rem)]`}>
-              {PERFORMANCE.heading}
-            </h1>
-          </Rise>
-          <Rise delay={0.1}>
-            <div className="mt-[22px]">
-              <AsOf />
-            </div>
-          </Rise>
-          <Rise delay={0.14}>
-            <p className={`mt-8 max-w-[520px] text-black/70 ${BODY}`}>{PERFORMANCE.lead}</p>
-          </Rise>
-        </div>
-        <Rise delay={0.2}>
-          <PageIndex parts={PERFORMANCE_PARTS} />
-        </Rise>
-      </div>
-    </section>
   );
 }
 
@@ -155,96 +109,6 @@ export function PmsPerformanceSection() {
           <AsOf />
         </div>
         <Returns rows={PMS_ROWS} names={PMS_NAMES} />
-      </div>
-    </section>
-  );
-}
-
-/** Counts up to `target` once `on`, with two decimals; jumps straight there under reduced motion. */
-function useCount(target: number, on: boolean, duration = 1600) {
-  const reduce = useReducedMotion();
-  const [value, setValue] = useState(0);
-  useEffect(() => {
-    if (!on || reduce) return;
-    let frame = 0;
-    const start = performance.now();
-    const tick = (now: number) => {
-      const t = Math.min(1, (now - start) / duration);
-      setValue(target * (1 - (1 - t) ** 3));
-      if (t < 1) frame = requestAnimationFrame(tick);
-    };
-    frame = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(frame);
-  }, [on, target, reduce, duration]);
-  return on && reduce ? target : value;
-}
-
-/** One square per Rs. 1 Mn, filled in order; the last square fills only as far as its fraction. */
-function UnitGrid({ total, fill, on, columns = 10 }: { total: number; fill: string; on: boolean; columns?: number }) {
-  const cells = Math.ceil(total);
-  return (
-    <div className="grid gap-[4px]" style={{ gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))` }} aria-hidden="true">
-      {Array.from({ length: cells }, (_, index) => {
-        const part = Math.min(1, total - index);
-        return (
-          <span key={index} className="relative block aspect-square border border-white/20">
-            <span
-              className="absolute inset-y-0 left-0 block motion-reduce:!transition-none"
-              style={{
-                width: `${part * 100}%`,
-                backgroundColor: index === 0 ? "#fff" : fill,
-                opacity: on ? 1 : 0,
-                transform: `scale(${on ? 1 : 0.9})`,
-                transformOrigin: "0 100%",
-                transition: `opacity 300ms ${EASE} ${index * 30}ms, transform 300ms ${EASE} ${index * 30}ms`,
-              }}
-            />
-          </span>
-        );
-      })}
-    </div>
-  );
-}
-
-/** Rs. 1 Mn at inception and what it became in each, drawn as that many unit squares. */
-export function WealthSection() {
-  const { ref, shown } = useShown<HTMLDivElement>(0.3);
-  const ours = useCount(GROWTH.ours, shown);
-  const benchmark = useCount(GROWTH.benchmark, shown);
-  const sides = [
-    { name: PMS_NAMES.ours, value: ours, total: GROWTH.ours, fill: ORANGE, tone: "text-[#F6A11A]" },
-    { name: PMS_NAMES.benchmark, value: benchmark, total: GROWTH.benchmark, fill: "rgba(255,255,255,.55)", tone: "text-white" },
-  ];
-  return (
-    <section id="wealth" aria-labelledby="wealth-heading" className="scroll-mt-[96px] bg-black text-white">
-      <div className={`${COLUMN} py-[120px] max-md:py-[80px]`}>
-        <SectionHead id="wealth" label="Wealth growth" heading="Wealth Growth" dark />
-        <div className="mt-[40px] flex flex-wrap items-center gap-x-[28px] gap-y-[14px]">
-          <AsOf dark />
-          <span className={`${EYEBROW} flex items-center gap-[10px] text-[11px] text-white/70`}>
-            <i className="h-[12px] w-[12px] border border-white/40 bg-white" aria-hidden="true" />
-            Rs. {GROWTH.start} Mn invested {GROWTH.from}
-          </span>
-        </div>
-        <div ref={ref} className="mt-[48px] grid grid-cols-1 gap-[56px] md:grid-cols-2 md:gap-[72px]">
-          {sides.map((side) => (
-            <div key={side.name} className="flex flex-col">
-              <span className={`${EYEBROW} text-white/60`}>{side.name}</span>
-              <p className={`mt-[10px] text-[clamp(2.6rem,1.6rem+3vw,4.6rem)] leading-none font-light tracking-[-.05em] tabular-nums ${side.tone}`}>
-                <span className="sr-only">
-                  Rs. {GROWTH.start} Mn grew to Rs. {side.total} Mn by {GROWTH.to}
-                </span>
-                <span aria-hidden="true">Rs. {side.value.toFixed(2)} Mn</span>
-              </p>
-              <div className="mt-[28px]">
-                <UnitGrid total={side.total} fill={side.fill} on={shown} />
-              </div>
-              <span className={`${EYEBROW} mt-[16px] text-white/60`}>
-                {GROWTH.from} to {GROWTH.to}
-              </span>
-            </div>
-          ))}
-        </div>
       </div>
     </section>
   );
