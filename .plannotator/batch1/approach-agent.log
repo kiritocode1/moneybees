@@ -1,0 +1,26 @@
+Built the isolated preview at [our-approach](https://moneybees.localhost:1355/preview/our-approach). The published page is unchanged.
+
+Created:
+- `components/approach-v3/approach-hero.tsx`
+- `components/approach-v3/selection-process.tsx`
+- `components/approach-v3/selection-lists.tsx`
+- `components/approach-v3/risk-management.tsx`
+- `components/approach-v3/approach.css`
+- `components/approach-v3/reference-geometry.test.mjs`
+- `app/preview/our-approach/page.tsx`
+
+Visuals follow the inspected sources:
+- Study 08's linear growing discs, with Tres Mares' off-axis title.
+- Study 09's process chain and Monitor-to-Analyse loop.
+- Study 09's equal list columns with Titan Gate's staggered entrances.
+- Study 09's concentric risk half-rings and orange Portfolio core.
+
+Screenshots are in [`.plannotator/batch1/approach/`](.plannotator/batch1/approach/), named `desktop-*.png` and `mobile-*.png`.
+
+Verification:
+- ESLint clean.
+- Three pinned-geometry tests pass.
+- Earlier desktop, mobile and reduced-motion checks completed. Mobile scroll width was exactly 390px.
+- Browser session closed.
+
+Final verification is blocked. The shared server now returns HTTP 500, and typecheck fails because `/preview/aif` imports three missing components. I left those files and the server untouched. The latest render needs rechecking once that blocker clears.

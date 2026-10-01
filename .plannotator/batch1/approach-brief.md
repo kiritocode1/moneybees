@@ -1,0 +1,13 @@
+# Page brief: /our-approach, content plan §6
+
+Read `shared-rules.md` in this folder first.
+
+**Your files (create only these):** `components/approach-v3/*`, `app/preview/our-approach/page.tsx`. Screenshots go in `/Users/blank/Desktop/CREATE/moneybees/.plannotator/batch1/approach/`. Agent Browser session name: `pi-approach`. Do not edit any existing file. Other agents own `components/aif-v3/`, `components/compare-v3/` and their preview routes.
+
+**Preview route:** `app/preview/our-approach/page.tsx` with `SiteNavigation` and `SiteFooter` like `app/our-approach/page.tsx`. URL: https://moneybees.localhost:1355/preview/our-approach
+
+**Content** (data in `lib/approach.ts`: `APPROACH`, `PHILOSOPHY_STAGES`, `PROCESS_STEPS`, `LOOK_FOR`, `DONT_DO`, `RISKS`). The plan's visual note: "A six-step orange-and-black investment process, followed by What We Look For, What We Don't Do and Risk Management sections."
+1. **Header carrying the core philosophy.** Title "Our Investment Approach". The page opens on the plan's core philosophy "UNDISCOVERED → UNDER-RESEARCHED → UNDER-ESTIMATED" drawn as the growing circles of study 08 (`reference/visual-language/08/STUDY.md`, the linear variant `moneybee-linear.svg`: discs on one axis growing by a constant step, thin arrows through them, the last disc orange, optionally the clean silhouette figure with a telescope standing on it). The three words label the discs. This header replaces a separate "Core Philosophy" section, so do not repeat it below. Layout after Tres Mares' internal heroes (title placement off-axis, no button row, no index).
+2. **Stock Selection Process,** a black band (orange and black, as the plan asks): the six steps of `PROCESS_STEPS` as the process-sheet ring chain of study 09 (`reference/visual-language/09/moneybee.svg` already draws Screen, Shortlist, Analyse, Decision Making, Monitor, Exit with Monitor looping back to Analyse by a dotted arrow, Exit the one orange node), in white line on black. Scroll-driven: rings draw in order and each step's verbatim description appears as its ring lights (Titan Gate's large faded step numbers can carry 01–06). Below 768px, a vertical chain.
+3. **What We Look For / What We Don't Do,** the two lists verbatim as the list columns of study 09, after Titan Gate's staggered list lines (rows sliding in from alternate sides on scroll). Equal columns.
+4. **Risk Management:** the four `RISKS` as study 09's concentric half-rings around an orange core labelled "Portfolio", rings numbered 1–4 with hairline leaders to the risk names; rings draw outward on scroll; one short lorem line per risk.

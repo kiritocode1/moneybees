@@ -1,0 +1,65 @@
+(node:12201) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///Users/blank/Desktop/CREATE/moneybees/lib/contact-v2.ts is not specified and it doesn't parse as CommonJS.
+Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+To eliminate this warning, add "type": "module" to /Users/blank/Desktop/CREATE/moneybees/package.json.
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS Pinned off-canvas width retained
+PASS Pinned backdrop retained
+PASS Pinned expoOut retained
+PASS Pinned 800ms off-canvas timing retained
+PASS Pinned card scale and duration retained
+PASS Pinned card positional delay retained
+PASS pms: mailto recipient, encoded subject and body
+PASS pms: parameter selects its option
+PASS aif: mailto recipient, encoded subject and body
+PASS aif: parameter selects its option
+PASS support: mailto recipient, encoded subject and body
+PASS support: parameter selects its option
+PASS general: mailto recipient, encoded subject and body
+PASS general: parameter selects its option
+PASS Unknown parameter falls back
+PASS 1440: values survive tab switches
+PASS 1440: arrow wraps to General Enquiry
+PASS 1440: Home selects PMS
+PASS 1440: End selects General Enquiry
+PASS 1440: pms fields match data
+PASS 1440: aif fields match data
+PASS 1440: support fields match data
+PASS 1440: general fields match data
+PASS 1440: enquiry tab row count
+PASS 1440: incomplete form stays on page
+PASS 1440: email copy confirms success
+PASS 1440: contact has no horizontal overflow
+PASS 1440: two separate login cards
+PASS 1440: all group anchors exist
+PASS 1440: investor-charter-document opens correct details
+PASS 1440: investor-charter-document forward focus trap
+PASS 1440: investor-charter-document reverse focus trap
+PASS 1440: investor-charter-document returns focus and unlocks scrolling
+PASS 1440: disclosures-document opens correct details
+PASS 1440: disclosures-document forward focus trap
+PASS 1440: disclosures-document reverse focus trap
+PASS 1440: disclosures-document returns focus and unlocks scrolling
+PASS 1440: risk-disclosures opens correct details
+PASS 1440: risk-disclosures forward focus trap
+PASS 1440: risk-disclosures reverse focus trap
+PASS 1440: risk-disclosures returns focus and unlocks scrolling
+PASS 1440: policies opens correct details
+PASS 1440: policies forward focus trap
+PASS 1440: policies reverse focus trap
+PASS 1440: policies returns focus and unlocks scrolling
+PASS 1440: investor-complaints opens correct details
+PASS 1440: investor-complaints forward focus trap
+PASS 1440: investor-complaints reverse focus trap
+PASS 1440: investor-complaints returns focus and unlocks scrolling
+PASS 1440: grievance-redressal opens correct details
+PASS 1440: grievance-redressal forward focus trap
+PASS 1440: grievance-redressal reverse focus trap
+PASS 1440: grievance-redressal returns focus and unlocks scrolling
+PASS 1440: scores opens correct details
+PASS 1440: scores forward focus trap
+PASS 1440: scores reverse focus trap
+PASS 1440: scores returns focus and unlocks scrolling
+PASS 1440: odr opens correct details
+PASS 1440: odr forward focus trap
+PASS 1440: odr reverse focus trap
+PASS 1440: odr returns focus and unlocks scrolling

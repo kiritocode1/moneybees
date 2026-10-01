@@ -1,0 +1,13 @@
+# Page briefs: /team (content plan §9) and /careers (content plan §10)
+
+Read `shared-rules.md` in this folder first. Your files: `components/team-v3/*`, `components/careers-v3/*`, `app/preview/team/page.tsx`, `app/preview/careers/page.tsx` (each with `SiteNavigation`/`SiteFooter` like the current pages). Agent Browser session: `pi-people`. Screenshots to `.plannotator/batch1/people/`. URLs: https://moneybees.localhost:1355/preview/team and /preview/careers
+
+**/team.** Data `lib/team.ts` (`TEAM.heading` "People Behind Moneybee", `FOUNDER_PERSON`, `KEY_MEMBERS`): the plan's three people. Note /about already has the approved six-person "name list + one swapping portrait" section (`components/about-v3/people-section.tsx`); do not copy that pattern here. Visuals:
+1. Header: the study 02 "team" rings (`reference/visual-language/02/`: overlapping rings in offset rows, r and overlap measured) as three overlapping rings, one per person, each clipping that person's grayscale portrait; on load the rings slide into overlap; the founder's ring is the one orange-outlined ring. Title in Instrument Serif at display size.
+2. Each person once, as a full section: portrait (keep display width ≤ 300px: the headshots are 270×350, the founder's 868×824), name, designation, qualifications, the plan's biography; Titan Gate's large faded numbers 01–03 half cut by a dashed rule; alternate layout sides.
+**/careers.** Data `lib/careers.ts` (`CAREERS` heading and lead, `OPENINGS` placeholders, `LIFE`, `CULTURE`, `APPLY_STEPS`, `RESUME_HREF`, `applyHref`). Sections from the plan: Current Openings, Life at Moneybee, Our Work Culture, How to Apply; CTAs "View Open Positions" and "Send Your Resume". Visuals:
+1. Header after Tres Mares' "section index" hero: title right half, the plan's lead bottom-left, both CTAs, then the team photo `/people/moneybee-team.jpg` full-bleed with a slow parallax.
+2. Current Openings as Tres Mares table rows (role, team, location, type, an apply link), placeholders as they are.
+3. Life at Moneybee as Tres Mares' footer photo strip: photos drift sideways on their own, reverse with scroll direction, draggable (photos: `/people/moneybee-team.jpg`, `/people/moneybee-boardroom.jpg`, `/about/photos/research-desk.jpg`, `/about/photos/dealing-desk.jpg`), with the lorem text.
+4. Our Work Culture: the four placeholder points as the study 02 "building blocks" ring grid, one block per point lighting orange as it enters.
+5. How to Apply: the four steps on the study 07 dimetric block path (`reference/visual-language/07/`), a silhouette figure walking along it, numbered callouts 01–04 with elbow leaders.

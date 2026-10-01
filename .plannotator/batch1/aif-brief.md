@@ -1,0 +1,13 @@
+# Page brief: /aif (Flyingbee Investment Fund), content plan §4
+
+Read `shared-rules.md` in this folder first.
+
+**Your files (create only these):** `components/aif-v3/*`, `app/preview/aif/page.tsx`. Screenshots go in `/Users/blank/Desktop/CREATE/moneybees/.plannotator/batch1/aif/`. Agent Browser session name: `pi-aif`. Do not edit any existing file. Other agents own `components/compare-v3/`, `components/approach-v3/` and their preview routes.
+
+**Preview route:** `app/preview/aif/page.tsx` wraps sections in `SiteNavigation` and `SiteFooter` like `app/aif/page.tsx`, opening with the existing `ProductHero` (`components/pms-v3/product-hero.tsx`) and `AIF_HERO` (`lib/pms-v3-hero.ts`), unchanged. URL: https://moneybees.localhost:1355/preview/aif
+
+**Build these sections after the hero** (data in `lib/aif-v2.ts`: `CATEGORY_III`, `APPROACH_STEPS`, `KEY_TERMS`, `FLYINGBEE.start`):
+1. **Why Category III AIF?** Heading verbatim. The plan's explanation: "An AIF is a privately pooled investment vehicle. Unlike PMS, where investors directly hold securities in their own demat accounts, AIF investors receive units of the fund." Make the figure explain pooling, built from the Unit8 ring language (`reference/visual-language/02/`): investor rings flowing into one pooled fund ring that issues units, driven by scroll. If you contrast it with PMS (each investor's own ring holding securities directly), the PMS and AIF halves must be exactly equal in size and weight.
+2. **Investment Approach.** The seven points of `APPROACH_STEPS`, verbatim, as Tres Mares' accordion (`reference/tresmares/NOTES.md`, "dropdowns"/"dropdownssticky": opening a row builds its mark and brings the row to the centre). Give each row a small bespoke mark in the hexagon family (see `components/pms-v3/marks.tsx` and `hexPoints`) and one short lorem line. One row open at a time; keyboard accessible (button with aria-expanded, panel region).
+3. **Key Terms.** The five `KEY_TERMS` as the line cards of study 04 (`reference/visual-language/04/STUDY.md` and `moneybee.svg` are already drawn for exactly these five terms): line illustration with exactly one orange element per card, label and value from the data. On white, cards are `#F6F6F6` with black line art; or a black band with white line art, decide by looking. Include the plan's orange "Get Started" button (`FLYINGBEE.start`) once, at the end of this section. The plan also says terms, tax treatment, eligibility, fees and regulatory statements need compliance sign-off: keep that as a code comment, not visible text.
+Do not add the fund structure diagram: the owner removed it.

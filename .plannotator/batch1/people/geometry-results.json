@@ -1,0 +1,19 @@
+{
+  "application_path": {
+    "faces": 9,
+    "vertex_error_px": 0,
+    "source": "reference/visual-language/07/moneybee.svg"
+  },
+  "culture_grid": {
+    "rings": 12,
+    "max_centre_error_px": 0.01,
+    "radius_error_px": 0,
+    "source": "reference/visual-language/02/replica.svg"
+  },
+  "deliberate_changes": [
+    "Moneybee palette from brief",
+    "four culture selections",
+    "four application callouts",
+    "responsive callout layout"
+  ]
+}

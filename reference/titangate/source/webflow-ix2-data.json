@@ -1,0 +1,660 @@
+{
+ "events": {
+  "e": {
+   "id": "e",
+   "name": "",
+   "animationType": "custom",
+   "eventTypeId": "MOUSE_OVER",
+   "action": {
+    "id": "",
+    "actionTypeId": "GENERAL_START_ACTION",
+    "config": {
+     "delay": 0,
+     "easing": "",
+     "duration": 0,
+     "actionListId": "a",
+     "affectedElements": {},
+     "playInReverse": false,
+     "autoStopEventId": "e-2"
+    }
+   },
+   "mediaQueries": [
+    "main"
+   ],
+   "target": {
+    "selector": ".underline-btn",
+    "originalId": "253b4225-79e5-9400-3dab-b35025e488e1",
+    "appliesTo": "CLASS"
+   },
+   "targets": [
+    {
+     "selector": ".underline-btn",
+     "originalId": "253b4225-79e5-9400-3dab-b35025e488e1",
+     "appliesTo": "CLASS"
+    }
+   ],
+   "config": {
+    "loop": false,
+    "playInReverse": false,
+    "scrollOffsetValue": null,
+    "scrollOffsetUnit": null,
+    "delay": null,
+    "direction": null,
+    "effectIn": null
+   },
+   "createdOn": 1740192365226
+  },
+  "e-3": {
+   "id": "e-3",
+   "name": "",
+   "animationType": "preset",
+   "eventTypeId": "MOUSE_OVER",
+   "action": {
+    "id": "",
+    "actionTypeId": "GENERAL_START_ACTION",
+    "config": {
+     "delay": 0,
+     "easing": "",
+     "duration": 0,
+     "actionListId": "a",
+     "affectedElements": {},
+     "playInReverse": false,
+     "autoStopEventId": "e-4"
+    }
+   },
+   "mediaQueries": [
+    "main"
+   ],
+   "target": {
+    "selector": ".underline-btn",
+    "originalId": "67da69aeb01a395d6909707e|ef31ee55-d811-4564-f61b-13a8b860b7bb",
+    "appliesTo": "CLASS"
+   },
+   "targets": [
+    {
+     "selector": ".underline-btn",
+     "originalId": "67da69aeb01a395d6909707e|ef31ee55-d811-4564-f61b-13a8b860b7bb",
+     "appliesTo": "CLASS"
+    }
+   ],
+   "config": {
+    "loop": false,
+    "playInReverse": false,
+    "scrollOffsetValue": null,
+    "scrollOffsetUnit": null,
+    "delay": null,
+    "direction": null,
+    "effectIn": null
+   },
+   "createdOn": 1740291055829
+  },
+  "e-5": {
+   "id": "e-5",
+   "name": "",
+   "animationType": "custom",
+   "eventTypeId": "SCROLLING_IN_VIEW",
+   "action": {
+    "id": "",
+    "actionTypeId": "GENERAL_CONTINUOUS_ACTION",
+    "config": {
+     "actionListId": "a-2",
+     "affectedElements": {},
+     "duration": 0
+    }
+   },
+   "mediaQueries": [
+    "main",
+    "medium",
+    "small",
+    "tiny"
+   ],
+   "target": {
+    "id": "68e3c26f7edb22bc9e5314b0|cd82475f-ee6b-8cca-aea8-2af74ec38b8d",
+    "appliesTo": "ELEMENT",
+    "styleBlockIds": []
+   },
+   "targets": [
+    {
+     "id": "68e3c26f7edb22bc9e5314b0|cd82475f-ee6b-8cca-aea8-2af74ec38b8d",
+     "appliesTo": "ELEMENT",
+     "styleBlockIds": []
+    }
+   ],
+   "config": [
+    {
+     "continuousParameterGroupId": "a-2-p",
+     "smoothing": 60,
+     "startsEntering": true,
+     "addStartOffset": false,
+     "addOffsetValue": 50,
+     "startsExiting": false,
+     "addEndOffset": false,
+     "endOffsetValue": 50
+    }
+   ],
+   "createdOn": 1760030100540
+  },
+  "e-6": {
+   "id": "e-6",
+   "name": "",
+   "animationType": "custom",
+   "eventTypeId": "SCROLLING_IN_VIEW",
+   "action": {
+    "id": "",
+    "actionTypeId": "GENERAL_CONTINUOUS_ACTION",
+    "config": {
+     "actionListId": "a-3",
+     "affectedElements": {},
+     "duration": 0
+    }
+   },
+   "mediaQueries": [
+    "main",
+    "medium",
+    "small",
+    "tiny"
+   ],
+   "target": {
+    "id": "68e3c26f7edb22bc9e5314b0|ff176a5a-ac22-ebd8-76a3-6a6eca0362fe",
+    "appliesTo": "ELEMENT",
+    "styleBlockIds": []
+   },
+   "targets": [
+    {
+     "id": "68e3c26f7edb22bc9e5314b0|ff176a5a-ac22-ebd8-76a3-6a6eca0362fe",
+     "appliesTo": "ELEMENT",
+     "styleBlockIds": []
+    }
+   ],
+   "config": [
+    {
+     "continuousParameterGroupId": "a-3-p",
+     "smoothing": 60,
+     "startsEntering": true,
+     "addStartOffset": false,
+     "addOffsetValue": 50,
+     "startsExiting": false,
+     "addEndOffset": false,
+     "endOffsetValue": 50
+    }
+   ],
+   "createdOn": 1760030388987
+  },
+  "e-7": {
+   "id": "e-7",
+   "name": "",
+   "animationType": "custom",
+   "eventTypeId": "SCROLLING_IN_VIEW",
+   "action": {
+    "id": "",
+    "actionTypeId": "GENERAL_CONTINUOUS_ACTION",
+    "config": {
+     "actionListId": "a-4",
+     "affectedElements": {},
+     "duration": 0
+    }
+   },
+   "mediaQueries": [
+    "main",
+    "medium",
+    "small",
+    "tiny"
+   ],
+   "target": {
+    "id": "68e3c26f7edb22bc9e5314b0|3b8ba67b-21c6-99be-d0f0-3bfc58b27f6f",
+    "appliesTo": "ELEMENT",
+    "styleBlockIds": []
+   },
+   "targets": [
+    {
+     "id": "68e3c26f7edb22bc9e5314b0|3b8ba67b-21c6-99be-d0f0-3bfc58b27f6f",
+     "appliesTo": "ELEMENT",
+     "styleBlockIds": []
+    }
+   ],
+   "config": [
+    {
+     "continuousParameterGroupId": "a-4-p",
+     "smoothing": 60,
+     "startsEntering": true,
+     "addStartOffset": false,
+     "addOffsetValue": 50,
+     "startsExiting": false,
+     "addEndOffset": false,
+     "endOffsetValue": 50
+    }
+   ],
+   "createdOn": 1760037981513
+  }
+ },
+ "actionLists": {
+  "a": {
+   "id": "a",
+   "title": "Underline Animate",
+   "actionItemGroups": [
+    {
+     "actionItems": [
+      {
+       "id": "a-n",
+       "actionTypeId": "STYLE_SIZE",
+       "config": {
+        "delay": 0,
+        "easing": "",
+        "duration": 500,
+        "target": {
+         "useEventTarget": "CHILDREN",
+         "selector": ".btn-underline",
+         "selectorGuids": [
+          "1ed0c728-a4ff-aaf0-85e3-0258793333fd"
+         ]
+        },
+        "widthValue": 100,
+        "widthUnit": "%",
+        "heightUnit": "PX",
+        "locked": false
+       }
+      }
+     ]
+    },
+    {
+     "actionItems": [
+      {
+       "id": "a-n-2",
+       "actionTypeId": "STYLE_SIZE",
+       "config": {
+        "delay": 0,
+        "easing": "inOutQuart",
+        "duration": 800,
+        "target": {
+         "useEventTarget": "CHILDREN",
+         "selector": ".btn-underline",
+         "selectorGuids": [
+          "1ed0c728-a4ff-aaf0-85e3-0258793333fd"
+         ]
+        },
+        "widthValue": 0,
+        "widthUnit": "%",
+        "heightUnit": "PX",
+        "locked": false
+       }
+      }
+     ]
+    },
+    {
+     "actionItems": [
+      {
+       "id": "a-n-3",
+       "actionTypeId": "STYLE_SIZE",
+       "config": {
+        "delay": 0,
+        "easing": "inOutExpo",
+        "duration": 500,
+        "target": {
+         "useEventTarget": "CHILDREN",
+         "selector": ".btn-underline-top",
+         "selectorGuids": [
+          "1ed0c728-a4ff-aaf0-85e3-0258793333fb"
+         ]
+        },
+        "widthValue": 100,
+        "widthUnit": "%",
+        "heightUnit": "PX",
+        "locked": false
+       }
+      },
+      {
+       "id": "a-n-4",
+       "actionTypeId": "STYLE_OPACITY",
+       "config": {
+        "delay": 0,
+        "easing": "",
+        "duration": 0,
+        "target": {
+         "useEventTarget": "CHILDREN",
+         "selector": ".btn-underline",
+         "selectorGuids": [
+          "1ed0c728-a4ff-aaf0-85e3-0258793333fd"
+         ]
+        },
+        "value": 0,
+        "unit": ""
+       }
+      }
+     ]
+    },
+    {
+     "actionItems": [
+      {
+       "id": "a-n-5",
+       "actionTypeId": "STYLE_SIZE",
+       "config": {
+        "delay": 0,
+        "easing": "",
+        "duration": 0,
+        "target": {
+         "useEventTarget": "CHILDREN",
+         "selector": ".btn-underline",
+         "selectorGuids": [
+          "1ed0c728-a4ff-aaf0-85e3-0258793333fd"
+         ]
+        },
+        "widthValue": 100,
+        "widthUnit": "%",
+        "heightUnit": "PX",
+        "locked": false
+       }
+      }
+     ]
+    },
+    {
+     "actionItems": [
+      {
+       "id": "a-n-6",
+       "actionTypeId": "STYLE_OPACITY",
+       "config": {
+        "delay": 0,
+        "easing": "",
+        "duration": 0,
+        "target": {
+         "useEventTarget": "CHILDREN",
+         "selector": ".btn-underline-top",
+         "selectorGuids": [
+          "1ed0c728-a4ff-aaf0-85e3-0258793333fb"
+         ]
+        },
+        "value": 0,
+        "unit": ""
+       }
+      },
+      {
+       "id": "a-n-7",
+       "actionTypeId": "STYLE_OPACITY",
+       "config": {
+        "delay": 0,
+        "easing": "",
+        "duration": 0,
+        "target": {
+         "useEventTarget": "CHILDREN",
+         "selector": ".btn-underline",
+         "selectorGuids": [
+          "1ed0c728-a4ff-aaf0-85e3-0258793333fd"
+         ]
+        },
+        "value": 1,
+        "unit": ""
+       }
+      }
+     ]
+    },
+    {
+     "actionItems": [
+      {
+       "id": "a-n-8",
+       "actionTypeId": "STYLE_SIZE",
+       "config": {
+        "delay": 0,
+        "easing": "",
+        "duration": 0,
+        "target": {
+         "useEventTarget": "CHILDREN",
+         "selector": ".btn-underline-top",
+         "selectorGuids": [
+          "1ed0c728-a4ff-aaf0-85e3-0258793333fb"
+         ]
+        },
+        "widthValue": 0,
+        "widthUnit": "%",
+        "heightUnit": "PX",
+        "locked": false
+       }
+      }
+     ]
+    },
+    {
+     "actionItems": [
+      {
+       "id": "a-n-9",
+       "actionTypeId": "STYLE_OPACITY",
+       "config": {
+        "delay": 0,
+        "easing": "",
+        "duration": 500,
+        "target": {
+         "useEventTarget": "CHILDREN",
+         "selector": ".btn-underline-top",
+         "selectorGuids": [
+          "1ed0c728-a4ff-aaf0-85e3-0258793333fb"
+         ]
+        },
+        "value": 1,
+        "unit": ""
+       }
+      }
+     ]
+    }
+   ],
+   "useFirstGroupAsInitialState": true,
+   "createdOn": 1740192370888
+  },
+  "a-2": {
+   "id": "a-2",
+   "title": "Drone Parallax",
+   "continuousParameterGroups": [
+    {
+     "id": "a-2-p",
+     "type": "SCROLL_PROGRESS",
+     "parameterLabel": "Scroll",
+     "continuousActionGroups": [
+      {
+       "keyframe": 0,
+       "actionItems": [
+        {
+         "id": "a-2-n",
+         "actionTypeId": "TRANSFORM_MOVE",
+         "config": {
+          "delay": 0,
+          "easing": "",
+          "duration": 500,
+          "target": {
+           "useEventTarget": "CHILDREN",
+           "selector": ".drone-img",
+           "selectorGuids": [
+            "b15e436e-a07d-c795-ff9c-c884406a5641"
+           ]
+          },
+          "yValue": -7,
+          "xUnit": "PX",
+          "yUnit": "%",
+          "zUnit": "PX"
+         }
+        }
+       ]
+      },
+      {
+       "keyframe": 100,
+       "actionItems": [
+        {
+         "id": "a-2-n-2",
+         "actionTypeId": "TRANSFORM_MOVE",
+         "config": {
+          "delay": 0,
+          "easing": "",
+          "duration": 500,
+          "target": {
+           "useEventTarget": "CHILDREN",
+           "selector": ".drone-img",
+           "selectorGuids": [
+            "b15e436e-a07d-c795-ff9c-c884406a5641"
+           ]
+          },
+          "yValue": 6,
+          "xUnit": "PX",
+          "yUnit": "%",
+          "zUnit": "PX"
+         }
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "createdOn": 1760029933607
+  },
+  "a-3": {
+   "id": "a-3",
+   "title": "Intro Parallax",
+   "continuousParameterGroups": [
+    {
+     "id": "a-3-p",
+     "type": "SCROLL_PROGRESS",
+     "parameterLabel": "Scroll",
+     "continuousActionGroups": [
+      {
+       "keyframe": 0,
+       "actionItems": [
+        {
+         "id": "a-3-n",
+         "actionTypeId": "TRANSFORM_MOVE",
+         "config": {
+          "delay": 0,
+          "easing": "",
+          "duration": 500,
+          "target": {
+           "useEventTarget": "CHILDREN",
+           "selector": ".full-video.is-intro",
+           "selectorGuids": [
+            "153f2684-eb23-f006-628f-81afa22e9792",
+            "9155e029-1abc-bbe6-f0a0-2eb18815b720"
+           ]
+          },
+          "yValue": -5,
+          "xUnit": "PX",
+          "yUnit": "%",
+          "zUnit": "PX"
+         }
+        }
+       ]
+      },
+      {
+       "keyframe": 100,
+       "actionItems": [
+        {
+         "id": "a-3-n-2",
+         "actionTypeId": "TRANSFORM_MOVE",
+         "config": {
+          "delay": 0,
+          "easing": "",
+          "duration": 500,
+          "target": {
+           "useEventTarget": "CHILDREN",
+           "selector": ".full-video.is-intro",
+           "selectorGuids": [
+            "153f2684-eb23-f006-628f-81afa22e9792",
+            "9155e029-1abc-bbe6-f0a0-2eb18815b720"
+           ]
+          },
+          "yValue": 5,
+          "xUnit": "PX",
+          "yUnit": "%",
+          "zUnit": "PX"
+         }
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "createdOn": 1760030394020
+  },
+  "a-4": {
+   "id": "a-4",
+   "title": "Robot Parallax",
+   "continuousParameterGroups": [
+    {
+     "id": "a-4-p",
+     "type": "SCROLL_PROGRESS",
+     "parameterLabel": "Scroll",
+     "continuousActionGroups": [
+      {
+       "keyframe": 0,
+       "actionItems": [
+        {
+         "id": "a-4-n",
+         "actionTypeId": "TRANSFORM_MOVE",
+         "config": {
+          "delay": 0,
+          "easing": "",
+          "duration": 500,
+          "target": {
+           "useEventTarget": "CHILDREN",
+           "selector": ".full-video.is-industry",
+           "selectorGuids": [
+            "153f2684-eb23-f006-628f-81afa22e9792",
+            "2381e255-61fe-cda3-330c-7b33ad34e1be"
+           ]
+          },
+          "yValue": -8,
+          "xUnit": "PX",
+          "yUnit": "%",
+          "zUnit": "PX"
+         }
+        }
+       ]
+      },
+      {
+       "keyframe": 100,
+       "actionItems": [
+        {
+         "id": "a-4-n-2",
+         "actionTypeId": "TRANSFORM_MOVE",
+         "config": {
+          "delay": 0,
+          "easing": "",
+          "duration": 500,
+          "target": {
+           "useEventTarget": "CHILDREN",
+           "selector": ".full-video.is-industry",
+           "selectorGuids": [
+            "153f2684-eb23-f006-628f-81afa22e9792",
+            "2381e255-61fe-cda3-330c-7b33ad34e1be"
+           ]
+          },
+          "yValue": 10,
+          "xUnit": "PX",
+          "yUnit": "%",
+          "zUnit": "PX"
+         }
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "createdOn": 1760037986925
+  }
+ },
+ "site": {
+  "mediaQueries": [
+   {
+    "key": "main",
+    "min": 992,
+    "max": 10000
+   },
+   {
+    "key": "medium",
+    "min": 768,
+    "max": 991
+   },
+   {
+    "key": "small",
+    "min": 480,
+    "max": 767
+   },
+   {
+    "key": "tiny",
+    "min": 0,
+    "max": 479
+   }
+  ]
+ }
+}

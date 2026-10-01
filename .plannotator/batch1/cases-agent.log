@@ -1,0 +1,28 @@
+Completed the preview, keeping the existing story panels and charts. Fixed the desktop title/callout overlap and mobile spacing.
+
+▶ https://moneybees.localhost:1355 — moneybees · next dev · portless
+
+**Files**
+- Preview: `app/preview/case-studies/page.tsx`
+- Components: `components/case-studies-v3/`
+- Added verifier: `.plannotator/batch1/cases/verify-source.mjs`
+- [Verification report and screenshot index](.plannotator/batch1/cases/verification.md)
+
+**Sections**
+- Header uses study 07's measured dimetric solid, walker and numbered company callouts, with Tres Mares' off-axis hero layout.
+- Each company appears once as a complete story. Tres Mares' stacked panels wipe upward, darken the predecessor and snap between stories. Mobile uses ordinary stacked sections.
+- Each story includes its business drawing and labelled, zero-based Revenue, EBITDA and PAT charts.
+- Timeline uses Titan Gate's crawling dashed connector and travelling band. PAT circle areas share one scale; FY24 is orange.
+- Disclaimer remains verbatim and plain.
+
+**Verification passed**
+- TypeScript and ESLint clean.
+- Desktop 1440×900 and mobile 390×844 screenshots inspected. Mobile scroll width is exactly 390.
+- All 45 financial values and 15 PAT marker areas checked against library data.
+- Forward scrolling, reverse scrolling, snapping and reduced motion exercised.
+- Hero figure pixel diff: **0 / 307,200 pixels differ**, excluding text and normalizing the source shade to the brief's colour.
+- Fresh browser session reported no runtime errors. Browser closed.
+
+Screenshots are under `.plannotator/batch1/cases/`, including `hero-{desktop,mobile}.jpg`, company story/chart captures and timeline/disclaimer captures.
+
+Initials remain the requested placeholders pending approved logos. Production `/case-studies` is unchanged. No packages, commits or server lifecycle changes.

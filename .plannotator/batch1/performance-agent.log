@@ -1,0 +1,22 @@
+Completed the preview at https://moneybees.localhost:1355/preview/performance.
+
+Added `app/preview/performance/page.tsx` and finished the four components in `components/performance-v3/`. The production `/performance` route and existing PMS chart remain untouched.
+
+- **Header:** Tres Mares' off-axis layout and masked odometer, rolling from 2007 to 2026 beside the since-inception CAGR.
+- **PMS Performance:** Tres Mares-style hairline table with all eight periods, negative returns and N/A, followed by the unchanged approved chart renderer.
+- **Wealth Growth:** Study 08's measured, area-proportional circles. Desktop labels follow the circle positions; mobile values fit without overflow.
+- **AIF Performance:** The same approved chart renderer, with Flyingbee's five periods and all N/A rows.
+- **Methodology and Disclaimer:** The three source statements, without added claims.
+
+Verification passed:
+- TypeScript and scoped ESLint.
+- Desktop 1440×900 and mobile 390×844 screenshots, all inspected.
+- Mobile `scrollWidth` is exactly 390px.
+- Year endpoints, circle geometry, scroll interruption and reduced motion. Fixed the partial build's reduced-motion radius bug.
+- Fresh browser session had no page errors; session closed.
+
+The PMS chart comparison measured **0.20/255 mean RGB error**, with **0.15% of pixels differing by more than 24/255**. Small raster differences remain.
+
+Screenshots and detailed evidence are in [`.plannotator/batch1/performance/VERIFICATION.md`](.plannotator/batch1/performance/VERIFICATION.md), including [desktop wealth](.plannotator/batch1/performance/desktop-wealth.png) and [mobile table](.plannotator/batch1/performance/mobile-pms-table.png).
+
+No implementation work remains. Figures and the AIF benchmark label still require compliance approval before publication. No packages, commits or dev-server changes.

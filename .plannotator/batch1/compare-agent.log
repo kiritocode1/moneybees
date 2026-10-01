@@ -1,0 +1,20 @@
+Built the [comparison preview](https://moneybees.localhost:1355/preview/pms-vs-aif).
+
+Created:
+- `app/preview/pms-vs-aif/page.tsx`
+- `components/compare-v3/compare-sections.tsx`
+- `components/compare-v3/compare.module.css`
+- `components/compare-v3/verify.mjs`
+
+Sections:
+- Tres Mares right-half hero with Unit8’s equal cooperation rings and one orange overlap.
+- Tres Mares dark comparison table with synchronized row reveals.
+- Study 09 ring chains with dotted arrows, paired explanations, and identical product buttons.
+
+Screenshots in [`.plannotator/batch1/compare/`](.plannotator/batch1/compare/):
+- `desktop-hero.png`, `desktop-comparison.png`, `desktop-explanation.png`
+- `mobile-hero.png`, `mobile-comparison.png`, `mobile-explanation.png`, `mobile-links.png`
+
+TypeScript and ESLint pass. Browser checks pass at both widths, including equal sizing, pinned ring geometry, verbatim content, reduced motion, links, and `scrollWidth === 390`.
+
+Browser session closed. No existing files changed, no packages installed, no server changes. The production route remains unchanged, as requested.

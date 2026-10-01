@@ -1,0 +1,246 @@
+[
+  {
+    "check": "Pinned off-canvas width retained",
+    "passed": true
+  },
+  {
+    "check": "Pinned backdrop retained",
+    "passed": true
+  },
+  {
+    "check": "Pinned expoOut retained",
+    "passed": true
+  },
+  {
+    "check": "Pinned 800ms off-canvas timing retained",
+    "passed": true
+  },
+  {
+    "check": "Pinned card scale and duration retained",
+    "passed": true
+  },
+  {
+    "check": "Pinned card positional delay retained",
+    "passed": true
+  },
+  {
+    "check": "pms: mailto recipient, encoded subject and body",
+    "passed": true
+  },
+  {
+    "check": "pms: parameter selects its option",
+    "passed": true
+  },
+  {
+    "check": "aif: mailto recipient, encoded subject and body",
+    "passed": true
+  },
+  {
+    "check": "aif: parameter selects its option",
+    "passed": true
+  },
+  {
+    "check": "support: mailto recipient, encoded subject and body",
+    "passed": true
+  },
+  {
+    "check": "support: parameter selects its option",
+    "passed": true
+  },
+  {
+    "check": "general: mailto recipient, encoded subject and body",
+    "passed": true
+  },
+  {
+    "check": "general: parameter selects its option",
+    "passed": true
+  },
+  {
+    "check": "Unknown parameter falls back",
+    "passed": true
+  },
+  {
+    "check": "1440: values survive tab switches",
+    "passed": true
+  },
+  {
+    "check": "1440: arrow wraps to General Enquiry",
+    "passed": true
+  },
+  {
+    "check": "1440: Home selects PMS",
+    "passed": true
+  },
+  {
+    "check": "1440: End selects General Enquiry",
+    "passed": true
+  },
+  {
+    "check": "1440: pms fields match data",
+    "passed": true
+  },
+  {
+    "check": "1440: aif fields match data",
+    "passed": true
+  },
+  {
+    "check": "1440: support fields match data",
+    "passed": true
+  },
+  {
+    "check": "1440: general fields match data",
+    "passed": true
+  },
+  {
+    "check": "1440: enquiry tab row count",
+    "passed": true
+  },
+  {
+    "check": "1440: incomplete form stays on page",
+    "passed": true
+  },
+  {
+    "check": "1440: email copy confirms success",
+    "passed": true
+  },
+  {
+    "check": "1440: contact has no horizontal overflow",
+    "passed": true
+  },
+  {
+    "check": "1440: two separate login cards",
+    "passed": true
+  },
+  {
+    "check": "1440: all group anchors exist",
+    "passed": true
+  },
+  {
+    "check": "1440: investor-charter-document opens correct details",
+    "passed": true
+  },
+  {
+    "check": "1440: investor-charter-document forward focus trap",
+    "passed": true
+  },
+  {
+    "check": "1440: investor-charter-document reverse focus trap",
+    "passed": true
+  },
+  {
+    "check": "1440: investor-charter-document returns focus and unlocks scrolling",
+    "passed": true
+  },
+  {
+    "check": "1440: disclosures-document opens correct details",
+    "passed": true
+  },
+  {
+    "check": "1440: disclosures-document forward focus trap",
+    "passed": true
+  },
+  {
+    "check": "1440: disclosures-document reverse focus trap",
+    "passed": true
+  },
+  {
+    "check": "1440: disclosures-document returns focus and unlocks scrolling",
+    "passed": true
+  },
+  {
+    "check": "1440: risk-disclosures opens correct details",
+    "passed": true
+  },
+  {
+    "check": "1440: risk-disclosures forward focus trap",
+    "passed": true
+  },
+  {
+    "check": "1440: risk-disclosures reverse focus trap",
+    "passed": true
+  },
+  {
+    "check": "1440: risk-disclosures returns focus and unlocks scrolling",
+    "passed": true
+  },
+  {
+    "check": "1440: policies opens correct details",
+    "passed": true
+  },
+  {
+    "check": "1440: policies forward focus trap",
+    "passed": true
+  },
+  {
+    "check": "1440: policies reverse focus trap",
+    "passed": true
+  },
+  {
+    "check": "1440: policies returns focus and unlocks scrolling",
+    "passed": true
+  },
+  {
+    "check": "1440: investor-complaints opens correct details",
+    "passed": true
+  },
+  {
+    "check": "1440: investor-complaints forward focus trap",
+    "passed": true
+  },
+  {
+    "check": "1440: investor-complaints reverse focus trap",
+    "passed": true
+  },
+  {
+    "check": "1440: investor-complaints returns focus and unlocks scrolling",
+    "passed": true
+  },
+  {
+    "check": "1440: grievance-redressal opens correct details",
+    "passed": true
+  },
+  {
+    "check": "1440: grievance-redressal forward focus trap",
+    "passed": true
+  },
+  {
+    "check": "1440: grievance-redressal reverse focus trap",
+    "passed": true
+  },
+  {
+    "check": "1440: grievance-redressal returns focus and unlocks scrolling",
+    "passed": true
+  },
+  {
+    "check": "1440: scores opens correct details",
+    "passed": true
+  },
+  {
+    "check": "1440: scores forward focus trap",
+    "passed": true
+  },
+  {
+    "check": "1440: scores reverse focus trap",
+    "passed": true
+  },
+  {
+    "check": "1440: scores returns focus and unlocks scrolling",
+    "passed": true
+  },
+  {
+    "check": "1440: odr opens correct details",
+    "passed": true
+  },
+  {
+    "check": "1440: odr forward focus trap",
+    "passed": true
+  },
+  {
+    "check": "1440: odr reverse focus trap",
+    "passed": true
+  },
+  {
+    "check": "1440: odr returns focus and unlocks scrolling",
+    "passed": true
+  }
+]

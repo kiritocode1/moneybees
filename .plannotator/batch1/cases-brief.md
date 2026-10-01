@@ -1,0 +1,10 @@
+# Page brief: /case-studies, content plan §8
+
+Read `shared-rules.md` in this folder first. Your files: `components/case-studies-v3/*`, `app/preview/case-studies/page.tsx` (with `SiteNavigation`/`SiteFooter` like `app/case-studies/page.tsx`). Agent Browser session: `pi-cases`. Screenshots to `.plannotator/batch1/cases/`. URL: https://moneybees.localhost:1355/preview/case-studies
+
+Data: `lib/case-studies.ts` (`CASE_STUDIES_PAGE`, `CASE_STUDIES` with business, edge, growth and FY20–FY24 Revenue/EBITDA/PAT financials, `CASE_DISCLAIMER`). You may import the existing business drawings from `components/case-studies/drawings.tsx`. The owner complained the current page introduces the three companies twice ("the 3 examples are talked below as well"): each company must appear ONCE as a full story. These are historical case studies, never recommendations; no return multiples.
+Sections:
+1. **Header.** Title "Our Investment Journey", carrying the study 07 dimetric block (`reference/visual-language/07/STUDY.md` and `moneybee.svg`: an L/T-shaped solid at ~20.6° dimetric, lit faces `#F6A11A`, shaded `#B77613`, a clean silhouette figure walking on it) with three numbered callouts naming the three companies (names only). Layout after Titan Gate's section openers / Tres Mares' internal heroes.
+2. **The three companies** as Tres Mares' stacked strategy panels (`reference/tresmares/NOTES.md`, financial-solutions "dropdownssticky"/stacked panels: the section pins, each new panel wipes up from the bottom while the previous one darkens, snapping per panel). Each panel: the company's initials mark (placeholder until an approved logo), the name, Business Model / Competitive Edge / Growth Prospect verbatim, its business drawing, and honest small-multiple charts of Revenue, EBITDA and PAT FY20–FY24 (Rs. crore, labelled). Below 768px: plain stacked sections, no pinning.
+3. **Historical Investment Timeline:** the FY20–FY24 years on one line with Titan Gate's dashed connector (crawling dashes, a travelling light band) and each company's PAT per year as a marker sized by value, the latest year orange.
+4. **The disclaimer** `CASE_DISCLAIMER` verbatim, small, plain.
