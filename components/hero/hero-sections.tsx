@@ -2,7 +2,7 @@ import Link from "@/components/transition/transition-link";
 import { HOME_PLAN, INTRODUCTION, PERIOD_RETURNS } from "@/lib/insights";
 import CornerBrackets from "./corner-brackets";
 import { BODY, BUTTON, COLUMN, DashedRule, EYEBROW, HEADING, Rise, SUBHEAD } from "./editorial";
-import HeroPyramid from "./hero-pyramid";
+import HeroTerrain from "./hero-terrain";
 import WealthChart from "./wealth-chart";
 
 /**
@@ -12,7 +12,7 @@ import WealthChart from "./wealth-chart";
  * dashed rule, the pill buttons and the corner-bracket box. Section order is
  * the source's minus its quote: hero, then the manifesto. Colours
  * are ours: white paper, black, #F6A11A and grey. A server component; the
- * pyramid, the chart and the Rise wrappers are the client parts.
+ * terrain, the chart and the Rise wrappers are the client parts.
  */
 
 
@@ -29,10 +29,9 @@ const HERO_FIGURES = [
 export function HeroSection() {
   return (
     <section aria-label="Hero" className="relative isolate w-full overflow-hidden bg-white text-black max-md:flex max-md:flex-col">
-      {/* The source's figure is centred about x 1120 and y 400 at 1440 wide. The
-          pyramid's own centre sits 44% into its viewBox, so the box hangs right of that. */}
+      {/* Keep the terrain in the hero's existing illustration container. */}
       <div className="absolute top-[400px] right-[max(24px,calc((100vw_-_1512px)/2_+_96px))] z-0 w-[min(42vw,600px)] -translate-y-1/2 max-md:relative max-md:top-0 max-md:right-0 max-md:order-last max-md:mx-auto max-md:w-[min(100%_-_48px,520px)] max-md:translate-y-0 max-md:pb-12">
-        <HeroPyramid />
+        <HeroTerrain />
       </div>
       {/* 256px to the headline: the source's 76px header band plus its 180px top padding. */}
       <div className={`${COLUMN} pointer-events-none relative z-10 flex flex-col gap-10 pt-[140px] pb-10 md:flex-row md:items-start md:gap-12 md:pt-[220px] md:pb-[72px]`}>

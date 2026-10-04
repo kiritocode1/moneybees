@@ -4,3 +4,7 @@ allowBuilds:
 ignoredBuiltDependencies:
   - sharp
   - unrs-resolver
+minimumReleaseAgeExclude:
+  - '@lucasmarkes/hairline@0.2.0'
+patchedDependencies:
+  '@lucasmarkes/hairline@0.2.0': patches/@lucasmarkes__hairline@0.2.0.patch

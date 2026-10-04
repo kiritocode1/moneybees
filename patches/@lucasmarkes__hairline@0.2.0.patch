@@ -1,0 +1,136 @@
+diff --git a/dist/index.js b/dist/index.js
+index 490e55a8555b9c455f75d2e26f0e54f3a14c3db6..4a7e15af4fb1d08622f2533038eec88b7f492a06 100644
+--- a/dist/index.js
++++ b/dist/index.js
+@@ -2927,6 +2927,21 @@ var mount16 = ({ stage, svg, read }, value) => {
+   };
+ };
+ 
++// src/figures/moneybee-bee.ts
++function makeBee(parent) {
++  const drawing = mk("g", { transform: "scale(.115) translate(-551 -362)" }, parent);
++  const left = mk("g", { "data-bee-wing": "left" }, drawing);
++  mk("path", { d: "M 474.808 372.425 C 465.857 372.287 459.329 372.688 450.872 369.044 C 436.294 362.763 427.155 347.463 427.356 331.728 C 427.45 322.551 431.206 313.793 437.79 307.4 C 462.7 283.277 518.08 304.958 538.111 326.053 L 521.927 333.626 C 506.236 317.304 489.666 307.691 466.391 306.865 C 458.055 306.569 449.71 308.464 443.569 314.504 C 438.951 319.068 436.367 325.301 436.401 331.794 C 436.422 353.567 456.963 365.803 474.808 372.425 z", style: "fill:#000000;stroke:none" }, left);
++  const right = mk("g", { "data-bee-wing": "right" }, drawing);
++  mk("path", { d: "M 602.857 369.335 C 626.338 380.569 648.29 400.992 657.642 425.522 C 664.729 444.112 660.261 469.089 638.865 475.201 C 615.533 481.866 594.506 474.525 586.697 450.188 C 586.28 448.883 585.881 447.571 585.502 446.255 C 598.89 461.895 623.367 479.04 643.026 462.264 C 648.096 457.96 651.176 451.764 651.545 445.124 C 652.957 419.222 624.332 396.892 603.218 387.394 z", style: "fill:#000000;stroke:none" }, right);
++  mk("path", { d: "M 538.111 326.053 C 580.973 311.714 603.232 320.794 602.857 369.335 L 603.218 387.394 C 599.218 411.978 594.702 429.42 573.329 445.723 C 554.678 459.949 521.147 464.491 498.45 460.888 L 490.372 458.923 L 499.49 470.806 L 477.592 499.875 C 480.387 484.907 483.077 471.985 481.143 456.545 C 479.714 445.138 473.098 436.205 470.39 426.142 C 460.976 391.15 474.069 364.034 502.853 344.304 C 508.91 340.232 515.289 336.661 521.927 333.626 z", style: "fill:#000000;stroke:none" }, drawing);
++  mk("path", { d: "M 480.529 424.325 C 491.52 432.242 514.801 448.768 529.017 445.737 L 529.766 444.471 C 528.867 442.37 528.277 441.098 527.687 438.85 C 530.198 439.075 537.776 445.8 540.397 447.889 C 526.866 455.962 513.707 457.995 498.45 460.888 L 490.372 458.923 C 483.375 448.633 481.641 436.551 480.529 424.325 z", style: "fill:#F9A11B;stroke:none" }, drawing);
++  mk("path", { d: "M 541.926 329.101 C 568.661 328.605 584.896 341.824 599.554 362.725 C 593.181 385.047 589.235 394.069 577.928 414.151 C 550.178 388.336 536.089 378.539 499.286 369.342 C 500.281 366.851 507.851 358.576 509.916 356.237 C 542.549 365.516 561.329 371.068 584.488 396.507 C 585.617 391.064 586.811 386.771 588.357 381.445 C 573.148 356.708 552.652 347.214 524.469 342.6 C 530.084 337.445 535.424 333.07 541.926 329.101 z", style: "fill:#F9A11B;stroke:none" }, drawing);
++  mk("path", { d: "M 486.801 390.338 C 491.802 390.264 496.803 390.561 501.761 391.227 C 528.621 395.105 547.433 409.68 563.235 430.901 C 559.789 434.86 556.913 437.069 552.887 440.368 C 552.677 440.524 552.467 440.681 552.256 440.837 C 550.763 441.719 549.269 442.6 547.775 443.482 C 526.494 423.439 512.443 413.173 481.938 408.307 L 486.801 390.338 z", style: "fill:#F9A11B;stroke:none" }, drawing);
++  mk("path", { d: "M 602.908 215.679 C 615.464 216.439 613.204 256.467 611.925 265.211 C 611.141 270.581 606.942 281.486 607.167 286.028 L 610.471 288.684 C 614.103 287.85 625.078 274.872 631.818 272.184 C 640.293 268.804 669.723 252.19 675.722 263.377 C 676.262 270.29 671.441 275.36 664.891 276.718 C 657.132 278.326 656.307 267.623 647.548 270.095 C 635.426 273.515 624.196 285.075 617.042 295.042 C 629.81 309.125 636.652 327.558 625.933 345.145 C 613.055 357.341 605.576 353.776 604.047 337.658 C 602.642 322.846 599.59 310.85 607.544 296.575 C 608.412 295.017 607.361 293.582 606.617 292.427 C 605.944 292.122 605.162 291.768 604.271 291.363 C 598.219 295.346 593.397 300.523 587.107 304.282 C 580.276 308.429 572.578 311.006 564.995 313.436 C 560.083 315.01 553.991 317.419 549.577 313.698 C 547.295 310.157 547.373 305.859 548.094 301.799 C 549.22 295.594 552.765 290.091 557.949 286.501 C 570.201 278.15 585.723 280.333 599.235 282.802 C 603.707 273.066 610.925 256.606 608.105 246.17 C 604.72 233.643 581.276 232.095 602.908 215.679 z", style: "fill:#000000;stroke:none" }, drawing);
++  return { left, right };
++}
++
+ // src/figures/terrain.ts
+ var N5 = 9;
+ var CELL = 14;
+@@ -2941,6 +2956,12 @@ var mount17 = ({ stage, svg, read }, value) => {
+   fit(C, [[-6, -6, -PB3], [EXT2 + 6, EXT2 + 6, -PB3], [EXT2 + 6, -6, -PB3], [-6, EXT2 + 6, -PB3], [0, 0, HMAX * 0.75]], 200, 166);
+   const P = proj(C), front2 = facing(C);
+   let R6 = value * CELL, over = null;
++  const withBee = stage.dataset.bee === "true";
++  const flightX = spring(97, { k: 90, c: 19 });
++  const flightY = spring(63, { k: 90, c: 19 });
++  const flightZ = spring(44, { k: 110, c: 21 });
++  let phase = 0, flightTime = 0, heading = 0;
++  let [oldX, oldY] = P(flightX.x, flightY.x, 0);
+   const g = mk("g", {}, svg), cols = [];
+   const [pr, pi] = rings(-6, -6, EXT2 + 6, EXT2 + 6, 9, 2.2);
+   put(solid(g), prism(P, front2, pr, pi, -PB3, 0));
+@@ -2959,6 +2980,10 @@ var mount17 = ({ stage, svg, read }, value) => {
+   const byCell = /* @__PURE__ */ new Map();
+   cols.forEach((c) => byCell.set(c.i + "," + c.j, c));
+   let mc = null, want = peak;
++  const bee = withBee ? mk("g", { "data-terrain-bee": "", "pointer-events": "none" }, svg) : null;
++  const shadow = bee ? mk("ellipse", { rx: 7, ry: 2.5, style: "fill:#936013;stroke:none;opacity:.14" }, bee) : null;
++  const beeBody = bee ? mk("g", {}, bee) : null;
++  const wings = beeBody ? makeBee(beeBody) : null;
+   function drawMark() {
+     if (want !== mc) {
+       mc = want;
+@@ -2972,35 +2997,72 @@ var mount17 = ({ stage, svg, read }, value) => {
+     if (h === c.drawn) return;
+     c.drawn = h;
+     put(c.el, prism(P, front2, c.ring, c.inner, 0, h));
+-    c.el.sil.classList.toggle("hi", h > HMAX * 0.5);
++    c.el.sil.classList.toggle("hi", h > (withBee && !over ? 18 : HMAX * 0.5));
+   }
+   const B3 = register(stage, (dt) => {
++    if (withBee) {
++      if (!reducedMotion()) flightTime += dt;
++      if (!over && !reducedMotion()) phase += dt * 0.32;
++      flightX.t = over ? clamp(over[0], 5, EXT2 - 5) : 63 + Math.cos(phase) * 34;
++      flightY.t = over ? clamp(over[1], 5, EXT2 - 5) : 63 + Math.sin(phase) * 34;
++      stepS(flightX, dt);
++      stepS(flightY, dt);
++      aim([flightX.x, flightY.x], over ? 1.18 : 0.58);
++      stage.dataset.flight = over ? "hover" : "idle";
++    }
+     let m = false;
+     for (const c of cols) {
+       if (stepS(c.sp, dt)) m = true;
+       drawCol(c);
+     }
+     drawMark();
+-    return m;
++    if (beeBody && shadow) {
++      const height = Math.max(...cols.map((c) => c.sp.x));
++      flightZ.t = height + (over ? 19 : 14);
++      stepS(flightZ, dt);
++      const [x, y] = P(flightX.x, flightY.x, flightZ.x);
++      const [groundX, groundY] = P(flightX.x, flightY.x, 0);
++      const dx = groundX - oldX, dy = groundY - oldY;
++      if (Math.hypot(dx, dy) > 0.05) {
++        const desired = Math.atan2(dy, dx);
++        const turn2 = Math.atan2(Math.sin(desired - heading), Math.cos(desired - heading));
++        heading += turn2 * (reducedMotion() ? 1 : 1 - Math.exp(-dt * 7));
++      }
++      oldX = groundX;
++      oldY = groundY;
++      const bob = reducedMotion() ? 0 : Math.sin(flightTime * 7.5) * 1.2;
++      beeBody.setAttribute("transform", `translate(${x} ${y + bob}) rotate(${heading * 180 / Math.PI + 52}) scale(${over ? 1.08 : 0.9})`);
++      if (wings) {
++        const flap = reducedMotion() ? 1 : 0.76 + Math.sin(flightTime * Math.PI * 24) * 0.24;
++        wings.left.setAttribute("transform", `translate(532 330) rotate(18) scale(${flap} 1) rotate(-18) translate(-532 -330)`);
++        wings.right.setAttribute("transform", `translate(603 378) rotate(54) scale(${flap} 1) rotate(-54) translate(-603 -378)`);
++      }
++      place(shadow, P(flightX.x, flightY.x, Math.max(0, height - 1)));
++    }
++    return m || withBee && !reducedMotion();
+   });
+   bag.add(B3.unregister);
+-  function retarget() {
++  if (withBee) bag.add(() => stage.removeAttribute("data-flight"));
++  function aim(at2, lift = 1) {
+     for (const c of cols) {
+-      if (!over) {
++      if (!at2) {
+         c.sp.t = c.h0;
+         continue;
+       }
+-      const dx = (c.i + 0.5) * CELL - over[0], dy = (c.j + 0.5) * CELL - over[1];
+-      c.sp.t = HMAX * falloff6(Math.hypot(dx, dy) / R6);
++      const dx = (c.i + 0.5) * CELL - at2[0], dy = (c.j + 0.5) * CELL - at2[1];
++      c.sp.t = HMAX * lift * falloff6(Math.hypot(dx, dy) / R6);
+     }
+-    if (over) {
+-      const i = clamp(Math.floor(over[0] / CELL), 0, N5 - 1), j = clamp(Math.floor(over[1] / CELL), 0, N5 - 1);
++    if (at2) {
++      const i = clamp(Math.floor(at2[0] / CELL), 0, N5 - 1), j = clamp(Math.floor(at2[1] / CELL), 0, N5 - 1);
+       want = byCell.get(i + "," + j);
+       read.textContent = `cell ${i}\xB7${j}`;
+     } else {
+       want = peak;
+       read.textContent = "rest";
+     }
++  }
++  function retarget() {
++    if (!withBee) aim(over);
+     B3.wake();
+   }
+   bag.add(pointer(stage, {
+@@ -3592,4 +3654,3 @@ export {
+   turntable,
+   vault
+ };
+-//# sourceMappingURL=index.js.map
