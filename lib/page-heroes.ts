@@ -8,7 +8,9 @@
 
 import { ABOUT } from "@/lib/about-v2";
 import { CAREERS, RESUME_HREF, RESUME_EMAIL } from "@/lib/careers";
+import { EMAIL, PHONE, PHONE_HREF } from "@/lib/contact-v2";
 import { CONTACT, PMS_APPROACH, PMS_VS_AIF } from "@/lib/insights";
+import { INSIGHTS_LOREM } from "@/lib/insights-page";
 import { PERFORMANCE } from "@/lib/performance";
 import type { ProductHeroData } from "@/lib/pms-v3-hero";
 
@@ -102,8 +104,8 @@ export const CONTACT_HERO = {
   sentence: `Moneybee Group, ${CONTACT.address[0]} ${CONTACT.address[1]}`,
   actions: [{ label: "Get Started", href: "#enquiry" }],
   figures: [
-    { label: "Phone", value: "022-4030 2080" },
-    { label: "Email", value: "info@moneybee.in" },
+    { label: "Phone", value: PHONE, icon: "phone", href: PHONE_HREF },
+    { label: "Email", value: EMAIL, icon: "email", href: `mailto:${EMAIL}` },
     { label: onboarding[0], value: onboarding[1] },
     { label: productQueries[0], value: productQueries[1] },
     { label: grievance[0], value: grievance[1] },
@@ -121,5 +123,18 @@ export const INVESTOR_HERO = {
     { label: grievance[0], value: grievance[1] },
     { label: "SEBI complaints", value: "SCORES" },
     { label: "Online dispute resolution", value: "ODR" },
+  ],
+} as const satisfies ProductHeroData;
+
+/** The sentence is LOREM until the client says what Insights will publish; the figures are deck facts. */
+export const INSIGHTS_HERO = {
+  mark: "insights",
+  title: ["Insights"],
+  sentence: INSIGHTS_LOREM.short,
+  figures: [
+    { label: "Focus", value: "Small and mid caps" },
+    { label: "Research", value: "Listed and unlisted companies" },
+    { label: "PMS since", value: "Aug 2007" },
+    { label: "Office", value: "Lower Parel, Mumbai" },
   ],
 } as const satisfies ProductHeroData;

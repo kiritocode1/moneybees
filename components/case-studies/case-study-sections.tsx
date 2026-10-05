@@ -8,10 +8,10 @@ import { CASE_DISCLAIMER, CASE_LOREM, CASE_STUDIES, type CaseStudyEntry } from "
 import { DRAWINGS } from "./drawings";
 
 /*
- * /case-studies, content plan §8, after the study-07 card scroll
- * (components/case-studies-v3): each company's business drawing and Revenue,
- * EBITDA and PAT for FY20 to FY24; then a closing timeline and the plan's disclaimer. Past
- * examples, not advice.
+ * /case-studies, content plan §8: each company's Business Model, Competitive
+ * Edge and Growth Prospect lines, its business drawing and Revenue, EBITDA
+ * and PAT for FY20 to FY24; then a closing timeline and the plan's
+ * disclaimer. Past examples, not advice.
  */
 
 const ORANGE = "#F6A11A";
@@ -30,7 +30,14 @@ const SERIES = [
   { key: "pat", name: "PAT" },
 ] as const;
 
-const seriesFill = (key: (typeof SERIES)[number]["key"], dark: boolean) => (key === "pat" ? ORANGE : key === "revenue" ? (dark ? "#fff" : "#000") : dark ? "rgba(255,255,255,.4)" : "rgba(0,0,0,.28)");
+/** The plan's three lines per company, in its order. */
+const THESIS = [
+  ["Business Model", "business"],
+  ["Competitive Edge", "edge"],
+  ["Growth Prospect", "growth"],
+] as const;
+
+const seriesFill =(key: (typeof SERIES)[number]["key"], dark: boolean) => (key === "pat" ? ORANGE : key === "revenue" ? (dark ? "#fff" : "#000") : dark ? "rgba(255,255,255,.4)" : "rgba(0,0,0,.28)");
 
 /**
  * Revenue, EBITDA and PAT per year as grouped bars on one Rs. crore axis. The
@@ -115,7 +122,7 @@ function Mark({ text, dark }: { text: string; dark: boolean }) {
   );
 }
 
-/** One company's business drawing beside its Revenue, EBITDA and PAT, FY20 to FY24. */
+/** One company's three plan lines, then its business drawing beside its Revenue, EBITDA and PAT, FY20 to FY24. */
 export function CaseStudySection({ study, index }: { study: CaseStudyEntry; index: number }) {
   const { ref, shown } = useShown<HTMLDivElement>(0.2);
   const Drawing = DRAWINGS[study.drawing];
@@ -131,6 +138,14 @@ export function CaseStudySection({ study, index }: { study: CaseStudyEntry; inde
             </h2>
           </div>
         </div>
+        <dl className="m-0 mt-[28px] grid grid-cols-1 gap-x-[32px] gap-y-[20px] md:grid-cols-3">
+          {THESIS.map(([term, key]) => (
+            <div key={term}>
+              <dt className={`${EYEBROW} text-black/60`}>{term}</dt>
+              <dd className="mt-[8px] ml-0 font-serif text-[clamp(1.05rem,.95rem+.45vw,1.35rem)] leading-[1.25] text-balance">{study[key]}</dd>
+            </div>
+          ))}
+        </dl>
         <div className="mt-[32px] grid grid-cols-1 gap-[16px] md:grid-cols-[minmax(0,1fr)_minmax(0,1.5fr)]">
           <div className="self-stretch rounded-[10px] bg-white p-[28px] ring-1 ring-black/[.12] max-[600px]:p-[18px]">
             <span className={`${EYEBROW} text-black/60`}>Business Model</span>

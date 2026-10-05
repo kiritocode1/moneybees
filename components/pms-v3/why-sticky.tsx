@@ -3,9 +3,9 @@
 import { useInView } from "motion/react";
 import { type CSSProperties, useEffect, useRef, useState } from "react";
 import { BracketLabel } from "@/components/fact-sections/fact-section";
-import { COLUMN, SUBHEAD } from "@/components/hero/tokens";
+import { BODY, COLUMN, SUBHEAD } from "@/components/hero/tokens";
 import { WHY_GLYPHS } from "@/components/pms-v2/why-glyphs";
-import { WHY_PMS } from "@/lib/pms-v2";
+import { PMS_INTRO_APPROACH, WHY_PMS } from "@/lib/pms-v2";
 import { useReducedMotion } from "@/lib/use-reduced-motion";
 
 /*
@@ -202,11 +202,14 @@ export function WhySection() {
       <style href="pms-v3-why" precedence="default">
         {STYLES}
       </style>
-      <div className={`${COLUMN} pt-[120px] max-md:pt-[80px]`}>
-        <BracketLabel>Why Moneybee</BracketLabel>
-        <h2 id="why-heading" className={`mt-[18px] ${SUBHEAD}`}>
-          Why Moneybee PMS?
-        </h2>
+      <div className={`${COLUMN} grid grid-cols-1 items-end gap-8 pt-[120px] max-md:pt-[80px] md:grid-cols-2 md:gap-16`}>
+        <div>
+          <BracketLabel>Why Moneybee</BracketLabel>
+          <h2 id="why-heading" className={`mt-[18px] ${SUBHEAD}`}>
+            Why Moneybee PMS?
+          </h2>
+        </div>
+        <p className={`m-0 text-black/70 ${BODY}`}>{PMS_INTRO_APPROACH}</p>
       </div>
       <Split />
       <div className={`${COLUMN} mt-10 pb-[80px] md:hidden`}>

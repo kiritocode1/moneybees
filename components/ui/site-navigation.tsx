@@ -5,7 +5,7 @@ import OverlayMenu, { type MenuLink } from "./overlay-menu";
 /** The current site's "Registration/ Log In" page. */
 const CLIENT_LOGIN_URL = "https://www.moneybee.in/register.php";
 
-/** The content plan's pages, in its user-journey order. Insights has no page yet; the investor centre is internal. */
+/** The content plan's pages, in its user-journey order, then Insights and the investor centre. */
 const primaryLinks = [
   { label: "Home", href: "/" },
   { label: "About Us", href: "/about" },
@@ -18,15 +18,19 @@ const primaryLinks = [
   { label: "Our Team", href: "/team" },
   { label: "Careers", href: "/careers" },
   { label: "Contact Us", href: "/contact" },
+  { label: "Insights", href: "/insights" },
+  { label: "Investor Centre", href: "/investor-centre" },
 ];
 
-/** The content plan's bar: its pages, Client Login set apart, then Get Started. Below 900px the other pages move to the menu; below 480px Client Login does too. */
+/** The content plan's bar in its order, with Client Login set apart before Get Started. Below 1200px Insights and Investor Centre move to the menu, below 900px the other pages do, and below 480px Client Login does too. */
 const barLinks: MenuLink[] = [
   { label: "Home", href: "/", hideBelow: 900 },
   { label: "About Us", href: "/about", hideBelow: 900 },
   { label: "PMS", href: "/pms" },
   { label: "AIF", href: "/aif" },
   { label: "Our Approach", href: "/our-approach", hideBelow: 900 },
+  { label: "Insights", href: "/insights", hideBelow: 1200 },
+  { label: "Investor Centre", href: "/investor-centre", hideBelow: 1200 },
   { label: "Client Login", href: CLIENT_LOGIN_URL, kind: "login", hideBelow: 480 },
   { label: "Get Started", href: "/contact", kind: "cta" },
 ];

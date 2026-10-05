@@ -9,14 +9,15 @@ import {
 } from "@/components/hero/editorial";
 import { AIF_PRODUCT, PMS_PRODUCT, RANKINGS } from "@/lib/insights";
 
-/** The FAQ is the one interactive block here; it lives in its own client file. */
+/** The FAQ and Get Started animate on the client, so they live in their own files. */
 export { FaqSection } from "./faq-section";
+export { GetStartedSection } from "./get-started-section";
 
 /*
  * The homepage sections that follow the peer pattern (see the competitor
  * comparison of 2026-09-27): recognition near the top, the two ways to invest,
- * a closing call to talk, and FAQs. Facts are the decks' own. Server
- * components: only the Rise wrappers and the FAQ run on the client.
+ * the plan's Get Started section, and FAQs. Facts are the decks' own. Server
+ * components: only the Rise wrappers, Get Started and the FAQ run on the client.
  */
 
 const FOCUS =
@@ -148,7 +149,7 @@ export function TwoWaysSection() {
   );
 }
 
-/** The closing ask, before the FAQs: one sentence, the way to book, and the direct lines. */
+/** The old closing band. The homepage replaced it with GetStartedSection (get-started-section.tsx); only the unrouted pages in components/products still render it. */
 export function LetsTalkSection() {
   return (
     <section

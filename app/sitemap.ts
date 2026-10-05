@@ -2,7 +2,7 @@ import type { MetadataRoute } from "next";
 
 const SITE_URL = "https://www.moneybee.in";
 
-/** The twelve production pages. /preview/* stays out; robots.ts disallows it too. */
+/** The thirteen production pages. /preview/* stays out; robots.ts disallows it too. */
 const ROUTES = [
   "",
   "/about",
@@ -15,6 +15,7 @@ const ROUTES = [
   "/team",
   "/careers",
   "/contact",
+  "/insights",
   "/investor-centre",
 ] as const;
 

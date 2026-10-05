@@ -1,7 +1,7 @@
 import type { CSSProperties } from "react";
 import Link from "@/components/transition/transition-link";
 import { BUTTON, EYEBROW } from "@/components/hero/tokens";
-import type { ProductHeroData } from "@/lib/pms-v3-hero";
+import type { HeroFigure, ProductHeroData } from "@/lib/pms-v3-hero";
 import { ProductMark } from "./marks";
 
 /*
@@ -34,6 +34,22 @@ const HERO_CSS = `
 function titleSize(title: ProductHeroData["title"], room: number, base: number) {
   const ems = Math.max(...title.map((line, index) => line.length * 0.42 + (index ? 1 : 0)));
   return Math.min(base, room / ems).toFixed(2);
+}
+
+/** The contact page's phone and email icons: 12px line drawings in the label's ink. */
+function FigureIcon({ kind }: { kind: NonNullable<HeroFigure["icon"]> }) {
+  return (
+    <svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true" className="block shrink-0" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinejoin="round">
+      {kind === "phone" ? (
+        <path d="M2.2 1.2h2.1l1 2.6-1.4 1a6.4 6.4 0 0 0 3.3 3.3l1-1.4 2.6 1v2.1a1 1 0 0 1-1 1A9.8 9.8 0 0 1 1.2 2.2a1 1 0 0 1 1-1Z" />
+      ) : (
+        <>
+          <rect x="1" y="2.5" width="10" height="7" />
+          <path d="M1 2.8 6 6.6l5-3.8" />
+        </>
+      )}
+    </svg>
+  );
 }
 
 export default function ProductHero({ data }: { data: ProductHeroData }) {
@@ -78,8 +94,19 @@ export default function ProductHero({ data }: { data: ProductHeroData }) {
         {data.figures.map((figure) => (
           // An email address is too long for half a phone's width, so a long value takes the whole row there.
           <div key={figure.label} className={`min-w-0 ${figure.value.length > 20 ? "max-sm:col-span-2" : ""}`}>
-            <dt className={`${EYEBROW} text-black/60`}>{figure.label}</dt>
-            <dd className="m-0 mt-[6px] text-[14px] leading-[1.3] [overflow-wrap:anywhere] text-black">{figure.value}</dd>
+            <dt className={`${EYEBROW} flex items-center gap-[7px] text-black/60`}>
+              {figure.icon ? <FigureIcon kind={figure.icon} /> : null}
+              {figure.label}
+            </dt>
+            <dd className="m-0 mt-[6px] text-[14px] leading-[1.3] [overflow-wrap:anywhere] text-black">
+              {figure.href ? (
+                <a href={figure.href} className="text-black underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-black">
+                  {figure.value}
+                </a>
+              ) : (
+                figure.value
+              )}
+            </dd>
           </div>
         ))}
       </dl>

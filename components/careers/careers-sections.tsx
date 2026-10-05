@@ -8,10 +8,10 @@ import { CAREERS_LOREM, LIFE, RESUME_HREF } from "@/lib/careers";
 import ApplyStack from "./apply-stack";
 
 /*
- * /careers, content plan §10: Life at Moneybee around the team photograph,
- * in a faded-bottom panel, and how to apply as the stack loop with both CTAs.
- * The openings and culture are the study-04 and 03 sections in
- * components/careers-v3.
+ * /careers, content plan §10: Life at Moneybee around the team and
+ * boardroom photographs, in faded-bottom panels, and how to apply as the
+ * stack loop with both CTAs. The openings and culture are the study-04 and 03
+ * sections in components/careers-v3.
  */
 
 /** The kobbe panel photographs sit in: #F6F6F6, 10px radius, a hairline ring. */
@@ -19,6 +19,12 @@ const PANEL = "overflow-hidden rounded-[10px] bg-[#F6F6F6] ring-1 ring-black/[.0
 /** The panel's bottom 15% fades to the white page. */
 const PANEL_FADE = { maskImage: "linear-gradient(to bottom, #000 85%, transparent)", WebkitMaskImage: "linear-gradient(to bottom, #000 85%, transparent)" } as const;
 const number = (index: number) => String(index + 1).padStart(2, "0");
+
+/** Life at Moneybee's two photographs. Both panels share one row height from md, so the narrow one fills it instead of keeping a ratio. */
+const PHOTOS = [
+  { src: "/people/moneybee-team.jpg", alt: "The Moneybee team at the Lower Parel office", aspect: "aspect-[16/9] max-md:aspect-[4/3]", position: "object-[50%_40%]", sizes: "(max-width: 768px) 100vw, 848px" },
+  { src: "/people/moneybee-boardroom.jpg", alt: "The Moneybee team in a meeting in the boardroom", aspect: "aspect-[4/3] md:aspect-auto md:h-full", position: "object-[62%_50%]", sizes: "(max-width: 768px) 100vw, 424px" },
+] as const;
 const FOCUS = "focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-current";
 const CTA = `inline-flex w-fit items-center rounded-full bg-[#F6A11A] px-[26px] py-[14px] text-[15px] font-medium text-black no-underline transition-[color,background-color,transform,scale] duration-200 ease-[cubic-bezier(.23,1,.32,1)] hover:bg-black hover:text-white active:scale-[0.97] motion-reduce:transition-none ${FOCUS}`;
 const CTA_OUTLINE = `inline-flex w-fit items-center rounded-full border border-black/25 px-[26px] py-[14px] text-[15px] font-medium text-black no-underline transition-[border-color,transform,scale] duration-200 ease-[cubic-bezier(.23,1,.32,1)] hover:border-black active:scale-[0.97] motion-reduce:transition-none ${FOCUS}`;
@@ -29,7 +35,7 @@ function useShown<T extends Element>(amount = 0.45) {
   return { ref, shown };
 }
 
-/** Life at Moneybee on white: the team photograph opens from the centre as the section comes into view. */
+/** Life at Moneybee on white: the team and boardroom photographs open from the centre as the section comes into view. */
 export function LifeSection() {
   const { ref, shown } = useShown<HTMLDivElement>(0.3);
   return (
@@ -44,13 +50,18 @@ export function LifeSection() {
           </div>
           <p className={`text-black/70 ${BODY}`}>{LIFE.text}</p>
         </div>
-        <div ref={ref} className={`relative mt-[56px] aspect-[16/9] w-full max-md:aspect-[4/3] ${PANEL}`} style={PANEL_FADE}>
-          <div
-            className="absolute inset-0 motion-reduce:!transition-none"
-            style={{ clipPath: shown ? "inset(0 0 0 0)" : "inset(18% 30% 18% 30%)", transition: "clip-path 1200ms cubic-bezier(.22,1,.36,1)" }}
-          >
-            <Image src="/people/moneybee-team.jpg" alt="The Moneybee team at the Lower Parel office" fill sizes="(max-width: 1512px) 100vw, 1272px" className="object-cover object-[50%_40%]" />
-          </div>
+        {/* The plan's office/team photograph and its workplace image: the team, then the boardroom, both Moneybee's own. */}
+        <div ref={ref} className="mt-[56px] grid grid-cols-1 gap-[16px] md:grid-cols-[2fr_1fr]">
+          {PHOTOS.map((photo, index) => (
+            <div key={photo.src} className={`relative w-full ${photo.aspect} ${PANEL}`} style={PANEL_FADE}>
+              <div
+                className="absolute inset-0 motion-reduce:!transition-none"
+                style={{ clipPath: shown ? "inset(0 0 0 0)" : "inset(18% 30% 18% 30%)", transition: `clip-path 1200ms cubic-bezier(.22,1,.36,1) ${index * 150}ms` }}
+              >
+                <Image src={photo.src} alt={photo.alt} fill sizes={photo.sizes} className={`object-cover ${photo.position}`} />
+              </div>
+            </div>
+          ))}
         </div>
         <ol className="mt-[32px] grid list-none grid-cols-1 gap-x-10 gap-y-6 p-0 md:grid-cols-3">
           {LIFE.notes.map((note, index) => (

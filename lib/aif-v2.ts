@@ -17,6 +17,9 @@ export const FLYINGBEE = {
   heading: "Flyingbee Investment Fund",
   intro:
     "Flyingbee Investment Fund is a Category III AIF managed by Moneybee. The fund focuses on opportunities in high-growth listed and pre-IPO/unlisted companies.",
+  /** The introduction's second sentence, set beside Strategic Opportunity; the hero carries the first. */
+  // A non-breaking hyphen in "pre‑IPO", so the line never splits the word.
+  focus: "The fund focuses on opportunities in high-growth listed and pre\u2011IPO/unlisted companies.",
   /** The plan's "Explore Flyingbee / Get Started" button, split into its two actions. */
   start: { label: "Get Started", href: "/contact?enquiry=aif" },
 } as const;
@@ -43,7 +46,7 @@ export const CATEGORY_III = {
   text: "An AIF is a privately pooled investment vehicle. Unlike PMS, where investors directly hold securities in their own demat accounts, AIF investors receive units of the fund.",
 } as const;
 
-/** Investors → Flyingbee Investment Fund → Moneybee Investment Manager, and the four parties around the fund. Not on /aif (removed 2026-09-30); /preview/motion still draws it. */
+/** Investors → Flyingbee Investment Fund → Moneybee Investment Manager, and the four parties around the fund. Drawn on /aif as names only (components/aif-v3/structure-section.tsx). */
 export const STRUCTURE = {
   heading: "Flyingbee Structure",
   chain: ["Investors", "Flyingbee Investment Fund", "Moneybee Investment Manager"],

@@ -114,7 +114,8 @@ const ring = (x: number, y: number, r: number): Cell[] => {
  * cells. The case studies bend three touching cells into a path. The team is
  * three cells touching. Careers is a ring of six cells around an empty one.
  * Contact is a large cell meeting a small one. The investor centre stacks
- * three cells like filed documents.
+ * three cells like filed documents. Insights sets three equal cells in a row,
+ * like issues in a series.
  */
 const PAGE_CELLS: Record<Exclude<MarkKind, "pms" | "aif">, Cell[]> = {
   compare: [[255, 450, 220], [745, 450, 220 / Math.sqrt(7)], ...ring(745, 450, 220 / Math.sqrt(7))],
@@ -126,6 +127,7 @@ const PAGE_CELLS: Record<Exclude<MarkKind, "pms" | "aif">, Cell[]> = {
   careers: ring(500, 450, 150),
   contact: [[400, 450, 290], [400 + (SQRT3 / 2) * 420, 450, 130]],
   investor: [[500, 150, 150], [500, 450, 150], [500, 750, 150]],
+  insights: [[500 - SQRT3 * 180, 450, 180], [500, 450, 180], [500 + SQRT3 * 180, 450, 180]],
 };
 
 /** Each mark's two halves, every cell cut on the centre line with the same seam overlap as the product marks. */

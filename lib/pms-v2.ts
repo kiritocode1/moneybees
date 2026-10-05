@@ -9,6 +9,9 @@
 const LOREM = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.";
 const LOREM_SHORT = "Lorem ipsum dolor sit amet, consectetur adipiscing elit.";
 
+/** The plan's introduction, second sentence; the first is the hero's (lib/pms-v3-hero.ts). Set beside "Why Moneybee PMS?". */
+export const PMS_INTRO_APPROACH = "The approach is research-driven, sector-agnostic and based on understanding businesses, management quality, valuations and risk.";
+
 /** "Why Moneybee PMS?", verbatim. `glyph` picks each point's drawing. */
 export const WHY_PMS = [
   { name: "Fundamental research", glyph: "research" },

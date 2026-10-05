@@ -6,7 +6,7 @@ import ResearchSection from "@/components/fact-sections/research-section";
 import TeamCarousel from "@/components/fact-sections/team-carousel";
 import SiteFooter from "@/components/footer/site-footer";
 import { HeroSection, WhoWeAreSection } from "@/components/hero/hero-sections";
-import { FaqSection, LetsTalkSection, RecognitionSection, TwoWaysSection } from "@/components/home/home-sections";
+import { FaqSection, GetStartedSection, RecognitionSection, TwoWaysSection } from "@/components/home/home-sections";
 import PhilosophyFlythrough from "@/components/philosophy/philosophy-flythrough";
 import SiteNavigation from "@/components/ui/site-navigation";
 
@@ -42,7 +42,7 @@ export default function Home() {
         </div>
         <PicksSection />
         <TeamCarousel />
-        <LetsTalkSection />
+        <GetStartedSection />
         <FaqSection />
       </main>
       <SiteFooter

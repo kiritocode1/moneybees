@@ -3,6 +3,7 @@ import { ApproachWheelSection } from "@/components/aif-v3/approach-wheel";
 import { KeyTermsSection } from "@/components/aif-v3/key-terms-section";
 import { OpportunitySection } from "@/components/aif-v3/opportunity-section";
 import { PoolingSection } from "@/components/aif-v3/pooling-section";
+import { StructureSection } from "@/components/aif-v3/structure-section";
 import SiteFooter from "@/components/footer/site-footer";
 import ProductHero from "@/components/pms-v3/product-hero";
 import SiteNavigation from "@/components/ui/site-navigation";
@@ -21,8 +22,9 @@ export const metadata: Metadata = {
  * /aif, built to the Content & Visual Plan §4 and approved in
  * .plannotator/aif-v3/plan.md: the product hero shared with /pms, the deck's
  * strategic opportunity on the solid that was /about's timeline, why a
- * Category III AIF as a pinned pooling scene, the investment approach as a
- * pinned wedge wheel, and the key terms as line cards. Copy lives in
+ * Category III AIF as a pinned pooling scene, the fund's structure as the
+ * plan's diagram, the investment approach as a pinned wedge wheel, and the key
+ * terms as line cards. Copy lives in
  * lib/aif-v2.ts.
  */
 export default function AifPage() {
@@ -32,6 +34,7 @@ export default function AifPage() {
         <ProductHero data={AIF_HERO} />
         <OpportunitySection />
         <PoolingSection />
+        <StructureSection />
         <ApproachWheelSection />
         <KeyTermsSection />
       </main>
@@ -41,6 +44,7 @@ export default function AifPage() {
           ["PMS", "/pms"],
           ["Our approach", "/our-approach"],
           ["Strategic opportunity", "#opportunity"],
+          ["Structure", "#structure"],
           ["Investment approach", "#approach"],
           ["Key terms", "#key-terms"],
           ["Investor Centre", "/investor-centre"],

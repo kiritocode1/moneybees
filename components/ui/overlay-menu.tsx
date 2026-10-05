@@ -8,7 +8,7 @@ export interface MenuLink {
   label: string;
   href: string;
   /** Drop this link from the bar below this width, where the bar cannot fit every link. It stays in the menu. */
-  hideBelow?: 480 | 900;
+  hideBelow?: 480 | 900 | 1200;
   /** "login" sets the link apart in the bar; "cta" makes it the orange button. */
   kind?: "login" | "cta";
 }
@@ -538,6 +538,7 @@ const styles = `
   color: #000;
   font-size: 13px;
   text-decoration: none;
+  white-space: nowrap;
 }
 /* The page you are on: an orange rule under it in the bar, orange type on the curtain. */
 .om-root .om-visible-links a[aria-current="page"] {
@@ -577,6 +578,9 @@ const styles = `
 .om-root.om-is-open .om-toggler:focus-visible { outline: 2px solid #fff; outline-offset: 5px; }
 .om-root .om-nav a:hover { text-decoration: underline; text-underline-offset: 5px; }
 @media (max-width: 1000px) {
+  /* Seven links still sit in the bar down to 900px; a tighter gap keeps them clear of the logo. */
+  .om-root .om-visible-links { gap: 20px; }
+  .om-root .om-visible-links .om-login { padding-left: 20px; }
   .om-root .om-items { overflow-y: auto; justify-content: flex-start; padding-top: 110px; }
   .om-root .om-items-col:nth-child(2) { flex-direction: column; gap: 24px; }
   .om-root .om-secondary-links { display: block; }
@@ -593,6 +597,9 @@ const styles = `
   .om-root .om-visible-links .om-cta { min-height: 32px; padding: 0 12px; }
   .om-root .om-toggler { padding: 12px 4px 12px 8px; }
   .om-root .om-toggler span { width: 28px; }
+}
+@media (max-width: 1199px) {
+  .om-root .om-visible-links .om-hide-1200 { display: none; }
 }
 @media (max-width: 899px) {
   .om-root .om-visible-links .om-hide-900 { display: none; }

@@ -10,10 +10,10 @@
 const LOREM_SHORT = "Lorem ipsum dolor sit amet, consectetur adipiscing elit.";
 
 /** Which mark in components/pms-v3/marks.tsx a hero draws: the two products, then one per internal page. */
-export type MarkKind = "pms" | "aif" | "compare" | "approach" | "performance" | "cases" | "team" | "careers" | "contact" | "investor";
+export type MarkKind = "pms" | "aif" | "compare" | "approach" | "performance" | "cases" | "team" | "careers" | "contact" | "investor" | "insights";
 
-/** One figure in the hero's bottom bar: a mono label over its value. */
-export type HeroFigure = { label: string; value: string };
+/** One figure in the hero's bottom bar: a mono label over its value. `icon` draws a small line icon before the label; `href` makes the value a link. */
+export type HeroFigure = { label: string; value: string; icon?: "phone" | "email"; href?: string };
 
 /** A hero button: the orange pill, or the outlined one for a second action. */
 export type HeroAction = { label: string; href: string; outline?: boolean };
