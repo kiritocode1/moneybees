@@ -3,7 +3,7 @@ import FounderSection from "@/components/fact-sections/founder-section";
 import PicksSection from "@/components/fact-sections/picks-section";
 import RecordSection from "@/components/fact-sections/record-section";
 import ResearchSection from "@/components/fact-sections/research-section";
-import TeamSection from "@/components/fact-sections/team-section";
+import TeamCarousel from "@/components/fact-sections/team-carousel";
 import SiteFooter from "@/components/footer/site-footer";
 import { HeroSection, WhoWeAreSection } from "@/components/hero/hero-sections";
 import { FaqSection, LetsTalkSection, RecognitionSection, TwoWaysSection } from "@/components/home/home-sections";
@@ -41,7 +41,7 @@ export default function Home() {
           <RecordSection />
         </div>
         <PicksSection />
-        <TeamSection />
+        <TeamCarousel />
         <LetsTalkSection />
         <FaqSection />
       </main>

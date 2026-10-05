@@ -1,0 +1,36 @@
+/*
+ * curocapital.dk's grid, from its :root in reference/curocapital/layout.css,
+ * scoped to the team section: 6 columns with 16px margins and 20px gutters,
+ * then 12 columns with 20px margins and 16px gutters from 900px.
+ */
+.grid {
+  /*
+   * The source grows its root font size past 1440px wide. Our root stays at
+   * 16px, so the section carries the same formula as --rem and rebases
+   * Tailwind's spacing and text sizes on it.
+   */
+  --rem: max(16px, calc(16px + 16 * 0.4 * (100vw - 1440px) / 1440));
+  --spacing: calc(var(--rem) * 0.25);
+  --text-sm: calc(var(--rem) * 0.875);
+  --text-base: var(--rem);
+  --grid-margin: 16px;
+  --grid-gutter: 20px;
+  --grid-cols: 6;
+  --single-column: calc((100vw - var(--grid-margin) * 2 - (var(--grid-cols) - 1) * var(--grid-gutter)) / var(--grid-cols));
+  --cols: calc(var(--single-column) + var(--grid-gutter));
+  --cols-1: calc(var(--cols) * 1 - var(--grid-gutter));
+  --cols-2: calc(var(--cols) * 2 - var(--grid-gutter));
+  --cols-4: calc(var(--cols) * 4 - var(--grid-gutter));
+  --cols-5: calc(var(--cols) * 5 - var(--grid-gutter));
+  --half-col: calc(var(--single-column) / 2);
+  --half-gutter: calc(var(--grid-gutter) / 2);
+  --push-5: calc(var(--cols) * 5);
+}
+
+@media (min-width: 900px) {
+  .grid {
+    --grid-margin: 20px;
+    --grid-gutter: 16px;
+    --grid-cols: 12;
+  }
+}
