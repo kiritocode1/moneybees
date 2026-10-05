@@ -59,14 +59,3 @@ export const PEOPLE: readonly Person[] = Object.entries(DETAILS).map(([name, det
   if (!member) throw new Error(`lib/about-v3.ts: ${name} is not in TEAM`);
   return { ...member, ...details };
 });
-
-/**
- * The plan's two dates (§2: 2004; §1: PMS since August 2007) and the AIF
- * deck's first close ("First Close declared on October 30, 2025"). The plan
- * asks for dates to be approved before publication.
- */
-export const TIMELINE_STOPS = [
-  { label: "2004", text: "Dhiren Shah starts Moneybee Group." },
-  { label: "Aug 2007", text: "Moneybee PMS starts managing portfolios." },
-  { label: "Oct 2025", text: "Flyingbee Investment Fund declares its first close." },
-] as const;

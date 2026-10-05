@@ -21,6 +21,22 @@ export const FLYINGBEE = {
   start: { label: "Get Started", href: "/contact?enquiry=aif" },
 } as const;
 
+/**
+ * Three of the five benefits on the Flyingbee deck's "Strategic Opportunity
+ * with Flyingbee Investment Fund" slide (August 2026, page 8), the three not
+ * said elsewhere on /aif. Titles are the slide's; the lines are its facts in
+ * plain words. The tax line is a regulatory statement: check it against the
+ * approved fund documents before publication.
+ */
+export const OPPORTUNITY = {
+  heading: "Strategic Opportunity",
+  steps: [
+    { mark: "01", title: "Seasoned background", text: "Over 45 years of experience in corporate advisory and wealth management." },
+    { mark: "02", title: "Exclusive access", text: "Access to early-stage winners and to opportunities the wider market overlooks." },
+    { mark: "03", title: "Simplified tax", text: "Category III AIF income is taxed at the fund level, so it is tax free in the investor's hands." },
+  ],
+} as const;
+
 /** The plan's explanation, with its "the presentation explains that" dropped. */
 export const CATEGORY_III = {
   heading: "Why Category III AIF?",

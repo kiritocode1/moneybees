@@ -11,7 +11,8 @@ import { PERSON_HEIGHT, Walker } from "@/components/drawing/lookout";
  * along the lowest box, and three numbered callouts tied to the solid by
  * one-elbow leaders. The walk runs from the low bar (step 1) past the arm
  * (step 2) to the tall column (step 3). The heights are the study's ratios
- * (3.30 : 1.87 : 1) and encode no figures. Used by the /about timeline.
+ * (3.30 : 1.87 : 1) and encode no figures. Used by the /aif strategic
+ * opportunity (it was the /about timeline until 2026-10-05).
  */
 
 const W = 1000;

@@ -1,17 +1,15 @@
 import Image from "next/image";
 import { BracketLabel } from "@/components/fact-sections/fact-section";
 import { Rise } from "@/components/hero/editorial";
-import { BODY, COLUMN, EYEBROW, HEADING, SUBHEAD } from "@/components/hero/tokens";
+import { BODY, COLUMN, EYEBROW, HEADING } from "@/components/hero/tokens";
 import { ABOUT } from "@/lib/about-v2";
-import { AREAS, HERO_PHOTO, TIMELINE_STOPS } from "@/lib/about-v3";
-import { JourneyBlock, type JourneyStep } from "@/components/drawing/journey-block";
+import { AREAS, HERO_PHOTO } from "@/lib/about-v3";
 
 /*
  * /about with photographs, content plan §2: the heading and company text over
- * the team photograph, the group's four areas as photographs and a flat
- * timeline of the plan's dates. The founder band, the people section and the
- * Moneybee story sit between them (about-v2 and people-section.tsx). Server
- * components; Rise and the timeline's solid are the client parts.
+ * the team photograph and the group's four areas as photographs. The founder
+ * band, the people section and the Moneybee story sit between them (about-v2
+ * and people-section.tsx). Server components; Rise is the client part.
  */
 
 /** Heading and company text, then the team across the column. The founder band follows it. */
@@ -87,26 +85,6 @@ export function AreasSection() {
           </li>
         ))}
       </ul>
-    </section>
-  );
-}
-
-const step = (stop: (typeof TIMELINE_STOPS)[number]): JourneyStep => ({ mark: stop.label, text: stop.text });
-const STEPS = [step(TIMELINE_STOPS[0]), step(TIMELINE_STOPS[1]), step(TIMELINE_STOPS[2])] as const;
-
-/** The plan's company timeline as study 07's solid: the walk from the group in 2004 to Flyingbee in 2025. */
-export function TimelineSection() {
-  return (
-    <section id="timeline" aria-labelledby="timeline-heading" className="scroll-mt-[96px] bg-[#F6F6F6] text-black">
-      <div className={`${COLUMN} py-[120px] max-md:py-[80px]`}>
-        <BracketLabel>04</BracketLabel>
-        <h2 id="timeline-heading" className={`mt-[18px] ${SUBHEAD}`}>
-          Timeline
-        </h2>
-        <div className="mt-[48px] lg:h-[min(600px,72svh)]">
-          <JourneyBlock steps={STEPS} tone="light" />
-        </div>
-      </div>
     </section>
   );
 }
