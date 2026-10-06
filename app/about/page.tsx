@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import { FounderSection, StorySection } from "@/components/about-v2/about-sections";
 import { AboutHero, AreasSection } from "@/components/about-v3/about-sections";
-import PeopleSection from "@/components/about-v3/people-section";
 import { TimelineSection } from "@/components/about-v3/timeline-section";
 import SiteFooter from "@/components/footer/site-footer";
+import { KeyMembersSection } from "@/components/team/team-sections";
 import SiteNavigation from "@/components/ui/site-navigation";
 
 export const metadata: Metadata = {
@@ -18,9 +18,10 @@ export const metadata: Metadata = {
 /**
  * /about, built to the Content & Visual Plan §2 and approved in
  * .plannotator/about-people/plan.md: the heading and company information over
- * the team photograph, the founder, the group's four areas as photographs, who
- * does what, the company timeline and the Moneybee story. Copy lives in
- * lib/about-v2.ts; photographs, people and dates in lib/about-v3.ts.
+ * the team photograph, the founder, the group's four areas as photographs, the
+ * key team members (once /team's, approved in .plannotator/about-key-members),
+ * the company timeline and the Moneybee story. Copy lives in lib/about-v2.ts;
+ * photographs and dates in lib/about-v3.ts, the team in lib/team.ts.
  */
 export default function AboutPage() {
   return (
@@ -29,7 +30,7 @@ export default function AboutPage() {
         <AboutHero />
         <FounderSection />
         <AreasSection />
-        <PeopleSection />
+        <KeyMembersSection />
         <TimelineSection />
         <StorySection index="05" />
       </main>
@@ -37,7 +38,7 @@ export default function AboutPage() {
         explore={[
           ["Founder", "#founder"],
           ["What the group does", "#group"],
-          ["Our team", "#people"],
+          ["Our team", "#key-members"],
           ["Timeline", "#timeline"],
           ["Moneybee story", "#story"],
           ["Our approach", "/our-approach"],

@@ -4,127 +4,27 @@ import Image from "next/image";
 import { useId } from "react";
 import { BOX, Draw, Hatch, MOVE, OUT, RM, tr } from "@/components/drawing/plate";
 import { hexPoints, ORANGE, useShown } from "@/components/about-v2/shared";
-import { BracketLabel } from "@/components/fact-sections/fact-section";
-import { BODY, COLUMN, EYEBROW, HEADING, SUBHEAD } from "@/components/hero/tokens";
-import { FOUNDER_PERSON, KEY_MEMBERS } from "@/lib/team";
+import { COLUMN, EYEBROW, SUBHEAD } from "@/components/hero/tokens";
+import { KEY_MEMBERS } from "@/lib/team";
 
 /*
- * /team, content plan §9: the founder on a black band with a drawing of his
- * years in the plan's own dates, and the key team members on grey (the plan's
- * two and the group profile's four), each with a drawing of what their work
- * covers.
+ * The key team members, content plan §9, as section 03 of /about (they had a
+ * page of their own at /team until 2026-10-06): the plan's two and the group
+ * profile's four on grey, each with a drawing of what their work covers.
  */
 
 const MONO = "var(--font-geist-mono), ui-monospace, monospace";
 type Timing = (ms: number, delay?: number) => string;
 
-function Qualifications({ items, dark }: { items: string; dark?: boolean }) {
+function Qualifications({ items }: { items: string }) {
   return (
     <ul className="mt-[20px] flex list-none flex-wrap gap-[8px] p-0" aria-label="Qualifications">
       {items.split(", ").map((item) => (
-        <li key={item} className={`rounded-full border px-[14px] py-[6px] text-[14px] ${dark ? "border-white/30" : "border-black/20"}`}>
+        <li key={item} className="rounded-full border border-black/20 px-[14px] py-[6px] text-[14px]">
           {item}
         </li>
       ))}
     </ul>
-  );
-}
-
-/**
- * The founder's story in the plan's own facts. A dimension line measures the
- * 45+ years from the start of his career to today; under it the market swings
- * through its cycles over a dashed run-up with no start year (the plan gives
- * none); then the orange run begins at 2004, Moneybee Group, and passes August
- * 2007, the PMS, on its way to today.
- */
-function FounderYears({ on }: { on: boolean; t: Timing }) {
-  const hatch = useId();
-  const ink = "#fff";
-  const axis = 90;
-  const start = 14;
-  const now = 306;
-  const stops = [
-    { x: 206, label: "2004", sub: "MONEYBEE GROUP" },
-    { x: 290, label: "AUG 2007", sub: "PMS" },
-  ];
-  const wave = "M14 58 C 30 34, 46 34, 62 58 S 94 82, 110 58 S 142 34, 158 58 S 178 72, 190 64";
-  const run = 620;
-  const runAt = 1150;
-  const reach = (x: number) => runAt + ((x - stops[0].x) / (now - stops[0].x)) * run;
-  return (
-    <svg viewBox="0 0 320 130" className="block h-auto w-full overflow-visible" role="img" aria-label="45+ years across market cycles; Moneybee Group started in 2004; PMS since August 2007">
-      <defs>
-        <Hatch id={hatch} ink={ink} gap={2.6} opacity={0.4} />
-      </defs>
-      {/* The time axis and its ticks. */}
-      <line x1={start} x2={now} y1={axis} y2={axis} stroke={ink} strokeWidth=".5" strokeOpacity=".3" />
-      {Array.from({ length: 25 }, (_, tick) => (
-        <line key={tick} x1={start + tick * 12.17} x2={start + tick * 12.17} y1={axis} y2={axis + (tick % 4 ? 2 : 3.6)} stroke={ink} strokeWidth=".5" strokeOpacity=".35" />
-      ))}
-      <path d={`M${start} ${axis}H${stops[0].x}`} stroke={ink} strokeOpacity=".5" strokeWidth="1" strokeDasharray="3 3" />
-      {/* 45+ years, measured end to end: extension lines, then the dimension. */}
-      <Draw d={`M${start} ${axis - 4}V10M${now} ${axis - 4}V10`} on={on} ms={420} stroke={ink} strokeWidth=".5" strokeOpacity=".5" />
-      <Draw d={`M${start + 1} 16H${now - 1}`} on={on} ms={560} delay={220} ease={MOVE} stroke={ink} strokeWidth=".8" />
-      <g className={RM} style={{ opacity: on ? 1 : 0, ...tr("opacity", 240, 700) }}>
-        <path d={`M${start + 4} 13.6L${start} 16L${start + 4} 18.4M${now - 4} 13.6L${now} 16L${now - 4} 18.4`} fill="none" stroke={ink} strokeWidth=".8" />
-        <rect x="126" y="11" width="68" height="10" fill="#000" />
-        <text x="160" y="18.4" textAnchor="middle" fontSize="7" letterSpacing=".12em" fill={ink} fontFamily={MONO}>
-          45+ YEARS
-        </text>
-      </g>
-      {/* The market, swinging over the run-up. */}
-      <path d={`${wave}L190 ${axis}H14Z`} fill={`url(#${hatch})`} className={RM} style={{ opacity: on ? 1 : 0, ...tr("opacity", 500, 950) }} />
-      <Draw d={wave} on={on} ms={1000} delay={150} ease={MOVE} stroke={ink} strokeOpacity=".8" strokeWidth="1" strokeLinejoin="round" />
-      <text x={start} y="112" fontSize="7" letterSpacing=".12em" fill={ink} fillOpacity=".6" fontFamily={MONO}>
-        MARKET CYCLES
-      </text>
-      {/* Moneybee's own run, to today. */}
-      <Draw d={`M${stops[0].x} ${axis}H${now}`} on={on} ms={run} delay={runAt} ease="linear" stroke={ORANGE} strokeWidth="2.2" />
-      {stops.map((stop, index) => (
-        <g key={stop.label}>
-          <line x1={stop.x} x2={stop.x} y1={axis - 14} y2={axis - 4} stroke={ink} strokeWidth=".5" strokeOpacity=".5" />
-          <polygon points={hexPoints(stop.x, axis, 8)} fill="#000" stroke={ink} strokeOpacity=".55" strokeWidth=".8" />
-          <polygon points={hexPoints(stop.x, axis, 6.4)} fill={ORANGE} className={RM} style={{ ...BOX, transformOrigin: "center", opacity: on ? 1 : 0, transform: on ? "scale(1)" : "scale(.7)", ...tr("opacity, transform", 360, reach(stop.x)) }} />
-          <text x={stop.x} y="112" textAnchor={index ? "end" : "middle"} dx={index ? 12 : 0} fontSize="8" letterSpacing=".1em" fill={ink} fontFamily={MONO}>
-            {stop.label}
-          </text>
-          <text x={stop.x} y="124" textAnchor={index ? "end" : "middle"} dx={index ? 12 : 0} fontSize="7" letterSpacing=".12em" fill={ink} fillOpacity=".55" fontFamily={MONO}>
-            {stop.sub}
-          </text>
-        </g>
-      ))}
-      <circle cx={now} cy={axis} r="2.2" fill={ORANGE} className={RM} style={{ opacity: on ? 1 : 0, ...tr("opacity", 200, runAt + run) }} />
-    </svg>
-  );
-}
-
-/** The founder on black: a large portrait, his name and qualifications, and his years drawn in the plan's dates. */
-export function FounderBand() {
-  const { ref, shown, t } = useShown<HTMLDivElement>(0.35);
-  const person = FOUNDER_PERSON;
-  return (
-    <section id={person.id} aria-labelledby="founder-heading" className="scroll-mt-[96px] bg-black text-white">
-      <div className={`${COLUMN} grid grid-cols-1 items-end gap-12 py-[120px] md:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] md:gap-20 max-md:py-[80px]`}>
-        <figure className="m-0">
-          <div className="relative aspect-[868/824] w-full overflow-hidden bg-white/10">
-            <Image src={person.photo} alt={person.name} fill sizes="(max-width: 768px) 100vw, 520px" className="object-cover" />
-          </div>
-          <span aria-hidden="true" className="block h-[3px] w-full origin-left bg-[#F6A11A]" style={{ transform: `scaleX(${shown ? 1 : 0})`, transition: `transform ${t(900, 200)}` }} />
-        </figure>
-        <div ref={ref}>
-          <BracketLabel>01 · Founder</BracketLabel>
-          <h2 id="founder-heading" className={`${HEADING} mt-[18px] text-[clamp(2.5rem,1.2rem+3.2vw,4.25rem)]`}>
-            {person.name}
-          </h2>
-          <p className={`mt-[12px] ${EYEBROW} text-[12px] text-white/70`}>{person.designation}</p>
-          <Qualifications items={person.qualifications} dark />
-          <p className={`mt-[28px] max-w-[600px] text-white/80 ${BODY}`}>{person.bio}</p>
-          <div className="mt-[40px] max-w-[520px] border-t border-white/20 pt-[24px]">
-            <FounderYears on={shown} t={t} />
-          </div>
-        </div>
-      </div>
-    </section>
   );
 }
 
@@ -418,7 +318,7 @@ export function KeyMembersSection() {
   return (
     <section id="key-members" aria-labelledby="members-heading" className="scroll-mt-[96px] bg-[#F7F7F8] text-black">
       <div className={`${COLUMN} py-[120px] max-md:py-[80px]`}>
-        <span className={`${EYEBROW} text-black/60`}>02</span>
+        <span className={`${EYEBROW} text-black/60`}>03</span>
         <h2 id="members-heading" className={`mt-[14px] ${SUBHEAD}`}>
           Key Team Members
         </h2>

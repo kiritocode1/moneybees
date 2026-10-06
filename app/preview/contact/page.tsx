@@ -22,7 +22,7 @@ export default function ContactPreviewPage() {
         ["Office", "#office"],
         ["Enquiry", "#enquiry"],
         ["Performance", "/performance"],
-        ["Team", "/team"],
+        ["Team", "/about#key-members"],
       ]} />
     </SiteNavigation>
   );

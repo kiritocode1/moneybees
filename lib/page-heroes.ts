@@ -6,11 +6,9 @@
  * never repeated as a section on the same page.
  */
 
-import { ABOUT } from "@/lib/about-v2";
 import { CAREERS, RESUME_HREF, RESUME_EMAIL } from "@/lib/careers";
 import { EMAIL, PHONE, PHONE_HREF } from "@/lib/contact-v2";
 import { CONTACT, PMS_APPROACH, PMS_VS_AIF } from "@/lib/insights";
-import { INSIGHTS_LOREM } from "@/lib/insights-page";
 import { PERFORMANCE } from "@/lib/performance";
 import type { ProductHeroData } from "@/lib/pms-v3-hero";
 
@@ -71,18 +69,6 @@ export const CASES_HERO = {
   ],
 } as const satisfies ProductHeroData;
 
-export const TEAM_HERO = {
-  mark: "team",
-  title: ["People Behind", "Moneybee"],
-  sentence: ABOUT.company[1],
-  figures: [
-    { label: "Moneybee Group since", value: "2004" },
-    { label: "Founder's experience", value: "45+ years" },
-    { label: "PMS since", value: "Aug 2007" },
-    { label: "Office", value: "Lower Parel, Mumbai" },
-  ],
-} as const satisfies ProductHeroData;
-
 export const CAREERS_HERO = {
   mark: "careers",
   title: ["Build Your Career", "with Moneybee"],
@@ -123,18 +109,5 @@ export const INVESTOR_HERO = {
     { label: grievance[0], value: grievance[1] },
     { label: "SEBI complaints", value: "SCORES" },
     { label: "Online dispute resolution", value: "ODR" },
-  ],
-} as const satisfies ProductHeroData;
-
-/** The sentence is LOREM until the client says what Insights will publish; the figures are deck facts. */
-export const INSIGHTS_HERO = {
-  mark: "insights",
-  title: ["Insights"],
-  sentence: INSIGHTS_LOREM.short,
-  figures: [
-    { label: "Focus", value: "Small and mid caps" },
-    { label: "Research", value: "Listed and unlisted companies" },
-    { label: "PMS since", value: "Aug 2007" },
-    { label: "Office", value: "Lower Parel, Mumbai" },
   ],
 } as const satisfies ProductHeroData;

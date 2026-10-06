@@ -40,7 +40,7 @@ export default function OurApproachPage() {
           ["Our process", "#process"],
           ["Performance", "/performance"],
           ["Our strategies", "/pms-vs-aif"],
-          ["Team", "/team"],
+          ["Team", "/about#key-members"],
         ]}
       />
     </SiteNavigation>

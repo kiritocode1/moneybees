@@ -52,7 +52,7 @@ export default function Home() {
           ["PMS", "/pms"],
           ["Flyingbee AIF", "/aif"],
           ["Performance", "/performance"],
-          ["Our Team", "/team"],
+          ["Our Team", "/about#key-members"],
         ]}
       />
     </SiteNavigation>

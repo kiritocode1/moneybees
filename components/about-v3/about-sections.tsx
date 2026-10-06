@@ -8,8 +8,8 @@ import { AREAS, HERO_PHOTO } from "@/lib/about-v3";
 /*
  * /about with photographs, content plan §2: the heading and company text over
  * the team photograph and the group's four areas as photographs. The founder
- * band, the people section and the Moneybee story sit between them (about-v2
- * and people-section.tsx). Server components; Rise is the client part.
+ * band, the key team members and the Moneybee story sit between them (about-v2
+ * and components/team). Server components; Rise is the client part.
  */
 
 /** Heading and company text, then the team across the column. The founder band follows it. */

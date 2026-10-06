@@ -28,8 +28,8 @@ const RING = "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring
 
 const wrap = (index: number) => ((index % COUNT) + COUNT) % COUNT;
 
-/** The source links "Om <name>" to a page per person; ours exist only for the people on /team. */
-const ABOUT = new Map<string, string>(KEY_MEMBERS.map((person) => [person.name, `/team#${person.id}`]));
+/** The source links "Om <name>" to a page per person; ours go to that person's card in /about's key team members. */
+const ABOUT = new Map<string, string>(KEY_MEMBERS.map((person) => [person.name, `/about#${person.id}`]));
 
 /** The source's 6x14 chevrons. */
 const CHEVRONS = {
