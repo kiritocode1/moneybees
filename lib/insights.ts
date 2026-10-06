@@ -423,12 +423,19 @@ export const HOME_PLAN = {
   ],
 } as const;
 
-/** PMS Bazaar rankings, December 2024, group profile p5. */
-export const RANKINGS = [
-  ["3rd", "5-year returns"],
-  ["6th", "3-year returns"],
-  ["6th", "1-year returns"],
+/**
+ * PMS Bazaar rankings, December 2024: the three "Top Performance" tables on
+ * group profile p5 ("As on 31 Dec 2024"), each period's top seven returns in
+ * rank order. `ours` is Moneybee's place in the list (the QueenBee strategy).
+ * The other schemes are not named on the site. Shown on /about.
+ */
+export const RANKING_TABLES = [
+  { rank: "3rd", period: "5-year returns", ours: 2, returns: [72.62, 48.91, 44.69, 43.09, 42.41, 40.57, 40.27] },
+  { rank: "6th", period: "3-year returns", ours: 5, returns: [46.13, 43.43, 43.11, 42.55, 41.26, 38.67, 36.99] },
+  { rank: "6th", period: "1-year returns", ours: 5, returns: [72.0, 69.69, 66.52, 52.83, 52.61, 51.95, 51.17] },
 ] as const;
+
+export const RANKINGS_AS_OF = "As on 31 Dec 2024";
 
 /** Why we focus on small cap Indian equities, group profile p14, verbatim. The index and multibagger-share figures are left out: the slide gives no source or date. */
 export const SMALL_CAP_THESIS = [

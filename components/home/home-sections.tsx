@@ -7,7 +7,7 @@ import {
   Rise,
   SUBHEAD,
 } from "@/components/hero/editorial";
-import { AIF_PRODUCT, PMS_PRODUCT, RANKINGS } from "@/lib/insights";
+import { AIF_PRODUCT, PMS_PRODUCT } from "@/lib/insights";
 
 /** The FAQ and Get Started animate on the client, so they live in their own files. */
 export { FaqSection } from "./faq-section";
@@ -15,9 +15,10 @@ export { GetStartedSection } from "./get-started-section";
 
 /*
  * The homepage sections that follow the peer pattern (see the competitor
- * comparison of 2026-09-27): recognition near the top, the two ways to invest,
- * the plan's Get Started section, and FAQs. Facts are the decks' own. Server
- * components: only the Rise wrappers, Get Started and the FAQ run on the client.
+ * comparison of 2026-09-27): the two ways to invest, the plan's Get Started
+ * section, and FAQs. Recognition moved to /about on 2026-10-06. Facts are the
+ * decks' own. Server components: only the Rise wrappers, Get Started and the
+ * FAQ run on the client.
  */
 
 const FOCUS =
@@ -25,51 +26,6 @@ const FOCUS =
 const FOCUS_ON_DARK =
   "focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white";
 const EASE = "ease-[cubic-bezier(.23,1,.32,1)]";
-const GUTTER = "px-6 md:px-[120px]";
-
-/**
- * Recognition, after Wonder Vision's: the one centred section, plain facts.
- * Each rank is the value of its period, so the period is the <dt> and the rank
- * the <dd>, shown above it. Ranks are ink; orange marks the ruled top edge.
- */
-export function RecognitionSection() {
-  return (
-    <section
-      aria-labelledby="recognition-heading"
-      className={`bg-white pt-[120px] pb-[120px] text-center max-[600px]:py-[80px] ${GUTTER}`}
-    >
-      <h2
-        id="recognition-heading"
-        className="text-[clamp(3rem,5.4vw,5.6rem)] leading-none font-light tracking-[-.05em] uppercase"
-      >
-        Recognition
-      </h2>
-      <p className="mx-auto mt-[26px] max-w-[52ch] text-[16px] leading-[1.6] text-[rgba(0,0,0,.72)]">
-        Ranked among India&rsquo;s top-performing portfolio managers by PMS
-        Bazaar, December 2024.
-      </p>
-      <dl className="mx-auto mt-[56px] grid max-w-[980px] grid-cols-3 border-b border-b-black max-[600px]:grid-cols-1">
-        {RANKINGS.map(([rank, period]) => (
-          <div
-            key={period}
-            className="relative flex flex-col-reverse justify-end border-t border-t-black border-r border-r-[rgba(0,0,0,.13)] py-[34px] last:border-r-0 max-[600px]:border-r-0"
-          >
-            <i
-              aria-hidden="true"
-              className="absolute top-[-2px] left-1/2 h-[3px] w-[32px] -translate-x-1/2 bg-[#F6A11A]"
-            />
-            <dt className="mt-[12px] text-[13px] uppercase tracking-[.06em] text-black/60">
-              {period}
-            </dt>
-            <dd className="m-0 text-[clamp(3.4rem,6vw,6rem)] leading-none font-light tracking-[-.05em] text-black tabular-nums">
-              {rank}
-            </dd>
-          </div>
-        ))}
-      </dl>
-    </section>
-  );
-}
 
 const WAYS = [
   {

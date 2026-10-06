@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { FounderSection, StorySection } from "@/components/about-v2/about-sections";
-import { AboutHero, AreasSection } from "@/components/about-v3/about-sections";
+import { AboutHero } from "@/components/about-v3/about-sections";
+import { AreasSection } from "@/components/about-v3/areas-section";
+import { RecognitionSection } from "@/components/about-v3/recognition-section";
 import { TimelineSection } from "@/components/about-v3/timeline-section";
 import SiteFooter from "@/components/footer/site-footer";
 import { KeyMembersSection } from "@/components/team/team-sections";
@@ -18,10 +20,12 @@ export const metadata: Metadata = {
 /**
  * /about, built to the Content & Visual Plan §2 and approved in
  * .plannotator/about-people/plan.md: the heading and company information over
- * the team photograph, the founder, the group's four areas as photographs, the
- * key team members (once /team's, approved in .plannotator/about-key-members),
- * the company timeline and the Moneybee story. Copy lives in lib/about-v2.ts;
- * photographs and dates in lib/about-v3.ts, the team in lib/team.ts.
+ * the team photograph, the founder, the key team members (once /team's,
+ * approved in .plannotator/about-key-members), the group's four areas as
+ * drawings (.plannotator/about-areas), the PMS Bazaar rankings (moved from the
+ * homepage, .plannotator/about-recognition), the company timeline and the
+ * Moneybee story. Copy lives in lib/about-v2.ts; the photograph and dates in
+ * lib/about-v3.ts, the team in lib/team.ts.
  */
 export default function AboutPage() {
   return (
@@ -29,16 +33,18 @@ export default function AboutPage() {
       <main id="top" className="option-one bg-white text-black">
         <AboutHero />
         <FounderSection />
-        <AreasSection />
         <KeyMembersSection />
+        <AreasSection index="03" />
+        <RecognitionSection index="04" />
         <TimelineSection />
-        <StorySection index="05" />
+        <StorySection index="06" />
       </main>
       <SiteFooter
         explore={[
           ["Founder", "#founder"],
-          ["What the group does", "#group"],
           ["Our team", "#key-members"],
+          ["What the group does", "#group"],
+          ["Recognition", "#recognition"],
           ["Timeline", "#timeline"],
           ["Moneybee story", "#story"],
           ["Our approach", "/our-approach"],

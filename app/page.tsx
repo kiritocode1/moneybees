@@ -6,7 +6,7 @@ import ResearchSection from "@/components/fact-sections/research-section";
 import TeamCarousel from "@/components/fact-sections/team-carousel";
 import SiteFooter from "@/components/footer/site-footer";
 import { HeroSection, WhoWeAreSection } from "@/components/hero/hero-sections";
-import { FaqSection, GetStartedSection, RecognitionSection, TwoWaysSection } from "@/components/home/home-sections";
+import { FaqSection, GetStartedSection, TwoWaysSection } from "@/components/home/home-sections";
 import PhilosophyFlythrough from "@/components/philosophy/philosophy-flythrough";
 import SiteNavigation from "@/components/ui/site-navigation";
 
@@ -28,10 +28,9 @@ export default function Home() {
   return (
     <SiteNavigation>
       <main id="top" className="option-one overflow-clip bg-white text-[#000000]">
-        {/* The peer pattern: claim and figures, outside proof, who we are, the two
-            ways to invest, belief and method, results, people, then the ask. */}
+        {/* The peer pattern: claim and figures, who we are, the two ways to
+            invest, belief and method, results, people, then the ask. */}
         <HeroSection />
-        <RecognitionSection />
         <WhoWeAreSection />
         <FounderSection />
         <TwoWaysSection />

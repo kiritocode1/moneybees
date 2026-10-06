@@ -10,16 +10,15 @@ import { TIMELINE_STOPS } from "@/lib/about-v3";
  * date: the line draws left to right as the section comes into view, and each
  * stop's orange square lands as the line reaches it. Below 768px the line
  * runs down the left edge instead. The isometric solid that once carried these
- * dates is on /aif now. White, so it does not run into the grey key team
- * members section above it.
+ * dates is on /aif now.
  */
 export function TimelineSection() {
   const { ref, shown, t } = useShown<HTMLOListElement>(0.35);
   return (
-    <section id="timeline" aria-labelledby="timeline-heading" className="scroll-mt-[96px] bg-white text-black">
+    <section id="timeline" aria-labelledby="timeline-heading" className="scroll-mt-[96px] bg-[#F6F6F6] text-black">
       <div className={`${COLUMN} py-[120px] max-md:py-[80px]`}>
         <h2 id="timeline-heading">
-          <BracketLabel>04 · Timeline</BracketLabel>
+          <BracketLabel>05 · Timeline</BracketLabel>
         </h2>
         <ol ref={ref} className="relative mt-[56px] grid list-none grid-cols-1 gap-y-[40px] p-0 max-md:pl-[28px] md:grid-cols-3 md:gap-x-6">
           {/* The line: across the top from md, down the left edge below it. */}
