@@ -1,18 +1,17 @@
 import Link from "@/components/transition/transition-link";
-import { HOME_PLAN, INTRODUCTION, PERIOD_RETURNS } from "@/lib/insights";
+import { HOME_PLAN, PERIOD_RETURNS } from "@/lib/insights";
 import CornerBrackets from "./corner-brackets";
-import { BODY, BUTTON, COLUMN, DashedRule, EYEBROW, HEADING, Rise, SUBHEAD } from "./editorial";
+import { BODY, BUTTON, COLUMN, EYEBROW, HEADING, Rise } from "./editorial";
 import HeroTerrain from "./hero-terrain";
-import WealthChart from "./wealth-chart";
 
 /**
  * The top of the homepage in antimetal.com's layout. Class values come from the
  * pinned source (reference/antimetal/source): the 1512px column with 120px
  * gutters, the type scale (.text-heading, .text-body, .text-eyebrow), the
- * dashed rule, the pill buttons and the corner-bracket box. Section order is
- * the source's minus its quote: hero, then the manifesto. Colours
- * are ours: white paper, black, #F6A11A and grey. A server component; the
- * terrain, the chart and the Rise wrappers are the client parts.
+ * pill buttons and the corner-bracket box. Only the hero is kept; the
+ * "Why Moneybee" manifesto and its wealth chart left the homepage on
+ * 2026-10-06. Colours are ours: white paper, black, #F6A11A and grey. A server
+ * component; the terrain and the Rise wrappers are the client parts.
  */
 
 
@@ -74,45 +73,5 @@ export function HeroSection() {
         ))}
       </dl>
     </section>
-  );
-}
-
-export function WhoWeAreSection() {
-  const [first, ...rest] = INTRODUCTION.lead;
-  return (
-    <>
-      <DashedRule />
-      <section id="about" aria-labelledby="why-heading" className={`w-full bg-white text-black`}>
-        <div className={`${COLUMN} grid grid-cols-1 items-start gap-10 py-[80px] md:grid-cols-2 md:gap-12`}>
-          <WealthChart />
-          <Rise onView>
-            <div className="flex flex-col gap-5">
-              <h2 id="why-heading" className={SUBHEAD}>
-                Why Moneybee
-              </h2>
-              <ul className="mb-3 list-none border-t border-t-black/15 p-0">
-                {HOME_PLAN.highlights.map((highlight) => (
-                  <li key={highlight} className="flex gap-3 border-b border-b-black/15 py-3 text-[15px] leading-[1.45]">
-                    <span aria-hidden="true" className="mt-[.5em] h-[6px] w-[6px] shrink-0 bg-[#F6A11A]" />
-                    {highlight.replace(/\.$/, "")}
-                  </li>
-                ))}
-              </ul>
-              <p className={BODY}>
-                {/* The bracketed drop cap: two lines tall, floated, dashed box with corner marks. */}
-                {/* Ink letter; the corner marks carry the orange. */}
-                <span className="relative float-left mr-3 flex h-[2lh] items-center justify-center border border-dashed border-black/10 px-2 text-[#F6A11A]">
-                  <span className="font-serif text-[50px] leading-none text-black">{first}</span>
-                  <CornerBrackets />
-                </span>
-                {rest.join("")}
-              </p>
-              <p className={BODY}>{INTRODUCTION.advice}</p>
-              <p className={BODY}>{INTRODUCTION.team}</p>
-            </div>
-          </Rise>
-        </div>
-      </section>
-    </>
   );
 }

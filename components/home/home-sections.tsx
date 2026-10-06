@@ -1,109 +1,21 @@
 import Link from "@/components/transition/transition-link";
-import {
-  BODY,
-  COLUMN,
-  DashedRule,
-  EYEBROW,
-  Rise,
-  SUBHEAD,
-} from "@/components/hero/editorial";
-import { AIF_PRODUCT, PMS_PRODUCT } from "@/lib/insights";
+import { COLUMN } from "@/components/hero/editorial";
 
-/** The FAQ and Get Started animate on the client, so they live in their own files. */
+/** The FAQ and Get Started animate on the client, and Two ways carries its own mark styles, so they live in their own files. */
 export { FaqSection } from "./faq-section";
 export { GetStartedSection } from "./get-started-section";
+export { TwoWaysSection } from "./two-ways-section";
 
 /*
  * The homepage sections that follow the peer pattern (see the competitor
  * comparison of 2026-09-27): the two ways to invest, the plan's Get Started
- * section, and FAQs. Recognition moved to /about on 2026-10-06. Facts are the
- * decks' own. Server components: only the Rise wrappers, Get Started and the
- * FAQ run on the client.
+ * section and FAQs, each in its own file and re-exported here, plus the old
+ * closing band below. Recognition moved to /about on 2026-10-06.
  */
 
-const FOCUS =
-  "focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-black";
 const FOCUS_ON_DARK =
   "focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white";
 const EASE = "ease-[cubic-bezier(.23,1,.32,1)]";
-
-const WAYS = [
-  {
-    href: "/pms",
-    label: "Portfolio Management Service",
-    name: PMS_PRODUCT.name,
-    lead: "The stocks sit in your own demat account.",
-    facts: [
-      PMS_PRODUCT.points[1],
-      PMS_PRODUCT.points[2],
-      PMS_PRODUCT.points[5],
-    ],
-  },
-  {
-    href: "/aif",
-    label: "Category III AIF",
-    name: AIF_PRODUCT.name,
-    lead: AIF_PRODUCT.lead,
-    facts: [
-      "Rs. 1 crore minimum",
-      "3 to 5 years",
-      "At least 51% listed, up to 49% unlisted",
-    ],
-  },
-] as const;
-
-/** One philosophy, two ways to invest: the products up front, each leading to its own page. */
-export function TwoWaysSection() {
-  return (
-    <section
-      id="invest"
-      aria-labelledby="invest-heading"
-      className="bg-white text-black"
-    >
-      <DashedRule />
-      <div className={`${COLUMN} py-[120px] max-[600px]:py-[80px]`}>
-        <Rise onView>
-          <h2 id="invest-heading" className={SUBHEAD}>
-            Two ways to invest with us
-          </h2>
-        </Rise>
-        <div className="mt-[48px] grid grid-cols-2 gap-[24px] max-[900px]:grid-cols-1">
-          {WAYS.map((way) => (
-            <Link
-              key={way.href}
-              href={way.href}
-              className={`group flex flex-col border border-[rgba(0,0,0,.14)] p-[36px] text-black no-underline transition-[border-color,scale] duration-200 ${EASE} hover:border-black active:scale-[.99] max-[600px]:p-[24px] ${FOCUS}`}
-            >
-              <span className={`${EYEBROW} text-black/60`}>{way.label}</span>
-              <h3 className="mt-[18px] font-serif text-[clamp(2rem,3vw,2.8rem)] leading-[1.05] font-normal">
-                {way.name}
-              </h3>
-              <p className={`mt-[14px] text-black/70 ${BODY}`}>{way.lead}</p>
-              <ul className="mt-[28px] list-none border-t border-t-[rgba(0,0,0,.13)] p-0">
-                {way.facts.map((fact) => (
-                  <li
-                    key={fact}
-                    className="flex gap-[12px] border-b border-b-[rgba(0,0,0,.13)] py-[12px] text-[15px] leading-[1.45]"
-                  >
-                    <span className="mt-[.5em] h-[6px] w-[6px] shrink-0 bg-[#F6A11A]" />
-                    {fact}
-                  </li>
-                ))}
-              </ul>
-              <span className="mt-[28px] inline-flex items-center gap-[10px] text-[15px] font-medium">
-                See the details
-                {/* Grows on hover by scaleX from its left end, not by width. */}
-                <span
-                  className={`h-[2px] w-[40px] origin-left scale-x-[.55] bg-[#F6A11A] transition-transform duration-200 ${EASE} group-hover:scale-x-100`}
-                />
-              </span>
-            </Link>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
 
 /** The old closing band. The homepage replaced it with GetStartedSection (get-started-section.tsx); only the unrouted pages in components/products still render it. */
 export function LetsTalkSection() {
