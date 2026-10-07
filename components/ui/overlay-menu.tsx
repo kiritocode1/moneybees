@@ -319,7 +319,7 @@ export default function OverlayMenu({
             </div>
           </div>
           <div className="om-items-col">
-            <div className="om-primary-links">
+            <div className="om-primary-links" style={{ gridTemplateRows: `repeat(${Math.ceil(primaryLinks.length / 2)}, max-content)` }}>
               {primaryLinks.map((link) => (
                 <MenuAnchor key={link.label} link={link} />
               ))}
@@ -454,9 +454,11 @@ const styles = `
 
 .om-root .om-items-col:nth-child(2) {
   flex: 4;
+  min-width: 0;
   display: flex;
+  flex-direction: column;
+  align-items: stretch;
   gap: 2rem;
-  justify-content: space-between;
 }
 
 .om-root .om-items a {
@@ -478,10 +480,25 @@ const styles = `
   color: #9D9EA1;
 }
 
-/* Eleven links must fit the curtain's height too, so the size follows whichever of width or height is tighter. */
+/* Read down the first column, then the second, matching keyboard and DOM order. */
+.om-root .om-primary-links {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-auto-flow: column;
+  column-gap: clamp(24px, 3vw, 48px);
+  row-gap: 12px;
+  align-content: start;
+}
 .om-root .om-primary-links a {
-  font-size: clamp(1.75rem, min(5.2vw, 5.4svh), 5.7rem);
+  max-width: 100%;
+  margin-bottom: 0;
+  font-size: clamp(1.5rem, min(3.2vw, 5.4svh), 3.5rem);
   font-weight: 400;
+}
+.om-root .om-secondary-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 28px;
 }
 
 .om-root .om-secondary-links a {
@@ -584,7 +601,9 @@ const styles = `
   .om-root .om-items { overflow-y: auto; justify-content: flex-start; padding-top: 110px; }
   .om-root .om-items-col:nth-child(2) { flex-direction: column; gap: 24px; }
   .om-root .om-secondary-links { display: block; }
-  .om-root .om-primary-links a { font-size: clamp(24px, min(7vw, 5.2svh), 46px); }
+  .om-root .om-primary-links { column-gap: 20px; }
+  .om-root .om-primary-links a { font-size: clamp(18px, min(4.2vw, 5.2svh), 36px); min-height: 40px; }
+  .om-root .om-secondary-links { display: flex; }
   .om-root .om-socials { position: static; }
 }
 @media (max-width: 600px) {
