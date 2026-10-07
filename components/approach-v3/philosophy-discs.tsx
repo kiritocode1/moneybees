@@ -58,8 +58,6 @@ function Discs({ shown, t }: { shown: boolean; t: (ms: number, delay?: number) =
   );
 }
 
-const number = (index: number) => String(index + 1).padStart(2, "0");
-
 export function PhilosophyDiscs() {
   const { ref, shown, t } = useShown<HTMLDivElement>(0.3);
   return (
@@ -82,20 +80,14 @@ export function PhilosophyDiscs() {
                 // Each column runs to the next one, so it inherits the disc spacing as 08's columns do.
                 style={{ left: `${((DISCS[index].x - 31.3 - BOX.x) / BOX.w) * 100}%`, width: `${(((DISCS[index + 1]?.x ?? DISCS[index].x + 150) - DISCS[index].x) / BOX.w) * 100}%`, opacity: shown ? 1 : 0, transform: shown ? "none" : "translateY(8px)", transition: `opacity ${t(420, 900 + index * 120)}, transform ${t(600, 900 + index * 120)}` }}
               >
-                <span aria-hidden="true" className="block text-[22px] leading-none font-semibold tracking-[-.02em]">
-                  {number(index)}
-                </span>
-                <h3 className="mt-3 font-serif text-[clamp(1.4rem,1.1rem+.7vw,1.8rem)] leading-[1.1] font-normal">{stage.word}</h3>
+                <h3 className=" font-serif text-[clamp(1.4rem,1.1rem+.7vw,1.8rem)] leading-[1.1] font-normal">{stage.word}</h3>
                 <p className="mt-2 text-[13px] leading-[1.5] text-black/60">{stage.text}</p>
               </li>
             ))}
           </ol>
           <ol className="m-0 mt-8 list-none p-0 md:hidden">
-            {PHILOSOPHY_STAGES.map((stage, index) => (
-              <li key={stage.word} className="grid grid-cols-[36px_minmax(0,1fr)] border-t border-black/15 py-4">
-                <span aria-hidden="true" className="text-[17px] font-semibold">
-                  {number(index)}
-                </span>
+            {PHILOSOPHY_STAGES.map((stage) => (
+              <li key={stage.word} className="border-t border-black/15 py-4">
                 <div>
                   <h3 className="font-serif text-[22px] leading-[1.1] font-normal">{stage.word}</h3>
                   <p className="mt-1 text-[13px] leading-[1.5] text-black/60">{stage.text}</p>

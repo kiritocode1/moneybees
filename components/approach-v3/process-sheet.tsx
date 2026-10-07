@@ -186,7 +186,7 @@ const FIGURES: Record<(typeof PROCESS_STEPS)[number]["name"], Figure> = {
 };
 
 /** One stage of the sheet: its rule draws across as it arrives, then its figure draws. */
-function Stage({ index, step }: { index: number; step: (typeof PROCESS_STEPS)[number] }) {
+function Stage({ step }: { step: (typeof PROCESS_STEPS)[number] }) {
   const { ref, shown, t } = useShown<HTMLLIElement>(0.2);
   const figure = FIGURES[step.name];
   return (
@@ -194,10 +194,7 @@ function Stage({ index, step }: { index: number; step: (typeof PROCESS_STEPS)[nu
       <span aria-hidden="true" className="absolute inset-x-0 top-0 h-px origin-left bg-white/25" style={{ transform: shown ? "none" : "scaleX(0)", transition: `transform ${t(1200)}` }} />
       <div className={`${COLUMN} grid grid-cols-1 gap-12 py-[64px] md:py-[96px] xl:min-h-[min(66vh,580px)] xl:grid-cols-12 xl:items-center xl:gap-x-6`}>
         <div className="xl:col-span-4">
-          <span aria-hidden="true" className="block font-serif text-[56px] leading-none text-white/40">
-            {String(index + 1).padStart(2, "0")}
-          </span>
-          <h3 className="mt-5 font-serif text-[clamp(2rem,1.4rem+1.6vw,2.75rem)] leading-[1.05] font-normal tracking-[-.015em]">{step.name}</h3>
+          <h3 className=" font-serif text-[clamp(2rem,1.4rem+1.6vw,2.75rem)] leading-[1.05] font-normal tracking-[-.015em]">{step.name}</h3>
           <p className="mt-4 max-w-[36ch] text-[17px] leading-[1.55] text-white/70">{step.text}</p>
         </div>
         <div className="xl:col-span-8 xl:col-start-5 xl:flex xl:justify-center">
@@ -217,8 +214,8 @@ export function ProcessSheet() {
         </h2>
       </div>
       <ol className="m-0 list-none border-b border-white/25 p-0">
-        {PROCESS_STEPS.map((step, index) => (
-          <Stage key={step.name} index={index} step={step} />
+        {PROCESS_STEPS.map((step) => (
+          <Stage key={step.name} step={step} />
         ))}
       </ol>
     </section>

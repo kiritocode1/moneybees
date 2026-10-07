@@ -8,7 +8,7 @@ import { COLUMN, EYEBROW, SUBHEAD } from "@/components/hero/tokens";
 import { KEY_MEMBERS } from "@/lib/team";
 
 /*
- * The key team members, content plan §9, as section 02 of /about (they had a
+ * The key team members, content plan §9, on /about (they had a
  * page of their own at /team until 2026-10-06): the plan's two and the group
  * profile's four on grey, each with a drawing of what their work covers.
  */
@@ -318,8 +318,7 @@ export function KeyMembersSection() {
   return (
     <section id="key-members" aria-labelledby="members-heading" className="scroll-mt-[96px] bg-[#F7F7F8] text-black">
       <div className={`${COLUMN} py-[120px] max-md:py-[80px]`}>
-        <span className={`${EYEBROW} text-black/60`}>02</span>
-        <h2 id="members-heading" className={`mt-[14px] ${SUBHEAD}`}>
+        <h2 id="members-heading" className={SUBHEAD}>
           Key Team Members
         </h2>
         <div ref={ref} className="mt-[56px] grid grid-cols-1 gap-[2px] lg:grid-cols-2">

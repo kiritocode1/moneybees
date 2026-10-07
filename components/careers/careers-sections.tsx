@@ -3,7 +3,7 @@
 import { useInView } from "motion/react";
 import Image from "next/image";
 import { useRef } from "react";
-import { BODY, COLUMN, EYEBROW, SUBHEAD } from "@/components/hero/tokens";
+import { BODY, COLUMN, SUBHEAD } from "@/components/hero/tokens";
 import { CAREERS_LOREM, LIFE, RESUME_HREF } from "@/lib/careers";
 import ApplyStack from "./apply-stack";
 
@@ -18,7 +18,6 @@ import ApplyStack from "./apply-stack";
 const PANEL = "overflow-hidden rounded-[10px] bg-[#F6F6F6] ring-1 ring-black/[.06]";
 /** The panel's bottom 15% fades to the white page. */
 const PANEL_FADE = { maskImage: "linear-gradient(to bottom, #000 85%, transparent)", WebkitMaskImage: "linear-gradient(to bottom, #000 85%, transparent)" } as const;
-const number = (index: number) => String(index + 1).padStart(2, "0");
 
 /** Life at Moneybee's two photographs. Both panels share one row height from md, so the narrow one fills it instead of keeping a ratio. */
 const PHOTOS = [
@@ -43,8 +42,7 @@ export function LifeSection() {
       <div className={`${COLUMN} py-[120px] max-md:py-[80px]`}>
         <div className="grid grid-cols-1 items-end gap-8 md:grid-cols-2 md:gap-16">
           <div>
-            <span className={`${EYEBROW} text-black/60`}>02</span>
-            <h2 id="life-heading" className={`mt-[14px] ${SUBHEAD}`}>
+            <h2 id="life-heading" className={SUBHEAD}>
               Life at Moneybee
             </h2>
           </div>
@@ -72,8 +70,7 @@ export function LifeSection() {
                 className="absolute top-0 left-0 h-[2px] w-full origin-left bg-[#F6A11A] motion-reduce:!transition-none"
                 style={{ transform: `scaleX(${shown ? 1 : 0})`, transition: `transform 600ms cubic-bezier(.23,1,.32,1) ${900 + index * 80}ms` }}
               />
-              <span className={`${EYEBROW} text-black/60`}>{number(index)}</span>
-              <p className="mt-[10px] text-[15px] leading-[1.55] text-black/65">{note}</p>
+              <p className=" text-[15px] leading-[1.55] text-black/65">{note}</p>
             </li>
           ))}
         </ol>
@@ -89,8 +86,7 @@ export function ApplySection() {
       <div className={`${COLUMN} py-[120px] max-md:py-[80px]`}>
         <div className="grid grid-cols-1 items-end gap-8 md:grid-cols-2 md:gap-16">
           <div>
-            <span className={`${EYEBROW} text-black/60`}>04</span>
-            <h2 id="apply-heading" className={`mt-[14px] ${SUBHEAD}`}>
+            <h2 id="apply-heading" className={SUBHEAD}>
               How to Apply
             </h2>
           </div>

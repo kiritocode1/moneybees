@@ -28,8 +28,6 @@ const DOCUMENT_ART: Record<DocumentGlyph, LineArt> = {
   aif: "gather",
 };
 
-const number = (index: number) => String(index + 1).padStart(2, "0");
-
 function DocumentCard({ doc, on, delay }: { doc: InvestorDocument; on: boolean; delay: number }) {
   return (
     <li id={doc.id} className="flex min-h-[300px] scroll-mt-[120px] flex-col rounded-[6px] bg-white p-[22px] ring-1 ring-black/[.06]" style={{ opacity: on ? 1 : 0, transform: on ? "none" : "translateY(18px)", transition: `opacity 500ms cubic-bezier(.23,1,.32,1) ${delay}ms, transform 700ms cubic-bezier(.23,1,.32,1) ${delay}ms` }}>
@@ -53,13 +51,12 @@ function DocumentCard({ doc, on, delay }: { doc: InvestorDocument; on: boolean; 
   );
 }
 
-function Group({ group, index }: { group: (typeof DOCUMENT_GROUPS)[number]; index: number }) {
+function Group({ group }: { group: (typeof DOCUMENT_GROUPS)[number] }) {
   const { ref, shown } = useShown<HTMLDivElement>(0.2);
   return (
     <div ref={ref} id={group.id} className="grid scroll-mt-[120px] grid-cols-1 gap-6 border-t border-black/15 pt-8 lg:grid-cols-12 lg:gap-x-6">
       <div className="lg:col-span-3">
-        <span className={`${EYEBROW} text-black/60`}>{number(index)}</span>
-        <h3 className="mt-[10px] font-serif text-[clamp(1.6rem,1.3rem+.8vw,2.1rem)] leading-[1.1] font-normal">{group.heading}</h3>
+        <h3 className=" font-serif text-[clamp(1.6rem,1.3rem+.8vw,2.1rem)] leading-[1.1] font-normal">{group.heading}</h3>
       </div>
       <ul className="m-0 grid list-none grid-cols-1 gap-[12px] p-0 sm:grid-cols-2 lg:col-span-9 lg:grid-cols-4">
         {group.documents.map((doc, order) => (
@@ -81,8 +78,8 @@ export function DocumentCards() {
           <p className={`text-black/70 ${BODY}`}>{INVESTOR_LOREM.long}</p>
         </div>
         <div className="mt-[64px] flex flex-col gap-[56px]">
-          {DOCUMENT_GROUPS.map((group, index) => (
-            <Group key={group.id} group={group} index={index} />
+          {DOCUMENT_GROUPS.map((group) => (
+            <Group key={group.id} group={group} />
           ))}
         </div>
       </div>

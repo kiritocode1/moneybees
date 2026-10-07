@@ -3,7 +3,7 @@
 import Image from "next/image";
 import type { ReactNode } from "react";
 import { useShown } from "@/components/about-v2/shared";
-import { BODY, COLUMN, EYEBROW, SUBHEAD } from "@/components/hero/tokens";
+import { BODY, COLUMN, SUBHEAD } from "@/components/hero/tokens";
 import { CAREERS_LOREM, CULTURE } from "@/lib/careers";
 
 /*
@@ -78,8 +78,7 @@ export function CultureColumns() {
       <div className={`${COLUMN} py-[120px] max-md:py-[80px]`}>
         <div className="grid grid-cols-1 items-end gap-10 md:grid-cols-2 md:gap-16">
           <div>
-            <span className={`${EYEBROW} text-white/60`}>03</span>
-            <h2 id="culture-heading" className={`mt-[14px] ${SUBHEAD}`}>
+            <h2 id="culture-heading" className={SUBHEAD}>
               Our Work Culture
             </h2>
             <p className={`mt-[28px] max-w-[480px] text-white/70 ${BODY}`}>{CAREERS_LOREM.long}</p>
@@ -108,9 +107,6 @@ export function CultureColumns() {
               </li>
             ))}
           </ol>
-          <span aria-hidden="true" className={`${EYEBROW} mt-[clamp(40px,5vw,72px)] block text-white/50`}>
-            03
-          </span>
         </div>
       </div>
     </section>

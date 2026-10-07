@@ -43,7 +43,7 @@ export function FounderSection() {
           <Image src={FOUNDER.photo} alt={FOUNDER.name} fill sizes="(max-width: 768px) 100vw, 520px" className="object-cover" />
         </div>
         <div>
-          <BracketLabel>01 · Founder</BracketLabel>
+          <BracketLabel>Founder</BracketLabel>
           <h2 id="founder-heading" className={`mt-[18px] ${SUBHEAD}`}>
             {FOUNDER.name}
           </h2>
@@ -200,14 +200,13 @@ function MoneyDrawing({ on }: { on: boolean; t: (ms: number, delay?: number) => 
   );
 }
 
-/** The plan's story line, drawn as its two halves side by side. `index` is its number in the page's order. */
-export function StorySection({ index = "03" }: { index?: string }) {
+/** The story line, drawn as its two halves side by side. */
+export function StorySection() {
   const { ref, shown, t } = useShown<HTMLDivElement>(0.35);
   return (
     <section id="story" aria-labelledby="story-heading" className="scroll-mt-[96px] border-t border-dashed border-black/10 bg-white text-black">
       <div className={`${COLUMN} py-[120px] max-md:py-[80px]`}>
-        <span className={`${EYEBROW} text-black/60`}>{index}</span>
-        <h2 id="story-heading" className={`mt-[14px] ${SUBHEAD}`}>
+        <h2 id="story-heading" className={SUBHEAD}>
           {STORY.heading}
         </h2>
         <blockquote className="mt-[40px] max-w-[980px] font-serif text-[clamp(1.9rem,1.2rem+2.4vw,3.4rem)] leading-[1.12] tracking-[-.015em]">

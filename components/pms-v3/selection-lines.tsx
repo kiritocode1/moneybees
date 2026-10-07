@@ -233,12 +233,12 @@ function useBox(figure: RefObject<HTMLElement | null>, list: RefObject<HTMLEleme
     if (!cell || !steps) return;
     const measure = () => {
       const area = cell.getBoundingClientRect();
-      const numerals = steps.querySelectorAll<HTMLElement>("[data-numeral]");
+      const headings = steps.querySelectorAll<HTMLElement>("[data-start]");
       const ends = steps.querySelectorAll<HTMLElement>("[data-end]");
       const beside = window.matchMedia("(min-width: 768px)").matches;
-      const first = numerals[0] && laidOut(numerals[0]);
+      const first = headings[0] && laidOut(headings[0]);
       const last = ends[ends.length - 1] && laidOut(ends[ends.length - 1]);
-      // Beside the steps the fan spans them: top curve at the first numeral's cap top, bottom curve through the last line.
+      // Beside the steps the fan spans them: top curve at the first heading's cap top, bottom curve through the last line.
       const top = beside && first ? first.top - area.top + 1 : area.height * 0.06;
       const bottom = beside && last ? last.bottom - area.top - 10 : area.height * 0.94;
       setBox({ w: Math.round(area.width), h: Math.round(area.height), top: r2(top), bottom: r2(bottom) });
@@ -282,12 +282,9 @@ export function SelectionSection() {
                 }}
               >
                 <Rise onView>
-                  <div className="grid grid-cols-[clamp(44px,4.4vw,64px)_minmax(0,1fr)] gap-x-[12px]">
-                    <span data-numeral="" className="font-serif text-[clamp(2rem,1.5rem+1.4vw,3rem)] leading-none tabular-nums [text-box:trim-both_cap_alphabetic]">
-                      {String(index + 1).padStart(2, "0")}
-                    </span>
+                  <div>
                     <div>
-                      <h3 className="font-serif text-[clamp(1.4rem,1.1rem+.8vw,1.9rem)] leading-[1.1] font-normal [text-box:trim-both_cap_alphabetic]">{step.name}</h3>
+                      <h3 data-start="" className="font-serif text-[clamp(1.4rem,1.1rem+.8vw,1.9rem)] leading-[1.1] font-normal [text-box:trim-both_cap_alphabetic]">{step.name}</h3>
                       <p data-end="" className="m-0 mt-[14px] max-w-[44ch] text-[15px] leading-[1.55] text-black/70">
                         {step.text}
                       </p>

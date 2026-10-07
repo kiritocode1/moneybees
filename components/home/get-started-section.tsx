@@ -2,7 +2,7 @@
 
 import { useShown } from "@/components/about-v2/shared";
 import { ENQUIRY_GLYPHS } from "@/components/contact-v2/glyphs";
-import { COLUMN, DashedRule, EYEBROW, SUBHEAD } from "@/components/hero/editorial";
+import { COLUMN, DashedRule, SUBHEAD } from "@/components/hero/editorial";
 import Link from "@/components/transition/transition-link";
 import { EMAIL, ENQUIRIES, PHONE, PHONE_HREF } from "@/lib/contact-v2";
 
@@ -34,8 +34,7 @@ export function GetStartedSection() {
                 className="flex min-h-[380px] flex-col rounded-[6px] bg-[#F6F6F6] p-[26px] max-md:min-h-[320px]"
                 style={{ opacity: shown ? 1 : 0, transform: shown ? "none" : "translateY(24px)", transition: `opacity ${t(500, index * 80)}, transform ${t(700, index * 80)}` }}
               >
-                <span className={`${EYEBROW} text-black/60`}>{String(index + 1).padStart(2, "0")}</span>
-                <h3 className="mt-[12px] font-serif text-[clamp(1.5rem,1.15rem+.7vw,1.9rem)] leading-[1.1] font-normal">{enquiry.name}</h3>
+                <h3 className=" font-serif text-[clamp(1.5rem,1.15rem+.7vw,1.9rem)] leading-[1.1] font-normal">{enquiry.name}</h3>
                 <div className="flex flex-1 items-center justify-center py-8">
                   <div className="aspect-[4/3] w-[min(100%,170px)]">
                     <Glyph on={shown} />

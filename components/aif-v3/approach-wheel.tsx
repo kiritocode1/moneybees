@@ -51,7 +51,6 @@ function wedgePath(index: number) {
 }
 
 const WEDGES = APPROACH_STEPS.map((_, index) => wedgePath(index));
-const number = (index: number) => String(index + 1).padStart(2, "0");
 
 function Wheel({ active }: { active: number | null }) {
   return (
@@ -59,14 +58,9 @@ function Wheel({ active }: { active: number | null }) {
       {WEDGES.map((d, index) => {
         const state = active === null || index < active ? "done" : index === active ? "active" : "next";
         const fill = state === "active" ? ORANGE : state === "done" ? "#000000" : "#EDEDED";
-        const ink = state === "active" ? "#000000" : state === "done" ? "#FFFFFF" : "#767676";
-        const mid = START + (index + 0.5) * SWEEP;
         return (
           <g key={index}>
             <path d={d} fill={fill} stroke={fill} strokeWidth={CORNER * 2} strokeLinejoin="round" className="transition-[fill,stroke] duration-500 ease-[cubic-bezier(.23,1,.32,1)] motion-reduce:transition-none" />
-            <text x={CENTRE + 206 * Math.cos(toRadians(mid))} y={CENTRE + 206 * Math.sin(toRadians(mid)) + 6} textAnchor="middle" fontSize={17} letterSpacing="0.08em" fill={ink} fontFamily="var(--font-geist-mono), ui-monospace, monospace" className="transition-[fill] duration-500">
-              {number(index)}
-            </text>
           </g>
         );
       })}
@@ -95,10 +89,7 @@ export function ApproachWheelSection() {
             </h2>
             {/* Desktop: the lit point takes the stage. */}
             <div className="mt-[min(8vh,72px)] hidden md:block" aria-live="polite">
-              <p className={`${EYEBROW} tabular-nums text-black/55`}>
-                <span className="text-black">{number(active)}</span> / {number(APPROACH_STEPS.length - 1)}
-              </p>
-              <p key={active} className="mt-4 font-serif text-[clamp(2.6rem,1.4rem+2.8vw,4.6rem)] leading-[1.02] tracking-[-.02em] motion-safe:animate-[av3-rise_.6s_cubic-bezier(.23,1,.32,1)]">
+              <p key={active} className=" font-serif text-[clamp(2.6rem,1.4rem+2.8vw,4.6rem)] leading-[1.02] tracking-[-.02em] motion-safe:animate-[av3-rise_.6s_cubic-bezier(.23,1,.32,1)]">
                 {APPROACH_STEPS[active]}
               </p>
               <p className="mt-5 max-w-[42ch] text-[16px] leading-[1.5] text-black/70">{AIF_LOREM.short}</p>
@@ -106,7 +97,6 @@ export function ApproachWheelSection() {
             <ol className="mt-[min(7vh,64px)] list-none border-t border-black/15 p-0">
               {APPROACH_STEPS.map((step, index) => (
                 <li key={step} className={`flex items-baseline gap-4 border-b border-black/10 py-[10px] ${EYEBROW} transition-colors duration-300 ${pinned && index !== active ? "md:text-black/45" : ""} text-black`}>
-                  <span className="w-6 tabular-nums">{number(index)}</span>
                   {step}
                 </li>
               ))}

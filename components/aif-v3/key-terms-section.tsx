@@ -2,7 +2,7 @@
 
 import { useShown } from "@/components/about-v2/shared";
 import { BracketLabel } from "@/components/fact-sections/fact-section";
-import { BUTTON, COLUMN, EYEBROW, SUBHEAD } from "@/components/hero/tokens";
+import { BUTTON, COLUMN, SUBHEAD } from "@/components/hero/tokens";
 import Link from "@/components/transition/transition-link";
 import { FLYINGBEE, KEY_TERMS } from "@/lib/aif-v2";
 import { TermFigure } from "./term-figures";
@@ -17,8 +17,6 @@ import { TermFigure } from "./term-figures";
  * regulatory statements be checked against the latest approved fund documents
  * before publication.
  */
-
-const number = (index: number) => String(index + 1).padStart(2, "0");
 
 export function KeyTermsSection() {
   const { ref, shown } = useShown<HTMLDivElement>(0.25);
@@ -43,8 +41,7 @@ export function KeyTermsSection() {
               className="flex min-h-[360px] flex-col rounded-[6px] bg-[#141414] p-[26px] ring-1 ring-white/[.08] transition-[opacity,transform] duration-700 ease-[cubic-bezier(.23,1,.32,1)] motion-reduce:transition-none max-lg:min-h-[300px]"
               style={{ opacity: shown ? 1 : 0, transform: shown ? "none" : "translateY(28px)", transitionDelay: `${index * 90}ms` }}
             >
-              <span className={`${EYEBROW} text-white/50`}>{number(index)}</span>
-              <h3 className="mt-[14px] font-serif text-[clamp(1.45rem,1.15rem+.5vw,1.75rem)] leading-[1.1] font-normal">{term.label}</h3>
+              <h3 className=" font-serif text-[clamp(1.45rem,1.15rem+.5vw,1.75rem)] leading-[1.1] font-normal">{term.label}</h3>
               <p className="mt-[10px] text-[15px] leading-[1.45] text-white/70">{term.value}</p>
               <div className="mt-auto flex justify-center pt-8">
                 <div className="w-[min(100%,180px)]">

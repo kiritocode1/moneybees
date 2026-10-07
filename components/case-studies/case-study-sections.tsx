@@ -16,7 +16,6 @@ import { DRAWINGS } from "./drawings";
 
 const ORANGE = "#F6A11A";
 const EASE = "cubic-bezier(.22,1,.36,1)";
-const number = (index: number) => String(index + 1).padStart(2, "0");
 
 function useShown<T extends Element>(amount = 0.3) {
   const ref = useRef<T>(null);
@@ -123,7 +122,7 @@ function Mark({ text, dark }: { text: string; dark: boolean }) {
 }
 
 /** One company's three plan lines, then its business drawing beside its Revenue, EBITDA and PAT, FY20 to FY24. */
-export function CaseStudySection({ study, index }: { study: CaseStudyEntry; index: number }) {
+export function CaseStudySection({ study }: { study: CaseStudyEntry }) {
   const { ref, shown } = useShown<HTMLDivElement>(0.2);
   const Drawing = DRAWINGS[study.drawing];
   return (
@@ -132,7 +131,7 @@ export function CaseStudySection({ study, index }: { study: CaseStudyEntry; inde
         <div className="flex items-center gap-[18px] border-b border-black/15 pb-[24px]">
           <Mark text={study.mark} dark={false} />
           <div>
-            <BracketLabel>Case study {number(index)}</BracketLabel>
+            <BracketLabel>Case study</BracketLabel>
             <h2 id={`${study.id}-heading`} className={`mt-[10px] ${SUBHEAD} text-[clamp(1.6rem,1.1rem+1.6vw,2.4rem)] leading-[1.1]`}>
               {study.name}
             </h2>
@@ -256,8 +255,8 @@ export function TimelineSection() {
 export function CaseStudyList() {
   return (
     <>
-      {CASE_STUDIES.map((study, index) => (
-        <CaseStudySection key={study.id} study={study} index={index} />
+      {CASE_STUDIES.map((study) => (
+        <CaseStudySection key={study.id} study={study} />
       ))}
     </>
   );

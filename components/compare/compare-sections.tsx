@@ -1,9 +1,9 @@
 "use client";
 
 import { BracketLabel } from "@/components/fact-sections/fact-section";
-import { COLUMN, EYEBROW, SUBHEAD } from "@/components/hero/tokens";
+import { COLUMN, SUBHEAD } from "@/components/hero/tokens";
 import Link from "@/components/transition/transition-link";
-import { DelayedOn, FOCUS, hexPoints, number, ORANGE, PRESS, T, useShown } from "@/components/pms-v2/shared";
+import { DelayedOn, FOCUS, hexPoints, ORANGE, PRESS, T, useShown } from "@/components/pms-v2/shared";
 import { COMPARE_LINKS, COMPARISON, EXPLANATION } from "@/lib/compare";
 import { ROW_GLYPHS } from "./row-glyphs";
 
@@ -59,10 +59,7 @@ export function ComparisonSection() {
                       <td key={side} className={`py-[24px] align-top ${side ? "border-l border-white/15 pl-[32px] max-md:pl-[14px]" : "pr-[32px] max-md:pr-[14px]"}`}>
                         <div className="grid grid-cols-[minmax(0,1fr)_150px] items-center gap-6 max-lg:grid-cols-1 max-lg:gap-4">
                           <div>
-                            <span aria-hidden="true" className={`${EYEBROW} block text-white/60`}>
-                              {number(index)}
-                            </span>
-                            <span className="mt-[8px] block font-serif text-[clamp(1.1rem,.9rem+.8vw,1.75rem)] leading-[1.2]">{text}</span>
+                            <span className="block font-serif text-[clamp(1.1rem,.9rem+.8vw,1.75rem)] leading-[1.2]">{text}</span>
                           </div>
                           <DelayedOn on={shown} delay={index * 80 + side * 40 + 200}>
                             {(ready) => <Glyph on={ready} />}

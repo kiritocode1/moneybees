@@ -6,7 +6,7 @@ import { useShown } from "@/components/about-v2/shared";
 import { BOX, Draw, MOVE, OUT, RM, tr } from "@/components/drawing/plate";
 import { BracketLabel } from "@/components/fact-sections/fact-section";
 import { Rise } from "@/components/hero/editorial";
-import { COLUMN, EYEBROW, SUBHEAD } from "@/components/hero/tokens";
+import { COLUMN, SUBHEAD } from "@/components/hero/tokens";
 import { PHILOSOPHY_POINTS, PHILOSOPHY_WORDS } from "@/lib/pms-v2";
 
 /*
@@ -135,8 +135,6 @@ const STAGES: readonly { word: string; upright: string; Glyph: ComponentType<Gly
   { word: PHILOSOPHY_WORDS[2], upright: "Under-", Glyph: GapGlyph },
 ];
 
-const number = (index: number) => String(index + 1).padStart(2, "0");
-
 export function PhilosophySection() {
   const { ref, shown } = useShown<HTMLOListElement>(0.35);
   return (
@@ -169,12 +167,11 @@ export function PhilosophySection() {
           ))}
         </ol>
 
-        {/* The five points on the same three-column grid: numbers on the first line, points from the second. */}
+        {/* The five points use the same column grid. */}
         <ol className="m-0 mt-[88px] grid list-none grid-cols-1 border-b border-white/20 p-0 md:mt-[112px] md:grid-cols-3 md:gap-x-[clamp(32px,4.5vw,72px)]">
-          {PHILOSOPHY_POINTS.map((point, index) => (
-            <li key={point} className="grid grid-cols-[44px_minmax(0,1fr)] items-baseline border-t border-white/20 py-[22px] md:col-span-3 md:grid-cols-subgrid md:py-[26px]">
-              <span className={`${EYEBROW} text-white/55 tabular-nums`}>{number(index)}</span>
-              <p className="m-0 font-serif text-[clamp(1.3rem,1rem+.8vw,1.85rem)] leading-[1.2] md:col-span-2">{point}</p>
+          {PHILOSOPHY_POINTS.map((point) => (
+            <li key={point} className="border-t border-white/20 py-[22px] md:col-span-3 md:py-[26px]">
+              <p className="m-0 font-serif text-[clamp(1.3rem,1rem+.8vw,1.85rem)] leading-[1.2]">{point}</p>
             </li>
           ))}
         </ol>

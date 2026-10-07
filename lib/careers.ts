@@ -46,6 +46,15 @@ export const OPENINGS = (Object.keys(TEAM_NAMES) as Team[]).map((team) => ({
   ] as const,
 }));
 
+/** Team areas for career enquiries. These do not assert that a vacancy exists. */
+export const CAREER_AREAS = [
+  { team: "research", description: "Listed and unlisted company research" },
+  { team: "portfolio", description: "Portfolio management and investment analysis" },
+  { team: "advisory", description: "Corporate research, modelling and valuation" },
+  { team: "compliance", description: "Compliance and risk management" },
+  { team: "services", description: "Equity broking and related financial services" },
+] as const satisfies readonly { team: Team; description: string }[];
+
 /** The mailto an opening's Apply link opens. */
 export const applyHref = (role: string) => `mailto:${RESUME_EMAIL}?subject=${encodeURIComponent(`Application: ${role}`)}`;
 

@@ -130,8 +130,7 @@ function Ladder({ table, on, start, reduced }: { table: (typeof RANKING_TABLES)[
   );
 }
 
-/** `index` is the section's number in the page's order. */
-export function RecognitionSection({ index }: { index: string }) {
+export function RecognitionSection() {
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, amount: 0.3 });
   const reduced = useReducedMotion();
@@ -139,7 +138,7 @@ export function RecognitionSection({ index }: { index: string }) {
   return (
     <section id="recognition" aria-labelledby="recognition-heading" className="scroll-mt-[96px] border-t border-dashed border-black/10 bg-white text-black">
       <div className={`${COLUMN} py-[120px] max-md:py-[80px]`}>
-        <BracketLabel>{index} · Recognition</BracketLabel>
+        <BracketLabel>Recognition</BracketLabel>
         <h2 id="recognition-heading" className={`mt-[18px] max-w-[880px] ${SUBHEAD}`}>
           Ranked among India&rsquo;s top-performing portfolio managers by PMS Bazaar
         </h2>

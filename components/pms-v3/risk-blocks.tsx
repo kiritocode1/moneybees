@@ -10,14 +10,14 @@ import { PERSON_HEIGHT, Standing } from "@/components/drawing/lookout";
 /*
  * Risk Management as the measured stacked-blocks figure
  * (reference/visual-language/06/STUDY.md): four blocks in two-point
- * perspective, numbered bottom-up and alternating sides, each with a leader
- * from its numeral to the block's outer edge. Vertices are the study's
+ * perspective, alternating sides, each with a leader
+ * from its callout to the block's outer edge. Vertices are the study's
  * (06/moneybee.svg). The left callout column sits further left than the
  * study's so our type fits; the leaders keep their measured elbows.
  *
  * The callouts are HTML sized in container units, so they scale with the
  * drawing on desktop. Below md the drawing tightens around the tower with its
- * numerals and the callouts become a list under it.
+ * leaders and the callouts become a list under it.
  */
 
 const LIT = "#F6A11A";
@@ -30,7 +30,7 @@ const XR = 489.02;
 
 type Side = "left" | "right";
 
-/** In callout order, bottom block first. `start` and `elbow` are the leader's measured ys; `row` is its numeral's baseline. */
+/** Bottom block first. `start` and `elbow` are leader coordinates; `row` anchors the callout. */
 const BLOCKS: readonly { lit: string; shade: string; side: Side; row: number; start: number; elbow: number }[] = [
   {
     lit: "257.42,567.30 373.24,590.16 373.24,610.78 257.42,586.92",
@@ -69,19 +69,17 @@ const BLOCKS: readonly { lit: string; shade: string; side: Side; row: number; st
 /** The study's painter's order, D C A B: the eye level runs through B, so it paints last. */
 const PAINT = [0, 1, 3, 2] as const;
 
-/** Where each layout puts its numeral columns (their centres) and what it shows of the drawing. */
+/** Leader positions and the visible drawing area for each layout. */
 const LAYOUTS = {
-  wide: { left: 34, right: 533.8, viewBox: "0 88 746 536", numerals: false },
-  narrow: { left: 206, right: 540, viewBox: "176 88 395 536", numerals: true },
+  wide: { left: 34, right: 533.8, viewBox: "0 88 746 536" },
+  narrow: { left: 206, right: 540, viewBox: "176 88 395 536" },
 } as const;
-
-const number = (index: number) => String(index + 1).padStart(2, "0");
 
 /** Bottom-up: block i rises 24 units into place, then its leader draws and its callout fades in. The figure on the roof comes last. */
 const timing = (index: number) => ({ block: index * 120, leader: index * 120 + 450, callout: index * 120 + 550 });
 
 function Tower({ layout, shown, t, className }: { layout: keyof typeof LAYOUTS; shown: boolean; t: (ms: number, delay?: number) => string; className: string }) {
-  const { left, right, viewBox, numerals } = LAYOUTS[layout];
+  const { left, right, viewBox } = LAYOUTS[layout];
   const rise = (index: number): CSSProperties => ({
     transform: shown ? "none" : "translateY(24px)",
     opacity: shown ? 1 : 0,
@@ -120,34 +118,14 @@ function Tower({ layout, shown, t, className }: { layout: keyof typeof LAYOUTS; 
           <Standing />
         </g>
       </g>
-      {numerals &&
-        BLOCKS.map((block, index) => (
-          <text
-            key={index}
-            x={block.side === "left" ? left : right}
-            y={block.row}
-            textAnchor="middle"
-            className="font-serif text-[30px]"
-            fill="#000"
-            style={{ opacity: shown ? 1 : 0, transition: `opacity ${t(300, timing(index).callout)}` }}
-          >
-            {number(index)}
-          </text>
-        ))}
     </svg>
   );
 }
 
-/*
- * Desktop callout boxes in the wide drawing's units (x 0..746, y 88..624): a
- * 28-unit numeral column centred on the leader, a 10-unit gap, then the text.
- * The numeral is 24 units on a line-height of 1, which puts its baseline .84em
- * under the box top (Instrument Serif: ascent .99, descent .31), so the box
- * sits 20.16 units above the study's numeral baseline.
- */
+/* Desktop text starts beside each vertical leader, in the wide drawing's units. */
 const BOX: Record<Side, { left: string; width: string }> = {
-  left: { left: `${(20 / 746) * 100}%`, width: `${(224 / 746) * 100}%` },
-  right: { left: `${(519.8 / 746) * 100}%`, width: `${(226.2 / 746) * 100}%` },
+  left: { left: `${(58 / 746) * 100}%`, width: `${(186 / 746) * 100}%` },
+  right: { left: `${(557.8 / 746) * 100}%`, width: `${(188.2 / 746) * 100}%` },
 };
 const boxTop = (row: number) => `${((row - 0.84 * 24 - 88) / 536) * 100}%`;
 
@@ -174,7 +152,7 @@ export function RiskSection() {
               return (
                 <li
                   key={risk.name}
-                  className="grid grid-cols-[40px_minmax(0,1fr)] items-baseline border-b border-black/10 py-[18px] md:absolute md:top-[var(--box-top)] md:left-[var(--box-left)] md:w-[var(--box-width)] md:grid-cols-[3.753cqw_minmax(0,1fr)] md:gap-x-[1.34cqw] md:border-0 md:py-0"
+                  className="border-b border-black/10 py-[18px] md:absolute md:top-[var(--box-top)] md:left-[var(--box-left)] md:w-[var(--box-width)] md:border-0 md:py-0"
                   style={
                     {
                       "--box-left": BOX[side].left,
@@ -185,9 +163,8 @@ export function RiskSection() {
                     } as CSSProperties
                   }
                 >
-                  <span className="font-serif text-[26px] leading-none md:text-center md:text-[3.217cqw]">{number(index)}</span>
                   <h3 className="m-0 font-serif text-[22px] leading-[1.1] font-normal md:text-[2.279cqw]">{risk.name}</h3>
-                  <p className="col-start-2 m-0 mt-[8px] text-[15px] leading-[1.5] text-black/70 md:text-[clamp(13px,1.45cqw,15px)]">{risk.text}</p>
+                  <p className="m-0 mt-[8px] text-[15px] leading-[1.5] text-black/70 md:text-[clamp(13px,1.45cqw,15px)]">{risk.text}</p>
                 </li>
               );
             })}

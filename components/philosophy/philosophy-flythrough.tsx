@@ -59,10 +59,6 @@ function PillarCard({ index, progress }: { index: number; progress: MotionValue<
       style={{ opacity, y }}
       className="pointer-events-none absolute bottom-[max(48px,8svh)] left-[max(120px,calc((100vw_-_1512px)/2_+_120px))] w-[min(600px,calc(100vw_-_240px))] max-md:left-6 max-md:w-[calc(100vw_-_48px)] motion-reduce:hidden max-[600px]:left-[14px] max-[600px]:w-[calc(100vw_-_28px)] max-[600px]:bg-white/88 max-[600px]:p-[16px] max-[600px]:backdrop-blur-[6px]"
     >
-      <p className="flex items-center gap-[12px] font-[family-name:var(--font-geist-mono)] text-[11px] tracking-[.1em] text-black/60 tabular-nums">
-        <i className="h-[2px] w-[28px] bg-[#F6A11A]" />
-        {String(index + 1).padStart(2, "0")} / {String(PILLARS.length).padStart(2, "0")}
-      </p>
       <p className="mt-[18px] text-[clamp(2.2rem,4.4vw,4.4rem)] leading-[.95] font-light tracking-[-.05em] text-black">{pillar.name}</p>
       <p className="mt-[20px] max-w-[34ch] text-[clamp(1.15rem,1.55vw,1.45rem)] leading-[1.45] text-[rgba(0,0,0,.82)]">{pillar.text}</p>
     </motion.div>

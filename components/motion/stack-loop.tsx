@@ -112,9 +112,6 @@ export default function StackLoop({ sheets, lit, label }: { sheets: readonly Sta
             key={sheet.text}
             className={`flex gap-4 border-b border-b-black/10 py-4 text-[16px] leading-[1.45] transition-colors duration-500 ${index === active ? "text-black" : "text-black/40"}`}
           >
-            <span className={`font-[family-name:var(--font-geist-mono)] text-[11px] leading-[2.1] tracking-[.1em] ${index === active ? "text-[#F6A11A]" : ""}`}>
-              {String(index + 1).padStart(2, "0")}
-            </span>
             {sheet.text}
           </li>
         ))}

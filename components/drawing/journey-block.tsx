@@ -8,7 +8,7 @@ import { PERSON_HEIGHT, Walker } from "@/components/drawing/lookout";
  * Three steps as study 07 (reference/visual-language/07/STUDY.md): a solid of
  * three boxes meeting at a corner in a parallel dimetric projection at 20.6°,
  * lit top and lower-left faces, shaded lower-right faces, a figure walking
- * along the lowest box, and three numbered callouts tied to the solid by
+ * along the lowest box, and three callouts tied to the solid by
  * one-elbow leaders. The walk runs from the low bar (step 1) past the arm
  * (step 2) to the tall column (step 3). The heights are the study's ratios
  * (3.30 : 1.87 : 1) and encode no figures. Used by the /aif strategic
@@ -60,8 +60,8 @@ const CALLOUTS = [
   { left: 590, top: 26, width: 300, edge: [[1, 0, COLUMN], [1, 0, ARM]] as const, down: 0.72 },
 ] as const;
 
-/** One callout: its large mark (07's numeral, or a year), an optional title beside it, and its text. */
-export type JourneyStep = { mark: string; title?: string; text: string };
+/** One callout with an optional date, title, and text. */
+export type JourneyStep = { mark?: string; title?: string; text: string };
 
 /** The leader's vertical runs this far right of the callout's left edge, under the numeral's centre. */
 const LEADER_X = 16;
@@ -155,7 +155,7 @@ export function JourneyBlock({ steps, tone }: { steps: readonly [JourneyStep, Jo
               }}
             >
               <dt className="flex items-baseline gap-[.6em]">
-                <span className="font-sans text-[clamp(18px,2.6cqw,32px)] leading-none font-semibold tracking-[-.02em] whitespace-nowrap">{steps[index].mark}</span>
+                {steps[index].mark && <span className="font-sans text-[clamp(18px,2.6cqw,32px)] leading-none font-semibold tracking-[-.02em] whitespace-nowrap">{steps[index].mark}</span>}
                 {steps[index].title ? <span className="text-[clamp(11px,1.15cqw,13px)] font-semibold">{steps[index].title}</span> : null}
               </dt>
               <dd className={`m-0 mt-[.8em] pl-[3.2cqw] text-[clamp(11px,1.35cqw,15px)] leading-[1.45] ${colours.muted}`}>{steps[index].text}</dd>
@@ -170,9 +170,9 @@ export function JourneyBlock({ steps, tone }: { steps: readonly [JourneyStep, Jo
         </div>
         <dl className="m-0 mt-4">
           {steps.map((step) => (
-            <div key={step.mark} className="border-t border-current/25 py-[9px]">
+            <div key={step.title ?? step.mark ?? step.text} className="border-t border-current/25 py-[9px]">
               <dt className="flex items-baseline gap-2 text-[12px] font-semibold">
-                <span>{step.mark}</span>
+                {step.mark && <span>{step.mark}</span>}
                 {step.title}
               </dt>
               <dd className={`m-0 mt-1 text-[13px] leading-[1.4] ${colours.muted}`}>{step.text}</dd>

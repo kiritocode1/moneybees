@@ -12,10 +12,9 @@ import { useReducedMotion } from "@/lib/use-reduced-motion";
  * Why Moneybee PMS? as Titan Gate's benefits split (reference/titangate/NOTES.md
  * §4 row 11): the seven points scroll past on the left, and a sticky pane on
  * the right swaps to the point crossing the middle of the screen, with a
- * rolling counter and the point's drawing. Below 768px it is a plain list.
+ * the point's drawing. Below 768px it is a plain list.
  */
 
-const MONO = "font-[family-name:var(--font-geist-mono)]";
 /** Inactive names: #767676 is 4.5:1 on white; the brand grey #9D9EA1 is 2.7:1, under the 3:1 large-text minimum. */
 const GREY = "#767676";
 
@@ -29,8 +28,6 @@ const LINES = [
   "Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit.",
   "Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet.",
 ] as const;
-
-const pad = (index: number) => String(index + 1).padStart(2, "0");
 
 /**
  * Their card text swap: entering words blink in (.32s, 32ms apart, after
@@ -61,35 +58,13 @@ function Corners() {
   );
 }
 
-/** "01 / 07": a 1em-tall window over the column of numbers, which rolls to the active one. */
-function Counter({ active }: { active: number }) {
-  return (
-    <div className={`${MONO} inline-flex items-center gap-[.7em] bg-white px-[14px] py-[9px] text-[12px] leading-none tracking-[.2em]`}>
-      <span className="relative block h-[1em] overflow-hidden">
-        <span
-          className="flex flex-col transition-transform duration-500 ease-[cubic-bezier(.22,1,.36,1)] motion-reduce:transition-none"
-          style={{ transform: `translateY(${-active}em)` }}
-        >
-          {WHY_PMS.map((point, index) => (
-            <span key={point.name} className="block h-[1em] leading-none">
-              {pad(index)}
-            </span>
-          ))}
-        </span>
-      </span>
-      <span className="text-black/35">/ {pad(WHY_PMS.length - 1)}</span>
-    </div>
-  );
-}
-
-/** The sticky pane: counter, the active point's drawing, and its line. */
+/** The sticky pane with the active point's drawing and its line. */
 function Pane({ active, previous, drawn }: { active: number; previous: number; drawn: boolean }) {
   return (
     <div aria-hidden="true" className="relative w-full p-[10px]">
       <Corners />
       <div className="bg-[#F6F6F6] px-[clamp(24px,3vw,48px)] pt-[clamp(20px,2.2vw,32px)] pb-[clamp(28px,3vw,44px)]">
-        <Counter active={active} />
-        <div className="mt-[clamp(20px,2.5vw,40px)] grid [&>*]:[grid-area:1/1]">
+        <div className="grid [&>*]:[grid-area:1/1]">
           {WHY_PMS.map((point, index) => {
             const Glyph = WHY_GLYPHS[point.glyph];
             const current = index === active;
@@ -189,8 +164,7 @@ function Row({ index }: { index: number }) {
         <Glyph on={inView || reduce} />
       </div>
       <div>
-        <span className={`${MONO} text-[11px] tracking-[.1em] text-black/55`}>{pad(index)}</span>
-        <h3 className="mt-1 mb-0 font-serif text-[1.55rem] leading-[1.1] font-normal">{point.name}</h3>
+        <h3 className="m-0 font-serif text-[1.55rem] leading-[1.1] font-normal">{point.name}</h3>
       </div>
     </li>
   );

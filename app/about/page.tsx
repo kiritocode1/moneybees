@@ -34,10 +34,10 @@ export default function AboutPage() {
         <AboutHero />
         <FounderSection />
         <KeyMembersSection />
-        <AreasSection index="03" />
-        <RecognitionSection index="04" />
+        <AreasSection />
+        <RecognitionSection />
         <TimelineSection />
-        <StorySection index="06" />
+        <StorySection />
       </main>
       <SiteFooter
         explore={[

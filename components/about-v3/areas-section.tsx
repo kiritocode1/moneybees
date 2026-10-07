@@ -5,7 +5,7 @@ import { hexPoints, useShown } from "@/components/about-v2/shared";
 import { BOX, Draw, Hatch, MOVE, ORANGE, RM, tr } from "@/components/drawing/plate";
 import { BracketLabel } from "@/components/fact-sections/fact-section";
 import { Rise } from "@/components/hero/editorial";
-import { COLUMN, EYEBROW } from "@/components/hero/tokens";
+import { COLUMN } from "@/components/hero/tokens";
 
 /*
  * The group's four areas, content plan §2, each drawn rather than photographed,
@@ -262,14 +262,14 @@ const AREAS = [
   { name: "Related financial services", Drawing: DepositoryDrawing },
 ] as const;
 
-/** The four areas the company text names, a drawing each. `index` is the section's number in the page's order. */
-export function AreasSection({ index }: { index: string }) {
+/** The four areas the company text names, a drawing each. */
+export function AreasSection() {
   const { ref, shown } = useShown<HTMLUListElement>(0.3);
   return (
     <section id="group" aria-labelledby="group-heading" className="scroll-mt-[96px] bg-white text-black">
       <div className={`${COLUMN} pt-[120px] max-md:pt-[80px]`}>
         <h2 id="group-heading">
-          <BracketLabel>{index} · What the group does</BracketLabel>
+          <BracketLabel>What the group does</BracketLabel>
         </h2>
       </div>
       <ul ref={ref} className={`${COLUMN} mt-10 grid list-none grid-cols-2 gap-x-6 gap-y-10 pb-[120px] max-md:pb-[80px] md:grid-cols-4`}>
@@ -280,7 +280,6 @@ export function AreasSection({ index }: { index: string }) {
                 <Drawing on={shown} delay={i * 220} />
               </div>
               <div className="mt-4 flex items-baseline gap-3 border-t border-black pt-3">
-                <span className={`${EYEBROW} text-black/50`}>{String(i + 1).padStart(2, "0")}</span>
                 <span className="font-serif text-[clamp(1.25rem,1rem+.6vw,1.6rem)] leading-[1.15]">{name}</span>
               </div>
             </Rise>

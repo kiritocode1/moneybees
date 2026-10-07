@@ -62,8 +62,7 @@ export function OpeningCards() {
       <div className={`${COLUMN} py-[120px] max-md:py-[80px]`}>
         <div className="grid grid-cols-1 items-end gap-8 md:grid-cols-2 md:gap-16">
           <div>
-            <span className={`${EYEBROW} text-black/60`}>01</span>
-            <h2 id="openings-heading" className={`mt-[14px] ${SUBHEAD}`}>
+            <h2 id="openings-heading" className={SUBHEAD}>
               Current Openings
             </h2>
           </div>
