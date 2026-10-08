@@ -21,22 +21,23 @@ export const metadata: Metadata = {
 
 /**
  * /pms, built to the Content & Visual Plan §3 and approved in
- * .plannotator/pms-v3/plan.md: the Tres Mares product hero, why Moneybee PMS
- * as a sticky split, the philosophy, stock selection as converging lines,
- * the portfolio approach as Titan Gate's stats band, risk management on
- * stacked blocks, and the PMS performance chart.
+ * .plannotator/pms-v3/plan.md: the Tres Mares product hero, then the PMS
+ * performance chart, which investors see first (user, 2026-10-08), then why
+ * Moneybee PMS as a sticky split, the philosophy, stock selection as
+ * converging lines, the portfolio approach as Titan Gate's stats band, and
+ * risk management on stacked blocks.
  */
 export default function PmsPage() {
   return (
     <SiteNavigation>
       <main id="top" className="option-one bg-white text-black">
         <ProductHero data={PMS_HERO} />
+        <PerformanceChart />
         <WhySection />
         <PhilosophySection />
         <SelectionSection />
         <PortfolioApproachSection />
         <RiskSection />
-        <PerformanceChart />
       </main>
       <SiteFooter
         explore={[
