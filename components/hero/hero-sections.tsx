@@ -3,6 +3,7 @@ import { HOME_PLAN, PERIOD_RETURNS } from "@/lib/insights";
 import CornerBrackets from "./corner-brackets";
 import { BODY, BUTTON, COLUMN, EYEBROW, HEADING, Rise } from "./editorial";
 import HeroTerrain from "./hero-terrain";
+import { ENQUIRY_HREF } from "@/lib/contact-v2";
 
 /**
  * The top of the homepage in antimetal.com's layout. Class values come from the
@@ -43,7 +44,7 @@ export function HeroSection() {
           </Rise>
           <Rise delay={0.16}>
             <div className="mt-10 flex flex-wrap items-center gap-4 md:mt-20">
-              <Link href="/contact" className={`${BUTTON} pointer-events-auto bg-[#F6A11A] text-black hover:bg-black hover:text-white`}>
+              <Link href={ENQUIRY_HREF} className={`${BUTTON} pointer-events-auto bg-[#F6A11A] text-black hover:bg-black hover:text-white`}>
                 Get Started
               </Link>
               <Link

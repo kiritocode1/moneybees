@@ -19,8 +19,6 @@ export const CONTACT_PAGE = {
 export const OFFICE = {
   name: "Moneybee Group",
   lines: ["303, Tower A, Peninsula Business Park,", "G.K. Marg, Lower Parel, Mumbai 400013"],
-  /** LOREM */
-  text: LOREM,
   /** Peninsula Business Park, from OpenStreetMap (way 441268787). */
   lat: 18.9987,
   lon: 72.82925,
@@ -31,13 +29,16 @@ export const PHONE = "022-4030 2080";
 export const EMAIL = "info@moneybee.in";
 export const PHONE_HREF = "tel:+912240302080";
 
-/** The OpenStreetMap embed around the office, with its marker. */
-export const MAP_EMBED = (() => {
-  const pad = 0.006;
-  const bbox = [OFFICE.lon - pad * 1.6, OFFICE.lat - pad, OFFICE.lon + pad * 1.6, OFFICE.lat + pad].map((n) => n.toFixed(5)).join("%2C");
-  return `https://www.openstreetmap.org/export/embed.html?bbox=${bbox}&layer=mapnik&marker=${OFFICE.lat}%2C${OFFICE.lon}`;
-})();
-export const MAP_LINK = `https://www.openstreetmap.org/?mlat=${OFFICE.lat}&mlon=${OFFICE.lon}#map=17/${OFFICE.lat}/${OFFICE.lon}`;
+/** Where every enquiry link on the site lands: the form at the top of /contact, on the General tab (user, 2026-10-08). */
+export const ENQUIRY_HREF = "/contact?enquiry=general#enquiry";
+
+/**
+ * Google Maps at street level around the office, pinned on its coordinates
+ * (this form of embed needs no API key), and the directions link the office
+ * card opens, which starts from wherever the visitor is.
+ */
+export const MAP_EMBED = `https://www.google.com/maps?q=${OFFICE.lat},${OFFICE.lon}&z=16&output=embed`;
+export const DIRECTIONS_HREF = `https://www.google.com/maps/dir/?api=1&destination=${OFFICE.lat},${OFFICE.lon}`;
 
 /** One field of the enquiry form. `options` makes it a select. */
 export type EnquiryField = {

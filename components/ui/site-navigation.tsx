@@ -1,9 +1,10 @@
 import type { ReactNode } from "react";
 import Link from "@/components/transition/transition-link";
 import OverlayMenu, { type MenuLink } from "./overlay-menu";
+import { ENQUIRY_HREF } from "@/lib/contact-v2";
 
-/** The current site's "Registration/ Log In" page. */
-const CLIENT_LOGIN_URL = "https://www.moneybee.in/register.php";
+/** The client portal's sign-in page (app/(frontend)/portal/login). */
+const CLIENT_LOGIN_URL = "/portal/login";
 
 /** The content plan's pages, in its user-journey order, then the investor centre. */
 const primaryLinks = [
@@ -17,7 +18,7 @@ const primaryLinks = [
   { label: "Case Studies", href: "/case-studies" },
   { label: "Our Team", href: "/about#key-members" },
   { label: "Careers", href: "/careers" },
-  { label: "Contact Us", href: "/contact" },
+  { label: "Contact Us", href: ENQUIRY_HREF },
   { label: "Investor Centre", href: "/investor-centre" },
 ];
 
@@ -30,7 +31,7 @@ const barLinks: MenuLink[] = [
   { label: "Our Approach", href: "/our-approach", hideBelow: 900 },
   { label: "Investor Centre", href: "/investor-centre", hideBelow: 1200 },
   { label: "Client Login", href: CLIENT_LOGIN_URL, kind: "login", hideBelow: 480 },
-  { label: "Get Started", href: "/contact", kind: "cta" },
+  { label: "Get Started", href: ENQUIRY_HREF, kind: "cta" },
 ];
 
 /** Both logins, kept apart from the investor pages as the plan asks. Distributor Login has no URL yet, so it writes to the office. */

@@ -10,6 +10,8 @@
  * before this page is published.
  */
 
+import { ENQUIRY_HREF } from "@/lib/contact-v2";
+
 const LOREM = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.";
 const LOREM_SHORT = "Lorem ipsum dolor sit amet, consectetur adipiscing elit.";
 
@@ -21,7 +23,7 @@ export const FLYINGBEE = {
   // A non-breaking hyphen in "pre‑IPO", so the line never splits the word.
   focus: "The fund focuses on opportunities in high-growth listed and pre\u2011IPO/unlisted companies.",
   /** The plan's "Explore Flyingbee / Get Started" button, split into its two actions. */
-  start: { label: "Get Started", href: "/contact?enquiry=aif" },
+  start: { label: "Get Started", href: ENQUIRY_HREF },
 } as const;
 
 /**

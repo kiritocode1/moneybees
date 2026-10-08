@@ -7,6 +7,8 @@
  * supplies them.
  */
 
+import { ENQUIRY_HREF } from "@/lib/contact-v2";
+
 const LOREM_SHORT = "Lorem ipsum dolor sit amet, consectetur adipiscing elit.";
 
 /** Which mark in components/pms-v3/marks.tsx a hero draws: the two products, then one per internal page. */
@@ -32,7 +34,7 @@ export const PMS_HERO = {
   mark: "pms",
   title: ["Portfolio", "Management Services"],
   sentence: "Moneybee PMS is focused on long-term investment in Indian equities, with a strong focus on small and mid-cap companies.",
-  actions: [{ label: "Get Started", href: "/contact?enquiry=pms" }],
+  actions: [{ label: "Get Started", href: ENQUIRY_HREF }],
   figures: [
     { label: "PMS since", value: "Aug 2007" },
     { label: "Focus", value: "Small and mid caps" },
@@ -47,7 +49,7 @@ export const AIF_HERO = {
   mark: "aif",
   title: ["Flyingbee", "Investment Fund"],
   sentence: "Flyingbee Investment Fund is a Category III AIF managed by Moneybee.",
-  actions: [{ label: "Get Started", href: "/contact?enquiry=aif" }],
+  actions: [{ label: "Get Started", href: ENQUIRY_HREF }],
   figures: [
     { label: "Category", value: "III AIF" },
     { label: "Minimum", value: "Rs. 1 crore" },

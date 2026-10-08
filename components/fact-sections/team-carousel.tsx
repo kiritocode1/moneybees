@@ -8,6 +8,7 @@ import TransitionLink from "@/components/transition/transition-link";
 import { TEAM, type TeamMember } from "@/lib/insights";
 import { KEY_MEMBERS } from "@/lib/team";
 import styles from "./team-carousel.module.css";
+import { ENQUIRY_HREF } from "@/lib/contact-v2";
 
 /*
  * curocapital.dk's "Mød vores partnere", copied 1:1 from its markup, script and
@@ -106,7 +107,7 @@ function Actions({ member, className }: { member: TeamMember; className: string 
   const about = ABOUT.get(member.name);
   return (
     <div className={className}>
-      <Action href="/contact">Get in touch</Action>
+      <Action href={ENQUIRY_HREF}>Get in touch</Action>
       {about && <Action href={about}>About {member.name.split(" ")[0]}</Action>}
     </div>
   );

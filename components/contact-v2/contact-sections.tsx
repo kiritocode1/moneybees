@@ -1,119 +1,162 @@
 "use client";
 
-import { useInView } from "motion/react";
+import { ChevronDown, Mail, MapPin, Phone } from "lucide-react";
+import { motion } from "motion/react";
 import { useSearchParams } from "next/navigation";
 import { type FormEvent, type KeyboardEvent, Suspense, useId, useRef, useState } from "react";
 import { BracketLabel } from "@/components/fact-sections/fact-section";
-import { COLUMN, SUBHEAD } from "@/components/hero/tokens";
+import { COLUMN, EYEBROW, SUBHEAD } from "@/components/hero/tokens";
 import {
+  CONTACT_PAGE,
+  DIRECTIONS_HREF,
+  EMAIL,
   ENQUIRIES,
   type Enquiry,
   type EnquiryField,
   enquiryFromParam,
   enquiryMailto,
   MAP_EMBED,
-  MAP_LINK,
   OFFICE,
+  PHONE,
+  PHONE_HREF,
 } from "@/lib/contact-v2";
+import { CONTACT } from "@/lib/insights";
+import { useReducedMotion } from "@/lib/use-reduced-motion";
 
 /*
- * /contact below its hero, content plan §11: the four enquiry options as tabs
- * over an underline-only form, then the office on a map. The form has no
- * backend: sending it opens a mailto to info@moneybee.in with the filled
- * fields. `?enquiry=pms` (or aif, support, general) preselects a tab, so
- * product pages can link here.
+ * /contact, content plan §11: the page opens on the enquiry (no hero, user,
+ * 2026-10-08). The form sits in a white card on the site grey, in the same
+ * card language as the client sign-in and the door cards: a segmented
+ * control for the four topics, outlined fields two to a row, one orange
+ * action. The direct lines sit beside it. Then the office card and its map. The form
+ * has no backend yet: sending it opens a mailto to info@moneybee.in with the
+ * filled fields. Every enquiry link on the site lands here on the General tab
+ * (ENQUIRY_HREF); `?enquiry=pms` (or aif, support) preselects another.
  */
 
 const FOCUS = "focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-current";
-/** Realevate's UI-state curve, used for the tab underline, tab colour and field borders. */
-const UI_EASE = "cubic-bezier(.7,.6,0,1)";
 
-function useShown<T extends Element>(amount = 0.45) {
-  const ref = useRef<T>(null);
-  const shown = useInView(ref, { once: true, amount });
-  return { ref, shown };
+/** The card every form and door on the site sits in (components/cta/door-card.tsx, components/portal/portal-frame.tsx). */
+const CARD = "rounded-[20px] border border-black/[.08] bg-white shadow-[0_1px_2px_rgba(0,0,0,.04),0_16px_40px_-16px_rgba(0,0,0,.12)]";
+
+/** One direct line: an icon chip, what it is for, and the address or number as a link. */
+function DirectLine({ icon: Icon, label, value, href }: { icon: typeof Phone; label: string; value: string; href: string }) {
+  return (
+    <div className="flex items-start gap-[14px]">
+      <span aria-hidden="true" className="mt-[2px] inline-flex h-[36px] w-[36px] shrink-0 items-center justify-center rounded-full border border-black/[.08] bg-white">
+        <Icon size={16} strokeWidth={1.5} />
+      </span>
+      <div className="min-w-0">
+        <dt className="text-[13px] text-black/55">{label}</dt>
+        <dd className="m-0 mt-[2px] text-[15px] break-words">
+          <a href={href} className={`text-black no-underline transition-colors duration-200 hover:text-[#C77A00] ${FOCUS}`}>
+            {value}
+          </a>
+        </dd>
+      </div>
+    </div>
+  );
 }
 
-/** The plan's four enquiry options as tabs over one form, the section under the contact hero (lib/page-heroes.ts carries the address, phone and email). */
+/**
+ * The first section of /contact. It starts at the top of the page under the
+ * absolute nav (113px, 75px on phones), so #enquiry needs no scroll margin.
+ * Desktop: the heading and the direct lines on the left, the form card on the
+ * right. Phones: heading, form card, then the lines, so the enquiry is always
+ * the first thing after the heading.
+ */
 export function EnquirySection() {
   return (
-    <section id="enquiry" aria-labelledby="enquiry-heading" className="scroll-mt-[96px] bg-white text-black">
-      <div className={`${COLUMN} grid grid-cols-1 gap-10 py-[120px] md:grid-cols-12 md:gap-x-6 max-md:py-[80px]`}>
-        <div className="md:col-span-4">
-          <BracketLabel>Get Started</BracketLabel>
-          <h2 id="enquiry-heading" className={`mt-[18px] ${SUBHEAD}`}>
-            Enquiry Options
-          </h2>
-        </div>
-        <div className="md:col-span-7 md:col-start-6">
-          <Suspense fallback={<EnquiryTabs initial={ENQUIRIES[0].id} />}>
-            <EnquiryFromParams />
-          </Suspense>
+    <section id="enquiry" aria-labelledby="enquiry-heading" className="bg-white pt-[113px] text-black max-md:pt-[75px]">
+      <div className="border-t border-black/10 bg-[#F6F6F6]">
+        <div className={`${COLUMN} grid grid-cols-1 gap-x-6 gap-y-10 pt-[64px] pb-[96px] md:grid-cols-12 md:grid-rows-[auto_1fr] max-md:pt-[36px] max-md:pb-[56px]`}>
+          <div className="md:col-span-4 md:row-start-1">
+            <BracketLabel>Get Started</BracketLabel>
+            <h1 id="enquiry-heading" className={`mt-[18px] ${SUBHEAD}`}>
+              {CONTACT_PAGE.heading}
+            </h1>
+          </div>
+          <div className={`${CARD} p-[32px] md:col-span-7 md:col-start-6 md:row-span-2 md:row-start-1 max-md:p-[20px]`}>
+            <Suspense fallback={<EnquiryTabs initial="general" />}>
+              <EnquiryFromParams />
+            </Suspense>
+          </div>
+          <dl className="m-0 grid content-start gap-y-[20px] md:col-span-4 md:row-start-2">
+            <DirectLine icon={Phone} label="Phone" value={PHONE} href={PHONE_HREF} />
+            <DirectLine icon={Mail} label="Email" value={EMAIL} href={`mailto:${EMAIL}`} />
+            <p className={`${EYEBROW} mt-[12px] text-black/55`}>Flyingbee AIF desks</p>
+            {CONTACT.emails.map(([label, address]) => (
+              <DirectLine key={address} icon={Mail} label={label} value={address} href={`mailto:${address}`} />
+            ))}
+          </dl>
         </div>
       </div>
     </section>
   );
 }
 
-/** The office address on black beside the map; the map drops its colour to sit in the band. */
+/**
+ * The office, in the card language of the form above: an address card with
+ * one orange action, Get directions, beside a street-level map in the same
+ * rounded card (user, 2026-10-08, replacing the black band and its lorem).
+ */
 export function OfficeSection() {
-  const { ref, shown } = useShown<HTMLDivElement>(0.3);
   return (
-    <section id="office" aria-labelledby="office-heading" className="scroll-mt-[96px] bg-black text-white">
-      <div ref={ref} className={`${COLUMN} grid grid-cols-1 items-stretch gap-12 py-[120px] md:grid-cols-[minmax(0,.9fr)_minmax(0,1.1fr)] md:gap-16 max-md:py-[80px]`}>
-        <div className="flex flex-col">
-          <BracketLabel>Office address</BracketLabel>
-          <h2 id="office-heading" className={`mt-[18px] ${SUBHEAD}`}>
+    <section id="office" aria-labelledby="office-heading" className="scroll-mt-[96px] border-t border-black/10 bg-white text-black">
+      <div className={`${COLUMN} grid grid-cols-1 gap-[16px] py-[96px] md:grid-cols-[minmax(0,.85fr)_minmax(0,1.15fr)] max-md:py-[56px]`}>
+        <div className={`${CARD} flex flex-col p-[40px] max-md:p-[24px]`}>
+          <div className="flex items-center justify-between gap-4">
+            <span aria-hidden="true" className="inline-flex h-[48px] w-[48px] items-center justify-center rounded-full bg-[#FDEFE2]">
+              <MapPin size={20} strokeWidth={1.5} />
+            </span>
+            <span className={`${EYEBROW} text-black/55`}>Office</span>
+          </div>
+          <h2 id="office-heading" className="mt-[32px] font-serif text-[clamp(2rem,1.6rem+1vw,2.5rem)] leading-[1.05] font-normal tracking-[-.015em]">
             {OFFICE.name}
           </h2>
-          <address className="mt-[28px] font-serif text-[clamp(1.35rem,1rem+.9vw,1.8rem)] leading-[1.3] not-italic text-white/90">
+          <address className="mt-[12px] text-[16px] leading-[1.6] not-italic text-black/70">
             {OFFICE.lines.map((line) => (
               <span key={line} className="block">
                 {line}
               </span>
             ))}
           </address>
-          <p className="mt-[24px] max-w-[440px] text-[15px] leading-[1.55] text-white/65">{OFFICE.text}</p>
-          <a href={MAP_LINK} target="_blank" rel="noreferrer" className={`group mt-auto inline-flex w-fit items-center gap-[10px] pt-[36px] text-[15px] text-white no-underline transition-colors duration-200 hover:text-[#F6A11A] ${FOCUS}`}>
-            <span className="h-[2px] w-[28px] bg-[#F6A11A] transition-transform duration-200 ease-[cubic-bezier(.23,1,.32,1)] group-hover:translate-x-[4px] motion-reduce:transition-none" aria-hidden="true" />
-            Open in OpenStreetMap
-            <span className="sr-only"> (opens in new tab)</span>
-          </a>
+          <div className="mt-auto pt-[36px]">
+            <a
+              href={DIRECTIONS_HREF}
+              target="_blank"
+              rel="noreferrer"
+              className={`inline-flex items-center justify-center rounded-full bg-[#F6A11A] px-[26px] py-[13px] text-[15px] font-medium text-black no-underline transition-[color,background-color,scale] duration-200 ease-[cubic-bezier(.23,1,.32,1)] hover:bg-black hover:text-white active:scale-[0.97] motion-reduce:transition-none ${FOCUS}`}
+            >
+              Get directions
+              <span className="sr-only"> (opens Google Maps in a new tab)</span>
+            </a>
+          </div>
         </div>
-        <div className="relative min-h-[360px] overflow-hidden border border-white/15 bg-white/5 md:min-h-[440px]">
-          <iframe
-            title="Map of Peninsula Business Park, Lower Parel, Mumbai"
-            src={MAP_EMBED}
-            loading="lazy"
-            className="absolute inset-0 h-full w-full border-0 grayscale-[.85] contrast-[1.05]"
-          />
-          {/* A ring pulses on the office once the band is in view. */}
-          <span
-            aria-hidden="true"
-            className="pointer-events-none absolute top-1/2 left-1/2 h-[64px] w-[64px] rounded-full border-2 border-[#F6A11A] motion-reduce:!transition-none"
-            style={{ opacity: shown ? 1 : 0, transform: `translate(-50%, -62%) scale(${shown ? 1 : 2.4})`, transition: "opacity 900ms cubic-bezier(.22,1,.36,1) 300ms, transform 900ms cubic-bezier(.22,1,.36,1) 300ms" }}
-          />
-          <span aria-hidden="true" className="pointer-events-none absolute top-1/2 left-1/2 h-[64px] w-[64px] animate-[contact-pulse_2.4s_ease-out_infinite] rounded-full border border-[#F6A11A] motion-reduce:hidden" />
+        <div className={`${CARD} relative min-h-[360px] overflow-hidden md:min-h-[420px]`}>
+          <iframe title="Map of Peninsula Business Park, Lower Parel, Mumbai" src={MAP_EMBED} loading="lazy" referrerPolicy="no-referrer-when-downgrade" className="absolute inset-0 h-full w-full border-0" />
         </div>
       </div>
-      <style>{"@keyframes contact-pulse{0%{transform:translate(-50%,-62%) scale(1);opacity:.9}100%{transform:translate(-50%,-62%) scale(2.6);opacity:0}}"}</style>
     </section>
   );
 }
 
 function EnquiryFromParams() {
-  const initial = enquiryFromParam(useSearchParams().get("enquiry")) ?? ENQUIRIES[0].id;
+  const initial = enquiryFromParam(useSearchParams().get("enquiry")) ?? "general";
   return <EnquiryTabs key={initial} initial={initial} />;
 }
 
 /**
- * The four enquiry options as tabs over one form. The typed values live here,
- * not in the form, so switching tab keeps the name, email and phone already
- * typed. Arrow keys, Home and End move between tabs.
+ * The four topics as a segmented control over one form: a white pill slides
+ * to the chosen topic. The typed values live here, not in the form, so
+ * switching topic keeps the name, email and phone already typed. Arrow keys,
+ * Home and End move between topics. Four in a row once the card is wide
+ * enough (about 34rem), two by two below that.
  */
 function EnquiryTabs({ initial }: { initial: Enquiry["id"] }) {
   const [activeId, setActiveId] = useState<Enquiry["id"]>(initial);
   const [values, setValues] = useState<Record<string, string>>({});
+  const reduced = useReducedMotion();
   const active = ENQUIRIES.find((enquiry) => enquiry.id === activeId) ?? ENQUIRIES[0];
   const base = useId();
   const tabs = useRef<(HTMLButtonElement | null)[]>([]);
@@ -127,9 +170,16 @@ function EnquiryTabs({ initial }: { initial: Enquiry["id"] }) {
     tabs.current[next]?.focus();
   };
   return (
-    <div className="@container lg:max-w-[540px]">
-      {/* Two by two until the column fits all four labels at their own widths (about 420px), then one row on a shared rule. */}
-      <div role="tablist" aria-label="Enquiry options" onKeyDown={onKeyDown} className="grid grid-cols-2 @min-[27rem]:flex @min-[27rem]:justify-between @min-[27rem]:gap-x-5 @min-[27rem]:border-b @min-[27rem]:border-solid @min-[27rem]:border-black/15">
+    <div className="@container">
+      <p id={`${base}-topic`} className="mb-[10px] text-[13px] font-medium text-black/70">
+        What is it about?
+      </p>
+      <div
+        role="tablist"
+        aria-labelledby={`${base}-topic`}
+        onKeyDown={onKeyDown}
+        className="grid grid-cols-2 gap-[4px] rounded-[18px] bg-[#F1F1F2] p-[4px] @min-[34rem]:grid-cols-4 @min-[34rem]:rounded-full"
+      >
         {ENQUIRIES.map((enquiry, index) => {
           const selected = enquiry.id === active.id;
           return (
@@ -145,15 +195,17 @@ function EnquiryTabs({ initial }: { initial: Enquiry["id"] }) {
               aria-controls={`${base}-panel`}
               tabIndex={selected ? 0 : -1}
               onClick={() => setActiveId(enquiry.id)}
-              className={`relative min-h-[48px] cursor-pointer border-0 border-b border-solid border-b-black/15 bg-transparent px-[4px] pb-[14px] pt-[10px] text-[14px] leading-[1.25] font-medium @min-[27rem]:flex-none @min-[27rem]:border-b-0 @min-[27rem]:px-0 @min-[27rem]:whitespace-nowrap hover:text-black ${selected ? "text-black" : "text-black/55"} focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-black`}
-              style={{ transition: `color .25s ${UI_EASE}` }}
+              className={`relative min-h-[42px] cursor-pointer rounded-full border-0 bg-transparent px-[10px] text-[14px] leading-[1.2] font-medium transition-colors duration-200 ${selected ? "text-black" : "text-black/55 hover:text-black"} focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-black`}
             >
-              {enquiry.name}
-              <span
-                aria-hidden="true"
-                className="absolute right-0 -bottom-px left-0 h-[2px] bg-[#F6A11A] motion-reduce:!transition-none"
-                style={{ transform: `scaleX(${selected ? 1 : 0})`, transition: `transform .5s ${UI_EASE}` }}
-              />
+              {selected && (
+                <motion.span
+                  layoutId={`${base}-pill`}
+                  aria-hidden="true"
+                  className="absolute inset-0 rounded-full bg-white shadow-[0_1px_2px_rgba(0,0,0,.08),0_2px_8px_-2px_rgba(0,0,0,.08)]"
+                  transition={reduced ? { duration: 0 } : { type: "spring", stiffness: 420, damping: 36 }}
+                />
+              )}
+              <span className="relative">{enquiry.name}</span>
             </button>
           );
         })}
@@ -169,10 +221,20 @@ function EnquiryTabs({ initial }: { initial: Enquiry["id"] }) {
   );
 }
 
-/** Fields that sit two to a row from 640px; the rest take the full width. */
-const HALF = new Set(["phone", "amount", "city", "investor", "commitment", "client", "topic"]);
+/**
+ * Fields that sit two to a row once the card is wide enough; the rest take
+ * the full width. With an odd number of them, the last one takes the full
+ * width too, so no row is left half empty.
+ */
+const HALF = new Set(["name", "email", "phone", "amount", "city", "investor", "commitment", "client", "topic", "subject"]);
 
-/** The form for one option. Sending it opens the visitor's mail app with the fields filled in. */
+function pairedFields(fields: readonly EnquiryField[]) {
+  const short = fields.filter((field) => HALF.has(field.name));
+  const alone = short.length % 2 === 1 ? short[short.length - 1].name : null;
+  return fields.map((field) => ({ field, half: HALF.has(field.name) && field.name !== alone }));
+}
+
+/** The form for one topic. Sending it opens the visitor's mail app with the fields filled in. */
 function EnquiryForm({
   id,
   labelledBy,
@@ -192,54 +254,48 @@ function EnquiryForm({
   };
   return (
     <form id={id} role="tabpanel" aria-labelledby={labelledBy} onSubmit={onSubmit} className="mt-[28px]">
-      <div className="grid grid-cols-1 gap-x-[20px] gap-y-[20px] sm:grid-cols-2">
-        {enquiry.fields.map((field) => (
-          <Field key={field.name} field={field} half={HALF.has(field.name)} value={values[field.name] ?? ""} onChange={(value) => onChange(field.name, value)} />
+      <div className="grid grid-cols-1 gap-x-[16px] gap-y-[18px] @min-[30rem]:grid-cols-2">
+        {pairedFields(enquiry.fields).map(({ field, half }) => (
+          <Field key={field.name} field={field} half={half} value={values[field.name] ?? ""} onChange={(value) => onChange(field.name, value)} />
         ))}
       </div>
-      <p className="mt-[18px] text-[12px] text-black/55">
-        <span aria-hidden="true">*</span> required
-      </p>
       <button
         type="submit"
-        className={`group relative mt-[24px] inline-flex cursor-pointer items-center overflow-hidden rounded-full border-0 bg-[#F6A11A] px-[28px] py-[13px] text-[15px] font-medium text-black transition-[color,scale] duration-300 hover:text-white active:scale-[0.97] motion-reduce:transition-none ${FOCUS}`}
+        className={`mt-[28px] inline-flex h-[52px] w-full cursor-pointer items-center justify-center rounded-full border-0 bg-[#F6A11A] px-[28px] text-[15px] font-medium text-black transition-[color,background-color,scale] duration-200 ease-[cubic-bezier(.23,1,.32,1)] hover:bg-black hover:text-white active:scale-[0.98] motion-reduce:transition-none ${FOCUS}`}
       >
-        <span
-          aria-hidden="true"
-          className="absolute inset-0 translate-y-[101%] rounded-full bg-black transition-transform duration-300 group-hover:translate-y-0 motion-reduce:transition-none"
-          style={{ transitionTimingFunction: UI_EASE }}
-        />
-        <span className="relative">Get Started</span>
+        Send enquiry
       </button>
+      <p className="mt-[14px] text-center text-[13px] leading-[1.5] text-black/55">
+        Sending opens your email app with these details filled in, addressed to {EMAIL}. Fields marked * are required.
+      </p>
     </form>
   );
 }
 
+/** The outlined control every field shares: hairline at rest, darker on hover, ink with a soft ring on focus. */
+const CONTROL =
+  "block w-full appearance-none rounded-[12px] border border-solid border-black/[.14] bg-white px-[14px] text-[16px] text-black outline-none transition-[border-color,box-shadow] duration-200 hover:border-black/30 focus:border-black focus:shadow-[0_0_0_4px_rgba(0,0,0,.07)] motion-reduce:transition-none";
+
 function Field({ field, half, value, onChange }: { field: EnquiryField; half: boolean; value: string; onChange: (value: string) => void }) {
   const id = useId();
-  const input =
-    "mt-[4px] block w-full appearance-none rounded-none border-0 border-b border-solid border-b-black/25 bg-transparent px-0 py-[8px] text-[16px] text-black outline-none focus:border-b-black focus:shadow-[0_1px_0_0_#000]";
-  const transition = { transition: `border-color .3s ${UI_EASE}, box-shadow .3s ${UI_EASE}` };
   return (
-    <div className={half ? "" : "sm:col-span-2"}>
-      <label htmlFor={id} className="block text-[13px] leading-[1.4] text-black/55">
+    <div className={half ? "" : "@min-[30rem]:col-span-2"}>
+      <label htmlFor={id} className="mb-[8px] block text-[13px] leading-[1.4] font-medium text-black/70">
         {field.label}
         {field.required && <span aria-hidden="true"> *</span>}
       </label>
       {field.options ? (
         <div className="relative">
-          <select id={id} name={field.name} required={field.required} value={value} onChange={(event) => onChange(event.target.value)} className={`${input} cursor-pointer pr-[24px]`} style={transition}>
+          <select id={id} name={field.name} required={field.required} value={value} onChange={(event) => onChange(event.target.value)} className={`${CONTROL} h-[48px] cursor-pointer pr-[42px] ${value ? "" : "text-black/45"}`}>
             <option value="">Choose one</option>
             {field.options.map((option) => (
               <option key={option}>{option}</option>
             ))}
           </select>
-          <svg viewBox="0 0 10 6" aria-hidden="true" className="pointer-events-none absolute top-1/2 right-[2px] h-[6px] w-[10px]">
-            <path d="M0 0h10L5 6Z" fill="#000" />
-          </svg>
+          <ChevronDown aria-hidden="true" size={16} strokeWidth={1.75} className="pointer-events-none absolute top-1/2 right-[14px] -translate-y-1/2 text-black/55" />
         </div>
       ) : field.type === "textarea" ? (
-        <textarea id={id} name={field.name} rows={3} required={field.required} value={value} onChange={(event) => onChange(event.target.value)} className={`${input} resize-none`} style={transition} />
+        <textarea id={id} name={field.name} rows={4} required={field.required} value={value} onChange={(event) => onChange(event.target.value)} className={`${CONTROL} min-h-[128px] resize-y py-[12px]`} />
       ) : (
         <input
           id={id}
@@ -251,8 +307,7 @@ function Field({ field, half, value, onChange }: { field: EnquiryField; half: bo
           spellCheck={field.type === "email" ? false : undefined}
           value={value}
           onChange={(event) => onChange(event.target.value)}
-          className={input}
-          style={transition}
+          className={`${CONTROL} h-[48px]`}
         />
       )}
     </div>

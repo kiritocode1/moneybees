@@ -15,12 +15,25 @@ export const INVESTOR_CENTRE = {
 
 /**
  * The two logins, kept apart: the client one leads, the distributor one sits
- * beside it. The client link is the investor login the site nav already uses;
- * the distributor portal has no address yet, so it renders without a link.
+ * beside it. Each is a card on /investor-centre with one action: the client
+ * card opens the portal's sign-in page, the distributor card asks the office
+ * for an account, since distributor accounts are opened on request.
  */
-export const LOGINS: Record<"client" | "distributor", { name: string; text: string; href?: string }> = {
-  client: { name: "Client Login", text: LOREM_SHORT, href: "https://www.moneybee.in/register.php" },
-  distributor: { name: "Distributor Login", text: LOREM_SHORT },
+export const LOGINS: Record<"client" | "distributor", { name: string; audience: string; text: string; action: string; href: string }> = {
+  client: {
+    name: "Client Login",
+    audience: "For clients",
+    text: "Sign in to see your statements and documents. Moneybee sets up each account.",
+    action: "Sign in",
+    href: "/portal/login",
+  },
+  distributor: {
+    name: "Distributor Login",
+    audience: "For distributors",
+    text: "Moneybee opens distributor accounts on request.",
+    action: "Request access",
+    href: "mailto:info@moneybee.in?subject=Distributor%20login",
+  },
 };
 
 /**

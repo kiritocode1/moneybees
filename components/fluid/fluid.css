@@ -1,0 +1,112 @@
+/*
+ * Fluid Functionalism's tokens (components/fluid), with the light-theme
+ * values from fluidfunctionalism.com's own stylesheet (read 2026-10-08), so
+ * the components look as they do there. The values live on `.fluid`, so they
+ * apply only inside an element that opts in: a portal page's card, or a form
+ * embedded in a marketing page. The @theme block maps them to the utilities
+ * the components use (bg-card, ring-border, text-muted-foreground, text-body).
+ * Imported by app/(frontend)/globals.css.
+ */
+
+.fluid {
+  --background: #fafafa;
+  --foreground: #171717;
+  --card: #ffffff;
+  --muted: #f4f4f5;
+  --muted-foreground: #737373;
+  --border: color-mix(in oklab, var(--foreground) 12%, transparent);
+  --destructive: #ef4444;
+  --destructive-light: #fef2f2;
+  --selected: #d4d4d4;
+  --focus-ring: #6b97ff;
+  --hover: #0000000a;
+  --active: #00000012;
+  --tint: #00000014;
+  --tint-hover: #00000011;
+  --overlay: 0 0 0;
+  --info: #3b82f6;
+  --success: #22c55e;
+  --warning: #f59e0b;
+
+  /* Type scale. */
+  --fs-display: 28px;
+  --lh-display: 34px;
+  --fs-display-compact: 24px;
+  --lh-display-compact: 30px;
+  --fs-title: 16px;
+  --lh-title: 22px;
+  --fs-title-compact: 15px;
+  --lh-title-compact: 20px;
+  --fs-subtitle: 14px;
+  --lh-subtitle: 20px;
+  --fs-subtitle-compact: 13px;
+  --lh-subtitle-compact: 18px;
+  --fs-body: 13px;
+  --lh-body: 20px;
+  --fs-body-compact: 12px;
+  --lh-body-compact: 18px;
+  --fs-caption: 12px;
+  --lh-caption: 16px;
+  --fs-caption-compact: 11px;
+  --lh-caption-compact: 14px;
+  --fs-micro: 11px;
+  --lh-micro: 14px;
+  --fs-micro-compact: 10px;
+  --lh-micro-compact: 12px;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-hover: var(--hover);
+  --color-active: var(--active);
+  --color-selected: var(--selected);
+  --color-destructive-light: var(--destructive-light);
+
+  --text-display: var(--fs-display);
+  --text-display--line-height: var(--lh-display);
+  --text-title: var(--fs-title);
+  --text-title--line-height: var(--lh-title);
+  --text-subtitle: var(--fs-subtitle);
+  --text-subtitle--line-height: var(--lh-subtitle);
+  --text-body: var(--fs-body);
+  --text-body--line-height: var(--lh-body);
+  --text-caption: var(--fs-caption);
+  --text-caption--line-height: var(--lh-caption);
+  --text-micro: var(--fs-micro);
+  --text-micro--line-height: var(--lh-micro);
+}
+
+/* FF's focus ring, in the base layer as FF ships it, so a component's own
+   `outline-none` (the text field inside InputField) still wins. */
+@layer base {
+  .fluid :focus-visible {
+    outline: 1px solid var(--focus-ring);
+    outline-offset: 2px;
+    border-radius: var(--shape-input-radius, 8px);
+  }
+  .fluid a:focus-visible {
+    border-radius: 2px;
+  }
+}
+
+/* Button's loading spinner (registry "button"). */
+@keyframes spinner-move {
+  to {
+    stroke-dashoffset: -100;
+  }
+}
+@keyframes spinner-dash {
+  0%,
+  100% {
+    stroke-dasharray: 15 85;
+  }
+  50% {
+    stroke-dasharray: 40 60;
+  }
+}

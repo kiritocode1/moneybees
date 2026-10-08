@@ -51,7 +51,7 @@ const DEFAULT_PRIMARY: MenuLink[] = [
 
 const DEFAULT_SECONDARY: MenuLink[] = [
   { label: "Case studies", href: "#case-studies" },
-  { label: "Investor login", href: "https://www.moneybee.in/register.php" },
+  { label: "Investor login", href: "/portal/login" },
   { label: "PMS", href: "#services" },
   { label: "AIF", href: "#services" },
 ];

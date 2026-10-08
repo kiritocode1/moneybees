@@ -7,7 +7,7 @@
  */
 
 import { CAREERS, RESUME_HREF, RESUME_EMAIL } from "@/lib/careers";
-import { EMAIL, PHONE, PHONE_HREF } from "@/lib/contact-v2";
+import { EMAIL, ENQUIRY_HREF, PHONE, PHONE_HREF } from "@/lib/contact-v2";
 import { CONTACT, PMS_APPROACH, PMS_VS_AIF } from "@/lib/insights";
 import { PERFORMANCE } from "@/lib/performance";
 import type { ProductHeroData } from "@/lib/pms-v3-hero";
@@ -18,7 +18,7 @@ export const COMPARE_HERO = {
   mark: "compare",
   title: ["PMS vs AIF", "Understanding the Difference"],
   sentence: PMS_VS_AIF,
-  actions: [{ label: "Get Started", href: "/contact" }],
+  actions: [{ label: "Get Started", href: ENQUIRY_HREF }],
   // Three facts a side, PMS and AIF alternating, none of them a row of the comparison below.
   figures: [
     { label: "PMS since", value: "Aug 2007" },

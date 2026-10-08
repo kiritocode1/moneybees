@@ -1,5 +1,6 @@
 import Link from "@/components/transition/transition-link";
 import { COLUMN } from "@/components/hero/editorial";
+import { ENQUIRY_HREF } from "@/lib/contact-v2";
 
 /** The FAQ and Get Started animate on the client, and Two ways carries its own mark styles, so they live in their own files. */
 export { FaqSection } from "./faq-section";
@@ -37,7 +38,7 @@ export function LetsTalkSection() {
         </h2>
         <div className="flex flex-col gap-[22px]">
           <Link
-            href="/contact"
+            href={ENQUIRY_HREF}
             className={`inline-flex w-fit items-center rounded-full bg-[#F6A11A] px-[26px] py-[14px] text-[15px] font-medium text-black no-underline transition-[background-color,scale] duration-200 ${EASE} hover:bg-white active:scale-[.97] ${FOCUS_ON_DARK}`}
           >
             Get Started
