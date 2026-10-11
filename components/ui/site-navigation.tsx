@@ -15,6 +15,7 @@ const primaryLinks = [
   { label: "PMS vs AIF", href: "/pms-vs-aif" },
   { label: "Our Approach", href: "/our-approach" },
   { label: "Case Studies", href: "/case-studies" },
+  { label: "Multibagger Picks", href: "/multi-bagger-picks" },
   { label: "Contact Us", href: ENQUIRY_HREF },
   { label: "Careers", href: "/careers" },
   // Until the investor centre has a better way in, this is its only route below 1200px, where the bar drops it.

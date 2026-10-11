@@ -148,20 +148,22 @@ function Profile({ member, size }: { member: TeamMember; size: "large" | "small"
 type Look = { opacity: string; visibility: string; translate: string };
 
 /**
- * Alpine's x-show transition as the source runs it: the start look and the
- * transition go on at once, a frame later the element is shown, a frame after
- * that the end look goes on, and the element is hidden once the transition's
- * time is up. Visibility is not in Tailwind's transition list, so it switches
- * at the end look: the leaving bio vanishes at once while the new one drops in.
+ * Alpine's x-show transition as the source runs it: the start look goes on at
+ * once, the transition with it, and two frames later the end look. Visibility
+ * is not in Tailwind's transition list, so it switches at the end look: the
+ * leaving bio vanishes at once while the new one drops in. The source hides
+ * with display: none; ours stay laid out (hidden by visibility) so the panel
+ * is always as tall as the longest bio, so the start look is set with no
+ * transition, as it would be on a hidden element.
  */
-function xShow(el: HTMLElement, show: boolean, transition: string, start: Look, end: Look, ms: number) {
-  Object.assign(el.style, start, { transition });
+function xShow(el: HTMLElement, transition: string, start: Look, end: Look, ms: number) {
+  Object.assign(el.style, start, { transition: "none" });
+  void el.offsetHeight;
+  el.style.transition = transition;
   requestAnimationFrame(() => {
-    if (show) el.style.display = "";
     requestAnimationFrame(() => {
       Object.assign(el.style, end);
       window.setTimeout(() => {
-        if (!show) el.style.display = "none";
         el.style.transition = "";
       }, ms);
     });
@@ -183,18 +185,19 @@ function Bios({ active }: { active: number }) {
     shownRef.current = active;
     const leaving = refs.current[from];
     const entering = refs.current[active];
-    if (leaving) xShow(leaving, false, "opacity 200ms cubic-bezier(.4,0,1,1), translate 200ms cubic-bezier(.4,0,1,1)", SHOWN, { opacity: "0", visibility: "hidden", translate: "0 calc(var(--spacing) * 4)" }, 200);
-    if (entering) xShow(entering, true, "opacity 600ms cubic-bezier(0,0,.2,1), translate 600ms cubic-bezier(0,0,.2,1)", { opacity: "0", visibility: "hidden", translate: "0 calc(var(--spacing) * -4)" }, SHOWN, 600);
+    if (leaving) xShow(leaving, "opacity 200ms cubic-bezier(.4,0,1,1), translate 200ms cubic-bezier(.4,0,1,1)", SHOWN, { opacity: "0", visibility: "hidden", translate: "0 calc(var(--spacing) * 4)" }, 200);
+    if (entering) xShow(entering, "opacity 600ms cubic-bezier(0,0,.2,1), translate 600ms cubic-bezier(0,0,.2,1)", { opacity: "0", visibility: "hidden", translate: "0 calc(var(--spacing) * -4)" }, SHOWN, 600);
   }, [active]);
+  // Every bio shares one grid cell, so the panel is as tall as the longest one.
   return TEAM.map((member, index) => (
     <div
       key={member.name}
       ref={(el) => {
         refs.current[index] = el;
       }}
-      className="absolute inset-0 flex w-[var(--cols-4)] flex-col gap-4"
-      // Only the first is shown on the first render; xShow owns display after that.
-      style={index === 0 ? undefined : { display: "none" }}
+      className="flex w-[var(--cols-4)] flex-col gap-4 [grid-area:1/1]"
+      // Only the first is shown on the first render; xShow owns the look after that.
+      style={index === 0 ? undefined : { opacity: 0, visibility: "hidden" }}
     >
       <Profile member={member} size="large" />
       <Actions member={member} className="mt-auto flex shrink-0 flex-wrap gap-3 pt-4" />
@@ -317,7 +320,7 @@ function Row() {
       <Heading id="team-heading" className="font-serif text-[length:calc(var(--rem)*3)] leading-[1.1] font-bold" />
       <div className="relative flex w-full items-end gap-[var(--grid-gutter)]">
         <div className="flex w-[var(--cols-5)] flex-col justify-between gap-4 self-stretch">
-          <div className="relative z-20 w-full grow pr-[var(--grid-margin)]">
+          <div className="relative z-20 grid w-full grow pr-[var(--grid-margin)]">
             <Bios active={active} />
           </div>
           <div className="flex w-full items-end justify-between gap-[var(--grid-gutter)]">

@@ -1,24 +1,24 @@
 import Link from "@/components/transition/transition-link";
 import CornerBrackets from "@/components/hero/corner-brackets";
 import { BODY, BUTTON, COLUMN, DashedRule, EYEBROW, Rise, SUBHEAD } from "@/components/hero/editorial";
-import { ProductMark } from "@/components/pms-v3/marks";
 import { AIF_PRODUCT, PMS_PRODUCT } from "@/lib/insights";
-import type { MarkKind } from "@/lib/pms-v3-hero";
+import { FundFigure } from "./fund-figure";
 
 /*
  * One philosophy, two ways to invest: the products up front, each leading to
  * its own page, on exactly equal footing (same size, weight and button). Each
- * card opens on its product's mark from the /pms and /aif heroes
- * (components/pms-v3/marks.tsx), split on its centre line as there; hovering
- * or focusing the card closes the split, a preview of the page it opens. The
- * two cards share row tracks, so their labels, leads, facts and buttons line
- * up whatever the length of each lead. A server component; Rise is the client part.
+ * card opens on a figure of what the product is (fund-figure.tsx): one
+ * investor and a portfolio of their own for PMS, seven investors and one
+ * pooled fund of listed and unlisted companies for the AIF. The two cards
+ * share row tracks, so their labels, leads, facts and buttons line up whatever
+ * the length of each lead. A server component; Rise and FundFigure are the
+ * client parts.
  */
 
-const WAYS: readonly { href: string; mark: MarkKind; label: string; name: string; lead: string; facts: readonly string[] }[] = [
+const WAYS: readonly { href: string; kind: "pms" | "aif"; label: string; name: string; lead: string; facts: readonly string[] }[] = [
   {
     href: "/pms",
-    mark: "pms",
+    kind: "pms",
     label: "Portfolio Management Service",
     name: PMS_PRODUCT.name,
     lead: "The stocks sit in your own demat account.",
@@ -26,7 +26,7 @@ const WAYS: readonly { href: string; mark: MarkKind; label: string; name: string
   },
   {
     href: "/aif",
-    mark: "aif",
+    kind: "aif",
     label: "Category III AIF",
     name: AIF_PRODUCT.name,
     lead: AIF_PRODUCT.lead,
@@ -34,19 +34,11 @@ const WAYS: readonly { href: string; mark: MarkKind; label: string; name: string
   },
 ];
 
-/** The mark's halves rest apart (their inline offset); the card's hover or focus closes them. */
-const MARK_CSS = `
-.tw-half { transition: transform .7s cubic-bezier(.87,0,.13,1) }
-.tw-card:hover .tw-half, .tw-card:focus-visible .tw-half { transform: translateX(0) scale(1) !important }
-@media (prefers-reduced-motion: reduce) { .tw-half { transition: none } }
-`;
-
 const EASE = "ease-[cubic-bezier(.23,1,.32,1)]";
 
 export function TwoWaysSection() {
   return (
     <section id="invest" aria-labelledby="invest-heading" className="bg-white text-black">
-      <style>{MARK_CSS}</style>
       <DashedRule />
       <div className={`${COLUMN} py-[120px] max-[600px]:py-[80px]`}>
         <Rise onView>
@@ -60,10 +52,10 @@ export function TwoWaysSection() {
             <Link
               key={way.href}
               href={way.href}
-              className={`tw-card group row-span-5 grid grid-rows-subgrid gap-y-0 border border-black/[.14] text-black no-underline transition-[border-color,scale] duration-200 ${EASE} hover:border-black focus-visible:border-black focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-black active:scale-[.99] motion-reduce:active:scale-100`}
+              className={`group row-span-5 grid grid-rows-subgrid gap-y-0 border border-black/[.14] text-black no-underline transition-[border-color,scale] duration-200 ${EASE} hover:border-black focus-visible:border-black focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-black active:scale-[.99] motion-reduce:active:scale-100`}
             >
               <div className="relative aspect-[16/9] overflow-hidden bg-[#F6F6F6]">
-                <ProductMark kind={way.mark} className="absolute inset-x-0 top-[12%] mx-auto h-[76%] w-full overflow-visible" halfClassName="tw-half" />
+                <FundFigure kind={way.kind} />
               </div>
               <div className="px-[36px] pt-[32px] max-[600px]:px-[24px] max-[600px]:pt-[24px]">
                 <span className={`${EYEBROW} text-black/60`}>{way.label}</span>
