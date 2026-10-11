@@ -194,7 +194,7 @@ function Stage({ step }: { step: (typeof PROCESS_STEPS)[number] }) {
       <span aria-hidden="true" className="absolute inset-x-0 top-0 h-px origin-left bg-white/25" style={{ transform: shown ? "none" : "scaleX(0)", transition: `transform ${t(1200)}` }} />
       <div className={`${COLUMN} grid grid-cols-1 gap-12 py-[64px] md:py-[96px] xl:min-h-[min(66vh,580px)] xl:grid-cols-12 xl:items-center xl:gap-x-6`}>
         <div className="xl:col-span-4">
-          <h3 className=" font-serif text-[clamp(2rem,1.4rem+1.6vw,2.75rem)] leading-[1.05] font-normal tracking-[-.015em]">{step.name}</h3>
+          <h3 className=" font-serif text-[clamp(2rem,1.4rem+1.6vw,2.75rem)] leading-[1.05] font-semibold tracking-[-.015em]">{step.name}</h3>
           <p className="mt-4 max-w-[36ch] text-[17px] leading-[1.55] text-white/70">{step.text}</p>
         </div>
         <div className="xl:col-span-8 xl:col-start-5 xl:flex xl:justify-center">

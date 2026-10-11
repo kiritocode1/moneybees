@@ -67,7 +67,7 @@ export function TwoWaysSection() {
               </div>
               <div className="px-[36px] pt-[32px] max-[600px]:px-[24px] max-[600px]:pt-[24px]">
                 <span className={`${EYEBROW} text-black/60`}>{way.label}</span>
-                <h3 className="mt-[14px] font-serif text-[clamp(2rem,3vw,2.8rem)] leading-[1.05] font-normal">{way.name}</h3>
+                <h3 className="mt-[14px] font-serif text-[clamp(2rem,3vw,2.8rem)] leading-[1.05] font-semibold">{way.name}</h3>
               </div>
               <p className={`mt-[14px] px-[36px] text-black/70 max-[600px]:px-[24px] ${BODY}`}>{way.lead}</p>
               <ul className="mx-[36px] mt-[28px] list-none border-t border-t-black/[.13] p-0 max-[600px]:mx-[24px]">

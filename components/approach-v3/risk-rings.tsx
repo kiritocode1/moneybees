@@ -56,7 +56,7 @@ export function RiskRings() {
           <ol className="m-0 mt-10 grid list-none grid-cols-1 gap-x-6 gap-y-8 p-0 sm:grid-cols-2 lg:grid-cols-4">
             {RISKS.map((risk, index) => (
               <li key={risk.name} style={{ opacity: shown ? 1 : 0, transform: shown ? "none" : "translateY(12px)", transition: `opacity ${t(500, 700 + index * 120)}, transform ${t(700, 700 + index * 120)}` }}>
-                <h3 className=" font-serif text-[clamp(1.6rem,1.3rem+.8vw,2rem)] leading-[1.1] font-normal">{risk.name}</h3>
+                <h3 className=" font-serif text-[clamp(1.6rem,1.3rem+.8vw,2rem)] leading-[1.1] font-semibold">{risk.name}</h3>
                 <p className="mt-3 max-w-[32ch] text-[15px] leading-[1.55] text-black/60">{APPROACH_LOREM.short}</p>
               </li>
             ))}

@@ -4,8 +4,8 @@ import { AboutHero } from "@/components/about-v3/about-sections";
 import { AreasSection } from "@/components/about-v3/areas-section";
 import { RecognitionSection } from "@/components/about-v3/recognition-section";
 import { TimelineSection } from "@/components/about-v3/timeline-section";
+import TeamCarousel from "@/components/fact-sections/team-carousel";
 import SiteFooter from "@/components/footer/site-footer";
-import { KeyMembersSection } from "@/components/team/team-sections";
 import SiteNavigation from "@/components/ui/site-navigation";
 import { PageEndDoors } from "@/components/cta/page-end-doors";
 
@@ -21,12 +21,12 @@ export const metadata: Metadata = {
 /**
  * /about, built to the Content & Visual Plan §2 and approved in
  * .plannotator/about-people/plan.md: the heading and company information over
- * the team photograph, the founder, the key team members (once /team's,
- * approved in .plannotator/about-key-members), the group's four areas as
+ * the team photograph, the founder, the team carousel (moved from the
+ * homepage in place of the key team members, client, 2026-10-08), the group's four areas as
  * drawings (.plannotator/about-areas), the PMS Bazaar rankings (moved from the
  * homepage, .plannotator/about-recognition), the company timeline and the
  * Moneybee story. Copy lives in lib/about-v2.ts; the photograph and dates in
- * lib/about-v3.ts, the team in lib/team.ts.
+ * lib/about-v3.ts, the team in lib/insights.ts (TEAM).
  * Ends with the closing door pair (components/cta/page-end-doors.tsx).
  */
 export default function AboutPage() {
@@ -35,7 +35,7 @@ export default function AboutPage() {
       <main id="top" className="option-one bg-white text-black">
         <AboutHero />
         <FounderSection />
-        <KeyMembersSection />
+        <TeamCarousel />
         <AreasSection />
         <RecognitionSection />
         <TimelineSection />
@@ -45,7 +45,7 @@ export default function AboutPage() {
       <SiteFooter
         explore={[
           ["Founder", "#founder"],
-          ["Our team", "#key-members"],
+          ["Our team", "#team"],
           ["What the group does", "#group"],
           ["Recognition", "#recognition"],
           ["Timeline", "#timeline"],

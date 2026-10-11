@@ -8,8 +8,7 @@
 
 import { CAREERS, RESUME_HREF, RESUME_EMAIL } from "@/lib/careers";
 import { EMAIL, ENQUIRY_HREF, PHONE, PHONE_HREF } from "@/lib/contact-v2";
-import { CONTACT, PMS_APPROACH, PMS_VS_AIF } from "@/lib/insights";
-import { PERFORMANCE } from "@/lib/performance";
+import { CONTACT, PICK_TIERS, PICKS_LEAD, PMS_APPROACH, PMS_VS_AIF } from "@/lib/insights";
 import type { ProductHeroData } from "@/lib/pms-v3-hero";
 
 const [onboarding, productQueries, grievance] = CONTACT.emails;
@@ -40,20 +39,6 @@ export const APPROACH_HERO = {
     { label: "Horizon", value: "At least 3 years" },
     { label: "Maximum sector allocation", value: "30%" },
     { label: "Review", value: "Quarterly" },
-  ],
-} as const satisfies ProductHeroData;
-
-export const PERFORMANCE_HERO = {
-  mark: "performance",
-  title: ["Performance"],
-  sentence: "Moneybee PMS and the Flyingbee Investment Fund, period by period, against their benchmarks.",
-  figures: [
-    { label: "As of", value: PERFORMANCE.asOf.replace("As of ", "") },
-    { label: "PMS since", value: "Aug 2007" },
-    { label: "PMS benchmark", value: "S&P BSE 500 TRI" },
-    { label: "Flyingbee first close", value: "Oct 2025" },
-    { label: "AIF benchmark", value: "S&P BSE 500" },
-    { label: "Returns", value: "Time-weighted, after expenses" },
   ],
 } as const satisfies ProductHeroData;
 
@@ -96,6 +81,17 @@ export const CONTACT_HERO = {
     { label: productQueries[0], value: productQueries[1] },
     { label: grievance[0], value: grievance[1] },
   ],
+} as const satisfies ProductHeroData;
+
+/** /multi-bagger-picks: the deck's slide 20 title, its tiers as the facts. */
+export const PICKS_HERO = {
+  mark: "picks",
+  title: ["Our Multibagger", "Picks"],
+  sentence: PICKS_LEAD,
+  figures: PICK_TIERS.map((tier) => ({
+    label: tier.multiple,
+    value: typeof tier.picks === "string" ? tier.picks : tier.picks.map((pick) => pick.name).join(", "),
+  })),
 } as const satisfies ProductHeroData;
 
 export const INVESTOR_HERO = {

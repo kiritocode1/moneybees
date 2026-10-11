@@ -31,7 +31,6 @@ export default function ContactPage() {
           ["Our approach", "/our-approach"],
           ["Office", "#office"],
           ["Enquiry", "#enquiry"],
-          ["Performance", "/performance"],
           ["Team", "/about#key-members"],
         ]}
       />

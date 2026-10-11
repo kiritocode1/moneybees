@@ -14,7 +14,7 @@ export function CareersIntro() {
         <div className="grid grid-cols-1 items-end gap-8 lg:grid-cols-[minmax(0,7fr)_minmax(0,4fr)] lg:gap-16">
           <div>
             <p className="mb-4 text-[13px] text-black/60">Careers at Moneybee</p>
-            <h1 id="careers-heading" className="m-0 max-w-[16ch] font-serif text-[clamp(2.8rem,4.3vw,4.5rem)] leading-[1.02] font-normal tracking-[-.025em]">
+            <h1 id="careers-heading" className="m-0 max-w-[16ch] font-serif text-[clamp(2.8rem,4.3vw,4.5rem)] leading-[1.02] font-bold tracking-[-.025em]">
               Build your career with Moneybee
             </h1>
           </div>
@@ -67,7 +67,7 @@ export function CareersResumeSection() {
     <section id="apply" aria-labelledby="apply-heading" className="scroll-mt-[120px] bg-black py-[96px] text-white max-md:py-[72px]">
       <div className={`${COLUMN} grid grid-cols-1 items-center gap-10 lg:grid-cols-[minmax(0,6fr)_minmax(0,5fr)] lg:gap-20`}>
         <div>
-          <h2 id="apply-heading" className="max-w-[16ch] font-serif text-[clamp(2.8rem,4.3vw,4.5rem)] leading-[1.05] font-normal tracking-[-.025em]">Tell us about yourself.</h2>
+          <h2 id="apply-heading" className="max-w-[16ch] font-serif text-[clamp(2.8rem,4.3vw,4.5rem)] leading-[1.05] font-bold tracking-[-.025em]">Tell us about yourself.</h2>
           <p className="mt-6 max-w-[38ch] text-[16px] leading-[1.6] text-white/70">
             Send your resume with a short note about your experience and the team you would like to work with.
           </p>

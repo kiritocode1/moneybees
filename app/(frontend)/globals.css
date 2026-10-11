@@ -4,11 +4,13 @@
 /* The pinned reference sites hold thousands of class strings Tailwind would otherwise scan. */
 @source not "../reference";
 
-/* Rethink Sans remains the body face; Instrument Serif gives headings and
-   display copy a warmer editorial voice. */
+/* Rethink Sans remains the body face; Overused Grotesk, a Helvetica-style
+   grotesk, sets headings and display copy. The client rejected Instrument
+   Serif (2026-10-08); `font-serif` keeps its name so the utility still marks
+   the display face. */
 @theme inline {
   --font-sans: var(--font-rethink-sans);
-  --font-serif: var(--font-instrument-serif), Georgia, serif;
+  --font-serif: var(--font-overused-grotesk), "Helvetica Neue", Arial, sans-serif;
   --font-mono: var(--font-rethink-sans);
   /* Brand orange (client, 2026-09-30). Fills, rules and marks only: as text on
      white it is about 2:1, so numerals and labels on white stay ink. */
@@ -84,7 +86,7 @@ body {
    beat every utility regardless of specificity. */
 @layer base {
   :where(h1, h2, h3, h4, h5, h6) {
-    font-family: var(--font-instrument-serif);
+    font-family: var(--font-overused-grotesk);
     font-weight: 400;
   }
 

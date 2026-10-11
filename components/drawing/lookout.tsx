@@ -4,7 +4,7 @@
  * hair, a nose and chin, a neck that runs into the shoulders, a jacket to the
  * seat, trousers with knees, and dress shoes. Three poses:
  *
- *   Person    raising a telescope to the right (05 and 08): /pms selection, /performance, /our-approach
+ *   Person    raising a telescope to the right (05 and 08): /pms selection and wealth growth, /our-approach
  *   Standing  arms at the sides (06): /pms risk blocks
  *   Walker    mid-stride to the right (07): /about timeline
  *

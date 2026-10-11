@@ -41,7 +41,6 @@ export default function OurApproachPage() {
           ["About Moneybee", "/about"],
           ["Our philosophy", "#philosophy"],
           ["Our process", "#process"],
-          ["Performance", "/performance"],
           ["Our strategies", "/pms-vs-aif"],
           ["Team", "/about#key-members"],
         ]}

@@ -1,13 +1,14 @@
 import { BracketLabel } from "@/components/fact-sections/fact-section";
 import { BODY, COLUMN, EYEBROW, SUBHEAD } from "@/components/hero/tokens";
 import LitRows from "@/components/motion/lit-rows";
+import { ReturnTable } from "@/components/performance/performance-sections";
 import { METHOD, PMS_NAMES, PMS_ROWS } from "@/lib/performance";
 import { PERFORMANCE, PMS_LOREM } from "@/lib/pms-v2";
 import { FigurePanel } from "./shared";
 
 /*
- * PMS performance on /pms: the same lit rows as /performance, cut to the four
- * long periods. Figures are lib/performance.ts's, as of 31 July 2026.
+ * PMS performance on /pms: lit rows cut to the four long periods, then every
+ * period as a table. Figures are lib/performance.ts's, as of 31 July 2026.
  */
 
 const PERIODS = new Set(["1Y", "3Y", "5Y", "SI"]);
@@ -32,6 +33,9 @@ export default function PerformanceChart() {
         <FigurePanel className="mt-[32px]">
           <LitRows rows={ROWS} names={PMS_NAMES} />
         </FigurePanel>
+        <div className="mt-[48px]">
+          <ReturnTable rows={PMS_ROWS} names={PMS_NAMES} />
+        </div>
         <p className={`${EYEBROW} mt-[18px] text-black/60`}>Returns in %. Periods above 1 year are CAGR.</p>
         {/* The content plan (§7) requires the deck's methodology and disclaimer with any performance figures. */}
         <p className="mt-[18px] max-w-[880px] border-t border-black/10 pt-[14px] text-[12px] leading-[1.55] text-black/60">

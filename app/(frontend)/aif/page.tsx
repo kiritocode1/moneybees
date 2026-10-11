@@ -5,6 +5,7 @@ import { OpportunitySection } from "@/components/aif-v3/opportunity-section";
 import { PoolingSection } from "@/components/aif-v3/pooling-section";
 import { StructureSection } from "@/components/aif-v3/structure-section";
 import SiteFooter from "@/components/footer/site-footer";
+import { AifPerformanceSection } from "@/components/performance/performance-sections";
 import ProductHero from "@/components/pms-v3/product-hero";
 import SiteNavigation from "@/components/ui/site-navigation";
 import { AIF_HERO } from "@/lib/pms-v3-hero";
@@ -21,7 +22,8 @@ export const metadata: Metadata = {
 
 /**
  * /aif, built to the Content & Visual Plan §4 and approved in
- * .plannotator/aif-v3/plan.md: the product hero shared with /pms, the deck's
+ * .plannotator/aif-v3/plan.md: the product hero shared with /pms, the fund's
+ * returns, which investors see first (user, 2026-10-08), the deck's
  * strategic opportunity on the solid that was /about's timeline, why a
  * Category III AIF as a pinned pooling scene, the fund's structure as the
  * plan's diagram, the investment approach as a pinned wedge wheel, and the key
@@ -34,6 +36,7 @@ export default function AifPage() {
     <SiteNavigation>
       <main id="top" className="option-one bg-white text-black">
         <ProductHero data={AIF_HERO} />
+        <AifPerformanceSection />
         <OpportunitySection />
         <PoolingSection />
         <StructureSection />
@@ -46,6 +49,7 @@ export default function AifPage() {
           ["About Moneybee", "/about"],
           ["PMS", "/pms"],
           ["Our approach", "/our-approach"],
+          ["Performance", "#performance"],
           ["Strategic opportunity", "#opportunity"],
           ["Structure", "#structure"],
           ["Investment approach", "#approach"],

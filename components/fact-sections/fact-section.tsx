@@ -148,7 +148,7 @@ export function SectionHeading({ id, label, heading, lead }: { id: string; label
         {/* Deck lines run from three words to a full sentence; a long one steps down a size so it holds four lines at most. */}
         <h2
           id={`${id}-heading`}
-          className={`font-light tracking-[-.055em] ${
+          className={`font-serif font-bold tracking-[-.03em] ${
             heading.length > 56 ? "text-[clamp(2.4rem,4.2vw,4.6rem)] leading-[.98]" : "text-[clamp(3.6rem,6.4vw,7rem)] leading-[.92]"
           }`}
         >
@@ -169,7 +169,7 @@ export function Eyebrow({ children }: { children: ReactNode }) {
 export function PanelTitle({ children, size = "large" }: { children: ReactNode; size?: "large" | "medium" }) {
   return (
     <strong
-      className={`mt-[6px] block font-light tracking-[-.05em] ${
+      className={`mt-[6px] block font-serif font-bold tracking-[-.03em] ${
         size === "large"
           ? "text-[clamp(3.2rem,5vw,5.2rem)] leading-[.9]"
           : "max-w-[16ch] text-[clamp(2.2rem,3.2vw,3.4rem)] leading-[.98]"

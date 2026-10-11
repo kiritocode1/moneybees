@@ -1,29 +1,17 @@
-"use client";
-
-import { useInView } from "motion/react";
-import { useRef } from "react";
-import { BOX, Draw, MOVE, RM, tr } from "@/components/drawing/plate";
 import { BracketLabel } from "@/components/fact-sections/fact-section";
 import { BODY, COLUMN, EYEBROW, SUBHEAD } from "@/components/hero/tokens";
-import { AIF_NAMES, AIF_ROWS, formatReturn, METHOD, PERFORMANCE, PERFORMANCE_LOREM, PMS_NAMES, PMS_ROWS, type ReturnRow } from "@/lib/performance";
+import { AIF_DATES } from "@/lib/aif";
+import { AIF_NAMES, AIF_ROWS, formatReturn, METHOD, PERFORMANCE, PERFORMANCE_LOREM, type ReturnRow } from "@/lib/performance";
 import LitRows from "@/components/motion/lit-rows";
 import { FigurePanel } from "@/components/pms-v2/shared";
 
 /*
- * /performance, content plan §7 and the section plan's §7: each fund's periods
- * as lit rows (components/motion/lit-rows.tsx) with the same figures as a plain
- * table under them, the growth of Rs. 1 Mn drawn as unit squares, and the
- * method drawn as chained sub-periods. Figures are as of 31 July 2026
+ * Returns as lit rows (components/motion/lit-rows.tsx) with the same figures
+ * as a plain table under them. AifPerformanceSection opens /aif under its
+ * hero; ReturnTable also sits under the PMS chart on /pms
+ * (components/pms-v2/performance-chart.tsx). Figures are as of 31 July 2026
  * (lib/performance.ts); a period the data does not carry prints N/A.
  */
-
-const ORANGE = "#F6A11A";
-
-function useShown<T extends Element>(amount = 0.35) {
-  const ref = useRef<T>(null);
-  const shown = useInView(ref, { once: true, amount });
-  return { ref, shown };
-}
 
 /** The As-of label, an orange square beside the date. */
 function AsOf({ dark = false }: { dark?: boolean }) {
@@ -51,7 +39,7 @@ function SectionHead({ id, label, heading, dark = false }: { id: string; label: 
 }
 
 /** The same rows as a plain table under the lit rows, for reading and screen readers. */
-function ReturnTable({ rows, names }: { rows: readonly ReturnRow[]; names: { ours: string; benchmark: string } }) {
+export function ReturnTable({ rows, names }: { rows: readonly ReturnRow[]; names: { ours: string; benchmark: string } }) {
   return (
     <table className="w-full border-collapse text-left">
       <thead>
@@ -100,115 +88,20 @@ function Returns({ rows, names }: { rows: readonly ReturnRow[]; names: { ours: s
   );
 }
 
-export function PmsPerformanceSection() {
-  return (
-    <section id="pms" aria-labelledby="pms-heading" className="scroll-mt-[96px] border-t border-dashed border-black/10 bg-white text-black">
-      <div className={`${COLUMN} py-[120px] max-md:py-[80px]`}>
-        <SectionHead id="pms" label="PMS" heading="PMS Performance" />
-        <div className="mt-[40px]">
-          <AsOf />
-        </div>
-        <Returns rows={PMS_ROWS} names={PMS_NAMES} />
-      </div>
-    </section>
-  );
-}
-
+/** Flyingbee's periods against the S&P BSE 500, directly under the /aif hero. */
 export function AifPerformanceSection() {
   return (
-    <section id="aif" aria-labelledby="aif-heading" className="scroll-mt-[96px] border-t border-dashed border-black/10 bg-white text-black">
+    <section id="performance" aria-labelledby="performance-heading" className="scroll-mt-[96px] border-t border-dashed border-black/10 bg-white text-black">
       <div className={`${COLUMN} py-[120px] max-md:py-[80px]`}>
-        <SectionHead id="aif" label="AIF" heading="AIF Performance" />
+        <SectionHead id="performance" label="Performance" heading="AIF Performance" />
         <div className="mt-[40px]">
           <AsOf />
         </div>
         <Returns rows={AIF_ROWS} names={AIF_NAMES} />
-      </div>
-    </section>
-  );
-}
-
-/**
- * Time-weighted return, drawn. The portfolio's value (the grey line) jumps
- * up at an inflow and drops at an outflow; those jumps are money moving, not
- * performance. So the line is cut at every flow, each piece keeps only its
- * own return, measured under it, and the pieces are chained in orange.
- */
-function MethodGlyph({ on }: { on: boolean }) {
-  const flows = [
-    { x: 120, inflow: true },
-    { x: 230, inflow: false },
-  ];
-  const pieces = [
-    { d: "M20 120 C 50 110, 80 104, 120 92", label: "r1", from: 20, to: 120 },
-    { d: "M120 92 C 150 100, 190 84, 230 76", label: "r2", from: 120, to: 230 },
-    { d: "M230 76 C 262 70, 300 56, 330 44", label: "r3", from: 230, to: 330 },
-  ];
-  // The same value with the flows left in: up by the inflow at 120, down by the outflow at 230.
-  const raw = "M20 120 C 50 110, 80 104, 120 92 V72 C 150 80, 190 64, 230 56 V86 C 262 80, 300 66, 330 54";
-  const mono = "var(--font-geist-mono), ui-monospace, monospace";
-  return (
-    <svg viewBox="0 0 350 200" className="block h-auto w-full" aria-hidden="true">
-      <line x1="10" x2="340" y1="150" y2="150" stroke="#000" strokeWidth=".6" strokeOpacity=".45" />
-      {Array.from({ length: 12 }, (_, tick) => (
-        <line key={tick} x1={20 + tick * 28.2} x2={20 + tick * 28.2} y1="150" y2={tick % 3 ? 152.5 : 154} stroke="#000" strokeWidth=".5" strokeOpacity=".45" />
-      ))}
-      <Draw d={raw} on={on} ms={900} ease={MOVE} stroke="#000" strokeWidth=".9" strokeOpacity=".4" strokeLinejoin="round" />
-      {flows.map((flow, index) => (
-        <g key={flow.x}>
-          <line x1={flow.x} x2={flow.x} y1="30" y2="150" stroke="#000" strokeWidth=".6" strokeOpacity=".45" strokeDasharray="3 3" className={RM} style={{ ...BOX, transformOrigin: "50% 100%", transform: `scaleY(${on ? 1 : 0})`, ...tr("transform", 500, 500 + index * 120, MOVE) }} />
-          <g className={RM} style={{ opacity: on ? 1 : 0, transform: `translateY(${on ? 0 : flow.inflow ? -4 : 4}px)`, ...tr("opacity, transform", 360, 700 + index * 120) }}>
-            <path d={flow.inflow ? `M${flow.x} 8V26M${flow.x - 4} 21l4 5 4-5` : `M${flow.x} 26V8M${flow.x - 4} 13l4-5 4 5`} fill="none" stroke="#000" strokeWidth="1" />
-            <text x={flow.x + 8} y="19" fontSize="8" fill="#000" fillOpacity=".65" fontFamily={mono} letterSpacing=".12em">
-              {flow.inflow ? "IN" : "OUT"}
-            </text>
-          </g>
-        </g>
-      ))}
-      {pieces.map((piece, index) => {
-        const at = 1000 + index * 260;
-        return (
-          <g key={piece.label}>
-            <Draw d={piece.d} on={on} ms={520} delay={at} stroke={ORANGE} strokeWidth="2.4" />
-            {/* Each piece's own span, measured under it. */}
-            <Draw d={`M${piece.from + 3} 128H${piece.to - 3}`} on={on} ms={380} delay={at + 120} stroke="#000" strokeWidth=".6" />
-            <g className={RM} style={{ opacity: on ? 1 : 0, ...tr("opacity", 260, at + 300) }}>
-              <path d={`M${piece.from + 6} 125.8L${piece.from + 3} 128L${piece.from + 6} 130.2M${piece.to - 6} 125.8L${piece.to - 3} 128L${piece.to - 6} 130.2`} fill="none" stroke="#000" strokeWidth=".6" />
-              <text x={(piece.from + piece.to) / 2} y="142" textAnchor="middle" fontSize="11" fill="#000" fontFamily={mono}>
-                {piece.label}
-              </text>
-            </g>
-          </g>
-        );
-      })}
-      <text x="175" y="186" textAnchor="middle" fontSize="11" fill="#000" fontFamily={mono} className={RM} style={{ opacity: on ? 1 : 0, ...tr("opacity", 400, 1900) }}>
-        (1+r1)(1+r2)(1+r3) - 1
-      </text>
-    </svg>
-  );
-}
-
-export function MethodologySection() {
-  const { ref, shown } = useShown<HTMLDivElement>(0.35);
-  return (
-    <section id="methodology" aria-labelledby="methodology-heading" className="scroll-mt-[96px] border-t border-dashed border-black/10 bg-white text-black">
-      <div ref={ref} className={`${COLUMN} grid grid-cols-1 gap-[56px] py-[120px] md:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] md:gap-[72px] max-md:py-[80px]`}>
-        <div>
-          <BracketLabel>Methodology</BracketLabel>
-          <h2 id="methodology-heading" className={`mt-[18px] ${SUBHEAD}`}>
-            Methodology and Disclaimer
-          </h2>
-          <div className="mt-[28px]">
-            <AsOf />
-          </div>
-          <p className="mt-[28px] text-[15px] leading-[1.6] text-black/70">{METHOD.text}</p>
-          <p className="mt-[20px] border-l-2 border-[#F6A11A] pl-[16px] font-serif text-[clamp(1.25rem,1rem+.7vw,1.6rem)] leading-[1.25]">
-            {METHOD.caveat} {METHOD.guarantee}
-          </p>
-        </div>
-        <FigurePanel className="self-center">
-          <MethodGlyph on={shown} />
-        </FigurePanel>
+        {/* The content plan (§7) requires a method and disclaimer beside any performance figures. RECORD_METHOD is the PMS's, so the fund's own facts (deck p10) stand in for it. */}
+        <p className="mt-[18px] max-w-[880px] border-t border-black/10 pt-[14px] text-[12px] leading-[1.55] text-black/60">
+          Returns in %, time-weighted (TWRR). N/A marks a period that has not run since the fund&apos;s first close on {AIF_DATES.firstClose}. {METHOD.caveat} {METHOD.guarantee}
+        </p>
       </div>
     </section>
   );

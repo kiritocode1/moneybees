@@ -3,11 +3,11 @@
 import Autoplay from "embla-carousel-autoplay";
 import useEmblaCarousel from "embla-carousel-react";
 import Image from "next/image";
-import { type KeyboardEvent, type ReactNode, useEffect, useLayoutEffect, useRef, useState } from "react";
+import { type KeyboardEvent, useEffect, useLayoutEffect, useRef, useState } from "react";
 import TransitionLink from "@/components/transition/transition-link";
 import { TEAM, type TeamMember } from "@/lib/insights";
-import { KEY_MEMBERS } from "@/lib/team";
 import styles from "./team-carousel.module.css";
+import { BUTTON } from "@/components/hero/tokens";
 import { ENQUIRY_HREF } from "@/lib/contact-v2";
 
 /*
@@ -16,7 +16,9 @@ import { ENQUIRY_HREF } from "@/lib/contact-v2";
  * grid, type sizes, motion and controls are the source's. The colours, font,
  * words and people are Moneybee's: the section sits on the homepage's white and
  * black, the portraits are grey as elsewhere on the site, and the arrows use
- * its grey.
+ * its grey. The profile panel is ours (approved 2026-10-09): the name in the
+ * display face, the role as a mono label, the bio as a lead and ruled rows,
+ * then the enquiry and the person's LinkedIn.
  */
 const SLIDE_MS = 700;
 const EASE_IN_OUT = "cubic-bezier(.4,0,.2,1)";
@@ -27,10 +29,11 @@ const COUNT = TEAM.length;
  */
 const RING = "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-current focus-visible:ring-offset-2";
 
-const wrap = (index: number) => ((index % COUNT) + COUNT) % COUNT;
+/** LinkedIn's mark (Simple Icons). */
+const LINKEDIN_PATH =
+  "M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z";
 
-/** The source links "Om <name>" to a page per person; ours go to that person's card in /about's key team members. */
-const ABOUT = new Map<string, string>(KEY_MEMBERS.map((person) => [person.name, `/about#${person.id}`]));
+const wrap = (index: number) => ((index % COUNT) + COUNT) % COUNT;
 
 /** The source's 6x14 chevrons. */
 const CHEVRONS = {
@@ -86,69 +89,59 @@ function Heading({ id, className }: { id?: string; className: string }) {
   );
 }
 
-/** The source's outlined button: on desktop hover a chevron slides in and the label moves right. */
-function Action({ href, children }: { href: string; children: ReactNode }) {
-  return (
-    <TransitionLink
-      href={href}
-      className={`group relative flex w-fit cursor-pointer border border-current/30 px-3 py-2 pl-8 text-base leading-6 transition-all duration-300 ease-in-out lg:pl-3 lg:hover:border-current lg:hover:pl-8 lg:hover:backdrop-blur-xs ${RING}`}
-    >
-      <span className="absolute top-1/2 left-3 -translate-y-1/2 lg:left-6 lg:opacity-0 lg:transition-all lg:duration-300 lg:ease-in-out lg:group-hover:left-3 lg:group-hover:opacity-100">
-        <svg width="6" height="14" viewBox="0 0 6 14" fill="none" aria-hidden="true" className="size-3">
-          <path d={CHEVRONS.next} fill="currentColor" />
-        </svg>
-      </span>
-      <span className="flex transition-transform duration-500 select-none lg:py-0.5">{children}</span>
-    </TransitionLink>
-  );
-}
-
+/** The enquiry as the site's orange pill, and the person's LinkedIn when one is confirmed. */
 function Actions({ member, className }: { member: TeamMember; className: string }) {
-  const about = ABOUT.get(member.name);
+  const { linkedin } = member;
   return (
     <div className={className}>
-      <Action href={ENQUIRY_HREF}>Get in touch</Action>
-      {about && <Action href={about}>About {member.name.split(" ")[0]}</Action>}
+      <TransitionLink href={ENQUIRY_HREF} className={`${BUTTON} bg-[#F6A11A] text-black hover:bg-black hover:text-white`}>
+        Get in touch
+      </TransitionLink>
+      {linkedin && (
+        <a
+          href={linkedin}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label={`${member.name} on LinkedIn`}
+          className={`${BUTTON} gap-2 border border-black/20 text-black hover:border-black`}
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true" className="size-[15px] fill-current">
+            <path d={LINKEDIN_PATH} />
+          </svg>
+          LinkedIn
+        </a>
+      )}
     </div>
   );
 }
 
 /**
- * The bio text, cut to as many 20px lines as fit the space left above the
- * thumbnails, as the source does on desktop.
+ * One person's panel: the name in the display face over the role as a mono
+ * label, the first line of the bio as a lead, the rest as ruled rows.
  */
-function ClampedPoints({ points }: { points: readonly string[] }) {
-  const boxRef = useRef<HTMLDivElement>(null);
-  const textRef = useRef<HTMLDivElement>(null);
-  useLayoutEffect(() => {
-    const box = boxRef.current;
-    const text = textRef.current;
-    if (!box || !text) return;
-    const clamp = () => {
-      const available = box.clientHeight;
-      if (!available) return;
-      let lines = Math.max(1, Math.floor(available / (parseFloat(getComputedStyle(text).lineHeight) || 20)));
-      text.style.webkitLineClamp = String(lines);
-      while (box.scrollHeight > available && lines > 1) {
-        lines -= 1;
-        text.style.webkitLineClamp = String(lines);
-      }
-    };
-    clamp();
-    const observer = new ResizeObserver(clamp);
-    observer.observe(box);
-    return () => observer.disconnect();
-  }, []);
+function Profile({ member, size }: { member: TeamMember; size: "large" | "small" }) {
+  const [lead, ...rest] = member.points;
   return (
-    <div ref={boxRef} className="relative min-h-0 w-full grow overflow-hidden">
-      <div ref={textRef} className="text-sm leading-5 tracking-[-.02em]" style={{ display: "-webkit-box", WebkitBoxOrient: "vertical", overflow: "hidden" }}>
-        {points.map((point) => (
-          <p key={point} className="mb-[1.35em] last:mb-0">
-            {point}
-          </p>
-        ))}
+    <>
+      <div className="shrink-0">
+        <h3 className={`font-serif leading-[1.02] font-bold tracking-[-.025em] ${size === "large" ? "text-[length:calc(var(--rem)*2.4)]" : "text-[length:calc(var(--rem)*1.6)]"}`}>
+          {member.name}
+        </h3>
+        <p className="mt-3 font-[family-name:var(--font-geist-mono)] text-[11px] leading-normal tracking-[.1em] text-black/55 uppercase">{member.role}</p>
       </div>
-    </div>
+      <div className="mt-2 min-h-0 border-t border-black/15 pt-5">
+        <p className="text-[length:calc(var(--rem)*1.125)] leading-[1.45] tracking-[-.01em] text-black">{lead}</p>
+        {rest.length > 0 && (
+          <ul className="mt-5 list-none p-0">
+            {rest.map((point) => (
+              <li key={point} className="border-t border-black/10 py-3 text-sm leading-[1.5] text-black/65">
+                {point}
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+    </>
   );
 }
 
@@ -203,12 +196,8 @@ function Bios({ active }: { active: number }) {
       // Only the first is shown on the first render; xShow owns display after that.
       style={index === 0 ? undefined : { display: "none" }}
     >
-      <div className="shrink-0">
-        <h3 className="text-[length:calc(var(--rem)*1.5)] leading-[1.19] font-medium">{member.name}</h3>
-        <p className="mt-2 text-sm leading-[1.19] tracking-[-.02em]">{member.role}</p>
-      </div>
-      <ClampedPoints points={member.points} />
-      <Actions member={member} className="mt-4 flex shrink-0 gap-4" />
+      <Profile member={member} size="large" />
+      <Actions member={member} className="mt-auto flex shrink-0 flex-wrap gap-3 pt-4" />
     </div>
   ));
 }
@@ -325,7 +314,7 @@ function Row() {
       onKeyDown={onKeyDown}
       className="relative hidden w-full gap-10 overflow-clip px-[var(--grid-margin)] lg:grid"
     >
-      <Heading id="team-heading" className="text-[length:calc(var(--rem)*3)] leading-[1.1] font-normal" />
+      <Heading id="team-heading" className="font-serif text-[length:calc(var(--rem)*3)] leading-[1.1] font-bold" />
       <div className="relative flex w-full items-end gap-[var(--grid-gutter)]">
         <div className="flex w-[var(--cols-5)] flex-col justify-between gap-4 self-stretch">
           <div className="relative z-20 w-full grow pr-[var(--grid-margin)]">
@@ -375,7 +364,7 @@ function Rail() {
   return (
     <div className="grid w-full gap-5 lg:hidden">
       <div className="pl-[var(--grid-margin)]">
-        <Heading className="text-[length:calc(var(--rem)*1.5)] leading-[1.19] font-normal" />
+        <Heading className="font-serif text-[length:calc(var(--rem)*1.5)] leading-[1.19] font-bold" />
       </div>
       <div ref={emblaRef} className="w-full overflow-hidden">
         <div className="flex w-full touch-pan-y items-start [backface-visibility:hidden]">
@@ -396,18 +385,8 @@ function Rail() {
                   className="relative z-[2] flex w-full flex-col gap-4 transition-all duration-[600ms] ease-in-out"
                   style={{ opacity: on ? 1 : 0.5, translate: on ? "0 0" : "0 calc(var(--spacing) * -2)" }}
                 >
-                  <div>
-                    <h3 className="text-[length:calc(var(--rem)*1.25)] leading-[1.19] font-medium">{person.name}</h3>
-                    <p className="mt-2 text-sm leading-[1.19] tracking-[-.02em]">{person.role}</p>
-                  </div>
-                  <div className="line-clamp-7 text-sm leading-[1.19] tracking-[-.02em]">
-                    {person.points.map((point) => (
-                      <p key={point} className="mb-[1.35em] last:mb-0">
-                        {point}
-                      </p>
-                    ))}
-                  </div>
-                  <Actions member={person} className="relative z-[2] mt-4 flex flex-col gap-4" />
+                  <Profile member={person} size="small" />
+                  <Actions member={person} className="relative z-[2] mt-2 flex flex-wrap gap-3" />
                 </div>
               </div>
             );
@@ -418,18 +397,12 @@ function Rail() {
   );
 }
 
-/** The homepage team section, then the team photograph. */
+/** /about's team section (on the homepage until 2026-10-08, when the client dropped the team photograph under it). */
 export default function TeamCarousel() {
   return (
-    <>
-      <section id="team" aria-labelledby="team-heading" className={`${styles.grid} relative overflow-x-clip bg-white py-24 text-black lg:py-32`}>
-        <Row />
-        <Rail />
-      </section>
-      {/* The team photograph from moneybee.in: the one real image large enough to run full width. */}
-      <div className="relative aspect-[1920/1080] max-h-[88svh] w-full overflow-hidden">
-        <Image src="/people/moneybee-team.jpg" alt="The Moneybee team at the Mumbai office" fill sizes="100vw" className="object-cover object-[50%_40%]" />
-      </div>
-    </>
+    <section id="team" aria-labelledby="team-heading" className={`${styles.grid} relative scroll-mt-[96px] overflow-x-clip bg-white py-24 text-black lg:py-32`}>
+      <Row />
+      <Rail />
+    </section>
   );
 }

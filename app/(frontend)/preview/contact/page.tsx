@@ -21,7 +21,6 @@ export default function ContactPreviewPage() {
         ["Our approach", "/our-approach"],
         ["Office", "#office"],
         ["Enquiry", "#enquiry"],
-        ["Performance", "/performance"],
         ["Team", "/about#key-members"],
       ]} />
     </SiteNavigation>

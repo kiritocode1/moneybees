@@ -1,5 +1,5 @@
 import Link from "@/components/transition/transition-link";
-import { HOME_PLAN, PERIOD_RETURNS } from "@/lib/insights";
+import { PERIOD_RETURNS, WHY_MONEYBEE } from "@/lib/insights";
 import CornerBrackets from "./corner-brackets";
 import { BODY, BUTTON, COLUMN, EYEBROW, HEADING, Rise } from "./editorial";
 import HeroTerrain from "./hero-terrain";
@@ -37,10 +37,10 @@ export function HeroSection() {
       <div className={`${COLUMN} pointer-events-none relative z-10 flex flex-col gap-10 pt-[140px] pb-10 md:flex-row md:items-start md:gap-12 md:pt-[220px] md:pb-[72px]`}>
         <div className="flex max-w-[738px] flex-1 flex-col">
           <Rise>
-            <h1 className={`${HEADING} text-balance`}>{HOME_PLAN.heading}</h1>
+            <h1 className={`${HEADING} text-balance`}>{WHY_MONEYBEE.heading}</h1>
           </Rise>
           <Rise delay={0.08}>
-            <p className={`mt-6 max-w-[600px] text-black/70 md:mt-8 ${BODY}`}>{HOME_PLAN.introduction}</p>
+            <p className={`mt-6 max-w-[600px] text-black/70 md:mt-8 ${BODY}`}>{WHY_MONEYBEE.introduction}</p>
           </Rise>
           <Rise delay={0.16}>
             <div className="mt-10 flex flex-wrap items-center gap-4 md:mt-20">

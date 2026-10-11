@@ -111,7 +111,7 @@ export function OfficeSection() {
             </span>
             <span className={`${EYEBROW} text-black/55`}>Office</span>
           </div>
-          <h2 id="office-heading" className="mt-[32px] font-serif text-[clamp(2rem,1.6rem+1vw,2.5rem)] leading-[1.05] font-normal tracking-[-.015em]">
+          <h2 id="office-heading" className="mt-[32px] font-serif text-[clamp(2rem,1.6rem+1vw,2.5rem)] leading-[1.05] font-bold tracking-[-.015em]">
             {OFFICE.name}
           </h2>
           <address className="mt-[12px] text-[16px] leading-[1.6] not-italic text-black/70">

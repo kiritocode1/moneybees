@@ -32,7 +32,7 @@ export function LetsTalkSection() {
         {/* No entrance here: this band closes every page and must read even before any reveal runs. */}
         <h2
           id="talk-heading"
-          className="font-serif text-[clamp(2.6rem,5vw,4.8rem)] leading-[1.02] font-normal"
+          className="font-serif text-[clamp(2.6rem,5vw,4.8rem)] leading-[1.02] font-bold"
         >
           Let&rsquo;s talk about your portfolio
         </h2>

@@ -6,7 +6,7 @@ import { ENQUIRY_HREF } from "@/lib/contact-v2";
 /** The client portal's sign-in page (app/(frontend)/portal/login). */
 const CLIENT_LOGIN_URL = "/portal/login";
 
-/** The content plan's pages, in its user-journey order, then the investor centre. */
+/** The pages in the content plan's user-journey order. Our Team, Performance and the logins are reached from the pages themselves, not here. */
 const primaryLinks = [
   { label: "Home", href: "/" },
   { label: "About Us", href: "/about" },
@@ -14,15 +14,14 @@ const primaryLinks = [
   { label: "AIF", href: "/aif" },
   { label: "PMS vs AIF", href: "/pms-vs-aif" },
   { label: "Our Approach", href: "/our-approach" },
-  { label: "Performance", href: "/performance" },
   { label: "Case Studies", href: "/case-studies" },
-  { label: "Our Team", href: "/about#key-members" },
-  { label: "Careers", href: "/careers" },
   { label: "Contact Us", href: ENQUIRY_HREF },
+  { label: "Careers", href: "/careers" },
+  // Until the investor centre has a better way in, this is its only route below 1200px, where the bar drops it.
   { label: "Investor Centre", href: "/investor-centre" },
 ];
 
-/** The content plan's bar in its order, with Client Login set apart before Get Started. Below 1200px Investor Centre moves to the menu, below 900px the other pages do, and below 480px Client Login does too. */
+/** The content plan's bar in its order, with Client Login set apart before Get Started. Below 1200px Investor Centre leaves the bar and below 900px the other pages do; the menu still lists them. Below 480px Client Login leaves too, and the login card at the foot of each page is the way in. */
 const barLinks: MenuLink[] = [
   { label: "Home", href: "/", hideBelow: 900 },
   { label: "About Us", href: "/about", hideBelow: 900 },
@@ -32,12 +31,6 @@ const barLinks: MenuLink[] = [
   { label: "Investor Centre", href: "/investor-centre", hideBelow: 1200 },
   { label: "Client Login", href: CLIENT_LOGIN_URL, kind: "login", hideBelow: 480 },
   { label: "Get Started", href: ENQUIRY_HREF, kind: "cta" },
-];
-
-/** Both logins, kept apart from the investor pages as the plan asks. Distributor Login has no URL yet, so it writes to the office. */
-const loginLinks: MenuLink[] = [
-  { label: "Client Login", href: CLIENT_LOGIN_URL },
-  { label: "Distributor Login", href: "mailto:info@moneybee.in?subject=Distributor%20login" },
 ];
 
 /** The regulatory documents, on the investor centre's document groups (stable ids in lib/investor-centre.ts). */
@@ -69,7 +62,9 @@ export default function SiteNavigation({ children }: { children: ReactNode }) {
         </Link>
       }
       primaryLinks={primaryLinks}
-      secondaryLinks={loginLinks}
+      // Home to Our Approach in the first column, the rest in the second.
+      primaryRows={6}
+      secondaryLinks={[]}
       legal={legalLinks}
       panelColors={["#9D9EA1", "#000000", "#9D9EA1", "#000000"]}
       menuColor="#000000"

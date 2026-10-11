@@ -12,7 +12,7 @@ import { ENQUIRY_HREF } from "@/lib/contact-v2";
 const LOREM_SHORT = "Lorem ipsum dolor sit amet, consectetur adipiscing elit.";
 
 /** Which mark in components/pms-v3/marks.tsx a hero draws: the two products, then one per internal page. */
-export type MarkKind = "pms" | "aif" | "compare" | "approach" | "performance" | "cases" | "careers" | "contact" | "investor";
+export type MarkKind = "pms" | "aif" | "compare" | "approach" | "picks" | "cases" | "careers" | "contact" | "investor";
 
 /** One figure in the hero's bottom bar: a mono label over its value. `icon` draws a small line icon before the label; `href` makes the value a link. */
 export type HeroFigure = { label: string; value: string; icon?: "phone" | "email"; href?: string };

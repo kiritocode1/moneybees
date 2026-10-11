@@ -1,6 +1,5 @@
 "use client";
 
-import { Instrument_Serif } from "next/font/google";
 import type { ComponentType } from "react";
 import { useShown } from "@/components/about-v2/shared";
 import { BOX, Draw, MOVE, OUT, RM, tr } from "@/components/drawing/plate";
@@ -17,9 +16,6 @@ import { PHILOSOPHY_POINTS, PHILOSOPHY_WORDS } from "@/lib/pms-v2";
  * units of a 21-radius glyph; the found dot in the first is the set's one
  * orange element.
  */
-
-/** The root layout loads Instrument Serif upright only; the italic roots need the real italic. */
-const serifItalic = Instrument_Serif({ weight: "400", style: "italic", subsets: ["latin"], display: "swap" });
 
 const ORANGE = "#F6A11A";
 /**
@@ -157,9 +153,9 @@ export function PhilosophySection() {
                   <svg viewBox="-220 -220 440 440" className="block h-auto w-[56px] overflow-visible md:w-[clamp(64px,6vw,88px)]" aria-hidden="true">
                     <Glyph on={shown} delay={index * 180} />
                   </svg>
-                  <h3 className="font-serif text-[clamp(1.75rem,1.2rem+1.4vw,2.5rem)] leading-[1.1] font-normal tracking-[-.01em] md:mt-[32px]">
+                  <h3 className="font-serif text-[clamp(1.75rem,1.2rem+1.4vw,2.5rem)] leading-[1.1] font-semibold tracking-[-.01em] md:mt-[32px]">
                     {upright}
-                    <em className={serifItalic.className}>{word.slice(upright.length)}</em>
+                    <em>{word.slice(upright.length)}</em>
                   </h3>
                 </div>
               </Rise>

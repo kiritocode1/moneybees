@@ -12,7 +12,7 @@ import {
   squareCorners,
   winding,
 } from "@/components/insight-cards/moneybee-figures";
-import { type CaseStudy, HEADINGS, PICK_TIERS, PICKS_LEAD } from "@/lib/insights";
+import { type CaseStudy, HEADINGS, PICK_TIERS } from "@/lib/insights";
 import FactSection, {
   Bloom,
   clamp,
@@ -307,14 +307,17 @@ function TierPanel({ tier }: { tier: number }) {
   );
 }
 
-/** Section B, "Our multibagger picks", the deck's own title for slide 20. Panels run base to apex, so it ends on the highest multiple. */
+/**
+ * "Our multibagger picks", the deck's own title for slide 20, the body of
+ * /multi-bagger-picks. Its lead is the page hero's sentence there. Panels run
+ * base to apex, so it ends on the highest multiple.
+ */
 export default function PicksSection() {
   return (
     <FactSection
       id="picks"
       label="Our multibagger picks"
       heading={HEADINGS.picks}
-      lead={PICKS_LEAD}
       panels={PYRAMID_TIERS.map((_, tier) => ({ part: tier, content: <TierPanel tier={tier} /> }))}
       figure={PicksFigure}
     />

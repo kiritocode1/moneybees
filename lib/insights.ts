@@ -424,6 +424,20 @@ export const HOME_PLAN = {
 } as const;
 
 /**
+ * The homepage opening, in place of HOME_PLAN's heading and introduction: the
+ * client asked for why to invest with Moneybee (2026-10-08). The heading is
+ * ours, a pitch rather than a question (user, 2026-10-09), drawn from p11's
+ * early identification of promising companies; it names no return, as SEBI's
+ * advertising code bars implied assured returns. The paragraph rewrites p11's
+ * strategy points, short (user, 2026-10-09).
+ */
+export const WHY_MONEYBEE = {
+  heading: "Own India's next leaders early.",
+  introduction:
+    "We find promising small companies, and invest only after meeting their management and visiting their plants.",
+} as const;
+
+/**
  * PMS Bazaar rankings, December 2024: the three "Top Performance" tables on
  * group profile p5 ("As on 31 Dec 2024"), each period's top seven returns in
  * rank order. `ours` is Moneybee's place in the list (the QueenBee strategy).
@@ -509,12 +523,14 @@ export const PMS_VS_AIF =
 
 export const PRODUCTS_SOURCE = "Group profile, April 2026, slides 9, 11 and 17. AIF presentation, August 2026, pages 2, 8, 9 and 10.";
 
-export type TeamMember = { name: string; role: string; photo: string; points: readonly string[] };
+/** `linkedin` is set only where the public profile names Moneybee (checked 2026-10-09); the button shows when it is. */
+export type TeamMember = { name: string; role: string; photo: string; points: readonly string[]; linkedin?: string };
 
 /** Team profile, AIF presentation p14 and group profile p25 to 26, verbatim. */
 export const TEAM: readonly TeamMember[] = [
   {
     name: "Shreyam Shah",
+    linkedin: "https://www.linkedin.com/in/shreyam-shah-07239559",
     role: "AIF / Investment Team",
     photo: "/people/shreyam-shah.jpg",
     points: [
@@ -534,6 +550,7 @@ export const TEAM: readonly TeamMember[] = [
   },
   {
     name: "Ritesh Mistry",
+    linkedin: "https://www.linkedin.com/in/ritesh-mistry-a11b4624",
     role: "Asst. Vice President, Advisory",
     photo: "/people/ritesh-mistry.jpg",
     points: [
@@ -543,6 +560,7 @@ export const TEAM: readonly TeamMember[] = [
   },
   {
     name: "Anurag Roonwal",
+    linkedin: "https://www.linkedin.com/in/anurag-roonwal-50364639",
     role: "Asst. Vice President, PMS",
     photo: "/people/anurag-roonwal.jpg",
     points: [
@@ -552,6 +570,7 @@ export const TEAM: readonly TeamMember[] = [
   },
   {
     name: "Manan Shah",
+    linkedin: "https://www.linkedin.com/in/manan-shah-595a0331",
     role: "Asst. Portfolio Manager, PMS",
     photo: "/people/manan-shah.jpg",
     points: [
@@ -561,6 +580,7 @@ export const TEAM: readonly TeamMember[] = [
   },
   {
     name: "Chinmayi Upadhyay",
+    linkedin: "https://www.linkedin.com/in/chinmayi-u-0b04a792",
     role: "Senior Associate, PMS",
     photo: "/people/chinmayi-upadhyay.jpg",
     points: [

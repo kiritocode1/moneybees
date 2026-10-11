@@ -134,7 +134,7 @@ function Split() {
           >
             <div>
               <h3
-                className="m-0 font-serif text-[clamp(2.25rem,.9rem+2.8vw,3.8rem)] leading-[1.02] font-normal tracking-[-.02em] transition-colors duration-500 motion-reduce:transition-none"
+                className="m-0 font-serif text-[clamp(2.25rem,.9rem+2.8vw,3.8rem)] leading-[1.02] font-semibold tracking-[-.02em] transition-colors duration-500 motion-reduce:transition-none"
                 style={{ color: index === active ? "#000" : GREY }}
               >
                 {point.name}
@@ -164,7 +164,7 @@ function Row({ index }: { index: number }) {
         <Glyph on={inView || reduce} />
       </div>
       <div>
-        <h3 className="m-0 font-serif text-[1.55rem] leading-[1.1] font-normal">{point.name}</h3>
+        <h3 className="m-0 font-serif text-[1.55rem] leading-[1.1] font-semibold">{point.name}</h3>
       </div>
     </li>
   );

@@ -112,7 +112,7 @@ export function CareersJobBoard({ roles = CAREER_ROLES }: { roles?: readonly Car
         {selectedRole && (
           <div className="p-6 md:p-8">
             <p className="text-[13px] text-black/65">{TEAM_NAMES[selectedRole.team]}</p>
-            <h2 id="career-role-title" className="mt-3 font-serif text-[36px] leading-[1.1]">{selectedRole.title}</h2>
+            <h2 id="career-role-title" className="mt-3 font-serif font-bold text-[36px] leading-[1.1]">{selectedRole.title}</h2>
             <dl className="mt-6 flex flex-wrap gap-x-10 gap-y-4 text-[14px]">
               <div><dt className="text-[12px] text-black/60">Location</dt><dd className="mt-1">{selectedRole.location}</dd></div>
               <div><dt className="text-[12px] text-black/60">Employment type</dt><dd className="mt-1">{selectedRole.employment}</dd></div>

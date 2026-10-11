@@ -34,7 +34,7 @@ export function GetStartedSection() {
                 className="flex min-h-[380px] flex-col rounded-[6px] bg-[#F6F6F6] p-[26px] max-md:min-h-[320px]"
                 style={{ opacity: shown ? 1 : 0, transform: shown ? "none" : "translateY(24px)", transition: `opacity ${t(500, index * 80)}, transform ${t(700, index * 80)}` }}
               >
-                <h3 className=" font-serif text-[clamp(1.5rem,1.15rem+.7vw,1.9rem)] leading-[1.1] font-normal">{enquiry.name}</h3>
+                <h3 className=" font-serif text-[clamp(1.5rem,1.15rem+.7vw,1.9rem)] leading-[1.1] font-semibold">{enquiry.name}</h3>
                 <div className="flex flex-1 items-center justify-center py-8">
                   <div className="aspect-[4/3] w-[min(100%,170px)]">
                     <Glyph on={shown} />

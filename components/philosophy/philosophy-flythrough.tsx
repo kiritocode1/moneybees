@@ -156,7 +156,7 @@ export default function PhilosophyFlythrough() {
           className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center px-[22px] text-center motion-reduce:sr-only"
         >
           <BracketLabel>Our philosophy</BracketLabel>
-          <h2 id="philosophy-pillars-heading" className="mt-[22px] text-[clamp(3rem,7vw,7.6rem)] leading-[.92] font-light tracking-[-.055em]">
+          <h2 id="philosophy-pillars-heading" className="mt-[22px] text-[clamp(3rem,7vw,7.6rem)] leading-[.92] font-serif font-bold tracking-[-.03em]">
             {HEADINGS.philosophy}
           </h2>
         </motion.div>
@@ -198,7 +198,7 @@ export default function PhilosophyFlythrough() {
         </p>
         {PILLARS.map((pillar) => (
           <div key={pillar.name} className="border-t border-t-black/15 pt-[18px]">
-            <h3 className="flex items-center gap-[12px] text-[1.6rem] font-light tracking-[-.03em] text-black">
+            <h3 className="flex items-center gap-[12px] font-serif text-[1.6rem] font-semibold tracking-[-.02em] text-black">
               <i aria-hidden="true" className="h-[8px] w-[8px] shrink-0 bg-[#F6A11A]" />
               {pillar.name}
             </h3>

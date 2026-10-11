@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import SiteFooter from "@/components/footer/site-footer";
 import PerformanceChart from "@/components/pms-v2/performance-chart";
+import { WealthDiscs } from "@/components/performance-v3/wealth-discs";
 import { PhilosophySection } from "@/components/pms-v3/philosophy";
 import { PortfolioApproachSection } from "@/components/pms-v3/portfolio-stats";
 import ProductHero from "@/components/pms-v3/product-hero";
@@ -24,7 +25,9 @@ export const metadata: Metadata = {
 /**
  * /pms, built to the Content & Visual Plan §3 and approved in
  * .plannotator/pms-v3/plan.md: the Tres Mares product hero, then the PMS
- * performance chart, which investors see first (user, 2026-10-08), then why
+ * performance chart with every period's table and the growth of Rs. 1 Mn,
+ * which investors see first (user, 2026-10-08; /performance was folded in
+ * here and into /aif), then why
  * Moneybee PMS as a sticky split, the philosophy, stock selection as
  * converging lines, the portfolio approach as Titan Gate's stats band, and
  * risk management on stacked blocks.
@@ -36,6 +39,7 @@ export default function PmsPage() {
       <main id="top" className="option-one bg-white text-black">
         <ProductHero data={PMS_HERO} />
         <PerformanceChart />
+        <WealthDiscs />
         <WhySection />
         <PhilosophySection />
         <SelectionSection />

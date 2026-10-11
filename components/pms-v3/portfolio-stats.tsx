@@ -90,7 +90,7 @@ function FlickerHeading({ id, text }: { id: string; text: string }) {
       id={id}
       data-flicker=""
       data-on={on ? "" : undefined}
-      className="mx-auto max-w-[28rem] text-center font-serif text-[clamp(2.75rem,1.6rem+2.9vw,3.8rem)] leading-[.95] font-normal tracking-[-.02em] text-white"
+      className="mx-auto max-w-[28rem] text-center font-serif text-[clamp(2.75rem,1.6rem+2.9vw,3.8rem)] leading-[.95] font-bold tracking-[-.02em] text-white"
     >
       <span className="sr-only">{text}</span>
       <span aria-hidden="true">
@@ -118,7 +118,7 @@ function useReveal<T extends Element>() {
   return { ref, shown };
 }
 
-/** The display numerals both figures share: Instrument Serif at their 14vw, 20vw on a phone. */
+/** The display numerals both figures share: the display face at their 14vw, 20vw on a phone. */
 const NUMBER = "relative z-[1] font-serif text-[min(14vw,212px)] leading-none font-normal tracking-[-.01em] whitespace-nowrap text-white tabular-nums max-md:text-[20vw]";
 
 /** The caption under each figure. */

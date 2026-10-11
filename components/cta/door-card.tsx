@@ -35,7 +35,7 @@ export function DoorCard({
         </span>
         <span className={`${EYEBROW} text-black/55`}>{door.audience}</span>
       </div>
-      <h2 className="mt-[32px] font-serif text-[clamp(2rem,1.6rem+1vw,2.5rem)] leading-[1.05] font-normal tracking-[-.015em]">{door.name}</h2>
+      <h2 className="mt-[32px] font-serif text-[clamp(2rem,1.6rem+1vw,2.5rem)] leading-[1.05] font-bold tracking-[-.015em]">{door.name}</h2>
       <p className="mt-[12px] max-w-[420px] text-[15px] leading-[1.55] text-black/65">{door.text}</p>
       <div className="mt-auto flex flex-wrap items-center gap-x-[24px] gap-y-[12px] pt-[36px]">
         {door.href.startsWith("/") ? (

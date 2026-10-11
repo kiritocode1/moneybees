@@ -1,13 +1,9 @@
 import type { Metadata } from "next";
 import FounderSection from "@/components/fact-sections/founder-section";
-import PicksSection from "@/components/fact-sections/picks-section";
 import RecordSection from "@/components/fact-sections/record-section";
-import ResearchSection from "@/components/fact-sections/research-section";
-import TeamCarousel from "@/components/fact-sections/team-carousel";
 import SiteFooter from "@/components/footer/site-footer";
 import { HeroSection } from "@/components/hero/hero-sections";
-import { FaqSection, GetStartedSection, TwoWaysSection } from "@/components/home/home-sections";
-import PhilosophyFlythrough from "@/components/philosophy/philosophy-flythrough";
+import { GetStartedSection, TwoWaysSection } from "@/components/home/home-sections";
 import SiteNavigation from "@/components/ui/site-navigation";
 
 export const metadata: Metadata = {
@@ -28,21 +24,19 @@ export default function Home() {
   return (
     <SiteNavigation>
       <main id="top" className="option-one overflow-clip bg-white text-[#000000]">
-        {/* Claim and figures, the two ways to invest, the founder, the method
-            and its results together, the belief, the picks, people, then the
-            ask (the user's order, 2026-10-06). */}
+        {/* Claim and figures, then the results (user, 2026-10-08), the two
+            ways to invest, the founder, then the ask. The client cut the
+            research process, the team photograph and the FAQs, moved the team
+            to /about and the picks to /multi-bagger-picks (2026-10-08). The
+            philosophy fly-through is off the page while it is reworked
+            (user, 2026-10-09); drafts live under /preview/philosophy-*. */}
         <HeroSection />
-        <TwoWaysSection />
-        <FounderSection />
-        <ResearchSection />
         <div id="performance">
           <RecordSection />
         </div>
-        <PhilosophyFlythrough />
-        <PicksSection />
-        <TeamCarousel />
+        <TwoWaysSection />
+        <FounderSection />
         <GetStartedSection />
-        <FaqSection />
       </main>
       <SiteFooter
         explore={[
@@ -50,8 +44,8 @@ export default function Home() {
           ["Our Investment Approach", "/our-approach"],
           ["PMS", "/pms"],
           ["Flyingbee AIF", "/aif"],
-          ["Performance", "/performance"],
-          ["Our Team", "/about#key-members"],
+          ["Multibagger picks", "/multi-bagger-picks"],
+          ["Our Team", "/about#team"],
         ]}
       />
     </SiteNavigation>

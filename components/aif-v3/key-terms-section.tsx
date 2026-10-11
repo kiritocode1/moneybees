@@ -41,7 +41,7 @@ export function KeyTermsSection() {
               className="flex min-h-[360px] flex-col rounded-[6px] bg-[#141414] p-[26px] ring-1 ring-white/[.08] transition-[opacity,transform] duration-700 ease-[cubic-bezier(.23,1,.32,1)] motion-reduce:transition-none max-lg:min-h-[300px]"
               style={{ opacity: shown ? 1 : 0, transform: shown ? "none" : "translateY(28px)", transitionDelay: `${index * 90}ms` }}
             >
-              <h3 className=" font-serif text-[clamp(1.45rem,1.15rem+.5vw,1.75rem)] leading-[1.1] font-normal">{term.label}</h3>
+              <h3 className=" font-serif text-[clamp(1.45rem,1.15rem+.5vw,1.75rem)] leading-[1.1] font-semibold">{term.label}</h3>
               <p className="mt-[10px] text-[15px] leading-[1.45] text-white/70">{term.value}</p>
               <div className="mt-auto flex justify-center pt-8">
                 <div className="w-[min(100%,180px)]">

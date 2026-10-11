@@ -284,7 +284,7 @@ export function SelectionSection() {
                 <Rise onView>
                   <div>
                     <div>
-                      <h3 data-start="" className="font-serif text-[clamp(1.4rem,1.1rem+.8vw,1.9rem)] leading-[1.1] font-normal [text-box:trim-both_cap_alphabetic]">{step.name}</h3>
+                      <h3 data-start="" className="font-serif text-[clamp(1.4rem,1.1rem+.8vw,1.9rem)] leading-[1.1] font-semibold [text-box:trim-both_cap_alphabetic]">{step.name}</h3>
                       <p data-end="" className="m-0 mt-[14px] max-w-[44ch] text-[15px] leading-[1.55] text-black/70">
                         {step.text}
                       </p>

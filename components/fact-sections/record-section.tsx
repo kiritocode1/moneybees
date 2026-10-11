@@ -152,10 +152,10 @@ export default function RecordSection() {
         <WealthStacks />
       </div>
       <DashedRule />
-      {/* The plan's performance highlight: the lit rows /performance uses, for the long periods. */}
+      {/* The plan's performance highlight: the lit rows /pms opens with, for the long periods. */}
       <div className={`${COLUMN} py-[100px]`}>
         <LitRows rows={HOME_ROWS} names={PMS_NAMES} />
-        <Link href="/performance" className="mt-10 inline-flex text-[15px] font-medium text-black underline decoration-[#F6A11A] decoration-2 underline-offset-[6px]">
+        <Link href="/pms#performance" className="mt-10 inline-flex text-[15px] font-medium text-black underline decoration-[#F6A11A] decoration-2 underline-offset-[6px]">
           Performance
         </Link>
       </div>

@@ -1,5 +1,5 @@
 /**
- * Copy and figures for /performance, Content & Visual Plan §7. The plan's own
+ * Copy and figures for the returns on /pms and /aif, Content & Visual Plan §7. The plan's own
  * figures are blank, so the numbers come from the repo's 31 July 2026 set:
  * PERIOD_RETURNS, WEALTH, RECORD_METHOD and RECORD_CAVEAT in lib/insights.ts
  * (AIF presentation p12) and AIF_RETURNS in lib/aif.ts. The plan asks for
@@ -72,14 +72,6 @@ export const GROWTH = {
 
 /** The deck's method and caveat, and the content plan's own disclaimer line (§7). */
 export const METHOD = { text: RECORD_METHOD, caveat: RECORD_CAVEAT, guarantee: "Past performance does not guarantee future performance." } as const;
-
-/** The page's parts, for the hero's index. */
-export const PERFORMANCE_PARTS = [
-  ["PMS Performance", "#pms"],
-  ["Wealth growth", "#wealth"],
-  ["AIF Performance", "#aif"],
-  ["Methodology", "#methodology"],
-] as const;
 
 export const PERFORMANCE_LOREM = { long: LOREM, short: "Lorem ipsum dolor sit amet, consectetur adipiscing elit." } as const;
 

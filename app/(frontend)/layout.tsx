@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import { Geist_Mono, Instrument_Serif, Rethink_Sans } from "next/font/google";
+import { Geist_Mono, Rethink_Sans } from "next/font/google";
+import localFont from "next/font/local";
 import { CONTACT, REGISTRATIONS } from "@/lib/insights";
 import "./globals.css";
 
@@ -10,12 +11,20 @@ const rethinkSans = Rethink_Sans({
   display: "swap",
 });
 
-const instrumentSerif = Instrument_Serif({
-  weight: "400",
-  // The italic sets one word of a heading, as study 03's columns do (careers culture).
-  style: ["normal", "italic"],
-  subsets: ["latin"],
-  variable: "--font-instrument-serif",
+/**
+ * The display face for headings: Overused Grotesk, a free Helvetica-style
+ * grotesk (OFL, fonts/OverusedGrotesk-OFL.txt), in place of Instrument Serif
+ * (client, 2026-10-08). One variable file, weight 300 to 900 and slant 0 to
+ * -10deg. Its second face is the oblique range, which the browser uses for
+ * `font-style: italic` (one word of a heading, careers culture and /pms
+ * philosophy), so the slant comes from the font rather than a synthesised skew.
+ */
+const overusedGrotesk = localFont({
+  src: [
+    { path: "./fonts/OverusedGrotesk-VF.woff2", weight: "300 900", style: "normal" },
+    { path: "./fonts/OverusedGrotesk-VF.woff2", weight: "300 900", style: "oblique 0deg 10deg" },
+  ],
+  variable: "--font-overused-grotesk",
   display: "swap",
 });
 
@@ -87,7 +96,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${rethinkSans.variable} ${instrumentSerif.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${rethinkSans.variable} ${overusedGrotesk.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="option-one-shell min-h-full bg-white font-sans text-black">
         <a href="#top" className="skip-link">

@@ -110,8 +110,8 @@ const ring = (x: number, y: number, r: number): Cell[] => {
  * Each page's cells. PMS vs AIF stands the PMS cell and the AIF cluster apart
  * at equal area (the cluster's radius is the cell's over √7), never touching.
  * Our approach grows three cells by a constant step, as the philosophy runs
- * undiscovered → under-researched → under-estimated. Performance climbs five
- * cells. The case studies bend three touching cells into a path. Careers is a
+ * undiscovered → under-researched → under-estimated. The multibagger picks
+ * climb five cells, one per tier from >2X to >100X. The case studies bend three touching cells into a path. Careers is a
  * ring of six cells around an empty one.
  * Contact is a large cell meeting a small one. The investor centre stacks
  * three cells like filed documents.
@@ -120,7 +120,7 @@ const PAGE_CELLS: Record<Exclude<MarkKind, "pms" | "aif">, Cell[]> = {
   compare: [[255, 450, 220], [745, 450, 220 / Math.sqrt(7)], ...ring(745, 450, 220 / Math.sqrt(7))],
   approach: [[115, 450, 120], [393, 450, 185], [801, 450, 270]],
   // Only the middle cell crosses the split, so no cell is cut into a sliver; the top cell stays below the header.
-  performance: [0, 1, 2, 3, 4].map((step): Cell => [510 + (step - 2) * 161.5, 450 - (step - 2) * 119, 106]),
+  picks: [0, 1, 2, 3, 4].map((step): Cell => [510 + (step - 2) * 161.5, 450 - (step - 2) * 119, 106]),
   cases: [[290, 600, 200], [290 + SQRT3 * 200, 600, 200], [290 + SQRT3 * 300, 300, 200]],
   careers: ring(500, 450, 150),
   contact: [[400, 450, 290], [400 + (SQRT3 / 2) * 420, 450, 130]],

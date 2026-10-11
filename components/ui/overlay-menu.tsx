@@ -7,7 +7,7 @@ import { type ReactNode, useEffect, useId, useRef } from "react";
 export interface MenuLink {
   label: string;
   href: string;
-  /** Drop this link from the bar below this width, where the bar cannot fit every link. It stays in the menu. */
+  /** Drop this link from the bar below this width, where the bar cannot fit every link. List it in the menu too if it must stay reachable. */
   hideBelow?: 480 | 900 | 1200;
   /** "login" sets the link apart in the bar; "cta" makes it the orange button. */
   kind?: "login" | "cta";
@@ -20,6 +20,8 @@ export interface OverlayMenuProps {
   socials?: MenuLink[];
   legal?: MenuLink[];
   primaryLinks?: MenuLink[];
+  /** Rows in the two-column primary grid, read down the first column then the second. Defaults to an even split. */
+  primaryRows?: number;
   secondaryLinks?: MenuLink[];
   panelColors?: [string, string, string, string];
   menuColor?: string;
@@ -106,6 +108,7 @@ export default function OverlayMenu({
   socials = DEFAULT_SOCIALS,
   legal = DEFAULT_LEGAL,
   primaryLinks = DEFAULT_PRIMARY,
+  primaryRows = Math.ceil(primaryLinks.length / 2),
   secondaryLinks = DEFAULT_SECONDARY,
   panelColors = DEFAULT_PANELS,
   menuColor = "#000000",
@@ -319,16 +322,18 @@ export default function OverlayMenu({
             </div>
           </div>
           <div className="om-items-col">
-            <div className="om-primary-links" style={{ gridTemplateRows: `repeat(${Math.ceil(primaryLinks.length / 2)}, max-content)` }}>
+            <div className="om-primary-links" style={{ gridTemplateRows: `repeat(${primaryRows}, max-content)` }}>
               {primaryLinks.map((link) => (
                 <MenuAnchor key={link.label} link={link} />
               ))}
             </div>
-            <div className="om-secondary-links">
-              {secondaryLinks.map((link) => (
-                <MenuAnchor key={link.label} link={link} />
-              ))}
-            </div>
+            {secondaryLinks.length > 0 && (
+              <div className="om-secondary-links">
+                {secondaryLinks.map((link) => (
+                  <MenuAnchor key={link.label} link={link} />
+                ))}
+              </div>
+            )}
           </div>
         </div>
       </div>

@@ -28,10 +28,11 @@ const HERO_CSS = `
 /**
  * The title's size in vw: the source's 8.75vw (11.2vw on a phone) unless the
  * longest line, with the second line's 1em step, would run past the right
- * edge. Instrument Serif averages about .42em a character.
+ * edge. Overused Grotesk Bold runs up to .54em a character on the current
+ * titles ("Approach", measured 2026-10-09).
  */
 function titleSize(title: ProductHeroData["title"], room: number, base: number) {
-  const ems = Math.max(...title.map((line, index) => line.length * 0.42 + (index ? 1 : 0)));
+  const ems = Math.max(...title.map((line, index) => line.length * 0.54 + (index ? 1 : 0)));
   return Math.min(base, room / ems).toFixed(2);
 }
 
@@ -49,7 +50,7 @@ export default function ProductHero({ data }: { data: ProductHeroData }) {
 
       <h1
         id={titleId}
-        className="absolute top-[calc(104px+45vw)] left-6 m-0 -translate-y-1/2 font-serif text-[length:var(--hero-title)] leading-[.9] font-normal tracking-[-.02em] whitespace-nowrap mix-blend-multiply lg:top-1/2 lg:left-[19.167vw] lg:text-[length:var(--hero-title-lg)]"
+        className="absolute top-[calc(104px+45vw)] left-6 m-0 -translate-y-1/2 font-serif text-[length:var(--hero-title)] leading-[.9] font-bold tracking-[-.02em] whitespace-nowrap mix-blend-multiply lg:top-1/2 lg:left-[19.167vw] lg:text-[length:var(--hero-title-lg)]"
         style={size}
       >
         <span className="block">{data.title[0]}</span>

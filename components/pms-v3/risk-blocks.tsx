@@ -163,7 +163,7 @@ export function RiskSection() {
                     } as CSSProperties
                   }
                 >
-                  <h3 className="m-0 font-serif text-[22px] leading-[1.1] font-normal md:text-[2.279cqw]">{risk.name}</h3>
+                  <h3 className="m-0 font-serif text-[22px] leading-[1.1] font-semibold md:text-[2.279cqw]">{risk.name}</h3>
                   <p className="m-0 mt-[8px] text-[15px] leading-[1.5] text-black/70 md:text-[clamp(13px,1.45cqw,15px)]">{risk.text}</p>
                 </li>
               );
