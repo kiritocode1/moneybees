@@ -33,7 +33,7 @@ export default function MultibaggerPicksPage() {
       <SiteFooter
         explore={[
           ["Case studies", "/case-studies"],
-          ["Our approach", "/our-approach"],
+          ["Our philosophy", "/our-philosophy"],
           ["PMS", "/pms"],
           ["Flyingbee AIF", "/aif"],
         ]}

@@ -37,7 +37,7 @@ export default function CaseStudiesPage() {
           ["KPI Green Energy", "#kpi-green-energy"],
           ["Uni Abex Alloy Products", "#uni-abex"],
           ["Pitti Engineering", "#pitti-engineering"],
-          ["Our approach", "/our-approach"],
+          ["Our philosophy", "/our-philosophy"],
           ["About Moneybee", "/about"],
         ]}
       />

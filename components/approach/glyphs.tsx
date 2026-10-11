@@ -6,7 +6,7 @@ import { BOX, Draw, Hatch, MOVE, ORANGE, OUT, RM, tr, type GlyphProps } from "@/
 export { ORANGE };
 
 /*
- * The small explainer drawings on /our-approach (and the /pms risk rows). Each
+ * The small explainer drawings on /our-philosophy (and the /pms risk rows). Each
  * one draws what its label means rather than decorating it.
  *
  * One drawing language for the set, after an engraved technical plate:

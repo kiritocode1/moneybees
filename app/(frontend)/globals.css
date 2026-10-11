@@ -204,7 +204,7 @@ body {
   -webkit-text-fill-color: transparent;
 }
 
-/* /our-approach review card: each new count rises into place. */
+/* /our-philosophy review card: each new count rises into place. */
 @keyframes approach-count {
   from {
     opacity: 0;
@@ -216,7 +216,7 @@ body {
   }
 }
 
-/* /our-approach step drawings: the screen's sweep, the scale's weighing, the
+/* /our-philosophy step drawings: the screen's sweep, the scale's weighing, the
    monitor's trace and the exit's departure. */
 @keyframes approach-scan {
   from {

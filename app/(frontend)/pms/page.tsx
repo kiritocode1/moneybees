@@ -50,7 +50,7 @@ export default function PmsPage() {
       <SiteFooter
         explore={[
           ["About Moneybee", "/about"],
-          ["Our approach", "/our-approach"],
+          ["Our philosophy", "/our-philosophy"],
           ["PMS vs AIF", "/pms-vs-aif"],
           ["Flyingbee AIF", "/aif"],
           ["Performance", "#performance"],

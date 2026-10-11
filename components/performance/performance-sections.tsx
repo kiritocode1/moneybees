@@ -23,7 +23,7 @@ function AsOf({ dark = false }: { dark?: boolean }) {
   );
 }
 
-/** Heading on the left, placeholder body on the right, as /our-approach opens its sections. */
+/** Heading on the left, placeholder body on the right, as /our-philosophy opens its sections. */
 function SectionHead({ id, label, heading, dark = false }: { id: string; label: string; heading: string; dark?: boolean }) {
   return (
     <div className="grid grid-cols-1 items-end gap-8 md:grid-cols-2 md:gap-16">

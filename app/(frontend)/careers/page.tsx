@@ -27,7 +27,7 @@ export default function CareersPage() {
       <SiteFooter
         explore={[
           ["About Moneybee", "/about"],
-          ["Our approach", "/our-approach"],
+          ["Our philosophy", "/our-philosophy"],
           ["Career opportunities", "#openings"],
           ["Life at Moneybee", "#life"],
           ["Send your resume", "#apply"],

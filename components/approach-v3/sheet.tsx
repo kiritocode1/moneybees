@@ -7,7 +7,7 @@ import { useShown } from "@/components/about-v2/shared";
  * The process-sheet kit, from study 09 (reference/visual-language/09/STUDY.md):
  * hairline rings, dotted relations and boxes, open chevrons, filled nodes,
  * and one orange element per figure. A diagram is data (nodes placed in
- * artboard units, edges between them) so each step of /our-approach can be
+ * artboard units, edges between them) so each step of /our-philosophy can be
  * drawn from its own sentence, with a separate arrangement for phones.
  *
  * Measured rules kept here: chain rings interlock by 6.8% of their diameter,

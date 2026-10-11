@@ -35,7 +35,7 @@ export default function PmsVsAifPage() {
         explore={[
           ["Portfolio Management Services", "/pms"],
           ["Flyingbee AIF", "/aif"],
-          ["Our approach", "/our-approach"],
+          ["Our philosophy", "/our-philosophy"],
           ["About Moneybee", "/about"],
           ["Get started", ENQUIRY_HREF],
         ]}

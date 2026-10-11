@@ -41,7 +41,7 @@ export default function Home() {
       <SiteFooter
         explore={[
           ["About Us", "/about"],
-          ["Our Investment Approach", "/our-approach"],
+          ["Our Philosophy", "/our-philosophy"],
           ["PMS", "/pms"],
           ["Flyingbee AIF", "/aif"],
           ["Multibagger picks", "/multi-bagger-picks"],

@@ -50,7 +50,7 @@ export default function AboutPage() {
           ["Recognition", "#recognition"],
           ["Timeline", "#timeline"],
           ["Moneybee story", "#story"],
-          ["Our approach", "/our-approach"],
+          ["Our philosophy", "/our-philosophy"],
         ]}
       />
     </SiteNavigation>

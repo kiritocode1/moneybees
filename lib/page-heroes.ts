@@ -32,7 +32,7 @@ export const COMPARE_HERO = {
 /** The portfolio approach's rules (plan §3) sum the page up; the core philosophy has its own section below. */
 export const APPROACH_HERO = {
   mark: "approach",
-  title: ["Our Investment", "Approach"],
+  title: ["Our", "Philosophy"],
   sentence: PMS_APPROACH,
   figures: [
     { label: "Portfolio", value: "15 to 20 stocks" },

@@ -48,7 +48,7 @@ export default function AifPage() {
         explore={[
           ["About Moneybee", "/about"],
           ["PMS", "/pms"],
-          ["Our approach", "/our-approach"],
+          ["Our philosophy", "/our-philosophy"],
           ["Performance", "#performance"],
           ["Strategic opportunity", "#opportunity"],
           ["Structure", "#structure"],

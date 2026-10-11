@@ -28,7 +28,7 @@ export default function ContactPage() {
       <SiteFooter
         explore={[
           ["About Moneybee", "/about"],
-          ["Our approach", "/our-approach"],
+          ["Our philosophy", "/our-philosophy"],
           ["Office", "#office"],
           ["Enquiry", "#enquiry"],
           ["Team", "/about#key-members"],

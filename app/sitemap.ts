@@ -9,7 +9,7 @@ const ROUTES = [
   "/pms",
   "/aif",
   "/pms-vs-aif",
-  "/our-approach",
+  "/our-philosophy",
   "/case-studies",
   "/multi-bagger-picks",
   "/careers",

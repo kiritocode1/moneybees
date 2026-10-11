@@ -48,10 +48,10 @@ export function HeroSection() {
                 Get Started
               </Link>
               <Link
-                href="/our-approach"
+                href="/our-philosophy"
                 className={`${BUTTON} pointer-events-auto border border-dashed border-black/10 text-black hover:bg-black/[.03]`}
               >
-                Our Investment Approach
+                Our Philosophy
                 <CornerBrackets />
               </Link>
             </div>

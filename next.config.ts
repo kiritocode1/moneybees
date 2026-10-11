@@ -8,6 +8,10 @@ const dirname = path.dirname(fileURLToPath(import.meta.url));
 const nextConfig: NextConfig = {
   // Pin the workspace root so Turbopack does not pick up a lockfile further up the tree.
   turbopack: { root: dirname },
+  // Our Approach became Our Philosophy on 2026-10-11; old links and search results land on the new page.
+  async redirects() {
+    return [{ source: "/our-approach", destination: "/our-philosophy", permanent: true }];
+  },
   images: {
     remotePatterns: [
       {

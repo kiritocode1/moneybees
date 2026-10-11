@@ -1,5 +1,5 @@
 /**
- * Copy for /our-approach, from the Content & Visual Plan (docs, §6 "Our
+ * Copy for /our-philosophy, from the Content & Visual Plan (docs, §6 "Our
  * Approach"). Headings, the philosophy, the six steps and both lists are the
  * plan's wording. Body copy marked LOREM is placeholder until the client
  * supplies it.
@@ -9,7 +9,7 @@ const LOREM = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do e
 const LOREM_SHORT = "Lorem ipsum dolor sit amet, consectetur adipiscing elit.";
 
 export const APPROACH = {
-  heading: "Our Investment Approach",
+  heading: "Our Philosophy",
   /** LOREM */
   lead: LOREM,
 } as const;

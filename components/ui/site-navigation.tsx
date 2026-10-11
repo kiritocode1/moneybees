@@ -13,7 +13,7 @@ const primaryLinks = [
   { label: "PMS", href: "/pms" },
   { label: "AIF", href: "/aif" },
   { label: "PMS vs AIF", href: "/pms-vs-aif" },
-  { label: "Our Approach", href: "/our-approach" },
+  { label: "Our Philosophy", href: "/our-philosophy" },
   { label: "Case Studies", href: "/case-studies" },
   { label: "Multibagger Picks", href: "/multi-bagger-picks" },
   { label: "Contact Us", href: ENQUIRY_HREF },
@@ -28,7 +28,7 @@ const barLinks: MenuLink[] = [
   { label: "About Us", href: "/about", hideBelow: 900 },
   { label: "PMS", href: "/pms" },
   { label: "AIF", href: "/aif" },
-  { label: "Our Approach", href: "/our-approach", hideBelow: 900 },
+  { label: "Our Philosophy", href: "/our-philosophy", hideBelow: 900 },
   { label: "Investor Centre", href: "/investor-centre", hideBelow: 1200 },
   { label: "Client Login", href: CLIENT_LOGIN_URL, kind: "login", hideBelow: 480 },
   { label: "Get Started", href: ENQUIRY_HREF, kind: "cta" },
@@ -63,7 +63,7 @@ export default function SiteNavigation({ children }: { children: ReactNode }) {
         </Link>
       }
       primaryLinks={primaryLinks}
-      // Home to Our Approach in the first column, the rest in the second.
+      // Home to Our Philosophy in the first column, the rest in the second.
       primaryRows={6}
       secondaryLinks={[]}
       legal={legalLinks}
