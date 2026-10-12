@@ -307,6 +307,8 @@ export const DISCIPLINE_SOURCE = "AIF presentation, August 2026, pages 5 and 6. 
 /** About the founder, AIF presentation p13 and group profile p3, verbatim. */
 export const FOUNDER = {
   name: "Mr. Dhiren Shah, Managing Director",
+  /** What the homepage prints under his name: no degrees, the founder (user, 2026-10-12). */
+  role: "Founder, Moneybee",
   credentials: "FCA, GRAD CWA, LLB, M.COM",
   /** His small-cap thesis, verbatim as the client gave it on 2026-09-26. */
   quote:
