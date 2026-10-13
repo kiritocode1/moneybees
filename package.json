@@ -7,7 +7,7 @@
   "portless": "moneybees",
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "payload migrate && next build",
     "start": "next start",
     "lint": "eslint"
   },
