@@ -1,15 +1,12 @@
 import type { Metadata } from "next";
-import { ApproachWheelSection } from "@/components/aif-v3/approach-wheel";
-import { KeyTermsSection } from "@/components/aif-v3/key-terms-section";
-import { OpportunitySection } from "@/components/aif-v3/opportunity-section";
-import { PoolingSection } from "@/components/aif-v3/pooling-section";
-import { StructureSection } from "@/components/aif-v3/structure-section";
+import { draftMode } from "next/headers";
+import { DraftTools } from "@/components/site-editor/draft-tools";
+import { PageSections } from "@/components/site-editor/page-sections";
+import { AIF_SECTIONS } from "@/lib/pages/aif-content";
+import { pageSections } from "@/lib/pages/load";
+import { aifFigures, pmsFigures } from "@/lib/site/figures";
 import SiteFooter from "@/components/footer/site-footer";
-import { AifPerformanceSection } from "@/components/performance/performance-sections";
-import ProductHero from "@/components/pms-v3/product-hero";
 import SiteNavigation from "@/components/ui/site-navigation";
-import { AIF_HERO } from "@/lib/pms-v3-hero";
-import { PageEndDoors } from "@/components/cta/page-end-doors";
 
 export const metadata: Metadata = {
   title: "Flyingbee: Category III AIF for small-cap equity",
@@ -30,20 +27,18 @@ export const metadata: Metadata = {
  * terms as line cards. Copy lives in
  * lib/aif-v2.ts.
  * Ends with the closing door pair (components/cta/page-end-doors.tsx).
+ * Staff edit the sections in /admin (globals/AifPage.ts); the returns come from
+ * Flyingbee's fact sheets once they may be shown (lib/site/figures.ts).
  */
-export default function AifPage() {
+export default async function AifPage() {
+  const { isEnabled: draft } = await draftMode();
+  const [sections, figures, aif] = await Promise.all([pageSections("aif-page", draft, AIF_SECTIONS), pmsFigures(), aifFigures()]);
   return (
     <SiteNavigation>
       <main id="top" className="option-one bg-white text-black">
-        <ProductHero data={AIF_HERO} />
-        <AifPerformanceSection />
-        <OpportunitySection />
-        <PoolingSection />
-        <StructureSection />
-        <ApproachWheelSection />
-        <KeyTermsSection />
-        <PageEndDoors />
+        <PageSections sections={sections} figures={figures} aif={aif} draft={draft} />
       </main>
+      {draft ? <DraftTools path="/aif" /> : null}
       <SiteFooter
         explore={[
           ["About Moneybee", "/about"],

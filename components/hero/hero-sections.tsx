@@ -1,9 +1,9 @@
 import Link from "@/components/transition/transition-link";
-import { PERIOD_RETURNS, WHY_MONEYBEE } from "@/lib/insights";
+import { HERO, type HeroContent } from "@/lib/pages/home-content";
+import { DECK_FIGURES, fillContent } from "@/lib/site/tokens";
 import CornerBrackets from "./corner-brackets";
 import { BODY, BUTTON, COLUMN, EYEBROW, HEADING, Rise } from "./editorial";
 import HeroTerrain from "./hero-terrain";
-import { ENQUIRY_HREF } from "@/lib/contact-v2";
 
 /**
  * The top of the homepage in antimetal.com's layout. Class values come from the
@@ -12,21 +12,11 @@ import { ENQUIRY_HREF } from "@/lib/contact-v2";
  * pill buttons and the corner-bracket box. Only the hero is kept; the
  * "Why Moneybee" manifesto and its wealth chart left the homepage on
  * 2026-10-06. Colours are ours: white paper, black, #F6A11A and grey. A server
- * component; the terrain and the Rise wrappers are the client parts.
+ * component; the terrain and the Rise wrappers are the client parts. The
+ * words come from the Home page in /admin; without them, today's (HERO).
  */
-
-
-const SINCE_INCEPTION = PERIOD_RETURNS.find((row) => row.period === "Since Inception");
-
-/** The plan's key highlights that carry a figure, plus its small performance highlight. */
-const HERO_FIGURES = [
-  ["45+", "Years of experience of the founder"],
-  ["Aug 2007", "PMS since"],
-  [`${SINCE_INCEPTION?.queenbee.toFixed(2)}%`, `A year since 2007, against ${SINCE_INCEPTION?.benchmark.toFixed(2)}% for the S&P BSE 500 TRI`],
-  ["Small & mid", "The Indian companies we focus on"],
-] as const;
-
-export function HeroSection() {
+export function HeroSection({ content = fillContent(HERO, DECK_FIGURES) }: { content?: HeroContent }) {
+  const { primary = {}, secondary = {} } = content;
   return (
     <section aria-label="Hero" className="relative isolate w-full overflow-hidden bg-white text-black max-md:flex max-md:flex-col">
       {/* Keep the terrain in the hero's existing illustration container. */}
@@ -37,23 +27,29 @@ export function HeroSection() {
       <div className={`${COLUMN} pointer-events-none relative z-10 flex flex-col gap-10 pt-[140px] pb-10 md:flex-row md:items-start md:gap-12 md:pt-[220px] md:pb-[72px]`}>
         <div className="flex max-w-[738px] flex-1 flex-col">
           <Rise>
-            <h1 className={`${HEADING} text-balance`}>{WHY_MONEYBEE.heading}</h1>
+            <h1 className={`${HEADING} text-balance`}>{content.heading}</h1>
           </Rise>
-          <Rise delay={0.08}>
-            <p className={`mt-6 max-w-[600px] text-black/70 md:mt-8 ${BODY}`}>{WHY_MONEYBEE.introduction}</p>
-          </Rise>
+          {content.introduction ? (
+            <Rise delay={0.08}>
+              <p className={`mt-6 max-w-[600px] text-black/70 md:mt-8 ${BODY}`}>{content.introduction}</p>
+            </Rise>
+          ) : null}
           <Rise delay={0.16}>
             <div className="mt-10 flex flex-wrap items-center gap-4 md:mt-20">
-              <Link href={ENQUIRY_HREF} className={`${BUTTON} pointer-events-auto bg-[#F6A11A] text-black hover:bg-black hover:text-white`}>
-                Get Started
-              </Link>
-              <Link
-                href="/our-philosophy"
-                className={`${BUTTON} pointer-events-auto border border-dashed border-black/10 text-black hover:bg-black/[.03]`}
-              >
-                Our Philosophy
-                <CornerBrackets />
-              </Link>
+              {primary.label && primary.link ? (
+                <Link href={primary.link} className={`${BUTTON} pointer-events-auto bg-[#F6A11A] text-black hover:bg-black hover:text-white`}>
+                  {primary.label}
+                </Link>
+              ) : null}
+              {secondary.label && secondary.link ? (
+                <Link
+                  href={secondary.link}
+                  className={`${BUTTON} pointer-events-auto border border-dashed border-black/10 text-black hover:bg-black/[.03]`}
+                >
+                  {secondary.label}
+                  <CornerBrackets />
+                </Link>
+              ) : null}
             </div>
           </Rise>
         </div>
@@ -63,8 +59,8 @@ export function HeroSection() {
       {/* The label names each figure, so it is the <dt>; the figure is its value, shown above it.
           Figures are ink; a short orange rule marks the top of each. */}
       <dl className={`${COLUMN} relative z-10 grid grid-cols-4 gap-x-10 gap-y-10 pt-[40px] pb-[64px] max-md:order-last max-md:grid-cols-2`}>
-        {HERO_FIGURES.map(([figure, label]) => (
-          <div key={label} className="flex flex-col-reverse justify-end border-t border-black/15 pt-[22px]">
+        {content.figures?.map(({ figure, label }, index) => (
+          <div key={index} className="flex flex-col-reverse justify-end border-t border-black/15 pt-[22px]">
             <dt className={`${EYEBROW} mt-[12px] max-w-[26ch] leading-[1.5] text-black/60`}>{label}</dt>
             <dd className="relative m-0 font-serif text-[clamp(2.2rem,3.4vw,3.2rem)] leading-none text-black tabular-nums">
               <i aria-hidden="true" className="absolute top-[-24px] left-0 h-[3px] w-[24px] bg-[#F6A11A]" />

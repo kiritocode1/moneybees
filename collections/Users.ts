@@ -17,7 +17,7 @@ const firstUserIsAdmin: CollectionBeforeChangeHook = async ({ data, operation, r
 export const Users: CollectionConfig = {
   slug: "users",
   labels: { singular: "Staff member", plural: "Staff" },
-  admin: { useAsTitle: "name", defaultColumns: ["name", "email", "roles"], group: "Accounts" },
+  admin: { useAsTitle: "name", defaultColumns: ["name", "email", "roles"], group: "Settings" },
   auth: { tokenExpiration: 7200, maxLoginAttempts: 5, lockTime: 600_000 },
   access: {
     admin: ({ req }) => Boolean(req.user),

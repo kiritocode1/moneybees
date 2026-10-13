@@ -5,7 +5,7 @@ import { ScrambleTextPlugin } from "gsap/ScrambleTextPlugin";
 import { useInView } from "motion/react";
 import { type CSSProperties, Fragment, type Ref, useEffect, useId, useRef } from "react";
 import { COLUMN } from "@/components/hero/tokens";
-import { PORTFOLIO_APPROACH } from "@/lib/pms-v2";
+import { PMS_PORTFOLIO, type PortfolioContent } from "@/lib/pages/pms-content";
 import { useReducedMotion } from "@/lib/use-reduced-motion";
 
 /*
@@ -14,16 +14,12 @@ import { useReducedMotion } from "@/lib/use-reduced-motion";
  * centred heading, the sector cap in a ring of ticks, the portfolio size over
  * three thin circles, then the remaining three rules sliding in from
  * alternate sides. Timings are read from vercel-app.custom.pretty.js L764–984.
+ * The heading, the cap, the stock range and every line come from the PMS page
+ * in /admin.
  */
 
 const ORANGE = "#F6A11A";
 const MONO = "font-[family-name:var(--font-geist-mono)]";
-
-/** The docx lines, by position in PORTFOLIO_APPROACH. */
-const [CONCENTRATED, HORIZON, SECTOR, MONITORING, REBALANCING] = PORTFOLIO_APPROACH;
-
-/** The sector cap the ring draws, from "Maximum sector allocation of 30%." */
-const SECTOR_CAP = 30;
 
 /*
  * The ring: Titan Gate's circle (r 252 in a 514 box, stroke 10), cut into 100
@@ -36,7 +32,8 @@ const PERIOD = CIRCUMFERENCE / 100;
 const TICK = 2;
 const TICK_DASH = `${TICK} ${(PERIOD - TICK).toFixed(4)}`;
 const TICK_OFFSET = (TICK / 2 - PERIOD / 2).toFixed(4);
-const ARC = (CIRCUMFERENCE * SECTOR_CAP) / 100;
+/** The lit part of the ring for a sector cap in percent. */
+const arcOf = (cap: number) => (CIRCUMFERENCE * cap) / 100;
 
 /** Their ScrambleText settings for every number. */
 const SCRAMBLE = { chars: "0123456789", revealDelay: 0.25, speed: 0.8 } as const;
@@ -129,9 +126,10 @@ const FLASH_DELAYS = [0.8, 0, 1.6, 0.4, 1.2];
 
 /**
  * Left: the sector cap. 100 dim ticks, and the orange ones sweep clockwise
- * from 12 o'clock under a mask that stops at SECTOR_CAP percent of the ring.
+ * from 12 o'clock under a mask that stops at `cap` percent of the ring.
  */
-function SectorRing() {
+function SectorRing({ cap, line }: { cap: number; line: string }) {
+  const ARC = arcOf(cap);
   const { ref, shown } = useReveal<HTMLDivElement>();
   const reduce = useReducedMotion();
   const paragraph = useRef<HTMLParagraphElement>(null);
@@ -155,21 +153,21 @@ function SectorRing() {
         .timeline({ paused: true })
         .fromTo(arc, { strokeDashoffset: ARC }, { strokeDashoffset: 0, duration: 1.65, ease: EASE }, 0.1)
         .to(sign, { duration: 0.75, scrambleText: { text: "%", ...SCRAMBLE_SIGN } }, 0.1)
-        .to(number, { duration: 0.75, scrambleText: { text: String(SECTOR_CAP), ...SCRAMBLE } }, 0.1);
+        .to(number, { duration: 0.75, scrambleText: { text: String(cap), ...SCRAMBLE } }, 0.1);
     });
     return () => {
       context.revert();
       timeline.current = null;
-      number.textContent = String(SECTOR_CAP);
+      number.textContent = String(cap);
       sign.textContent = "%";
     };
-  }, [reduce]);
+  }, [reduce, cap, ARC]);
 
   useEffect(() => {
     if (shown) timeline.current?.play();
   }, [shown, reduce]);
 
-  const words = SECTOR.split(" ");
+  const words = line.split(" ");
   return (
     <div className="relative left-[-2.5%] flex w-1/2 flex-col items-center px-12 max-md:left-0 max-md:w-full max-md:px-0">
       <div ref={ref} data-played={shown && !reduce ? "" : undefined} className="grid w-[90%] place-items-center">
@@ -200,12 +198,12 @@ function SectorRing() {
             </g>
           </svg>
           <div className={`${NUMBER} ml-[-.08em]`}>
-            <span ref={numberRef}>{SECTOR_CAP}</span>
+            <span ref={numberRef}>{cap}</span>
             <span ref={signRef}>%</span>
           </div>
         </div>
       </div>
-      <p className={CAPTION}>{SECTOR}</p>
+      <p className={CAPTION}>{line}</p>
     </div>
   );
 }
@@ -233,18 +231,18 @@ function Circle({ className, accent = false, circleRef }: { className: string; a
  * slide apart from the middle and the centre one scales up; on a phone they
  * stack and slide on the vertical instead.
  */
-function HoldingsCircles() {
+function HoldingsCircles({ low, high, line }: { low: number; high: number; line: string }) {
   const { ref, shown } = useReveal<HTMLDivElement>();
   const reduce = useReducedMotion();
   const left = useRef<HTMLDivElement>(null);
   const right = useRef<HTMLDivElement>(null);
   const centre = useRef<HTMLDivElement>(null);
-  const low = useRef<HTMLSpanElement>(null);
-  const high = useRef<HTMLSpanElement>(null);
+  const lowRef = useRef<HTMLSpanElement>(null);
+  const highRef = useRef<HTMLSpanElement>(null);
   const timeline = useRef<gsap.core.Timeline | null>(null);
 
   useEffect(() => {
-    const [a, b, c, from, to] = [left.current, right.current, centre.current, low.current, high.current];
+    const [a, b, c, from, to] = [left.current, right.current, centre.current, lowRef.current, highRef.current];
     if (reduce || !a || !b || !c || !from || !to) return;
     gsap.registerPlugin(ScrambleTextPlugin);
     const phone = window.matchMedia("(max-width: 479px)").matches;
@@ -253,8 +251,8 @@ function HoldingsCircles() {
     const context = gsap.context(() => {
       timeline.current = gsap
         .timeline({ paused: true })
-        .to(from, { duration: 0.75, scrambleText: { text: "15", ...SCRAMBLE } }, 0)
-        .to(to, { duration: 0.75, scrambleText: { text: "20", ...SCRAMBLE } }, 0)
+        .to(from, { duration: 0.75, scrambleText: { text: String(low), ...SCRAMBLE } }, 0)
+        .to(to, { duration: 0.75, scrambleText: { text: String(high), ...SCRAMBLE } }, 0)
         .from(a, { duration: 0.8, opacity: 0, ease: EASE, ...(phone ? { yPercent: -35 } : { xPercent: 35 }) }, 0.15)
         .from(b, { duration: 0.8, opacity: 0, ease: EASE, ...(phone ? { yPercent: 35 } : { xPercent: -35 }) }, 0.3)
         .from(c, { duration: 0.8, opacity: 0, scale: 0.75, ease: EASE }, 0.4);
@@ -262,10 +260,10 @@ function HoldingsCircles() {
     return () => {
       context.revert();
       timeline.current = null;
-      from.textContent = "15";
-      to.textContent = "20";
+      from.textContent = String(low);
+      to.textContent = String(high);
     };
-  }, [reduce]);
+  }, [reduce, low, high]);
 
   useEffect(() => {
     if (shown) timeline.current?.play();
@@ -279,23 +277,24 @@ function HoldingsCircles() {
           <Circle circleRef={right} className="top-[10%] left-[30%] size-[80%] max-[479px]:top-[27.5%] max-[479px]:left-[5%] max-[479px]:size-[90%]" />
           <Circle circleRef={centre} accent className="top-[30%] left-[30%] size-[40%]" />
           <div className={NUMBER}>
-            <span ref={low}>15</span>–<span ref={high}>20</span>
+            <span ref={lowRef}>{low}</span>–<span ref={highRef}>{high}</span>
           </div>
         </div>
       </div>
-      <p className={`${CAPTION} mt-auto`}>{CONCENTRATED}</p>
+      <p className={`${CAPTION} mt-auto`}>{line}</p>
     </div>
   );
 }
 
 /** The other three rules, on Titan Gate's ragged starts, alternating the side they slide in from. */
-const RULES = [
-  { text: HORIZON, from: "7.5rem", place: "md:col-start-2 md:col-end-12" },
-  { text: MONITORING, from: "-7.5rem", place: "md:col-start-4 md:col-end-13" },
-  { text: REBALANCING, from: "7.5rem", place: "md:col-start-3 md:col-end-12" },
+const PLACES = [
+  { from: "7.5rem", place: "md:col-start-2 md:col-end-12" },
+  { from: "-7.5rem", place: "md:col-start-4 md:col-end-13" },
+  { from: "7.5rem", place: "md:col-start-3 md:col-end-12" },
 ] as const;
 
-export function PortfolioApproachSection() {
+export function PortfolioApproachSection({ content = PMS_PORTFOLIO }: { content?: PortfolioContent }) {
+  const rules = (content.rules ?? []).slice(0, PLACES.length).map(({ rule }, index) => ({ text: rule, ...PLACES[index] }));
   return (
     <section id="portfolio" aria-labelledby="portfolio-heading" className="scroll-mt-[96px] overflow-x-clip bg-black pb-[14rem] text-white max-md:pb-[120px]">
       <style href="pms-v3-portfolio" precedence="default">
@@ -304,19 +303,19 @@ export function PortfolioApproachSection() {
       <div className="flex flex-col items-center">
         <Guideline height={240} delay={0.025} className="max-md:!h-[120px]" />
         <div className="py-6">
-          <FlickerHeading id="portfolio-heading" text="Portfolio Approach" />
+          <FlickerHeading id="portfolio-heading" text={content.heading} />
         </div>
         <Guideline height={240} delay={0.2} className="max-md:!h-[120px]" />
       </div>
 
       <div className="mx-auto flex w-full max-w-[1512px] justify-between md:mt-[-10rem] max-md:flex-col max-md:px-6">
-        <SectorRing />
-        <HoldingsCircles />
+        <SectorRing cap={content.sectorCap} line={content.sectorLine} />
+        <HoldingsCircles low={content.holdingsFrom} high={content.holdingsTo} line={content.holdingsLine} />
       </div>
 
       <ul className={`${COLUMN} m-0 mt-[160px] list-none max-md:mt-[112px]`}>
-        {RULES.map((rule) => (
-          <li key={rule.text} className="grid grid-cols-12 border-t border-dashed border-white/20 py-[30px] last:border-b max-md:py-[24px]">
+        {rules.map((rule, index) => (
+          <li key={index} className="grid grid-cols-12 border-t border-dashed border-white/20 py-[30px] last:border-b max-md:py-[24px]">
             <p
               className={`pv3-slide col-span-12 m-0 font-serif text-[clamp(1.75rem,1.1rem+1.9vw,2.9rem)] leading-[1.08] tracking-[-.015em] text-white ${rule.place}`}
               style={{ "--from": rule.from } as CSSProperties}

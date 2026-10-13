@@ -3,7 +3,8 @@
 import { useShown } from "@/components/about-v2/shared";
 import { type LineArt, LineArtFigure } from "@/components/drawing/line-art";
 import { BODY, COLUMN, EYEBROW, SUBHEAD } from "@/components/hero/tokens";
-import { DOCUMENT_GROUPS, type DocumentGlyph, INVESTOR_LOREM, type InvestorDocument, NOT_YET_PUBLISHED } from "@/lib/investor-centre";
+import { DOCUMENT_GROUPS, type DocumentGlyph, type DocumentGroup, type InvestorDocument, NOT_YET_PUBLISHED } from "@/lib/investor-centre";
+import { DOCUMENTS_SECTION, type DocumentsContent } from "@/lib/pages/investor-centre-content";
 
 /*
  * Documents (content plan §12: "simple document cards with clear titles,
@@ -11,7 +12,8 @@ import { DOCUMENT_GROUPS, type DocumentGlyph, INVESTOR_LOREM, type InvestorDocum
  * document under its group, a title, its date, a centred line drawing with
  * one orange element (components/drawing/line-art.tsx), and the link at the
  * bottom left with 04's small square. Until the client supplies a file, the
- * card says so instead of linking.
+ * card says so instead of linking. The documents themselves are a list in
+ * /admin (collections/Documents.ts), read by lib/site/documents.ts.
  */
 
 const DOCUMENT_ART: Record<DocumentGlyph, LineArt> = {
@@ -51,7 +53,7 @@ function DocumentCard({ doc, on, delay }: { doc: InvestorDocument; on: boolean; 
   );
 }
 
-function Group({ group }: { group: (typeof DOCUMENT_GROUPS)[number] }) {
+function Group({ group }: { group: DocumentGroup }) {
   const { ref, shown } = useShown<HTMLDivElement>(0.2);
   return (
     <div ref={ref} id={group.id} className="grid scroll-mt-[120px] grid-cols-1 gap-6 border-t border-black/15 pt-8 lg:grid-cols-12 lg:gap-x-6">
@@ -67,18 +69,18 @@ function Group({ group }: { group: (typeof DOCUMENT_GROUPS)[number] }) {
   );
 }
 
-export function DocumentCards() {
+export function DocumentCards({ content = DOCUMENTS_SECTION, groups = DOCUMENT_GROUPS }: { content?: DocumentsContent; groups?: readonly DocumentGroup[] }) {
   return (
     <section id="documents" aria-labelledby="documents-heading" className="scroll-mt-[96px] bg-[#F6F6F6] text-black">
       <div className={`${COLUMN} py-[120px] max-md:py-[80px]`}>
         <div className="grid grid-cols-1 items-end gap-8 md:grid-cols-2 md:gap-16">
           <h2 id="documents-heading" className={`m-0 ${SUBHEAD}`}>
-            Documents
+            {content.heading}
           </h2>
-          <p className={`text-black/70 ${BODY}`}>{INVESTOR_LOREM.long}</p>
+          {content.lead ? <p className={`text-black/70 ${BODY}`}>{content.lead}</p> : null}
         </div>
         <div className="mt-[64px] flex flex-col gap-[56px]">
-          {DOCUMENT_GROUPS.map((group) => (
+          {groups.map((group) => (
             <Group key={group.id} group={group} />
           ))}
         </div>

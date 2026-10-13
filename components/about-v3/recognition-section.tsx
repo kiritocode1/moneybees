@@ -5,7 +5,7 @@ import { useRef } from "react";
 import { BracketLabel } from "@/components/fact-sections/fact-section";
 import { COLUMN, EYEBROW, SUBHEAD } from "@/components/hero/tokens";
 import { FigurePanel } from "@/components/pms-v2/shared";
-import { RANKING_TABLES, RANKINGS_AS_OF } from "@/lib/insights";
+import { RECOGNITION, type RecognitionContent } from "@/lib/pages/about-content";
 import { EASE_OUT } from "@/lib/ease";
 import { useReducedMotion } from "@/lib/use-reduced-motion";
 
@@ -16,20 +16,22 @@ import { useReducedMotion } from "@/lib/use-reduced-motion";
  * row is the lit bar, sweeping to orange and ending in the ringed marker, so
  * the rank reads as a place in the list. The scale is shared, so the three
  * lists compare. Cadence follows lit-rows: pills 60ms apart, then the lit bar
- * fills in 0.6s, the ring draws in 0.53s and the number rises.
+ * fills in 0.6s, the ring draws in 0.53s and the number rises. The lists and
+ * words come from the About page in /admin, where only compliance changes them.
  */
 
 const RING = 30;
 const FILL = 0.6;
 const DRAW = 0.53;
 const STEP = 0.06;
-const MAX = Math.max(...RANKING_TABLES.flatMap((table) => table.returns));
 
 const pct = (value: number) => `+${value.toFixed(2)}%`;
 const place = (index: number) => String(index + 1).padStart(2, "0");
 
-/** One period's list. `start` staggers it behind the lists before it. */
-function Ladder({ table, on, start, reduced }: { table: (typeof RANKING_TABLES)[number]; on: boolean; start: number; reduced: boolean }) {
+type Table = { rank: string; period: string; ours: number; returns: number[] };
+
+/** One period's list. `start` staggers it behind the lists before it; `max` is the highest return across every list, so the bars compare. */
+function Ladder({ table, max, on, start, reduced }: { table: Table; max: number; on: boolean; start: number; reduced: boolean }) {
   /** A delay after the list's own start; nothing waits under reduced motion. */
   const at = (delay: number) => (reduced ? 0 : start + delay);
   const lit = table.returns.length * STEP + 0.1;
@@ -49,7 +51,7 @@ function Ladder({ table, on, start, reduced }: { table: (typeof RANKING_TABLES)[
       <ol className="m-0 mt-[10px] list-none p-0">
         {table.returns.map((value, index) => {
           const ours = index === table.ours;
-          const share = `${(value / MAX) * 100}%`;
+          const share = `${(value / max) * 100}%`;
           return (
             <li key={index} className={`grid grid-cols-[28px_1fr] items-center gap-[10px] ${ours ? "py-[10px]" : "py-[7px]"}`}>
               <span className={`${EYEBROW} tabular-nums ${ours ? "text-black" : "text-black/40"}`}>{place(index)}</span>
@@ -130,7 +132,9 @@ function Ladder({ table, on, start, reduced }: { table: (typeof RANKING_TABLES)[
   );
 }
 
-export function RecognitionSection() {
+export function RecognitionSection({ content = RECOGNITION }: { content?: RecognitionContent }) {
+  const tables: Table[] = (content.tables ?? []).map(({ rank, period, ours, returns }) => ({ rank, period, ours, returns: (returns ?? []).map(({ value }) => value) }));
+  const max = Math.max(...tables.flatMap((table) => table.returns), 1);
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, amount: 0.3 });
   const reduced = useReducedMotion();
@@ -138,21 +142,23 @@ export function RecognitionSection() {
   return (
     <section id="recognition" aria-labelledby="recognition-heading" className="scroll-mt-[96px] border-t border-dashed border-black/10 bg-white text-black">
       <div className={`${COLUMN} py-[120px] max-md:py-[80px]`}>
-        <BracketLabel>Recognition</BracketLabel>
+        {content.label ? <BracketLabel>{content.label}</BracketLabel> : null}
         <h2 id="recognition-heading" className={`mt-[18px] max-w-[880px] ${SUBHEAD}`}>
-          Ranked among India&rsquo;s top-performing portfolio managers by PMS Bazaar
+          {content.heading}
         </h2>
-        <p className="mt-[40px]">
-          <span className={`${EYEBROW} rounded-full border border-[#F6A11A] px-[10px] py-[4px] text-black`}>{RANKINGS_AS_OF}</span>
-        </p>
+        {content.asOf ? (
+          <p className="mt-[40px]">
+            <span className={`${EYEBROW} rounded-full border border-[#F6A11A] px-[10px] py-[4px] text-black`}>{content.asOf}</span>
+          </p>
+        ) : null}
         <FigurePanel className="mt-[32px]">
           <div ref={ref} className="grid grid-cols-1 gap-x-[48px] gap-y-[56px] xl:grid-cols-3">
-            {RANKING_TABLES.map((table, i) => (
-              <Ladder key={table.period} table={table} on={on} start={i * 0.15} reduced={reduced} />
+            {tables.map((table, i) => (
+              <Ladder key={i} table={table} max={max} on={on} start={i * 0.15} reduced={reduced} />
             ))}
           </div>
         </FigurePanel>
-        <p className={`${EYEBROW} mt-[18px] text-black/60`}>Returns in %. Past performance does not guarantee future performance.</p>
+        {content.note ? <p className={`${EYEBROW} mt-[18px] text-black/60`}>{content.note}</p> : null}
       </div>
     </section>
   );

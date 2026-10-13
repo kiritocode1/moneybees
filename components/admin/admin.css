@@ -1,0 +1,155 @@
+/*
+ * Styles for our screens inside Payload's /admin, imported by
+ * components/admin/admin-provider.tsx and so loaded on admin routes only.
+ * Payload keeps its own styles in the payload-default layer; declaring it
+ * first keeps every layer below above it. Only the rules at the end, for the
+ * page editor, target Payload's own markup. There is no preflight: Payload's
+ * views keep their own reset.
+ * Utilities are generated only from components/fluid and components/admin.
+ */
+@layer payload-default, theme, base, components, utilities;
+
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/utilities.css" layer(utilities) source(none);
+@source "../fluid";
+@source "./";
+
+@import "./shadcn-variants.css";
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+@import "./fluid-theme.css";
+
+/*
+ * Without a preflight, a <button> inside our screens kept the browser's grey
+ * bevelled chrome under Fluid Functionalism's own fill. This clears it for
+ * buttons inside `.fluid` only; the component classes, in the utilities layer,
+ * then draw them. Payload's own buttons are outside `.fluid` and untouched.
+ */
+@layer base {
+  .fluid :where(button) {
+    border: 0;
+    background: transparent;
+    padding: 0;
+    font: inherit;
+    color: inherit;
+  }
+}
+
+/* The two wordmarks in components/admin/brand.tsx: ink on light, light on dark. */
+.mb-brand img {
+  display: block;
+  width: 220px;
+  height: auto;
+}
+.mb-brand .mb-brand-light,
+[data-theme="dark"] .mb-brand .mb-brand-ink {
+  display: none;
+}
+[data-theme="dark"] .mb-brand .mb-brand-light {
+  display: block;
+}
+
+/*
+ * The React Email editor (components/admin/email-editor): its menus and
+ * inspector read --re-* variables; these point them at Fluid
+ * Functionalism's tokens so they follow the admin's light and dark themes.
+ * The canvas itself stays light, because it shows the email as sent.
+ */
+:root {
+  --re-bg: var(--popover);
+  --re-border: var(--border);
+  --re-text: var(--foreground);
+  --re-text-muted: var(--muted-foreground);
+  --re-hover: var(--hover);
+  --re-active: var(--active);
+  --re-pressed: var(--active);
+  --re-radius: 0.5rem;
+  --re-radius-sm: 0.25rem;
+}
+.mb-email-surface {
+  background: #f7f7f8;
+  color-scheme: light;
+}
+/* The editor's injected theme sets margin: 0 on [data-editor-theme-scope]; this centres the email like an inbox does. */
+.mb-email-surface .tiptap.ProseMirror[data-editor-theme-scope] {
+  outline: none;
+  max-width: 600px;
+  margin-inline: auto;
+}
+.mb-drag-handle {
+  display: flex;
+  height: 24px;
+  width: 18px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  color: #8b8d91;
+  cursor: grab;
+}
+.mb-drag-handle:hover {
+  background: rgb(0 0 0 / 0.06);
+  color: #272727;
+}
+.mb-drag-handle:active {
+  cursor: grabbing;
+}
+
+/*
+ * The page editor (globals/pages/page-global.ts), from here down: Payload's
+ * own markup. The section list hides the blocks field's Collapse All, Show
+ * All and copy menu; staff open a section by clicking it on the page.
+ */
+.mb-page-sections .blocks-field__header-actions {
+  display: none;
+}
+
+/*
+ * The page editor's preview toolbar (components/admin/site-editor/
+ * preview-bridge.tsx puts a Desktop / Phone switch in it): Payload's size
+ * menu, width and height, zoom and open-in-a-new-window controls are hidden,
+ * since the bridge fits the page to the pane itself.
+ */
+.live-preview-toolbar-controls:has(.mb-device-switch) > :not(.mb-device-switch) {
+  display: none;
+}
+
+/*
+ * Payload's status line on an editable page, as a badge: the bridge tags it
+ * data-mb-state="published" or "changed". "Revert to published" stays as
+ * Payload draws it.
+ */
+.status[data-mb-state] .status__label {
+  display: none;
+}
+.status[data-mb-state] .status__value {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 22px;
+  padding: 0 9px;
+  border: 1px solid var(--theme-elevation-150);
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 500;
+}
+.status[data-mb-state] .status__value::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: #22c55e;
+}
+.status[data-mb-state="changed"] .status__value::before {
+  background: #f59e0b;
+}
+/* The same words as the Website screen (components/admin/website): Payload's own word for a draft is "Changed". */
+.status[data-mb-state] .status__value {
+  font-size: 0;
+}
+.status[data-mb-state] .status__value::after {
+  content: "Published";
+  font-size: 12px;
+}
+.status[data-mb-state="changed"] .status__value::after {
+  content: "Unpublished changes";
+}

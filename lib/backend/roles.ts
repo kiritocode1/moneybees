@@ -8,6 +8,13 @@ import type { Access, FieldAccess, PayloadRequest } from "payload";
 export const ROLES = ["admin", "editor", "compliance", "sales", "hr", "operations", "integration"] as const;
 export type Role = (typeof ROLES)[number];
 
+/**
+ * Staff who work enquiries and the client book. Any of them can open any
+ * enquiry (user, 2026-10-12: "any admin could look at enquiries"); the
+ * playbook says which role should take it.
+ */
+export const CRM_ROLES = ["sales", "operations", "compliance"] as const satisfies readonly Role[];
+
 /** True when the user is staff and is an admin or holds one of `roles`. */
 export function hasRole(user: PayloadRequest["user"] | undefined, ...roles: readonly Role[]): boolean {
   if (user?.collection !== "users") return false;

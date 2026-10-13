@@ -4,13 +4,13 @@ import { BracketLabel } from "@/components/fact-sections/fact-section";
 import { COLUMN, SUBHEAD } from "@/components/hero/tokens";
 import Link from "@/components/transition/transition-link";
 import { DelayedOn, FOCUS, hexPoints, ORANGE, PRESS, T, useShown } from "@/components/pms-v2/shared";
-import { COMPARE_LINKS, COMPARISON, EXPLANATION } from "@/lib/compare";
+import { COMPARISON_SECTION, type ComparisonContent, EXPLANATION_SECTION, type ExplanationContent } from "@/lib/pages/compare-content";
 import { ROW_GLYPHS } from "./row-glyphs";
 
 /*
  * /pms-vs-aif, content plan §5: the heading with the plan's two diagrams, the
  * simple comparison row by row, and the simple explanation. Every row and
- * card draws what its words say.
+ * card draws what its words say. The words are edited in /admin.
  */
 
 /**
@@ -19,14 +19,14 @@ import { ROW_GLYPHS } from "./row-glyphs";
  * the two columns equal, so at 390px each cell is half the column and nothing
  * overflows the page; the drawing drops under the text below lg.
  */
-export function ComparisonSection() {
+export function ComparisonSection({ content = COMPARISON_SECTION }: { content?: ComparisonContent }) {
   const { ref, shown } = useShown<HTMLDivElement>(0.2);
   return (
     <section id="comparison" aria-labelledby="comparison-heading" className="scroll-mt-[96px] bg-black text-white">
       <div className={`${COLUMN} py-[120px] max-md:py-[80px]`}>
-        <BracketLabel>Comparison</BracketLabel>
-        <h2 id="comparison-heading" className={`mt-[18px] ${SUBHEAD}`}>
-          Simple Comparison
+        {content.label ? <BracketLabel>{content.label}</BracketLabel> : null}
+        <h2 id="comparison-heading" className={`${content.label ? "mt-[18px] " : ""}${SUBHEAD}`}>
+          {content.heading}
         </h2>
         <div ref={ref} className="mt-[56px]">
           <table className="w-full table-fixed border-collapse text-left">
@@ -48,10 +48,10 @@ export function ComparisonSection() {
               </tr>
             </thead>
             <tbody>
-              {COMPARISON.map((row, index) => {
-                const pair = ROW_GLYPHS[row.glyph];
+              {(content.rows ?? []).map((row, index) => {
+                const pair = ROW_GLYPHS[row.drawing];
                 return (
-                  <tr key={row.glyph} className="border-b border-white/15" style={{ opacity: shown ? 1 : 0.3, transition: `opacity 400ms ease ${index * 80}ms` }}>
+                  <tr key={index} className="border-b border-white/15" style={{ opacity: shown ? 1 : 0.3, transition: `opacity 400ms ease ${index * 80}ms` }}>
                     {([
                       [row.pms, pair.pms],
                       [row.aif, pair.aif],
@@ -74,8 +74,8 @@ export function ComparisonSection() {
           </table>
           {/* The two ways in, drawn identically: neither product leads. */}
           <div className="mt-[40px] grid w-full grid-cols-1 gap-3 sm:w-fit sm:grid-cols-2">
-            {COMPARE_LINKS.map(([label, href]) => (
-              <Link key={href} href={href} className={`inline-flex items-center justify-center rounded-full border border-white/60 px-[26px] py-[14px] text-[15px] font-medium text-white no-underline hover:border-white hover:bg-white hover:text-black ${PRESS} ${FOCUS} focus-visible:outline-white`}>
+            {(content.links ?? []).map(({ label, link }) => (
+              <Link key={link} href={link} className={`inline-flex items-center justify-center rounded-full border border-white/60 px-[26px] py-[14px] text-[15px] font-medium text-white no-underline hover:border-white hover:bg-white hover:text-black ${PRESS} ${FOCUS} focus-visible:outline-white`}>
                 {label}
               </Link>
             ))}
@@ -150,18 +150,18 @@ function PoolDrawing({ on }: { on: boolean }) {
 }
 
 /** The simple explanation: the plan's two sentences, each beside a drawing of it. */
-export function ExplanationSection() {
+export function ExplanationSection({ content = EXPLANATION_SECTION }: { content?: ExplanationContent }) {
   const { ref, shown } = useShown<HTMLDivElement>(0.3);
   const cards = [
-    { label: "PMS", text: EXPLANATION.pms, Drawing: MandateDrawing },
-    { label: "AIF", text: EXPLANATION.aif, Drawing: PoolDrawing },
+    { label: "PMS", text: content.pms, Drawing: MandateDrawing },
+    { label: "AIF", text: content.aif, Drawing: PoolDrawing },
   ];
   return (
     <section id="explanation" aria-labelledby="explanation-heading" className="scroll-mt-[96px] bg-white text-black">
       <div className={`${COLUMN} py-[120px] max-md:py-[80px]`}>
-        <BracketLabel>Explanation</BracketLabel>
-        <h2 id="explanation-heading" className={`mt-[18px] ${SUBHEAD}`}>
-          Simple Explanation
+        {content.label ? <BracketLabel>{content.label}</BracketLabel> : null}
+        <h2 id="explanation-heading" className={`${content.label ? "mt-[18px] " : ""}${SUBHEAD}`}>
+          {content.heading}
         </h2>
         <div ref={ref} className="mt-[56px] grid grid-cols-1 gap-8 md:grid-cols-2">
           {cards.map(({ label, text, Drawing }, index) => (

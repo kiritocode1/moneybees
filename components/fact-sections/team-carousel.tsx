@@ -3,12 +3,12 @@
 import Autoplay from "embla-carousel-autoplay";
 import useEmblaCarousel from "embla-carousel-react";
 import Image from "next/image";
-import { type KeyboardEvent, useEffect, useLayoutEffect, useRef, useState } from "react";
+import { createContext, type KeyboardEvent, useContext, useEffect, useLayoutEffect, useRef, useState } from "react";
 import TransitionLink from "@/components/transition/transition-link";
 import { TEAM, type TeamMember } from "@/lib/insights";
+import { TEAM_SECTION, type TeamContent } from "@/lib/pages/about-content";
 import styles from "./team-carousel.module.css";
 import { BUTTON } from "@/components/hero/tokens";
-import { ENQUIRY_HREF } from "@/lib/contact-v2";
 
 /*
  * curocapital.dk's "Mød vores partnere", copied 1:1 from its markup, script and
@@ -18,11 +18,12 @@ import { ENQUIRY_HREF } from "@/lib/contact-v2";
  * black, the portraits are grey as elsewhere on the site, and the arrows use
  * its grey. The profile panel is ours (approved 2026-10-09): the name in the
  * display face, the role as a mono label, the bio as a lead and ruled rows,
- * then the enquiry and the person's LinkedIn.
+ * then the enquiry and the person's LinkedIn. The people come from Website ›
+ * Team in /admin and the heading and button from the About page there; a
+ * context hands them to every part below.
  */
 const SLIDE_MS = 700;
 const EASE_IN_OUT = "cubic-bezier(.4,0,.2,1)";
-const COUNT = TEAM.length;
 /*
  * The source sets name, role and phone text at line-height: normal, which in its
  * font is 1.19 (ascent 1, descent .19, measured). Ours differs, so it is set outright.
@@ -33,7 +34,13 @@ const RING = "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring
 const LINKEDIN_PATH =
   "M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z";
 
-const wrap = (index: number) => ((index % COUNT) + COUNT) % COUNT;
+const Carousel = createContext<{ team: readonly TeamMember[]; content: TeamContent }>({ team: TEAM, content: TEAM_SECTION });
+
+/** Wraps an index round the team: -1 is the last person, the team's length the first. */
+function useWrap() {
+  const count = useContext(Carousel).team.length;
+  return (index: number) => ((index % count) + count) % count;
+}
 
 /** The source's 6x14 chevrons. */
 const CHEVRONS = {
@@ -63,6 +70,7 @@ function Portrait({ person, alt }: { person: TeamMember; alt: string }) {
  * (transition-all, ease-out).
  */
 function Heading({ id, className }: { id?: string; className: string }) {
+  const { heading } = useContext(Carousel).content;
   const ref = useRef<HTMLHeadingElement>(null);
   const [shown, setShown] = useState<boolean | null>(null);
   useEffect(() => {
@@ -84,7 +92,7 @@ function Heading({ id, className }: { id?: string; className: string }) {
       className={`${className} transition-all duration-700 ease-out`}
       style={shown === false ? { translate: "0 calc(var(--spacing) * 8)", visibility: "hidden", opacity: 0 } : undefined}
     >
-      Our Team
+      {heading}
     </h2>
   );
 }
@@ -92,11 +100,14 @@ function Heading({ id, className }: { id?: string; className: string }) {
 /** The enquiry as the site's orange pill, and the person's LinkedIn when one is confirmed. */
 function Actions({ member, className }: { member: TeamMember; className: string }) {
   const { linkedin } = member;
+  const { buttonLabel, buttonLink } = useContext(Carousel).content;
   return (
     <div className={className}>
-      <TransitionLink href={ENQUIRY_HREF} className={`${BUTTON} bg-[#F6A11A] text-black hover:bg-black hover:text-white`}>
-        Get in touch
-      </TransitionLink>
+      {buttonLabel && buttonLink ? (
+        <TransitionLink href={buttonLink} className={`${BUTTON} bg-[#F6A11A] text-black hover:bg-black hover:text-white`}>
+          {buttonLabel}
+        </TransitionLink>
+      ) : null}
       {linkedin && (
         <a
           href={linkedin}
@@ -133,8 +144,8 @@ function Profile({ member, size }: { member: TeamMember; size: "large" | "small"
         <p className="text-[length:calc(var(--rem)*1.125)] leading-[1.45] tracking-[-.01em] text-black">{lead}</p>
         {rest.length > 0 && (
           <ul className="mt-5 list-none p-0">
-            {rest.map((point) => (
-              <li key={point} className="border-t border-black/10 py-3 text-sm leading-[1.5] text-black/65">
+            {rest.map((point, index) => (
+              <li key={index} className="border-t border-black/10 py-3 text-sm leading-[1.5] text-black/65">
                 {point}
               </li>
             ))}
@@ -177,6 +188,7 @@ const SHOWN: Look = { opacity: "1", visibility: "visible", translate: "0 calc(va
  * down 1rem) and shows the new one (600ms, ease-out, from 1rem up).
  */
 function Bios({ active }: { active: number }) {
+  const { team } = useContext(Carousel);
   const refs = useRef<(HTMLDivElement | null)[]>([]);
   const shownRef = useRef(active);
   useLayoutEffect(() => {
@@ -189,9 +201,9 @@ function Bios({ active }: { active: number }) {
     if (entering) xShow(entering, "opacity 600ms cubic-bezier(0,0,.2,1), translate 600ms cubic-bezier(0,0,.2,1)", { opacity: "0", visibility: "hidden", translate: "0 calc(var(--spacing) * -4)" }, SHOWN, 600);
   }, [active]);
   // Every bio shares one grid cell, so the panel is as tall as the longest one.
-  return TEAM.map((member, index) => (
+  return team.map((member, index) => (
     <div
-      key={member.name}
+      key={index}
       ref={(el) => {
         refs.current[index] = el;
       }}
@@ -211,16 +223,18 @@ function Bios({ active }: { active: number }) {
  * transparent, so each step pushes the old portrait out as the new one enters.
  */
 function Window({ active, shift }: { active: number; shift: number }) {
+  const { team } = useContext(Carousel);
+  const wrap = useWrap();
   const shown = wrap(active + shift);
   return (
     <div className="relative h-full w-full overflow-hidden">
-      {TEAM.map((person, index) => {
+      {team.map((person, index) => {
         // The source's getOffset: 0 is shown, -1 waits on the left, the rest wait on the right.
         const offset = wrap(index - shown + 1) - 1;
         const on = offset === 0;
         return (
           <div
-            key={person.name}
+            key={index}
             className="absolute inset-0"
             style={{
               transform: on ? "none" : `translateX(${offset < 0 ? -100 : 100}%)`,
@@ -239,11 +253,13 @@ function Window({ active, shift }: { active: number; shift: number }) {
 }
 
 function Thumb({ active, shift, opacity, onClick }: { active: number; shift: number; opacity: number; onClick: () => void }) {
+  const { team } = useContext(Carousel);
+  const wrap = useWrap();
   return (
     <button
       type="button"
       onClick={onClick}
-      aria-label={`Show ${TEAM[wrap(active + shift)].name}`}
+      aria-label={`Show ${team[wrap(active + shift)].name}`}
       className={`aspect-[3/4] w-[calc(var(--cols-2)+var(--half-col)+var(--half-gutter))] shrink-0 cursor-pointer ${RING}`}
       style={{ opacity }}
     >
@@ -273,6 +289,7 @@ function Arrow({ direction, busy, onClick }: { direction: keyof typeof CHEVRONS;
  * right, running off the edge. The left thumbnails step back, the right one forward.
  */
 function Row() {
+  const wrap = useWrap();
   const [active, setActive] = useState(0);
   const [busy, setBusy] = useState(false);
   const locked = useRef(false);
@@ -349,6 +366,7 @@ function Row() {
  * four columns to the full slide and its bio settled 0.5rem down into place.
  */
 function Rail() {
+  const { team } = useContext(Carousel);
   const [emblaRef, emblaApi] = useEmblaCarousel({ align: "start", loop: true }, [
     Autoplay({ playOnInit: true, delay: 4000, stopOnInteraction: false }),
   ]);
@@ -371,11 +389,11 @@ function Rail() {
       </div>
       <div ref={emblaRef} className="w-full overflow-hidden">
         <div className="flex w-full touch-pan-y items-start [backface-visibility:hidden]">
-          {TEAM.map((person, index) => {
+          {team.map((person, index) => {
             const on = index === selected;
             return (
               <div
-                key={person.name}
+                key={index}
                 className="grid h-fit min-w-0 shrink-0 flex-[0_0_var(--push-5)] [transform:translateZ(0)] gap-4 overflow-clip pl-[var(--grid-margin)] transition-opacity duration-[600ms] ease-in-out"
                 style={{ opacity: on ? 1 : 0.5 }}
               >
@@ -401,11 +419,14 @@ function Rail() {
 }
 
 /** /about's team section (on the homepage until 2026-10-08, when the client dropped the team photograph under it). */
-export default function TeamCarousel() {
+export default function TeamCarousel({ team = TEAM, content = TEAM_SECTION }: { team?: readonly TeamMember[]; content?: TeamContent }) {
+  if (team.length === 0) return null;
   return (
-    <section id="team" aria-labelledby="team-heading" className={`${styles.grid} relative scroll-mt-[96px] overflow-x-clip bg-white py-24 text-black lg:py-32`}>
-      <Row />
-      <Rail />
-    </section>
+    <Carousel value={{ team, content }}>
+      <section id="team" aria-labelledby="team-heading" className={`${styles.grid} relative scroll-mt-[96px] overflow-x-clip bg-white py-24 text-black lg:py-32`}>
+        <Row />
+        <Rail />
+      </section>
+    </Carousel>
   );
 }

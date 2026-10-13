@@ -8,7 +8,7 @@ import { allow, everyone } from "@/lib/backend/roles";
  */
 export const Products: CollectionConfig = {
   slug: "products",
-  admin: { useAsTitle: "name", defaultColumns: ["name", "kind", "benchmark"], group: "Products" },
+  admin: { useAsTitle: "name", defaultColumns: ["name", "kind", "benchmark"], group: "Publishing" },
   access: { read: everyone, create: allow("compliance"), update: allow("compliance"), delete: allow() },
   hooks: { afterChange: [auditChange("products")] },
   fields: [

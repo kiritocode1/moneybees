@@ -2,7 +2,7 @@
 
 import { useShown } from "@/components/about-v2/shared";
 import { COLUMN, SUBHEAD } from "@/components/hero/tokens";
-import { DONT_DO, LOOK_FOR } from "@/lib/approach";
+import { CRITERIA, type CriteriaContent } from "@/lib/pages/philosophy-content";
 
 /*
  * What We Look For and What We Don't Do (content plan §6), set as study 09's
@@ -33,19 +33,19 @@ function Row({ text, index, kept }: { text: string; index: number; kept: boolean
   );
 }
 
-export function CriteriaLists() {
+export function CriteriaLists({ content = CRITERIA }: { content?: CriteriaContent }) {
   return (
     <section id="look-for" aria-label="What we look for and what we don't do" className="scroll-mt-[96px] overflow-x-clip bg-white text-black">
       <div className={`${COLUMN} grid grid-cols-1 gap-16 py-[120px] md:grid-cols-2 md:gap-x-[80px] max-md:py-[80px]`}>
         {[
-          { heading: "What We Look For", items: LOOK_FOR, kept: true },
-          { heading: "What We Don't Do", items: DONT_DO, kept: false },
+          { heading: content.lookForHeading, items: (content.lookFor ?? []).map(({ item }) => item), kept: true },
+          { heading: content.dontDoHeading, items: (content.dontDo ?? []).map(({ item }) => item), kept: false },
         ].map((column) => (
-          <div key={column.heading}>
+          <div key={String(column.kept)}>
             <h2 className={`m-0 mb-10 ${SUBHEAD}`}>{column.heading}</h2>
             <ul className="m-0 list-none border-b border-black/15 p-0">
               {column.items.map((text, index) => (
-                <Row key={text} text={text} index={index} kept={column.kept} />
+                <Row key={index} text={text} index={index} kept={column.kept} />
               ))}
             </ul>
           </div>

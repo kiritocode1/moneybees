@@ -5,7 +5,7 @@ import { allow, nobody } from "@/lib/backend/roles";
 export const AuditLog: CollectionConfig = {
   slug: "audit-log",
   labels: { singular: "Audit entry", plural: "Audit log" },
-  admin: { useAsTitle: "summary", defaultColumns: ["createdAt", "actor", "summary"], group: "Accounts" },
+  admin: { useAsTitle: "summary", defaultColumns: ["createdAt", "actor", "summary"], group: "Settings" },
   access: { read: allow("compliance"), create: nobody, update: nobody, delete: nobody },
   fields: [
     { name: "actor", type: "relationship", relationTo: "users" },

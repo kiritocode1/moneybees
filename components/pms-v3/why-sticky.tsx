@@ -5,29 +5,21 @@ import { type CSSProperties, useEffect, useRef, useState } from "react";
 import { BracketLabel } from "@/components/fact-sections/fact-section";
 import { BODY, COLUMN, SUBHEAD } from "@/components/hero/tokens";
 import { WHY_GLYPHS } from "@/components/pms-v2/why-glyphs";
-import { PMS_INTRO_APPROACH, WHY_PMS } from "@/lib/pms-v2";
+import { PMS_WHY, type WhyContent } from "@/lib/pages/pms-content";
 import { useReducedMotion } from "@/lib/use-reduced-motion";
 
 /*
  * Why Moneybee PMS? as Titan Gate's benefits split (reference/titangate/NOTES.md
  * §4 row 11): the seven points scroll past on the left, and a sticky pane on
  * the right swaps to the point crossing the middle of the screen, with a
- * the point's drawing. Below 768px it is a plain list.
+ * the point's drawing. Below 768px it is a plain list. The points, their
+ * drawings and lines come from the PMS page in /admin.
  */
+
+type Point = NonNullable<WhyContent["points"]>[number];
 
 /** Inactive names: #767676 is 4.5:1 on white; the brand grey #9D9EA1 is 2.7:1, under the 3:1 large-text minimum. */
 const GREY = "#767676";
-
-/** Placeholder until the client supplies a line per point. LOREM. */
-const LINES = [
-  "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-  "Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-  "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.",
-  "Duis aute irure dolor in reprehenderit in voluptate velit esse.",
-  "Excepteur sint occaecat cupidatat non proident, sunt in culpa.",
-  "Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit.",
-  "Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet.",
-] as const;
 
 /**
  * Their card text swap: entering words blink in (.32s, 32ms apart, after
@@ -59,18 +51,18 @@ function Corners() {
 }
 
 /** The sticky pane with the active point's drawing and its line. */
-function Pane({ active, previous, drawn }: { active: number; previous: number; drawn: boolean }) {
+function Pane({ points, active, previous, drawn }: { points: Point[]; active: number; previous: number; drawn: boolean }) {
   return (
     <div aria-hidden="true" className="relative w-full p-[10px]">
       <Corners />
       <div className="bg-[#F6F6F6] px-[clamp(24px,3vw,48px)] pt-[clamp(20px,2.2vw,32px)] pb-[clamp(28px,3vw,44px)]">
         <div className="grid [&>*]:[grid-area:1/1]">
-          {WHY_PMS.map((point, index) => {
-            const Glyph = WHY_GLYPHS[point.glyph];
+          {points.map((point, index) => {
+            const Glyph = WHY_GLYPHS[point.drawing];
             const current = index === active;
             return (
               <div
-                key={point.name}
+                key={index}
                 className="transition-opacity ease-[cubic-bezier(.23,1,.32,1)] motion-reduce:transition-none"
                 style={{ opacity: current ? 1 : 0, transitionDuration: current ? "400ms" : "200ms" }}
               >
@@ -80,9 +72,9 @@ function Pane({ active, previous, drawn }: { active: number; previous: number; d
           })}
         </div>
         <div className="mt-[clamp(20px,2.5vw,36px)] grid [&>*]:[grid-area:1/1]">
-          {LINES.map((line, index) => (
-            <p key={line} data-state={index === active ? "in" : index === previous ? "out" : undefined} className="pv3-line m-0 max-w-[34ch] text-[17px] leading-[1.5] text-black/75">
-              {line.split(" ").map((word, w) => (
+          {points.map(({ line }, index) => (
+            <p key={index} data-state={index === active ? "in" : index === previous ? "out" : undefined} className="pv3-line m-0 max-w-[34ch] text-[17px] leading-[1.5] text-black/75">
+              {(line ?? "").split(" ").map((word, w) => (
                 <span key={w} className="pv3-word" style={{ "--word": w } as CSSProperties}>
                   {word}{" "}
                 </span>
@@ -96,7 +88,7 @@ function Pane({ active, previous, drawn }: { active: number; previous: number; d
 }
 
 /** Desktop: names on the left, one per 36svh, and the pane pinned on the right. */
-function Split() {
+function Split({ points }: { points: Point[] }) {
   const reduce = useReducedMotion();
   const split = useRef<HTMLDivElement>(null);
   const reached = useInView(split, { once: true, amount: 0.15 });
@@ -122,9 +114,9 @@ function Split() {
   return (
     <div ref={split} className={`${COLUMN} grid grid-cols-2 gap-[clamp(40px,5vw,96px)] max-md:hidden`}>
       <ol className="m-0 list-none py-[32svh] pl-0">
-        {WHY_PMS.map((point, index) => (
+        {points.map((point, index) => (
           <li
-            key={point.name}
+            key={index}
             ref={(item) => {
               items.current[index] = item;
             }}
@@ -139,25 +131,24 @@ function Split() {
               >
                 {point.name}
               </h3>
-              <p className="sr-only">{LINES[index]}</p>
+              {point.line ? <p className="sr-only">{point.line}</p> : null}
             </div>
           </li>
         ))}
       </ol>
       <div className="sticky top-0 flex h-svh items-center self-start">
-        <Pane active={active} previous={previous} drawn={reached || reduce} />
+        <Pane points={points} active={active} previous={previous} drawn={reached || reduce} />
       </div>
     </div>
   );
 }
 
 /** Phone: each point's drawing beside its name, drawn as the row scrolls in. */
-function Row({ index }: { index: number }) {
+function Row({ point }: { point: Point }) {
   const ref = useRef<HTMLLIElement>(null);
   const inView = useInView(ref, { once: true, amount: 0.6 });
   const reduce = useReducedMotion();
-  const point = WHY_PMS[index];
-  const Glyph = WHY_GLYPHS[point.glyph];
+  const Glyph = WHY_GLYPHS[point.drawing];
   return (
     <li ref={ref} className="grid grid-cols-[128px_minmax(0,1fr)] items-center gap-5 border-b border-black/10 py-6">
       <div aria-hidden="true">
@@ -170,7 +161,8 @@ function Row({ index }: { index: number }) {
   );
 }
 
-export function WhySection() {
+export function WhySection({ content = PMS_WHY }: { content?: WhyContent }) {
+  const points = content.points ?? [];
   return (
     <section id="why" aria-labelledby="why-heading" className="scroll-mt-[96px] bg-white text-black">
       <style href="pms-v3-why" precedence="default">
@@ -178,18 +170,18 @@ export function WhySection() {
       </style>
       <div className={`${COLUMN} grid grid-cols-1 items-end gap-8 pt-[120px] max-md:pt-[80px] md:grid-cols-2 md:gap-16`}>
         <div>
-          <BracketLabel>Why Moneybee</BracketLabel>
+          {content.label ? <BracketLabel>{content.label}</BracketLabel> : null}
           <h2 id="why-heading" className={`mt-[18px] ${SUBHEAD}`}>
-            Why Moneybee PMS?
+            {content.heading}
           </h2>
         </div>
-        <p className={`m-0 text-black/70 ${BODY}`}>{PMS_INTRO_APPROACH}</p>
+        {content.intro ? <p className={`m-0 text-black/70 ${BODY}`}>{content.intro}</p> : null}
       </div>
-      <Split />
+      <Split points={points} />
       <div className={`${COLUMN} mt-10 pb-[80px] md:hidden`}>
         <ol className="m-0 list-none border-t border-black/10 p-0">
-          {WHY_PMS.map((point, index) => (
-            <Row key={point.name} index={index} />
+          {points.map((point, index) => (
+            <Row key={index} point={point} />
           ))}
         </ol>
       </div>

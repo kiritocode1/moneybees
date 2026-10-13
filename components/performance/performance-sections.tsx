@@ -1,7 +1,9 @@
 import { BracketLabel } from "@/components/fact-sections/fact-section";
 import { BODY, COLUMN, EYEBROW, SUBHEAD } from "@/components/hero/tokens";
-import { AIF_DATES } from "@/lib/aif";
-import { AIF_NAMES, AIF_ROWS, formatReturn, METHOD, PERFORMANCE, PERFORMANCE_LOREM, type ReturnRow } from "@/lib/performance";
+import { AIF_NAMES, formatReturn, type ReturnRow } from "@/lib/performance";
+import { AIF_PERFORMANCE, type AifPerformanceContent } from "@/lib/pages/aif-content";
+import { AIF_DECK_FIGURES, type AifFigures } from "@/lib/site/figures";
+import { dayMonthYear } from "@/lib/site/tokens";
 import LitRows from "@/components/motion/lit-rows";
 import { FigurePanel } from "@/components/pms-v2/shared";
 
@@ -14,26 +16,26 @@ import { FigurePanel } from "@/components/pms-v2/shared";
  */
 
 /** The As-of label, an orange square beside the date. */
-function AsOf({ dark = false }: { dark?: boolean }) {
+function AsOf({ asOf, dark = false }: { asOf: string; dark?: boolean }) {
   return (
     <span className={`${EYEBROW} inline-flex items-center gap-[10px] border px-[12px] py-[7px] text-[11px] ${dark ? "border-white/25 text-white" : "border-black/20 text-black"}`}>
       <i className="h-[8px] w-[8px] bg-[#F6A11A]" aria-hidden="true" />
-      {PERFORMANCE.asOf}
+      As of {dayMonthYear(asOf)}
     </span>
   );
 }
 
 /** Heading on the left, placeholder body on the right, as /our-philosophy opens its sections. */
-function SectionHead({ id, label, heading, dark = false }: { id: string; label: string; heading: string; dark?: boolean }) {
+function SectionHead({ id, label, heading, lead, dark = false }: { id: string; label?: string | null; heading: string; lead?: string | null; dark?: boolean }) {
   return (
     <div className="grid grid-cols-1 items-end gap-8 md:grid-cols-2 md:gap-16">
       <div>
-        <BracketLabel>{label}</BracketLabel>
-        <h2 id={`${id}-heading`} className={`mt-[18px] ${SUBHEAD}`}>
+        {label ? <BracketLabel>{label}</BracketLabel> : null}
+        <h2 id={`${id}-heading`} className={`${label ? "mt-[18px] " : ""}${SUBHEAD}`}>
           {heading}
         </h2>
       </div>
-      <p className={`${dark ? "text-white/70" : "text-black/70"} ${BODY}`}>{PERFORMANCE_LOREM.long}</p>
+      {lead ? <p className={`${dark ? "text-white/70" : "text-black/70"} ${BODY}`}>{lead}</p> : null}
     </div>
   );
 }
@@ -88,20 +90,22 @@ function Returns({ rows, names }: { rows: readonly ReturnRow[]; names: { ours: s
   );
 }
 
-/** Flyingbee's periods against the S&P BSE 500, directly under the /aif hero. */
-export function AifPerformanceSection() {
+/**
+ * Flyingbee's periods against the S&P BSE 500, directly under the /aif hero.
+ * The words are edited in /admin (the method by compliance only); the figures
+ * come from Flyingbee's fact sheets once they may be shown (lib/site/figures.ts).
+ */
+export function AifPerformanceSection({ content = AIF_PERFORMANCE, figures = AIF_DECK_FIGURES }: { content?: AifPerformanceContent; figures?: AifFigures }) {
   return (
     <section id="performance" aria-labelledby="performance-heading" className="scroll-mt-[96px] border-t border-dashed border-black/10 bg-white text-black">
       <div className={`${COLUMN} py-[120px] max-md:py-[80px]`}>
-        <SectionHead id="performance" label="Performance" heading="AIF Performance" />
+        <SectionHead id="performance" label={content.label} heading={content.heading} lead={content.lead} />
         <div className="mt-[40px]">
-          <AsOf />
+          <AsOf asOf={figures.asOf} />
         </div>
-        <Returns rows={AIF_ROWS} names={AIF_NAMES} />
-        {/* The content plan (§7) requires a method and disclaimer beside any performance figures. RECORD_METHOD is the PMS's, so the fund's own facts (deck p10) stand in for it. */}
-        <p className="mt-[18px] max-w-[880px] border-t border-black/10 pt-[14px] text-[12px] leading-[1.55] text-black/60">
-          Returns in %, time-weighted (TWRR). N/A marks a period that has not run since the fund&apos;s first close on {AIF_DATES.firstClose}. {METHOD.caveat} {METHOD.guarantee}
-        </p>
+        <Returns rows={figures.rows} names={AIF_NAMES} />
+        {/* The content plan (§7) requires a method and disclaimer beside any performance figures. */}
+        {content.method ? <p className="mt-[18px] max-w-[880px] border-t border-black/10 pt-[14px] text-[12px] leading-[1.55] text-black/60">{content.method}</p> : null}
       </div>
     </section>
   );

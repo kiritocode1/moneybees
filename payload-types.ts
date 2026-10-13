@@ -71,25 +71,59 @@ export interface Config {
     'fact-sheets': FactSheet;
     products: Product;
     metrics: Metric;
+    media: Media;
+    'team-members': TeamMember;
+    documents: Document;
+    'case-studies': CaseStudy;
+    openings: Opening;
+    playbooks: Playbook;
+    'email-templates': EmailTemplate;
     investors: Investor;
     users: User;
     'audit-log': AuditLog;
-    media: Media;
+    enquiries: Enquiry;
+    contacts: Contact;
+    entities: Entity;
+    deals: Deal;
+    activities: Activity;
+    tasks: Task;
+    emails: Email;
     'login-challenges': LoginChallenge;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
     'payload-migrations': PayloadMigration;
   };
-  collectionsJoins: {};
+  collectionsJoins: {
+    contacts: {
+      enquiries: 'enquiries';
+      deals: 'deals';
+    };
+    entities: {
+      people: 'contacts';
+    };
+  };
   collectionsSelect: {
     'fact-sheets': FactSheetsSelect<false> | FactSheetsSelect<true>;
     products: ProductsSelect<false> | ProductsSelect<true>;
     metrics: MetricsSelect<false> | MetricsSelect<true>;
+    media: MediaSelect<false> | MediaSelect<true>;
+    'team-members': TeamMembersSelect<false> | TeamMembersSelect<true>;
+    documents: DocumentsSelect<false> | DocumentsSelect<true>;
+    'case-studies': CaseStudiesSelect<false> | CaseStudiesSelect<true>;
+    openings: OpeningsSelect<false> | OpeningsSelect<true>;
+    playbooks: PlaybooksSelect<false> | PlaybooksSelect<true>;
+    'email-templates': EmailTemplatesSelect<false> | EmailTemplatesSelect<true>;
     investors: InvestorsSelect<false> | InvestorsSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
     'audit-log': AuditLogSelect<false> | AuditLogSelect<true>;
-    media: MediaSelect<false> | MediaSelect<true>;
+    enquiries: EnquiriesSelect<false> | EnquiriesSelect<true>;
+    contacts: ContactsSelect<false> | ContactsSelect<true>;
+    entities: EntitiesSelect<false> | EntitiesSelect<true>;
+    deals: DealsSelect<false> | DealsSelect<true>;
+    activities: ActivitiesSelect<false> | ActivitiesSelect<true>;
+    tasks: TasksSelect<false> | TasksSelect<true>;
+    emails: EmailsSelect<false> | EmailsSelect<true>;
     'login-challenges': LoginChallengesSelect<false> | LoginChallengesSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
@@ -100,8 +134,36 @@ export interface Config {
     defaultIDType: number;
   };
   fallbackLocale: null;
-  globals: {};
-  globalsSelect: {};
+  globals: {
+    'home-page': HomePage;
+    'pms-page': PmsPage;
+    'aif-page': AifPage;
+    'pms-vs-aif-page': PmsVsAifPage;
+    'our-philosophy-page': OurPhilosophyPage;
+    'about-page': AboutPage;
+    'case-studies-page': CaseStudiesPage;
+    'picks-page': PicksPage;
+    'investor-centre-page': InvestorCentrePage;
+    'contact-page': ContactPage;
+    'careers-page': CareersPage;
+    'site-details': SiteDetail;
+    'crm-settings': CrmSetting;
+  };
+  globalsSelect: {
+    'home-page': HomePageSelect<false> | HomePageSelect<true>;
+    'pms-page': PmsPageSelect<false> | PmsPageSelect<true>;
+    'aif-page': AifPageSelect<false> | AifPageSelect<true>;
+    'pms-vs-aif-page': PmsVsAifPageSelect<false> | PmsVsAifPageSelect<true>;
+    'our-philosophy-page': OurPhilosophyPageSelect<false> | OurPhilosophyPageSelect<true>;
+    'about-page': AboutPageSelect<false> | AboutPageSelect<true>;
+    'case-studies-page': CaseStudiesPageSelect<false> | CaseStudiesPageSelect<true>;
+    'picks-page': PicksPageSelect<false> | PicksPageSelect<true>;
+    'investor-centre-page': InvestorCentrePageSelect<false> | InvestorCentrePageSelect<true>;
+    'contact-page': ContactPageSelect<false> | ContactPageSelect<true>;
+    'careers-page': CareersPageSelect<false> | CareersPageSelect<true>;
+    'site-details': SiteDetailsSelect<false> | SiteDetailsSelect<true>;
+    'crm-settings': CrmSettingsSelect<false> | CrmSettingsSelect<true>;
+  };
   locale: null;
   widgets: {
     collections: CollectionsWidget;
@@ -196,6 +258,10 @@ export interface FactSheet {
    * Only when replacing a sheet already published for the same month: what was wrong.
    */
   correctionReason?: string | null;
+  /**
+   * Compliance's note when sending a sheet back.
+   */
+  reviewNote?: string | null;
   submittedBy?: (number | null) | User;
   submittedAt?: string | null;
   approvedBy?: (number | null) | User;
@@ -300,6 +366,207 @@ export interface Metric {
   createdAt: string;
 }
 /**
+ * The people in the Our Team carousel on the About page, in this order. Drag a row to move someone.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "team-members".
+ */
+export interface TeamMember {
+  id: number;
+  _order?: string | null;
+  name: string;
+  /**
+   * As it should read under the name, e.g. Compliance Officer, PMS.
+   */
+  role: string;
+  /**
+   * A portrait, 3 wide by 4 tall. It shows in grey.
+   */
+  photo?: (number | null) | Media;
+  photoPath?: string | null;
+  /**
+   * Leave empty if not confirmed; the LinkedIn button only shows when this is set.
+   */
+  linkedin?: string | null;
+  /**
+   * The first line is set large; the rest are listed under it.
+   */
+  points?:
+    | {
+        point: string;
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * The cards on the Investor Centre page, in this order under their group. Drag a row to move it.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "documents".
+ */
+export interface Document {
+  id: number;
+  _order?: string | null;
+  title: string;
+  group: 'investor-charter' | 'disclosures' | 'grievance' | 'disclosure-document';
+  /**
+   * The approved PDF. Visitors open it from the card.
+   */
+  file?: (number | null) | Media;
+  /**
+   * For a page on another site, such as SEBI's SCORES. Used only when no file is uploaded.
+   */
+  link?: string | null;
+  /**
+   * Printed on the card. Empty shows Date to follow.
+   */
+  date?: string | null;
+  drawing:
+    | 'charter'
+    | 'disclosures'
+    | 'risk'
+    | 'policies'
+    | 'complaints'
+    | 'grievance'
+    | 'scores'
+    | 'odr'
+    | 'forms'
+    | 'pms'
+    | 'aif';
+  anchor?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * The companies on the Case Studies page, in this order. Drag a row to move one.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "case-studies".
+ */
+export interface CaseStudy {
+  id: number;
+  _order?: string | null;
+  name: string;
+  /**
+   * Two or three letters, until an approved logo is supplied.
+   */
+  mark: string;
+  drawing: 'power' | 'casting' | 'laminations';
+  business: string;
+  edge: string;
+  growth: string;
+  /**
+   * Oldest first. The chart and the timeline redraw from these.
+   */
+  financials?:
+    | {
+        year: string;
+        revenue: number;
+        ebitda: number;
+        pat: number;
+        id?: string | null;
+      }[]
+    | null;
+  anchor?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * The roles on the Careers page, in this order. Drag a row to move one.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "openings".
+ */
+export interface Opening {
+  id: number;
+  _order?: string | null;
+  title: string;
+  /**
+   * A sample is labelled on the page as not a live vacancy.
+   */
+  status: 'live' | 'sample';
+  team: 'research' | 'portfolio' | 'advisory' | 'compliance' | 'services';
+  location: string;
+  /**
+   * e.g. Full-time, Internship.
+   */
+  employment: string;
+  summary: string;
+  responsibilities?:
+    | {
+        line: string;
+        id?: string | null;
+      }[]
+    | null;
+  anchor?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "playbooks".
+ */
+export interface Playbook {
+  id: number;
+  name: string;
+  /**
+   * Leave empty for every kind.
+   */
+  kinds?: ('pms' | 'aif' | 'support' | 'general')[] | null;
+  /**
+   * Leave empty for every severity.
+   */
+  severities?: ('low' | 'normal' | 'high' | 'critical')[] | null;
+  responseHours: number;
+  /**
+   * Lower wins when several match.
+   */
+  order: number;
+  handlerRoles?: ('admin' | 'editor' | 'compliance' | 'sales' | 'hr' | 'operations')[] | null;
+  steps?:
+    | {
+        step: string;
+        id?: string | null;
+      }[]
+    | null;
+  template?: (number | null) | EmailTemplate;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "email-templates".
+ */
+export interface EmailTemplate {
+  id: number;
+  name: string;
+  purpose:
+    | 'enquiry_ack'
+    | 'enquiry_reply'
+    | 'follow_up'
+    | 'application_ack'
+    | 'application_reject'
+    | 'interview_invite'
+    | 'offer'
+    | 'other';
+  subject: string;
+  design?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  html?: string | null;
+  body?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "investors".
  */
@@ -363,6 +630,258 @@ export interface AuditLog {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "enquiries".
+ */
+export interface Enquiry {
+  id: number;
+  title: string;
+  contact: number | Contact;
+  kind: 'pms' | 'aif' | 'support' | 'general';
+  status: 'new' | 'open' | 'waiting' | 'converted' | 'closed' | 'spam';
+  severity: 'low' | 'normal' | 'high' | 'critical';
+  message?: string | null;
+  /**
+   * Every field the visitor filled in, by the form's field name.
+   */
+  answers?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  /**
+   * Why it has this severity: the rules that fired, and the AI's answers when AI triage is on.
+   */
+  triage?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  receivedAt: string;
+  /**
+   * When the first reply is due, from the playbook.
+   */
+  dueAt?: string | null;
+  firstResponseAt?: string | null;
+  assignee?: (number | null) | User;
+  claimedAt?: string | null;
+  playbook?: (number | null) | Playbook;
+  deal?: (number | null) | Deal;
+  closingNote?: string | null;
+  /**
+   * Where it came from.
+   */
+  origin?: {
+    page?: string | null;
+    visitorId?: string | null;
+    utm?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    ipHash?: string | null;
+  };
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "contacts".
+ */
+export interface Contact {
+  id: number;
+  name: string;
+  email?: string | null;
+  phone?: string | null;
+  city?: string | null;
+  kind: 'prospect' | 'investor' | 'distributor' | 'other';
+  source?: ('website' | 'offline' | 'referral' | 'distributor' | 'import' | 'portal') | null;
+  /**
+   * The family, HUF, company or trust the money comes from, if not the person themselves.
+   */
+  entity?: (number | null) | Entity;
+  owner?: (number | null) | User;
+  /**
+   * The distributor or investor who sent them.
+   */
+  referredBy?: (number | null) | Contact;
+  /**
+   * Their client portal account, once they invest.
+   */
+  investor?: (number | null) | Investor;
+  tags?: string[] | null;
+  /**
+   * Mailings this person agreed to receive. Broadcasts only go to people who chose the broadcast's topic.
+   */
+  topics?: ('factsheet' | 'insights' | 'events')[] | null;
+  /**
+   * When and where they agreed, and the wording they saw (DPDP Rules 2025).
+   */
+  consent?: {
+    at?: string | null;
+    source?: string | null;
+    wording?: string | null;
+  };
+  /**
+   * Set when they leave every mailing. No broadcast reaches them after this.
+   */
+  unsubscribedAt?: string | null;
+  lastActivityAt?: string | null;
+  visitorIds?: string[] | null;
+  enquiries?: {
+    docs?: (number | Enquiry)[];
+    hasNextPage?: boolean;
+    totalDocs?: number;
+  };
+  deals?: {
+    docs?: (number | Deal)[];
+    hasNextPage?: boolean;
+    totalDocs?: number;
+  };
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "entities".
+ */
+export interface Entity {
+  id: number;
+  name: string;
+  type: 'individual' | 'huf' | 'family_office' | 'company' | 'trust' | 'other';
+  people?: {
+    docs?: (number | Contact)[];
+    hasNextPage?: boolean;
+    totalDocs?: number;
+  };
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "deals".
+ */
+export interface Deal {
+  id: number;
+  title: string;
+  contact: number | Contact;
+  entity?: (number | null) | Entity;
+  product: number | Product;
+  stage: 'enquiry' | 'contacted' | 'meeting' | 'documents' | 'onboarding' | 'invested' | 'lost';
+  ticketSize?: number | null;
+  expectedClose?: string | null;
+  lostReason?: string | null;
+  owner?: (number | null) | User;
+  enquiry?: (number | null) | Enquiry;
+  stageChangedAt?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "activities".
+ */
+export interface Activity {
+  id: number;
+  contact: number | Contact;
+  type:
+    | 'form'
+    | 'email_out'
+    | 'email_in'
+    | 'email_event'
+    | 'call'
+    | 'meeting'
+    | 'note'
+    | 'page_view'
+    | 'stage'
+    | 'task'
+    | 'system';
+  at: string;
+  summary: string;
+  body?: string | null;
+  enquiry?: (number | null) | Enquiry;
+  deal?: (number | null) | Deal;
+  email?: (number | null) | Email;
+  actor?: (number | null) | User;
+  meta?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "emails".
+ */
+export interface Email {
+  id: number;
+  direction: 'out' | 'in';
+  status:
+    | 'queued'
+    | 'logged'
+    | 'sent'
+    | 'delivered'
+    | 'opened'
+    | 'clicked'
+    | 'bounced'
+    | 'complained'
+    | 'failed'
+    | 'received';
+  from: string;
+  to: string;
+  subject: string;
+  text?: string | null;
+  contact?: (number | null) | Contact;
+  enquiry?: (number | null) | Enquiry;
+  sentBy?: (number | null) | User;
+  inReplyTo?: (number | null) | Email;
+  resendId?: string | null;
+  events?:
+    | {
+        type: string;
+        at: string;
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "tasks".
+ */
+export interface Task {
+  id: number;
+  title: string;
+  dueAt: string;
+  owner: number | User;
+  contact?: (number | null) | Contact;
+  enquiry?: (number | null) | Enquiry;
+  deal?: (number | null) | Deal;
+  doneAt?: string | null;
+  doneBy?: (number | null) | User;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "login-challenges".
  */
 export interface LoginChallenge {
@@ -415,6 +934,34 @@ export interface PayloadLockedDocument {
         value: number | Metric;
       } | null)
     | ({
+        relationTo: 'media';
+        value: number | Media;
+      } | null)
+    | ({
+        relationTo: 'team-members';
+        value: number | TeamMember;
+      } | null)
+    | ({
+        relationTo: 'documents';
+        value: number | Document;
+      } | null)
+    | ({
+        relationTo: 'case-studies';
+        value: number | CaseStudy;
+      } | null)
+    | ({
+        relationTo: 'openings';
+        value: number | Opening;
+      } | null)
+    | ({
+        relationTo: 'playbooks';
+        value: number | Playbook;
+      } | null)
+    | ({
+        relationTo: 'email-templates';
+        value: number | EmailTemplate;
+      } | null)
+    | ({
         relationTo: 'investors';
         value: number | Investor;
       } | null)
@@ -427,8 +974,32 @@ export interface PayloadLockedDocument {
         value: number | AuditLog;
       } | null)
     | ({
-        relationTo: 'media';
-        value: number | Media;
+        relationTo: 'enquiries';
+        value: number | Enquiry;
+      } | null)
+    | ({
+        relationTo: 'contacts';
+        value: number | Contact;
+      } | null)
+    | ({
+        relationTo: 'entities';
+        value: number | Entity;
+      } | null)
+    | ({
+        relationTo: 'deals';
+        value: number | Deal;
+      } | null)
+    | ({
+        relationTo: 'activities';
+        value: number | Activity;
+      } | null)
+    | ({
+        relationTo: 'tasks';
+        value: number | Task;
+      } | null)
+    | ({
+        relationTo: 'emails';
+        value: number | Email;
       } | null)
     | ({
         relationTo: 'login-challenges';
@@ -518,6 +1089,7 @@ export interface FactSheetsSelect<T extends boolean = true> {
       };
   pdf?: T;
   correctionReason?: T;
+  reviewNote?: T;
   submittedBy?: T;
   submittedAt?: T;
   approvedBy?: T;
@@ -549,6 +1121,142 @@ export interface MetricsSelect<T extends boolean = true> {
   key?: T;
   value?: T;
   unit?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "media_select".
+ */
+export interface MediaSelect<T extends boolean = true> {
+  alt?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  url?: T;
+  thumbnailURL?: T;
+  filename?: T;
+  mimeType?: T;
+  filesize?: T;
+  width?: T;
+  height?: T;
+  focalX?: T;
+  focalY?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "team-members_select".
+ */
+export interface TeamMembersSelect<T extends boolean = true> {
+  _order?: T;
+  name?: T;
+  role?: T;
+  photo?: T;
+  photoPath?: T;
+  linkedin?: T;
+  points?:
+    | T
+    | {
+        point?: T;
+        id?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "documents_select".
+ */
+export interface DocumentsSelect<T extends boolean = true> {
+  _order?: T;
+  title?: T;
+  group?: T;
+  file?: T;
+  link?: T;
+  date?: T;
+  drawing?: T;
+  anchor?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "case-studies_select".
+ */
+export interface CaseStudiesSelect<T extends boolean = true> {
+  _order?: T;
+  name?: T;
+  mark?: T;
+  drawing?: T;
+  business?: T;
+  edge?: T;
+  growth?: T;
+  financials?:
+    | T
+    | {
+        year?: T;
+        revenue?: T;
+        ebitda?: T;
+        pat?: T;
+        id?: T;
+      };
+  anchor?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "openings_select".
+ */
+export interface OpeningsSelect<T extends boolean = true> {
+  _order?: T;
+  title?: T;
+  status?: T;
+  team?: T;
+  location?: T;
+  employment?: T;
+  summary?: T;
+  responsibilities?:
+    | T
+    | {
+        line?: T;
+        id?: T;
+      };
+  anchor?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "playbooks_select".
+ */
+export interface PlaybooksSelect<T extends boolean = true> {
+  name?: T;
+  kinds?: T;
+  severities?: T;
+  responseHours?: T;
+  order?: T;
+  handlerRoles?: T;
+  steps?:
+    | T
+    | {
+        step?: T;
+        id?: T;
+      };
+  template?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "email-templates_select".
+ */
+export interface EmailTemplatesSelect<T extends boolean = true> {
+  name?: T;
+  purpose?: T;
+  subject?: T;
+  design?: T;
+  html?: T;
+  body?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -625,21 +1333,157 @@ export interface AuditLogSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "media_select".
+ * via the `definition` "enquiries_select".
  */
-export interface MediaSelect<T extends boolean = true> {
-  alt?: T;
+export interface EnquiriesSelect<T extends boolean = true> {
+  title?: T;
+  contact?: T;
+  kind?: T;
+  status?: T;
+  severity?: T;
+  message?: T;
+  answers?: T;
+  triage?: T;
+  receivedAt?: T;
+  dueAt?: T;
+  firstResponseAt?: T;
+  assignee?: T;
+  claimedAt?: T;
+  playbook?: T;
+  deal?: T;
+  closingNote?: T;
+  origin?:
+    | T
+    | {
+        page?: T;
+        visitorId?: T;
+        utm?: T;
+        ipHash?: T;
+      };
   updatedAt?: T;
   createdAt?: T;
-  url?: T;
-  thumbnailURL?: T;
-  filename?: T;
-  mimeType?: T;
-  filesize?: T;
-  width?: T;
-  height?: T;
-  focalX?: T;
-  focalY?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "contacts_select".
+ */
+export interface ContactsSelect<T extends boolean = true> {
+  name?: T;
+  email?: T;
+  phone?: T;
+  city?: T;
+  kind?: T;
+  source?: T;
+  entity?: T;
+  owner?: T;
+  referredBy?: T;
+  investor?: T;
+  tags?: T;
+  topics?: T;
+  consent?:
+    | T
+    | {
+        at?: T;
+        source?: T;
+        wording?: T;
+      };
+  unsubscribedAt?: T;
+  lastActivityAt?: T;
+  visitorIds?: T;
+  enquiries?: T;
+  deals?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "entities_select".
+ */
+export interface EntitiesSelect<T extends boolean = true> {
+  name?: T;
+  type?: T;
+  people?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "deals_select".
+ */
+export interface DealsSelect<T extends boolean = true> {
+  title?: T;
+  contact?: T;
+  entity?: T;
+  product?: T;
+  stage?: T;
+  ticketSize?: T;
+  expectedClose?: T;
+  lostReason?: T;
+  owner?: T;
+  enquiry?: T;
+  stageChangedAt?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "activities_select".
+ */
+export interface ActivitiesSelect<T extends boolean = true> {
+  contact?: T;
+  type?: T;
+  at?: T;
+  summary?: T;
+  body?: T;
+  enquiry?: T;
+  deal?: T;
+  email?: T;
+  actor?: T;
+  meta?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "tasks_select".
+ */
+export interface TasksSelect<T extends boolean = true> {
+  title?: T;
+  dueAt?: T;
+  owner?: T;
+  contact?: T;
+  enquiry?: T;
+  deal?: T;
+  doneAt?: T;
+  doneBy?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "emails_select".
+ */
+export interface EmailsSelect<T extends boolean = true> {
+  direction?: T;
+  status?: T;
+  from?: T;
+  to?: T;
+  subject?: T;
+  text?: T;
+  contact?: T;
+  enquiry?: T;
+  sentBy?: T;
+  inReplyTo?: T;
+  resendId?: T;
+  events?:
+    | T
+    | {
+        type?: T;
+        at?: T;
+        id?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -696,6 +1540,2454 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
   batch?: T;
   updatedAt?: T;
   createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "home-page".
+ */
+export interface HomePage {
+  id: number;
+  sections?:
+    | (SectionHero | SectionRecord | SectionTwoWays | SectionFounder | SectionGetStarted | SectionFaq | SectionText)[]
+    | null;
+  _status?: ('draft' | 'published') | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SectionHero".
+ */
+export interface SectionHero {
+  /**
+   * The section stays here, and greyed out in the preview, until you show it again.
+   */
+  hidden?: boolean | null;
+  heading: string;
+  introduction?: string | null;
+  primary?: {
+    label?: string | null;
+    /**
+     * A page here, like /pms, or a full web address.
+     */
+    link?: string | null;
+  };
+  secondary?: {
+    label?: string | null;
+    /**
+     * A page here, like /pms, or a full web address.
+     */
+    link?: string | null;
+  };
+  /**
+   * Words in braces print the latest fact sheet's figures: {sinceInception} is Moneybee PMS's yearly return since inception; {benchmarkSinceInception} is the benchmark's yearly return since inception; {wealthOurs} is what Rs. 1 Mn in Moneybee PMS grew to; {wealthBenchmark} is what Rs. 1 Mn in the benchmark grew to; {asOfMonth} is the month the figures run to; {asOfDay} is the day the figures run to, such as 31 July 2026.
+   */
+  figures?:
+    | {
+        figure: string;
+        label: string;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'hero';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SectionRecord".
+ */
+export interface SectionRecord {
+  /**
+   * The section stays here, and greyed out in the preview, until you show it again.
+   */
+  hidden?: boolean | null;
+  eyebrow?: string | null;
+  heading: string;
+  /**
+   * It states returns, so only compliance can change it. Words in braces print the latest fact sheet's figures: {sinceInception} is Moneybee PMS's yearly return since inception; {benchmarkSinceInception} is the benchmark's yearly return since inception; {wealthOurs} is what Rs. 1 Mn in Moneybee PMS grew to; {wealthBenchmark} is what Rs. 1 Mn in the benchmark grew to; {asOfMonth} is the month the figures run to; {asOfDay} is the day the figures run to, such as 31 July 2026.
+   */
+  lead?: string | null;
+  more?: {
+    label?: string | null;
+    /**
+     * A page here, like /pms, or a full web address.
+     */
+    link?: string | null;
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'record';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SectionTwoWays".
+ */
+export interface SectionTwoWays {
+  /**
+   * The section stays here, and greyed out in the preview, until you show it again.
+   */
+  hidden?: boolean | null;
+  heading: string;
+  button: string;
+  /**
+   * Always two cards of the same size, so PMS and the AIF carry equal weight.
+   */
+  ways?:
+    | {
+        kind: 'pms' | 'aif';
+        link: string;
+        label: string;
+        name: string;
+        lead?: string | null;
+        facts?:
+          | {
+              fact: string;
+              id?: string | null;
+            }[]
+          | null;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'twoWays';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SectionFounder".
+ */
+export interface SectionFounder {
+  /**
+   * The section stays here, and greyed out in the preview, until you show it again.
+   */
+  hidden?: boolean | null;
+  label?: string | null;
+  quote: string;
+  /**
+   * Leave empty to keep the current portrait.
+   */
+  photo?: (number | null) | Media;
+  name: string;
+  credentials?: string | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'founder';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SectionGetStarted".
+ */
+export interface SectionGetStarted {
+  /**
+   * The section stays here, and greyed out in the preview, until you show it again.
+   */
+  hidden?: boolean | null;
+  /**
+   * The four cards are the enquiry choices on the Contact page, and the phone and email are the office's.
+   */
+  heading: string;
+  linkLabel: string;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'getStarted';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SectionFaq".
+ */
+export interface SectionFaq {
+  /**
+   * The section stays here, and greyed out in the preview, until you show it again.
+   */
+  hidden?: boolean | null;
+  label?: string | null;
+  heading: string;
+  questions?:
+    | {
+        question: string;
+        answer: string;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'faq';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SectionText".
+ */
+export interface SectionText {
+  /**
+   * The section stays here, and greyed out in the preview, until you show it again.
+   */
+  hidden?: boolean | null;
+  label?: string | null;
+  heading: string;
+  /**
+   * Leave an empty line between paragraphs.
+   */
+  body?: string | null;
+  action?: {
+    label?: string | null;
+    /**
+     * A page here, like /pms, or a full web address.
+     */
+    link?: string | null;
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'text';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "pms-page".
+ */
+export interface PmsPage {
+  id: number;
+  sections?:
+    | (
+        | SectionProductHero
+        | SectionPmsPerformance
+        | SectionWealthGrowth
+        | SectionWhyPms
+        | SectionPhilosophy
+        | SectionSelection
+        | SectionPortfolioApproach
+        | SectionRisks
+        | SectionClosingDoors
+        | SectionFaq
+        | SectionText
+      )[]
+    | null;
+  _status?: ('draft' | 'published') | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SectionProductHero".
+ */
+export interface SectionProductHero {
+  /**
+   * The section stays here, and greyed out in the preview, until you show it again.
+   */
+  hidden?: boolean | null;
+  title1: string;
+  /**
+   * Set in a step to the right. Leave empty for one line.
+   */
+  title2?: string | null;
+  sentence: string;
+  mark: 'pms' | 'aif' | 'compare' | 'approach' | 'picks' | 'cases' | 'careers' | 'contact' | 'investor';
+  actions?:
+    | {
+        label: string;
+        link: string;
+        outline?: boolean | null;
+        id?: string | null;
+      }[]
+    | null;
+  figures?:
+    | {
+        label: string;
+        value: string;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'productHero';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SectionPmsPerformance".
+ */
+export interface SectionPmsPerformance {
+  /**
+   * The section stays here, and greyed out in the preview, until you show it again.
+   */
+  hidden?: boolean | null;
+  label?: string | null;
+  heading: string;
+  lead?: string | null;
+  note?: string | null;
+  /**
+   * How the returns are worked out and the disclaimer SEBI requires beside them. Only compliance can change it. Words in braces print the latest fact sheet's figures: {sinceInception} is Moneybee PMS's yearly return since inception; {benchmarkSinceInception} is the benchmark's yearly return since inception; {wealthOurs} is what Rs. 1 Mn in Moneybee PMS grew to; {wealthBenchmark} is what Rs. 1 Mn in the benchmark grew to; {asOfMonth} is the month the figures run to; {asOfDay} is the day the figures run to, such as 31 July 2026.
+   */
+  method?: string | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'pmsPerformance';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SectionWealthGrowth".
+ */
+export interface SectionWealthGrowth {
+  /**
+   * The section stays here, and greyed out in the preview, until you show it again.
+   */
+  hidden?: boolean | null;
+  label?: string | null;
+  heading: string;
+  lead?: string | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'wealthGrowth';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SectionWhyPms".
+ */
+export interface SectionWhyPms {
+  /**
+   * The section stays here, and greyed out in the preview, until you show it again.
+   */
+  hidden?: boolean | null;
+  label?: string | null;
+  heading: string;
+  intro?: string | null;
+  /**
+   * Each point shows its drawing and line as it scrolls past.
+   */
+  points?:
+    | {
+        name: string;
+        drawing: 'research' | 'size' | 'concentrated' | 'management' | 'longterm' | 'riskreward' | 'overlooked';
+        line?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'whyPms';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SectionPhilosophy".
+ */
+export interface SectionPhilosophy {
+  /**
+   * The section stays here, and greyed out in the preview, until you show it again.
+   */
+  hidden?: boolean | null;
+  label?: string | null;
+  heading: string;
+  /**
+   * Each sits over its own drawing, in this order. A word starting Un or Under- has that part set upright and the rest in italic.
+   */
+  words?:
+    | {
+        word: string;
+        id?: string | null;
+      }[]
+    | null;
+  points?:
+    | {
+        point: string;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'philosophy';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SectionSelection".
+ */
+export interface SectionSelection {
+  /**
+   * The section stays here, and greyed out in the preview, until you show it again.
+   */
+  hidden?: boolean | null;
+  label?: string | null;
+  heading: string;
+  /**
+   * Always four: the drawing narrows the lines once at each step.
+   */
+  steps?:
+    | {
+        name: string;
+        text?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'selection';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SectionPortfolioApproach".
+ */
+export interface SectionPortfolioApproach {
+  /**
+   * The section stays here, and greyed out in the preview, until you show it again.
+   */
+  hidden?: boolean | null;
+  heading: string;
+  /**
+   * The ring lights this share.
+   */
+  sectorCap: number;
+  sectorLine: string;
+  holdingsFrom: number;
+  holdingsTo: number;
+  holdingsLine: string;
+  rules?:
+    | {
+        rule: string;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'portfolioApproach';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SectionRisks".
+ */
+export interface SectionRisks {
+  /**
+   * The section stays here, and greyed out in the preview, until you show it again.
+   */
+  hidden?: boolean | null;
+  label?: string | null;
+  heading: string;
+  /**
+   * Always four, one per block of the drawing, from the bottom block up.
+   */
+  risks?:
+    | {
+        name: string;
+        text?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'risks';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SectionClosingDoors".
+ */
+export interface SectionClosingDoors {
+  /**
+   * The section stays here, and greyed out in the preview, until you show it again.
+   */
+  hidden?: boolean | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'closingDoors';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "aif-page".
+ */
+export interface AifPage {
+  id: number;
+  sections?:
+    | (
+        | SectionProductHero
+        | SectionAifPerformance
+        | SectionOpportunity
+        | SectionPooling
+        | SectionStructure
+        | SectionApproachWheel
+        | SectionKeyTerms
+        | SectionClosingDoors
+        | SectionFaq
+        | SectionText
+      )[]
+    | null;
+  _status?: ('draft' | 'published') | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SectionAifPerformance".
+ */
+export interface SectionAifPerformance {
+  /**
+   * The section stays here, and greyed out in the preview, until you show it again.
+   */
+  hidden?: boolean | null;
+  label?: string | null;
+  heading: string;
+  lead?: string | null;
+  method?: string | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'aifPerformance';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SectionOpportunity".
+ */
+export interface SectionOpportunity {
+  /**
+   * The section stays here, and greyed out in the preview, until you show it again.
+   */
+  hidden?: boolean | null;
+  label?: string | null;
+  heading: string;
+  lead?: string | null;
+  /**
+   * The figure climbs them bottom to top. The tax line is a regulatory statement: check it against the approved fund documents.
+   */
+  steps?:
+    | {
+        title: string;
+        text: string;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'opportunity';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SectionPooling".
+ */
+export interface SectionPooling {
+  /**
+   * The section stays here, and greyed out in the preview, until you show it again.
+   */
+  hidden?: boolean | null;
+  label?: string | null;
+  heading: string;
+  text: string;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'pooling';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SectionStructure".
+ */
+export interface SectionStructure {
+  /**
+   * The section stays here, and greyed out in the preview, until you show it again.
+   */
+  hidden?: boolean | null;
+  label?: string | null;
+  heading: string;
+  investors: string;
+  fund: string;
+  manager: string;
+  parties?:
+    | {
+        name: string;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'structure';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SectionApproachWheel".
+ */
+export interface SectionApproachWheel {
+  /**
+   * The section stays here, and greyed out in the preview, until you show it again.
+   */
+  hidden?: boolean | null;
+  label?: string | null;
+  heading: string;
+  /**
+   * One wedge of the wheel each, lit in turn as the reader scrolls.
+   */
+  steps?:
+    | {
+        step: string;
+        id?: string | null;
+      }[]
+    | null;
+  line?: string | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'approachWheel';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SectionKeyTerms".
+ */
+export interface SectionKeyTerms {
+  /**
+   * The section stays here, and greyed out in the preview, until you show it again.
+   */
+  hidden?: boolean | null;
+  label?: string | null;
+  heading: string;
+  button?: {
+    label?: string | null;
+    /**
+     * A page here, like /pms, or a full web address.
+     */
+    link?: string | null;
+  };
+  /**
+   * Check every term against the approved fund documents.
+   */
+  terms?:
+    | {
+        label: string;
+        value: string;
+        drawing: 'minimum' | 'horizon' | 'universe' | 'benchmark' | 'exit';
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'keyTerms';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "pms-vs-aif-page".
+ */
+export interface PmsVsAifPage {
+  id: number;
+  sections?:
+    | (SectionProductHero | SectionComparison | SectionExplanation | SectionClosingDoors | SectionFaq | SectionText)[]
+    | null;
+  _status?: ('draft' | 'published') | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SectionComparison".
+ */
+export interface SectionComparison {
+  /**
+   * The section stays here, and greyed out in the preview, until you show it again.
+   */
+  hidden?: boolean | null;
+  label?: string | null;
+  heading: string;
+  rows?:
+    | {
+        pms: string;
+        aif: string;
+        drawing: 'holding' | 'money' | 'structure' | 'product' | 'account';
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Drawn the same, so neither product leads.
+   */
+  links?:
+    | {
+        label: string;
+        link: string;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'comparison';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SectionExplanation".
+ */
+export interface SectionExplanation {
+  /**
+   * The section stays here, and greyed out in the preview, until you show it again.
+   */
+  hidden?: boolean | null;
+  label?: string | null;
+  heading: string;
+  pms: string;
+  aif: string;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'explanation';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "our-philosophy-page".
+ */
+export interface OurPhilosophyPage {
+  id: number;
+  sections?:
+    | (
+        | SectionProductHero
+        | SectionCoreDiscs
+        | SectionPrinciples
+        | SectionCriteria
+        | SectionRiskRings
+        | SectionClosingDoors
+        | SectionFaq
+        | SectionText
+      )[]
+    | null;
+  _status?: ('draft' | 'published') | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SectionCoreDiscs".
+ */
+export interface SectionCoreDiscs {
+  /**
+   * The section stays here, and greyed out in the preview, until you show it again.
+   */
+  hidden?: boolean | null;
+  heading: string;
+  lead?: string | null;
+  /**
+   * One under each disc, smallest first.
+   */
+  stages?:
+    | {
+        word: string;
+        text?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'coreDiscs';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SectionPrinciples".
+ */
+export interface SectionPrinciples {
+  /**
+   * The section stays here, and greyed out in the preview, until you show it again.
+   */
+  hidden?: boolean | null;
+  label?: string | null;
+  heading: string;
+  /**
+   * Each lights up as its column turns to the front: the first three on the left, the rest on the right.
+   */
+  principles?:
+    | {
+        name: string;
+        text: string;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'principles';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SectionCriteria".
+ */
+export interface SectionCriteria {
+  /**
+   * The section stays here, and greyed out in the preview, until you show it again.
+   */
+  hidden?: boolean | null;
+  lookForHeading: string;
+  dontDoHeading: string;
+  lookFor?:
+    | {
+        item: string;
+        id?: string | null;
+      }[]
+    | null;
+  dontDo?:
+    | {
+        item: string;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'criteria';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SectionRiskRings".
+ */
+export interface SectionRiskRings {
+  /**
+   * The section stays here, and greyed out in the preview, until you show it again.
+   */
+  hidden?: boolean | null;
+  heading: string;
+  /**
+   * One ring round the portfolio for each risk.
+   */
+  risks?:
+    | {
+        name: string;
+        text?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'riskRings';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "about-page".
+ */
+export interface AboutPage {
+  id: number;
+  sections?:
+    | (
+        | SectionAboutHero
+        | SectionFounderProfile
+        | SectionTeamCarousel
+        | SectionGroupAreas
+        | SectionRecognition
+        | SectionTimeline
+        | SectionStory
+        | SectionClosingDoors
+        | SectionFaq
+        | SectionText
+      )[]
+    | null;
+  _status?: ('draft' | 'published') | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SectionAboutHero".
+ */
+export interface SectionAboutHero {
+  /**
+   * The section stays here, and greyed out in the preview, until you show it again.
+   */
+  hidden?: boolean | null;
+  label?: string | null;
+  heading: string;
+  paragraphs?:
+    | {
+        paragraph: string;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Leave empty to keep the team photograph.
+   */
+  photo?: (number | null) | Media;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'aboutHero';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SectionFounderProfile".
+ */
+export interface SectionFounderProfile {
+  /**
+   * The section stays here, and greyed out in the preview, until you show it again.
+   */
+  hidden?: boolean | null;
+  label?: string | null;
+  name: string;
+  role?: string | null;
+  /**
+   * Leave empty to keep the current portrait.
+   */
+  photo?: (number | null) | Media;
+  /**
+   * Shown as small pills. Remove them all to show none.
+   */
+  qualifications?:
+    | {
+        qualification: string;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Leave empty to hide the number.
+   */
+  years?: number | null;
+  yearsLabel?: string | null;
+  points?:
+    | {
+        point: string;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'founderProfile';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SectionTeamCarousel".
+ */
+export interface SectionTeamCarousel {
+  /**
+   * The section stays here, and greyed out in the preview, until you show it again.
+   */
+  hidden?: boolean | null;
+  heading: string;
+  buttonLabel?: string | null;
+  buttonLink?: string | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'teamCarousel';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SectionGroupAreas".
+ */
+export interface SectionGroupAreas {
+  /**
+   * The section stays here, and greyed out in the preview, until you show it again.
+   */
+  hidden?: boolean | null;
+  label?: string | null;
+  /**
+   * Each keeps its drawing, in this order: portfolios, broking, advisory, depository.
+   */
+  areas?:
+    | {
+        name: string;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'groupAreas';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SectionRecognition".
+ */
+export interface SectionRecognition {
+  /**
+   * The section stays here, and greyed out in the preview, until you show it again.
+   */
+  hidden?: boolean | null;
+  label?: string | null;
+  heading: string;
+  asOf?: string | null;
+  note?: string | null;
+  /**
+   * Each list as PMS Bazaar published it: its top returns in order, and which of them is Moneybee's. Only compliance can change these.
+   */
+  tables?:
+    | {
+        rank: string;
+        period: string;
+        ours: number;
+        returns?:
+          | {
+              value: number;
+              id?: string | null;
+            }[]
+          | null;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'recognition';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SectionTimeline".
+ */
+export interface SectionTimeline {
+  /**
+   * The section stays here, and greyed out in the preview, until you show it again.
+   */
+  hidden?: boolean | null;
+  label?: string | null;
+  stops?:
+    | {
+        label: string;
+        text: string;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'timeline';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SectionStory".
+ */
+export interface SectionStory {
+  /**
+   * The section stays here, and greyed out in the preview, until you show it again.
+   */
+  hidden?: boolean | null;
+  heading: string;
+  line: string;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'story';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "case-studies-page".
+ */
+export interface CaseStudiesPage {
+  id: number;
+  sections?:
+    | (SectionProductHero | SectionCaseStudies | SectionCaseTimeline | SectionClosingDoors | SectionFaq | SectionText)[]
+    | null;
+  _status?: ('draft' | 'published') | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SectionCaseStudies".
+ */
+export interface SectionCaseStudies {
+  /**
+   * The section stays here, and greyed out in the preview, until you show it again.
+   */
+  hidden?: boolean | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'caseStudies';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SectionCaseTimeline".
+ */
+export interface SectionCaseTimeline {
+  /**
+   * The section stays here, and greyed out in the preview, until you show it again.
+   */
+  hidden?: boolean | null;
+  label?: string | null;
+  heading: string;
+  lead?: string | null;
+  disclaimer?: string | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'caseTimeline';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "picks-page".
+ */
+export interface PicksPage {
+  id: number;
+  sections?: (SectionProductHero | SectionPicks | SectionClosingDoors | SectionFaq | SectionText)[] | null;
+  _status?: ('draft' | 'published') | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SectionPicks".
+ */
+export interface SectionPicks {
+  /**
+   * The section stays here, and greyed out in the preview, until you show it again.
+   */
+  hidden?: boolean | null;
+  label: string;
+  heading?: string | null;
+  /**
+   * One per step of the pyramid. Named stocks read as recommendations, so only compliance changes these.
+   */
+  tiers?:
+    | {
+        multiple: string;
+        /**
+         * Shown when no stocks are named, e.g. More than 10 stocks.
+         */
+        countLine?: string | null;
+        picks?:
+          | {
+              name: string;
+              business?: string | null;
+              edge?: string | null;
+              growth?: string | null;
+              financials?:
+                | {
+                    year: string;
+                    revenue: number;
+                    profit: number;
+                    id?: string | null;
+                  }[]
+                | null;
+              id?: string | null;
+            }[]
+          | null;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'picks';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "investor-centre-page".
+ */
+export interface InvestorCentrePage {
+  id: number;
+  sections?: (SectionLogins | SectionDocumentCards | SectionClosingDoors | SectionFaq | SectionText)[] | null;
+  _status?: ('draft' | 'published') | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SectionLogins".
+ */
+export interface SectionLogins {
+  /**
+   * The section stays here, and greyed out in the preview, until you show it again.
+   */
+  hidden?: boolean | null;
+  heading: string;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'logins';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SectionDocumentCards".
+ */
+export interface SectionDocumentCards {
+  /**
+   * The section stays here, and greyed out in the preview, until you show it again.
+   */
+  hidden?: boolean | null;
+  heading: string;
+  lead?: string | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'documentCards';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "contact-page".
+ */
+export interface ContactPage {
+  id: number;
+  sections?: (SectionEnquiry | SectionOffice | SectionFaq | SectionText)[] | null;
+  _status?: ('draft' | 'published') | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SectionEnquiry".
+ */
+export interface SectionEnquiry {
+  /**
+   * The section stays here, and greyed out in the preview, until you show it again.
+   */
+  hidden?: boolean | null;
+  label?: string | null;
+  heading: string;
+  desksLabel?: string | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'enquiry';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SectionOffice".
+ */
+export interface SectionOffice {
+  /**
+   * The section stays here, and greyed out in the preview, until you show it again.
+   */
+  hidden?: boolean | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'office';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "careers-page".
+ */
+export interface CareersPage {
+  id: number;
+  sections?:
+    | (SectionCareersIntro | SectionJobBoard | SectionCareersOffice | SectionCareersResume | SectionFaq | SectionText)[]
+    | null;
+  _status?: ('draft' | 'published') | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SectionCareersIntro".
+ */
+export interface SectionCareersIntro {
+  /**
+   * The section stays here, and greyed out in the preview, until you show it again.
+   */
+  hidden?: boolean | null;
+  label?: string | null;
+  heading: string;
+  lead?: string | null;
+  buttonLabel?: string | null;
+  /**
+   * Emails the main address in Office details.
+   */
+  resumeLabel?: string | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'careersIntro';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SectionJobBoard".
+ */
+export interface SectionJobBoard {
+  /**
+   * The section stays here, and greyed out in the preview, until you show it again.
+   */
+  hidden?: boolean | null;
+  heading: string;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'jobBoard';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SectionCareersOffice".
+ */
+export interface SectionCareersOffice {
+  /**
+   * The section stays here, and greyed out in the preview, until you show it again.
+   */
+  hidden?: boolean | null;
+  heading: string;
+  /**
+   * Leave empty to keep the boardroom photograph.
+   */
+  photo?: (number | null) | Media;
+  caption?: string | null;
+  text?: string | null;
+  detail?: string | null;
+  linkLabel?: string | null;
+  link?: string | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'careersOffice';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SectionCareersResume".
+ */
+export interface SectionCareersResume {
+  /**
+   * The section stays here, and greyed out in the preview, until you show it again.
+   */
+  hidden?: boolean | null;
+  heading: string;
+  text?: string | null;
+  /**
+   * Emails the main address in Office details.
+   */
+  buttonLabel: string;
+  note?: string | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'careersResume';
+}
+/**
+ * Shown in the footer of every page, on the Contact page and on the Home page. Saving puts changes live.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "site-details".
+ */
+export interface SiteDetail {
+  id: number;
+  /**
+   * The legal name, in the footer.
+   */
+  company: string;
+  /**
+   * On the Contact page.
+   */
+  officeName: string;
+  address: {
+    line1: string;
+    line2: string;
+  };
+  pin: {
+    lat: number;
+    lon: number;
+  };
+  /**
+   * The first is the main line, shown wherever there is room for one number.
+   */
+  phones?:
+    | {
+        label: string;
+        /**
+         * As people should see it, e.g. 022-4030 2080.
+         */
+        number: string;
+        id?: string | null;
+      }[]
+    | null;
+  email: string;
+  /**
+   * In the footer and on the Contact page.
+   */
+  desks?:
+    | {
+        label: string;
+        email: string;
+        id?: string | null;
+      }[]
+    | null;
+  registrations?:
+    | {
+        business: string;
+        number: string;
+        id?: string | null;
+      }[]
+    | null;
+  disclaimer: string;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "crm-settings".
+ */
+export interface CrmSetting {
+  id: number;
+  responseHours: {
+    critical: number;
+    high: number;
+    normal: number;
+    low: number;
+  };
+  acknowledge?: boolean | null;
+  /**
+   * Only used while the matching AI flag is on.
+   */
+  ai: {
+    triageConfidence: number;
+    complianceBlock: number;
+  };
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "home-page_select".
+ */
+export interface HomePageSelect<T extends boolean = true> {
+  sections?:
+    | T
+    | {
+        hero?: T | SectionHeroSelect<T>;
+        record?: T | SectionRecordSelect<T>;
+        twoWays?: T | SectionTwoWaysSelect<T>;
+        founder?: T | SectionFounderSelect<T>;
+        getStarted?: T | SectionGetStartedSelect<T>;
+        faq?: T | SectionFaqSelect<T>;
+        text?: T | SectionTextSelect<T>;
+      };
+  _status?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SectionHero_select".
+ */
+export interface SectionHeroSelect<T extends boolean = true> {
+  hidden?: T;
+  heading?: T;
+  introduction?: T;
+  primary?:
+    | T
+    | {
+        label?: T;
+        link?: T;
+      };
+  secondary?:
+    | T
+    | {
+        label?: T;
+        link?: T;
+      };
+  figures?:
+    | T
+    | {
+        figure?: T;
+        label?: T;
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SectionRecord_select".
+ */
+export interface SectionRecordSelect<T extends boolean = true> {
+  hidden?: T;
+  eyebrow?: T;
+  heading?: T;
+  lead?: T;
+  more?:
+    | T
+    | {
+        label?: T;
+        link?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SectionTwoWays_select".
+ */
+export interface SectionTwoWaysSelect<T extends boolean = true> {
+  hidden?: T;
+  heading?: T;
+  button?: T;
+  ways?:
+    | T
+    | {
+        kind?: T;
+        link?: T;
+        label?: T;
+        name?: T;
+        lead?: T;
+        facts?:
+          | T
+          | {
+              fact?: T;
+              id?: T;
+            };
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SectionFounder_select".
+ */
+export interface SectionFounderSelect<T extends boolean = true> {
+  hidden?: T;
+  label?: T;
+  quote?: T;
+  photo?: T;
+  name?: T;
+  credentials?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SectionGetStarted_select".
+ */
+export interface SectionGetStartedSelect<T extends boolean = true> {
+  hidden?: T;
+  heading?: T;
+  linkLabel?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SectionFaq_select".
+ */
+export interface SectionFaqSelect<T extends boolean = true> {
+  hidden?: T;
+  label?: T;
+  heading?: T;
+  questions?:
+    | T
+    | {
+        question?: T;
+        answer?: T;
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SectionText_select".
+ */
+export interface SectionTextSelect<T extends boolean = true> {
+  hidden?: T;
+  label?: T;
+  heading?: T;
+  body?: T;
+  action?:
+    | T
+    | {
+        label?: T;
+        link?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "pms-page_select".
+ */
+export interface PmsPageSelect<T extends boolean = true> {
+  sections?:
+    | T
+    | {
+        productHero?: T | SectionProductHeroSelect<T>;
+        pmsPerformance?: T | SectionPmsPerformanceSelect<T>;
+        wealthGrowth?: T | SectionWealthGrowthSelect<T>;
+        whyPms?: T | SectionWhyPmsSelect<T>;
+        philosophy?: T | SectionPhilosophySelect<T>;
+        selection?: T | SectionSelectionSelect<T>;
+        portfolioApproach?: T | SectionPortfolioApproachSelect<T>;
+        risks?: T | SectionRisksSelect<T>;
+        closingDoors?: T | SectionClosingDoorsSelect<T>;
+        faq?: T | SectionFaqSelect<T>;
+        text?: T | SectionTextSelect<T>;
+      };
+  _status?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SectionProductHero_select".
+ */
+export interface SectionProductHeroSelect<T extends boolean = true> {
+  hidden?: T;
+  title1?: T;
+  title2?: T;
+  sentence?: T;
+  mark?: T;
+  actions?:
+    | T
+    | {
+        label?: T;
+        link?: T;
+        outline?: T;
+        id?: T;
+      };
+  figures?:
+    | T
+    | {
+        label?: T;
+        value?: T;
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SectionPmsPerformance_select".
+ */
+export interface SectionPmsPerformanceSelect<T extends boolean = true> {
+  hidden?: T;
+  label?: T;
+  heading?: T;
+  lead?: T;
+  note?: T;
+  method?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SectionWealthGrowth_select".
+ */
+export interface SectionWealthGrowthSelect<T extends boolean = true> {
+  hidden?: T;
+  label?: T;
+  heading?: T;
+  lead?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SectionWhyPms_select".
+ */
+export interface SectionWhyPmsSelect<T extends boolean = true> {
+  hidden?: T;
+  label?: T;
+  heading?: T;
+  intro?: T;
+  points?:
+    | T
+    | {
+        name?: T;
+        drawing?: T;
+        line?: T;
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SectionPhilosophy_select".
+ */
+export interface SectionPhilosophySelect<T extends boolean = true> {
+  hidden?: T;
+  label?: T;
+  heading?: T;
+  words?:
+    | T
+    | {
+        word?: T;
+        id?: T;
+      };
+  points?:
+    | T
+    | {
+        point?: T;
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SectionSelection_select".
+ */
+export interface SectionSelectionSelect<T extends boolean = true> {
+  hidden?: T;
+  label?: T;
+  heading?: T;
+  steps?:
+    | T
+    | {
+        name?: T;
+        text?: T;
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SectionPortfolioApproach_select".
+ */
+export interface SectionPortfolioApproachSelect<T extends boolean = true> {
+  hidden?: T;
+  heading?: T;
+  sectorCap?: T;
+  sectorLine?: T;
+  holdingsFrom?: T;
+  holdingsTo?: T;
+  holdingsLine?: T;
+  rules?:
+    | T
+    | {
+        rule?: T;
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SectionRisks_select".
+ */
+export interface SectionRisksSelect<T extends boolean = true> {
+  hidden?: T;
+  label?: T;
+  heading?: T;
+  risks?:
+    | T
+    | {
+        name?: T;
+        text?: T;
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SectionClosingDoors_select".
+ */
+export interface SectionClosingDoorsSelect<T extends boolean = true> {
+  hidden?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "aif-page_select".
+ */
+export interface AifPageSelect<T extends boolean = true> {
+  sections?:
+    | T
+    | {
+        productHero?: T | SectionProductHeroSelect<T>;
+        aifPerformance?: T | SectionAifPerformanceSelect<T>;
+        opportunity?: T | SectionOpportunitySelect<T>;
+        pooling?: T | SectionPoolingSelect<T>;
+        structure?: T | SectionStructureSelect<T>;
+        approachWheel?: T | SectionApproachWheelSelect<T>;
+        keyTerms?: T | SectionKeyTermsSelect<T>;
+        closingDoors?: T | SectionClosingDoorsSelect<T>;
+        faq?: T | SectionFaqSelect<T>;
+        text?: T | SectionTextSelect<T>;
+      };
+  _status?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SectionAifPerformance_select".
+ */
+export interface SectionAifPerformanceSelect<T extends boolean = true> {
+  hidden?: T;
+  label?: T;
+  heading?: T;
+  lead?: T;
+  method?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SectionOpportunity_select".
+ */
+export interface SectionOpportunitySelect<T extends boolean = true> {
+  hidden?: T;
+  label?: T;
+  heading?: T;
+  lead?: T;
+  steps?:
+    | T
+    | {
+        title?: T;
+        text?: T;
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SectionPooling_select".
+ */
+export interface SectionPoolingSelect<T extends boolean = true> {
+  hidden?: T;
+  label?: T;
+  heading?: T;
+  text?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SectionStructure_select".
+ */
+export interface SectionStructureSelect<T extends boolean = true> {
+  hidden?: T;
+  label?: T;
+  heading?: T;
+  investors?: T;
+  fund?: T;
+  manager?: T;
+  parties?:
+    | T
+    | {
+        name?: T;
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SectionApproachWheel_select".
+ */
+export interface SectionApproachWheelSelect<T extends boolean = true> {
+  hidden?: T;
+  label?: T;
+  heading?: T;
+  steps?:
+    | T
+    | {
+        step?: T;
+        id?: T;
+      };
+  line?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SectionKeyTerms_select".
+ */
+export interface SectionKeyTermsSelect<T extends boolean = true> {
+  hidden?: T;
+  label?: T;
+  heading?: T;
+  button?:
+    | T
+    | {
+        label?: T;
+        link?: T;
+      };
+  terms?:
+    | T
+    | {
+        label?: T;
+        value?: T;
+        drawing?: T;
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "pms-vs-aif-page_select".
+ */
+export interface PmsVsAifPageSelect<T extends boolean = true> {
+  sections?:
+    | T
+    | {
+        productHero?: T | SectionProductHeroSelect<T>;
+        comparison?: T | SectionComparisonSelect<T>;
+        explanation?: T | SectionExplanationSelect<T>;
+        closingDoors?: T | SectionClosingDoorsSelect<T>;
+        faq?: T | SectionFaqSelect<T>;
+        text?: T | SectionTextSelect<T>;
+      };
+  _status?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SectionComparison_select".
+ */
+export interface SectionComparisonSelect<T extends boolean = true> {
+  hidden?: T;
+  label?: T;
+  heading?: T;
+  rows?:
+    | T
+    | {
+        pms?: T;
+        aif?: T;
+        drawing?: T;
+        id?: T;
+      };
+  links?:
+    | T
+    | {
+        label?: T;
+        link?: T;
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SectionExplanation_select".
+ */
+export interface SectionExplanationSelect<T extends boolean = true> {
+  hidden?: T;
+  label?: T;
+  heading?: T;
+  pms?: T;
+  aif?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "our-philosophy-page_select".
+ */
+export interface OurPhilosophyPageSelect<T extends boolean = true> {
+  sections?:
+    | T
+    | {
+        productHero?: T | SectionProductHeroSelect<T>;
+        coreDiscs?: T | SectionCoreDiscsSelect<T>;
+        principles?: T | SectionPrinciplesSelect<T>;
+        criteria?: T | SectionCriteriaSelect<T>;
+        riskRings?: T | SectionRiskRingsSelect<T>;
+        closingDoors?: T | SectionClosingDoorsSelect<T>;
+        faq?: T | SectionFaqSelect<T>;
+        text?: T | SectionTextSelect<T>;
+      };
+  _status?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SectionCoreDiscs_select".
+ */
+export interface SectionCoreDiscsSelect<T extends boolean = true> {
+  hidden?: T;
+  heading?: T;
+  lead?: T;
+  stages?:
+    | T
+    | {
+        word?: T;
+        text?: T;
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SectionPrinciples_select".
+ */
+export interface SectionPrinciplesSelect<T extends boolean = true> {
+  hidden?: T;
+  label?: T;
+  heading?: T;
+  principles?:
+    | T
+    | {
+        name?: T;
+        text?: T;
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SectionCriteria_select".
+ */
+export interface SectionCriteriaSelect<T extends boolean = true> {
+  hidden?: T;
+  lookForHeading?: T;
+  dontDoHeading?: T;
+  lookFor?:
+    | T
+    | {
+        item?: T;
+        id?: T;
+      };
+  dontDo?:
+    | T
+    | {
+        item?: T;
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SectionRiskRings_select".
+ */
+export interface SectionRiskRingsSelect<T extends boolean = true> {
+  hidden?: T;
+  heading?: T;
+  risks?:
+    | T
+    | {
+        name?: T;
+        text?: T;
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "about-page_select".
+ */
+export interface AboutPageSelect<T extends boolean = true> {
+  sections?:
+    | T
+    | {
+        aboutHero?: T | SectionAboutHeroSelect<T>;
+        founderProfile?: T | SectionFounderProfileSelect<T>;
+        teamCarousel?: T | SectionTeamCarouselSelect<T>;
+        groupAreas?: T | SectionGroupAreasSelect<T>;
+        recognition?: T | SectionRecognitionSelect<T>;
+        timeline?: T | SectionTimelineSelect<T>;
+        story?: T | SectionStorySelect<T>;
+        closingDoors?: T | SectionClosingDoorsSelect<T>;
+        faq?: T | SectionFaqSelect<T>;
+        text?: T | SectionTextSelect<T>;
+      };
+  _status?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SectionAboutHero_select".
+ */
+export interface SectionAboutHeroSelect<T extends boolean = true> {
+  hidden?: T;
+  label?: T;
+  heading?: T;
+  paragraphs?:
+    | T
+    | {
+        paragraph?: T;
+        id?: T;
+      };
+  photo?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SectionFounderProfile_select".
+ */
+export interface SectionFounderProfileSelect<T extends boolean = true> {
+  hidden?: T;
+  label?: T;
+  name?: T;
+  role?: T;
+  photo?: T;
+  qualifications?:
+    | T
+    | {
+        qualification?: T;
+        id?: T;
+      };
+  years?: T;
+  yearsLabel?: T;
+  points?:
+    | T
+    | {
+        point?: T;
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SectionTeamCarousel_select".
+ */
+export interface SectionTeamCarouselSelect<T extends boolean = true> {
+  hidden?: T;
+  heading?: T;
+  buttonLabel?: T;
+  buttonLink?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SectionGroupAreas_select".
+ */
+export interface SectionGroupAreasSelect<T extends boolean = true> {
+  hidden?: T;
+  label?: T;
+  areas?:
+    | T
+    | {
+        name?: T;
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SectionRecognition_select".
+ */
+export interface SectionRecognitionSelect<T extends boolean = true> {
+  hidden?: T;
+  label?: T;
+  heading?: T;
+  asOf?: T;
+  note?: T;
+  tables?:
+    | T
+    | {
+        rank?: T;
+        period?: T;
+        ours?: T;
+        returns?:
+          | T
+          | {
+              value?: T;
+              id?: T;
+            };
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SectionTimeline_select".
+ */
+export interface SectionTimelineSelect<T extends boolean = true> {
+  hidden?: T;
+  label?: T;
+  stops?:
+    | T
+    | {
+        label?: T;
+        text?: T;
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SectionStory_select".
+ */
+export interface SectionStorySelect<T extends boolean = true> {
+  hidden?: T;
+  heading?: T;
+  line?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "case-studies-page_select".
+ */
+export interface CaseStudiesPageSelect<T extends boolean = true> {
+  sections?:
+    | T
+    | {
+        productHero?: T | SectionProductHeroSelect<T>;
+        caseStudies?: T | SectionCaseStudiesSelect<T>;
+        caseTimeline?: T | SectionCaseTimelineSelect<T>;
+        closingDoors?: T | SectionClosingDoorsSelect<T>;
+        faq?: T | SectionFaqSelect<T>;
+        text?: T | SectionTextSelect<T>;
+      };
+  _status?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SectionCaseStudies_select".
+ */
+export interface SectionCaseStudiesSelect<T extends boolean = true> {
+  hidden?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SectionCaseTimeline_select".
+ */
+export interface SectionCaseTimelineSelect<T extends boolean = true> {
+  hidden?: T;
+  label?: T;
+  heading?: T;
+  lead?: T;
+  disclaimer?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "picks-page_select".
+ */
+export interface PicksPageSelect<T extends boolean = true> {
+  sections?:
+    | T
+    | {
+        productHero?: T | SectionProductHeroSelect<T>;
+        picks?: T | SectionPicksSelect<T>;
+        closingDoors?: T | SectionClosingDoorsSelect<T>;
+        faq?: T | SectionFaqSelect<T>;
+        text?: T | SectionTextSelect<T>;
+      };
+  _status?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SectionPicks_select".
+ */
+export interface SectionPicksSelect<T extends boolean = true> {
+  hidden?: T;
+  label?: T;
+  heading?: T;
+  tiers?:
+    | T
+    | {
+        multiple?: T;
+        countLine?: T;
+        picks?:
+          | T
+          | {
+              name?: T;
+              business?: T;
+              edge?: T;
+              growth?: T;
+              financials?:
+                | T
+                | {
+                    year?: T;
+                    revenue?: T;
+                    profit?: T;
+                    id?: T;
+                  };
+              id?: T;
+            };
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "investor-centre-page_select".
+ */
+export interface InvestorCentrePageSelect<T extends boolean = true> {
+  sections?:
+    | T
+    | {
+        logins?: T | SectionLoginsSelect<T>;
+        documentCards?: T | SectionDocumentCardsSelect<T>;
+        closingDoors?: T | SectionClosingDoorsSelect<T>;
+        faq?: T | SectionFaqSelect<T>;
+        text?: T | SectionTextSelect<T>;
+      };
+  _status?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SectionLogins_select".
+ */
+export interface SectionLoginsSelect<T extends boolean = true> {
+  hidden?: T;
+  heading?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SectionDocumentCards_select".
+ */
+export interface SectionDocumentCardsSelect<T extends boolean = true> {
+  hidden?: T;
+  heading?: T;
+  lead?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "contact-page_select".
+ */
+export interface ContactPageSelect<T extends boolean = true> {
+  sections?:
+    | T
+    | {
+        enquiry?: T | SectionEnquirySelect<T>;
+        office?: T | SectionOfficeSelect<T>;
+        faq?: T | SectionFaqSelect<T>;
+        text?: T | SectionTextSelect<T>;
+      };
+  _status?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SectionEnquiry_select".
+ */
+export interface SectionEnquirySelect<T extends boolean = true> {
+  hidden?: T;
+  label?: T;
+  heading?: T;
+  desksLabel?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SectionOffice_select".
+ */
+export interface SectionOfficeSelect<T extends boolean = true> {
+  hidden?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "careers-page_select".
+ */
+export interface CareersPageSelect<T extends boolean = true> {
+  sections?:
+    | T
+    | {
+        careersIntro?: T | SectionCareersIntroSelect<T>;
+        jobBoard?: T | SectionJobBoardSelect<T>;
+        careersOffice?: T | SectionCareersOfficeSelect<T>;
+        careersResume?: T | SectionCareersResumeSelect<T>;
+        faq?: T | SectionFaqSelect<T>;
+        text?: T | SectionTextSelect<T>;
+      };
+  _status?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SectionCareersIntro_select".
+ */
+export interface SectionCareersIntroSelect<T extends boolean = true> {
+  hidden?: T;
+  label?: T;
+  heading?: T;
+  lead?: T;
+  buttonLabel?: T;
+  resumeLabel?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SectionJobBoard_select".
+ */
+export interface SectionJobBoardSelect<T extends boolean = true> {
+  hidden?: T;
+  heading?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SectionCareersOffice_select".
+ */
+export interface SectionCareersOfficeSelect<T extends boolean = true> {
+  hidden?: T;
+  heading?: T;
+  photo?: T;
+  caption?: T;
+  text?: T;
+  detail?: T;
+  linkLabel?: T;
+  link?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SectionCareersResume_select".
+ */
+export interface SectionCareersResumeSelect<T extends boolean = true> {
+  hidden?: T;
+  heading?: T;
+  text?: T;
+  buttonLabel?: T;
+  note?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "site-details_select".
+ */
+export interface SiteDetailsSelect<T extends boolean = true> {
+  company?: T;
+  officeName?: T;
+  address?:
+    | T
+    | {
+        line1?: T;
+        line2?: T;
+      };
+  pin?:
+    | T
+    | {
+        lat?: T;
+        lon?: T;
+      };
+  phones?:
+    | T
+    | {
+        label?: T;
+        number?: T;
+        id?: T;
+      };
+  email?: T;
+  desks?:
+    | T
+    | {
+        label?: T;
+        email?: T;
+        id?: T;
+      };
+  registrations?:
+    | T
+    | {
+        business?: T;
+        number?: T;
+        id?: T;
+      };
+  disclaimer?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "crm-settings_select".
+ */
+export interface CrmSettingsSelect<T extends boolean = true> {
+  responseHours?:
+    | T
+    | {
+        critical?: T;
+        high?: T;
+        normal?: T;
+        low?: T;
+      };
+  acknowledge?: T;
+  ai?:
+    | T
+    | {
+        triageConfidence?: T;
+        complianceBlock?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

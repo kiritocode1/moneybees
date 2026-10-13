@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
-import { ComparisonSection, ExplanationSection } from "@/components/compare/compare-sections";
+import { draftMode } from "next/headers";
+import { DraftTools } from "@/components/site-editor/draft-tools";
+import { PageSections } from "@/components/site-editor/page-sections";
+import { COMPARE_SECTIONS } from "@/lib/pages/compare-content";
+import { pageSections } from "@/lib/pages/load";
+import { pmsFigures } from "@/lib/site/figures";
 import SiteFooter from "@/components/footer/site-footer";
-import ProductHero from "@/components/pms-v3/product-hero";
 import SiteNavigation from "@/components/ui/site-navigation";
-import { COMPARE_HERO } from "@/lib/page-heroes";
-import { PageEndDoors } from "@/components/cta/page-end-doors";
 import { ENQUIRY_HREF } from "@/lib/contact-v2";
 
 export const metadata: Metadata = {
@@ -21,16 +23,17 @@ export const metadata: Metadata = {
  * plan's two diagrams, the simple comparison and the simple explanation. Copy
  * lives in lib/compare.ts.
  * Ends with the closing door pair (components/cta/page-end-doors.tsx).
+ * Staff edit the sections in /admin (globals/PmsVsAifPage.ts).
  */
-export default function PmsVsAifPage() {
+export default async function PmsVsAifPage() {
+  const { isEnabled: draft } = await draftMode();
+  const [sections, figures] = await Promise.all([pageSections("pms-vs-aif-page", draft, COMPARE_SECTIONS), pmsFigures()]);
   return (
     <SiteNavigation>
       <main id="top" className="option-one bg-white text-black">
-        <ProductHero data={COMPARE_HERO} />
-        <ComparisonSection />
-        <ExplanationSection />
-        <PageEndDoors />
+        <PageSections sections={sections} figures={figures} draft={draft} />
       </main>
+      {draft ? <DraftTools path="/pms-vs-aif" /> : null}
       <SiteFooter
         explore={[
           ["Portfolio Management Services", "/pms"],

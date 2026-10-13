@@ -1,7 +1,12 @@
 import type { Metadata } from "next";
-import { EnquirySection, OfficeSection } from "@/components/contact-v2/contact-sections";
+import { draftMode } from "next/headers";
 import SiteFooter from "@/components/footer/site-footer";
+import { DraftTools } from "@/components/site-editor/draft-tools";
+import { PageSections } from "@/components/site-editor/page-sections";
 import SiteNavigation from "@/components/ui/site-navigation";
+import { CONTACT_SECTIONS } from "@/lib/pages/contact-content";
+import { pageSections } from "@/lib/pages/load";
+import { pmsFigures } from "@/lib/site/figures";
 
 export const metadata: Metadata = {
   title: "Contact Moneybee: Lower Parel, Mumbai",
@@ -17,21 +22,25 @@ export const metadata: Metadata = {
  * hero (user, 2026-10-08): the page opens on the heading and direct lines
  * beside the four enquiry options as tabs over a form that opens a mailto,
  * then the office on a map. Copy lives in lib/contact-v2.ts.
+ * Staff edit the sections in /admin (globals/ContactPage.ts); phone, email,
+ * desks and the office in Website › Office details.
  */
-export default function ContactPage() {
+export default async function ContactPage() {
+  const { isEnabled: draft } = await draftMode();
+  const [sections, figures] = await Promise.all([pageSections("contact-page", draft, CONTACT_SECTIONS), pmsFigures()]);
   return (
     <SiteNavigation>
       <main id="top" className="option-one bg-white text-black">
-        <EnquirySection />
-        <OfficeSection />
+        <PageSections sections={sections} figures={figures} draft={draft} />
       </main>
+      {draft ? <DraftTools path="/contact" /> : null}
       <SiteFooter
         explore={[
           ["About Moneybee", "/about"],
           ["Our philosophy", "/our-philosophy"],
           ["Office", "#office"],
           ["Enquiry", "#enquiry"],
-          ["Team", "/about#key-members"],
+          ["Team", "/about#team"],
         ]}
       />
     </SiteNavigation>

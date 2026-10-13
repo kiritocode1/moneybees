@@ -1,13 +1,13 @@
 import type { Metadata } from "next";
-import { FounderSection, StorySection } from "@/components/about-v2/about-sections";
-import { AboutHero } from "@/components/about-v3/about-sections";
-import { AreasSection } from "@/components/about-v3/areas-section";
-import { RecognitionSection } from "@/components/about-v3/recognition-section";
-import { TimelineSection } from "@/components/about-v3/timeline-section";
-import TeamCarousel from "@/components/fact-sections/team-carousel";
+import { draftMode } from "next/headers";
 import SiteFooter from "@/components/footer/site-footer";
+import { DraftTools } from "@/components/site-editor/draft-tools";
+import { PageSections } from "@/components/site-editor/page-sections";
 import SiteNavigation from "@/components/ui/site-navigation";
-import { PageEndDoors } from "@/components/cta/page-end-doors";
+import { ABOUT_SECTIONS } from "@/lib/pages/about-content";
+import { pageSections } from "@/lib/pages/load";
+import { pmsFigures } from "@/lib/site/figures";
+import { teamMembers } from "@/lib/site/team";
 
 export const metadata: Metadata = {
   title: "About Moneybee Group: founded in 2004 by Dhiren Shah",
@@ -28,20 +28,18 @@ export const metadata: Metadata = {
  * Moneybee story. Copy lives in lib/about-v2.ts; the photograph and dates in
  * lib/about-v3.ts, the team in lib/insights.ts (TEAM).
  * Ends with the closing door pair (components/cta/page-end-doors.tsx).
+ * Staff edit the sections in /admin (globals/AboutPage.ts) and the people in
+ * Website › Team (collections/TeamMembers.ts).
  */
-export default function AboutPage() {
+export default async function AboutPage() {
+  const { isEnabled: draft } = await draftMode();
+  const [sections, figures, team] = await Promise.all([pageSections("about-page", draft, ABOUT_SECTIONS), pmsFigures(), teamMembers()]);
   return (
     <SiteNavigation>
       <main id="top" className="option-one bg-white text-black">
-        <AboutHero />
-        <FounderSection />
-        <TeamCarousel />
-        <AreasSection />
-        <RecognitionSection />
-        <TimelineSection />
-        <StorySection />
-        <PageEndDoors />
+        <PageSections sections={sections} figures={figures} team={team} draft={draft} />
       </main>
+      {draft ? <DraftTools path="/about" /> : null}
       <SiteFooter
         explore={[
           ["Founder", "#founder"],

@@ -14,7 +14,8 @@ const refuseDisabled: CollectionBeforeLoginHook = ({ user }) => {
  */
 export const Investors: CollectionConfig = {
   slug: "investors",
-  admin: { useAsTitle: "name", defaultColumns: ["name", "email", "status", "updatedAt"], group: "Investors" },
+  labels: { singular: "Client account", plural: "Client accounts" },
+  admin: { useAsTitle: "name", defaultColumns: ["name", "email", "status", "updatedAt"], group: "Settings" },
   auth: {
     tokenExpiration: 7200,
     maxLoginAttempts: 5,

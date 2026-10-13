@@ -4,7 +4,7 @@ import { useId } from "react";
 import { useShown } from "@/components/about-v2/shared";
 import { Person, PERSON_HEIGHT } from "@/components/drawing/lookout";
 import { BODY, COLUMN, SUBHEAD } from "@/components/hero/tokens";
-import { APPROACH_LOREM, PHILOSOPHY_STAGES } from "@/lib/approach";
+import { CORE_DISCS, type CoreDiscsContent } from "@/lib/pages/philosophy-content";
 
 /*
  * The core philosophy (content plan §6, UNDISCOVERED → UNDER-RESEARCHED →
@@ -15,6 +15,7 @@ import { APPROACH_LOREM, PHILOSOPHY_STAGES } from "@/lib/approach";
  * each disc starting 31.3 units left of that disc's centre. The discs grow as
  * a company moves from unnoticed to undervalued; the lookout stands where the
  * market is not yet looking. Nothing here is data, so the linear step stands.
+ * The words are edited in /admin; there are always three stages, one a disc.
  */
 
 const DIAMETERS = [104.72, 140.19, 175.68];
@@ -58,24 +59,25 @@ function Discs({ shown, t }: { shown: boolean; t: (ms: number, delay?: number) =
   );
 }
 
-export function PhilosophyDiscs() {
+export function PhilosophyDiscs({ content = CORE_DISCS }: { content?: CoreDiscsContent }) {
   const { ref, shown, t } = useShown<HTMLDivElement>(0.3);
+  const stages = (content.stages ?? []).slice(0, DISCS.length);
   return (
     <section id="philosophy" aria-labelledby="philosophy-heading" className="scroll-mt-[96px] bg-white text-black">
       <div className={`${COLUMN} py-[120px] max-md:py-[80px]`}>
         <div className="grid grid-cols-1 items-end gap-8 md:grid-cols-2 md:gap-16">
           <h2 id="philosophy-heading" className={`m-0 ${SUBHEAD}`}>
-            Core Philosophy
+            {content.heading}
           </h2>
-          <p className={`text-black/70 ${BODY}`}>{APPROACH_LOREM.long}</p>
+          {content.lead ? <p className={`text-black/70 ${BODY}`}>{content.lead}</p> : null}
         </div>
         <div ref={ref} className="mx-auto mt-[64px] max-w-[860px]">
           <Discs shown={shown} t={t} />
           {/* Desktop: a column under each disc, from 31.3 units left of its centre. Phones: one list. */}
           <ol className="relative m-0 mt-8 hidden h-[130px] list-none p-0 md:block">
-            {PHILOSOPHY_STAGES.map((stage, index) => (
+            {stages.map((stage, index) => (
               <li
-                key={stage.word}
+                key={index}
                 className="absolute top-0 pr-3"
                 // Each column runs to the next one, so it inherits the disc spacing as 08's columns do.
                 style={{ left: `${((DISCS[index].x - 31.3 - BOX.x) / BOX.w) * 100}%`, width: `${(((DISCS[index + 1]?.x ?? DISCS[index].x + 150) - DISCS[index].x) / BOX.w) * 100}%`, opacity: shown ? 1 : 0, transform: shown ? "none" : "translateY(8px)", transition: `opacity ${t(420, 900 + index * 120)}, transform ${t(600, 900 + index * 120)}` }}
@@ -86,8 +88,8 @@ export function PhilosophyDiscs() {
             ))}
           </ol>
           <ol className="m-0 mt-8 list-none p-0 md:hidden">
-            {PHILOSOPHY_STAGES.map((stage) => (
-              <li key={stage.word} className="border-t border-black/15 py-4">
+            {stages.map((stage, index) => (
+              <li key={index} className="border-t border-black/15 py-4">
                 <div>
                   <h3 className="font-serif text-[22px] leading-[1.1] font-semibold">{stage.word}</h3>
                   <p className="mt-1 text-[13px] leading-[1.5] text-black/60">{stage.text}</p>

@@ -1,5 +1,6 @@
 "use client";
 
+import { type AreasContent, GROUP_AREAS } from "@/lib/pages/about-content";
 import { useId } from "react";
 import { hexPoints, useShown } from "@/components/about-v2/shared";
 import { BOX, Draw, Hatch, MOVE, ORANGE, RM, tr } from "@/components/drawing/plate";
@@ -255,26 +256,23 @@ function DepositoryDrawing({ on, delay: d }: DrawingProps) {
   );
 }
 
-const AREAS = [
-  { name: "Portfolio management", Drawing: PortfolioDrawing },
-  { name: "Equity broking", Drawing: BrokingDrawing },
-  { name: "Investment advisory", Drawing: AdvisoryDrawing },
-  { name: "Related financial services", Drawing: DepositoryDrawing },
-] as const;
+/** The four drawings, in the order of the areas on the About page in /admin. */
+const DRAWINGS = [PortfolioDrawing, BrokingDrawing, AdvisoryDrawing, DepositoryDrawing] as const;
 
-/** The four areas the company text names, a drawing each. */
-export function AreasSection() {
+/** The four areas the company text names, a drawing each. The names come from the About page in /admin. */
+export function AreasSection({ content = GROUP_AREAS }: { content?: AreasContent }) {
   const { ref, shown } = useShown<HTMLUListElement>(0.3);
+  const areas = (content.areas ?? []).slice(0, DRAWINGS.length).map(({ name }, index) => ({ name, Drawing: DRAWINGS[index] }));
   return (
     <section id="group" aria-labelledby="group-heading" className="scroll-mt-[96px] bg-white text-black">
       <div className={`${COLUMN} pt-[120px] max-md:pt-[80px]`}>
         <h2 id="group-heading">
-          <BracketLabel>What the group does</BracketLabel>
+          <BracketLabel>{content.label}</BracketLabel>
         </h2>
       </div>
       <ul ref={ref} className={`${COLUMN} mt-10 grid list-none grid-cols-2 gap-x-6 gap-y-10 pb-[120px] max-md:pb-[80px] md:grid-cols-4`}>
-        {AREAS.map(({ name, Drawing }, i) => (
-          <li key={name}>
+        {areas.map(({ name, Drawing }, i) => (
+          <li key={i}>
             <Rise onView delay={i * 0.06}>
               <div className="flex aspect-[4/5] items-center justify-center bg-[#F6F6F6] p-[6%] max-md:p-[3%]">
                 <Drawing on={shown} delay={i * 220} />

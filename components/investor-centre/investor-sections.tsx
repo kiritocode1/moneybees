@@ -3,6 +3,7 @@ import { DoorCard, QUIET_LINK } from "@/components/cta/door-card";
 import { COLUMN, SUBHEAD } from "@/components/hero/tokens";
 import Link from "@/components/transition/transition-link";
 import { LOGINS } from "@/lib/investor-centre";
+import { LOGINS_SECTION, type LoginsContent } from "@/lib/pages/investor-centre-content";
 
 /*
  * /investor-centre, content plan §12: the two logins kept apart, as the
@@ -16,14 +17,15 @@ import { LOGINS } from "@/lib/investor-centre";
 /**
  * Client Login and Distributor Login: two doors, never one. White, so the grey
  * Documents section below reads as the next part. The nav is absolute (113px,
- * 75px on phones), so the section starts below it.
+ * 75px on phones), so the section starts below it. The heading is edited in
+ * /admin; the cards' words are the same as the closing cards', in code.
  */
-export function LoginsSection() {
+export function LoginsSection({ content = LOGINS_SECTION }: { content?: LoginsContent }) {
   return (
     <section id="logins" aria-labelledby="investor-centre-heading" className="scroll-mt-[96px] bg-white pt-[113px] text-black max-md:pt-[75px]">
       <div className={`${COLUMN} border-t border-black/10 pt-[64px] pb-[96px] max-md:pt-[40px] max-md:pb-[64px]`}>
         <h1 id="investor-centre-heading" className={SUBHEAD}>
-          Investor Centre
+          {content.heading}
         </h1>
         <div className="mt-[40px] grid grid-cols-1 gap-[16px] md:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)]">
           <DoorCard door={LOGINS.client} icon={LockKeyhole} primary>

@@ -4,6 +4,7 @@ import { useId, useState } from "react";
 import { BracketLabel } from "@/components/fact-sections/fact-section";
 import { COLUMN, SUBHEAD } from "@/components/hero/tokens";
 import { FAQS } from "@/lib/insights";
+import { FAQ, type FaqContent } from "@/lib/pages/home-content";
 
 export type Product = "pms" | "aif";
 
@@ -12,29 +13,32 @@ const FOCUS = "focus-visible:outline-2 focus-visible:outline-offset-4 focus-visi
 /**
  * FAQs as an accordion, one open at a time. The answers come from
  * lib/insights.ts; a product page passes `product` to show only its questions.
+ * On the Home page the words come from /admin (`content`).
  * A closed answer is inert, so it is out of the tab order and the
  * accessibility tree while it is collapsed to zero height.
  */
-export function FaqSection({ product }: { product?: Product }) {
+export function FaqSection({ product, content = FAQ }: { product?: Product; content?: FaqContent }) {
   const [open, setOpen] = useState<number | null>(0);
   const base = useId();
-  const questions = FAQS.filter(([, , scope]) => !product || scope === "both" || scope === product);
+  const questions = product
+    ? FAQS.filter(([, , scope]) => scope === "both" || scope === product).map(([question, answer]) => ({ question, answer }))
+    : (content.questions ?? []);
   return (
     <section id="faqs" aria-labelledby="faqs-heading" className="bg-white text-black">
       <div className={`${COLUMN} grid grid-cols-[.8fr_1.2fr] gap-12 py-[120px] max-[900px]:grid-cols-1 max-[600px]:py-[80px]`}>
         <div>
-          <BracketLabel>FAQs</BracketLabel>
+          {content.label ? <BracketLabel>{content.label}</BracketLabel> : null}
           <h2 id="faqs-heading" className={`mt-[18px] ${SUBHEAD}`}>
-            Questions we are often asked
+            {content.heading}
           </h2>
         </div>
         <div className="border-t border-t-black">
-          {questions.map(([question, answer], index) => {
+          {questions.map(({ question, answer }, index) => {
             const expanded = open === index;
             const buttonId = `${base}-q${index}`;
             const panelId = `${base}-a${index}`;
             return (
-              <div key={question} className="border-b border-b-[rgba(0,0,0,.13)]">
+              <div key={index} className="border-b border-b-[rgba(0,0,0,.13)]">
                 <h3>
                   <button
                     id={buttonId}

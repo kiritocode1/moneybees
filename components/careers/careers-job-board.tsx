@@ -2,15 +2,24 @@
 
 import { useRef, useState } from "react";
 import { BUTTON, COLUMN, SUBHEAD } from "@/components/hero/tokens";
-import { RESUME_EMAIL, TEAM_NAMES } from "@/lib/careers";
+import { useSiteDetails } from "@/components/site/site-details";
+import { TEAM_NAMES } from "@/lib/careers";
 import { CAREER_ROLES, type CareerRole } from "@/lib/career-roles";
+import { JOB_BOARD, type JobBoardContent } from "@/lib/pages/careers-content";
 
 const PAGE_SIZE = 5;
 const FOCUS = "focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-black";
 const CONTROL = `min-h-11 rounded-md border border-black/20 bg-white px-3 text-[14px] ${FOCUS}`;
 
-/** Search and filters reset pagination; only five roles render at once, regardless of dataset size. */
-export function CareersJobBoard({ roles = CAREER_ROLES }: { roles?: readonly CareerRole[] }) {
+/**
+ * Search and filters reset pagination; only five roles render at once,
+ * regardless of dataset size. The roles are Website › Openings; a sample role
+ * is labelled as not a live vacancy, and a live one offers Apply by email to
+ * the main address in Office details.
+ */
+export function CareersJobBoard({ roles = CAREER_ROLES, content = JOB_BOARD }: { roles?: readonly CareerRole[]; content?: JobBoardContent }) {
+  const { email } = useSiteDetails();
+  const samples = roles.some((role) => role.status === "sample");
   const [query, setQuery] = useState("");
   const [team, setTeam] = useState("all");
   const [page, setPage] = useState(0);
@@ -46,8 +55,8 @@ export function CareersJobBoard({ roles = CAREER_ROLES }: { roles?: readonly Car
     <section id="openings" aria-labelledby="opportunities-heading" className="scroll-mt-[110px] pb-16 md:pb-20">
       <div className={COLUMN}>
         <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2">
-          <h2 id="opportunities-heading" className={SUBHEAD}>Find your role</h2>
-          <p className="text-[12px] text-black/60">Sample roles for presentation. Not live vacancies.</p>
+          <h2 id="opportunities-heading" className={SUBHEAD}>{content.heading}</h2>
+          {samples ? <p className="text-[12px] text-black/60">Sample roles for presentation. Not live vacancies.</p> : null}
         </div>
         <div className="mt-6 grid gap-3 sm:grid-cols-[minmax(0,1fr)_240px]">
           <label className="grid gap-2 text-[13px] font-medium">
@@ -106,7 +115,7 @@ export function CareersJobBoard({ roles = CAREER_ROLES }: { roles?: readonly Car
       </div>
       <dialog ref={dialog} onClose={() => setSelectedRole(null)} aria-labelledby="career-role-title" className="fixed inset-0 m-auto max-h-[85svh] w-[calc(100%-32px)] max-w-[640px] overflow-y-auto overscroll-contain rounded-xl border border-black/15 bg-white p-0 text-black shadow-xl backdrop:bg-black/45">
         <div className="sticky top-0 z-10 flex items-center justify-between gap-4 border-b border-black/10 bg-white px-6 py-3">
-          <span className="text-[12px] text-black/60">Sample role · Not a live vacancy</span>
+          <span className="text-[12px] text-black/60">{selectedRole?.status === "live" ? "Open role" : "Sample role · Not a live vacancy"}</span>
           <button type="button" onClick={() => dialog.current?.close()} autoFocus className={`min-h-11 cursor-pointer px-2 text-[14px] ${FOCUS}`}>Close</button>
         </div>
         {selectedRole && (
@@ -121,8 +130,14 @@ export function CareersJobBoard({ roles = CAREER_ROLES }: { roles?: readonly Car
             <h3 className="mt-7 text-[15px] font-semibold">About the work</h3>
             <ul className="mt-3 list-disc space-y-2 pl-5 text-[14px] leading-[1.6] text-black/75">{selectedRole.responsibilities.map((item) => <li key={item}>{item}</li>)}</ul>
             <div className="mt-8 border-t border-black/15 pt-6">
-              <p className="mb-5 text-[13px] leading-[1.5] text-black/60">This listing demonstrates the careers page. Contact Moneybee to ask about actual openings.</p>
-              <a href={`mailto:${RESUME_EMAIL}?subject=${encodeURIComponent(`Career enquiry: ${selectedRole.title}`)}`} className={`${BUTTON} bg-[#F6A11A] text-black hover:bg-black hover:text-white`}>Enquire about opportunities</a>
+              {selectedRole.status === "live" ? (
+                <a href={`mailto:${email}?subject=${encodeURIComponent(`Application: ${selectedRole.title}`)}`} className={`${BUTTON} bg-[#F6A11A] text-black hover:bg-black hover:text-white`}>Apply with your resume</a>
+              ) : (
+                <>
+                  <p className="mb-5 text-[13px] leading-[1.5] text-black/60">This listing demonstrates the careers page. Contact Moneybee to ask about actual openings.</p>
+                  <a href={`mailto:${email}?subject=${encodeURIComponent(`Career enquiry: ${selectedRole.title}`)}`} className={`${BUTTON} bg-[#F6A11A] text-black hover:bg-black hover:text-white`}>Enquire about opportunities</a>
+                </>
+              )}
             </div>
           </div>
         )}

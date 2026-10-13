@@ -6,7 +6,7 @@ import { BOX, Draw, MOVE, OUT, RM, tr } from "@/components/drawing/plate";
 import { BracketLabel } from "@/components/fact-sections/fact-section";
 import { Rise } from "@/components/hero/editorial";
 import { COLUMN, SUBHEAD } from "@/components/hero/tokens";
-import { PHILOSOPHY_POINTS, PHILOSOPHY_WORDS } from "@/lib/pms-v2";
+import { PMS_PHILOSOPHY, type PhilosophyContent } from "@/lib/pages/pms-content";
 
 /*
  * Investment philosophy for /pms, in the Futerra glyph-column pattern
@@ -14,7 +14,8 @@ import { PHILOSOPHY_POINTS, PHILOSOPHY_WORDS } from "@/lib/pms-v2";
  * glyph over a serif heading with its root in italic, then the plan's five
  * points as a list on the same column grid. Glyph geometry is the study's, in
  * units of a 21-radius glyph; the found dot in the first is the set's one
- * orange element.
+ * orange element. The words and points come from the PMS page in /admin; the
+ * drawings stay in order under the three words.
  */
 
 const ORANGE = "#F6A11A";
@@ -124,15 +125,15 @@ function GapGlyph({ on, delay }: GlyphProps) {
   );
 }
 
-/** Each word split where the study sets it: the prefix upright, the root in italic. */
-const STAGES: readonly { word: string; upright: string; Glyph: ComponentType<GlyphProps> }[] = [
-  { word: PHILOSOPHY_WORDS[0], upright: "Un", Glyph: FoundGlyph },
-  { word: PHILOSOPHY_WORDS[1], upright: "Under-", Glyph: CoverageGlyph },
-  { word: PHILOSOPHY_WORDS[2], upright: "Under-", Glyph: GapGlyph },
-];
+/** The three drawings, in the order of the three words. */
+const GLYPHS: readonly ComponentType<GlyphProps>[] = [FoundGlyph, CoverageGlyph, GapGlyph];
 
-export function PhilosophySection() {
+/** Each word split where the study sets it: an "Un" or "Under-" prefix upright, the root in italic. */
+const uprightOf = (word: string) => /^(under-|un)/i.exec(word)?.[0] ?? "";
+
+export function PhilosophySection({ content = PMS_PHILOSOPHY }: { content?: PhilosophyContent }) {
   const { ref, shown } = useShown<HTMLOListElement>(0.35);
+  const stages = (content.words ?? []).slice(0, GLYPHS.length).map(({ word }, index) => ({ word, upright: uprightOf(word), Glyph: GLYPHS[index] }));
   return (
     <section id="philosophy" aria-labelledby="philosophy-heading" className="scroll-mt-[96px] bg-black text-white">
       {/* Without JavaScript the glyphs never draw on; show them drawn. */}
@@ -140,14 +141,14 @@ export function PhilosophySection() {
         <style>{`#philosophy [data-reveal]{stroke-dashoffset:0!important;opacity:1!important;transform:none!important;transition:none!important}`}</style>
       </noscript>
       <div className={`${COLUMN} py-[120px] max-md:py-[80px]`}>
-        <BracketLabel>Our philosophy</BracketLabel>
+        {content.label ? <BracketLabel>{content.label}</BracketLabel> : null}
         <h2 id="philosophy-heading" className={`mt-[18px] ${SUBHEAD}`}>
-          Investment Philosophy
+          {content.heading}
         </h2>
 
         <ol ref={ref} className="m-0 mt-[72px] grid list-none grid-cols-1 gap-y-[36px] p-0 md:mt-[88px] md:grid-cols-3 md:gap-x-[clamp(32px,4.5vw,72px)]">
-          {STAGES.map(({ word, upright, Glyph }, index) => (
-            <li key={word}>
+          {stages.map(({ word, upright, Glyph }, index) => (
+            <li key={index}>
               <Rise onView delay={index * 0.12}>
                 <div className="grid grid-cols-[56px_minmax(0,1fr)] items-center gap-x-[20px] md:block">
                   <svg viewBox="-220 -220 440 440" className="block h-auto w-[56px] overflow-visible md:w-[clamp(64px,6vw,88px)]" aria-hidden="true">
@@ -165,8 +166,8 @@ export function PhilosophySection() {
 
         {/* The five points use the same column grid. */}
         <ol className="m-0 mt-[88px] grid list-none grid-cols-1 border-b border-white/20 p-0 md:mt-[112px] md:grid-cols-3 md:gap-x-[clamp(32px,4.5vw,72px)]">
-          {PHILOSOPHY_POINTS.map((point) => (
-            <li key={point} className="border-t border-white/20 py-[22px] md:col-span-3 md:py-[26px]">
+          {content.points?.map(({ point }, index) => (
+            <li key={index} className="border-t border-white/20 py-[22px] md:col-span-3 md:py-[26px]">
               <p className="m-0 font-serif text-[clamp(1.3rem,1rem+.8vw,1.85rem)] leading-[1.2]">{point}</p>
             </li>
           ))}

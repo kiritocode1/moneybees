@@ -9,7 +9,8 @@ export type CareerRole = {
   employment: string;
   summary: string;
   responsibilities: readonly string[];
-  status: "sample";
+  /** A sample is labelled on the page as not a live vacancy. */
+  status: "sample" | "live";
 };
 
 /** Sample roles demonstrate search, filtering and pagination without claiming live vacancies. */

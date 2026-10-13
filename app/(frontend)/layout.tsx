@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import { Geist_Mono, Rethink_Sans } from "next/font/google";
 import localFont from "next/font/local";
-import { CONTACT, REGISTRATIONS } from "@/lib/insights";
+import { SiteDetailsProvider } from "@/components/site/site-details";
+import { type SiteDetails, telHref } from "@/lib/site/details";
+import { siteDetails } from "@/lib/site/load-details";
 import "./globals.css";
 
 // Project default body faces.
@@ -64,35 +66,38 @@ export const metadata: Metadata = {
   },
 };
 
-/** The firm as structured data, built from the deck's contact slide (lib/insights.ts CONTACT). */
-const organization = {
-  "@context": "https://schema.org",
-  "@type": "FinancialService",
-  name: "Moneybee",
-  legalName: CONTACT.company,
-  url: SITE_URL,
-  logo: `${SITE_URL}/moneybee-logo.svg`,
-  description: SITE_DESCRIPTION,
-  // The PMS registration only; the AIF number stays off structured data.
-  identifier: { "@type": "PropertyValue", propertyID: "SEBI PMS registration", value: REGISTRATIONS[0][1] },
-  telephone: CONTACT.phones.map((phone) => phone.replace(/\s/g, "")),
-  email: CONTACT.emails.map(([, email]) => email),
-  address: {
-    "@type": "PostalAddress",
-    streetAddress: `${CONTACT.address[0]} ${CONTACT.address[1].replace(/, Mumbai.*$/, "")}`,
-    addressLocality: "Mumbai",
-    postalCode: "400013",
-    addressRegion: "Maharashtra",
-    addressCountry: "IN",
-  },
-  areaServed: "IN",
-} as const;
+/** The firm as structured data, from Office details in /admin (lib/site/load-details.ts). */
+function organization(details: SiteDetails) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "FinancialService",
+    name: "Moneybee",
+    legalName: details.company,
+    url: SITE_URL,
+    logo: `${SITE_URL}/moneybee-logo.svg`,
+    description: SITE_DESCRIPTION,
+    // The PMS registration only; the AIF number stays off structured data.
+    identifier: { "@type": "PropertyValue", propertyID: "SEBI PMS registration", value: details.registrations[0]?.number },
+    telephone: details.phones.map(({ number }) => telHref(number).slice(4)),
+    email: [details.email, ...details.desks.map(({ email }) => email)],
+    address: {
+      "@type": "PostalAddress",
+      streetAddress: `${details.address.line1} ${details.address.line2.replace(/, Mumbai.*$/, "")}`,
+      addressLocality: "Mumbai",
+      postalCode: details.address.line2.match(/\d{3}\s?\d{3}/)?.[0].replace(/\s/, ""),
+      addressRegion: "Maharashtra",
+      addressCountry: "IN",
+    },
+    areaServed: "IN",
+  };
+}
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const details = await siteDetails();
   return (
     <html
       lang="en"
@@ -102,8 +107,8 @@ export default function RootLayout({
         <a href="#top" className="skip-link">
           Skip to content
         </a>
-        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(organization).replace(/</g, "\\u003c") }} />
-        {children}
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(organization(details)).replace(/</g, "\\u003c") }} />
+        <SiteDetailsProvider details={details}>{children}</SiteDetailsProvider>
       </body>
     </html>
   );

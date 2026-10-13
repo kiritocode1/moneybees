@@ -5,7 +5,7 @@ import { MOVE, OUT, RM, tr } from "@/components/drawing/plate";
 import { BracketLabel } from "@/components/fact-sections/fact-section";
 import { Rise } from "@/components/hero/editorial";
 import { COLUMN, SUBHEAD } from "@/components/hero/tokens";
-import { PROCESS_STEPS } from "@/lib/approach";
+import { PMS_SELECTION, type SelectionContent } from "@/lib/pages/pms-content";
 import { useReducedMotion } from "@/lib/use-reduced-motion";
 import { Person } from "@/components/drawing/lookout";
 
@@ -20,8 +20,6 @@ import { Person } from "@/components/drawing/lookout";
  * width, carries on from them.
  */
 
-/** Screen, Shortlist, Analyse and Decision Making; Monitor and Exit come after the portfolio is built. */
-const STEPS = PROCESS_STEPS.slice(0, 4);
 
 const ORANGE = "#F6A11A";
 const CURVES = 12;
@@ -29,7 +27,8 @@ const CURVES = 12;
 const BREAKS = [0, 0.2, 0.36, 0.5, 0.62, 1] as const;
 /** How many stretches each curve draws, top to bottom: 1 to 4 means dropped at that step, 5 reaches the point. */
 const REACH = [1, 2, 5, 3, 1, 4, 5, 2, 3, 5, 2, 1] as const;
-const LAST_STEP = STEPS.length;
+/** The drawing narrows the lines at four steps (Screen, Shortlist, Analyse, Decision Making); the PMS page in /admin always has four. */
+const LAST_STEP = 4;
 /** A step counts as entered once its top passes this far down the viewport. */
 const TRIGGER = 0.86;
 /** The least time between one step's stretch and the next, so a fast scroll still plays them in order. */
@@ -251,7 +250,7 @@ function useBox(figure: RefObject<HTMLElement | null>, list: RefObject<HTMLEleme
   return box;
 }
 
-export function SelectionSection() {
+export function SelectionSection({ content = PMS_SELECTION }: { content?: SelectionContent }) {
   const reduceMotion = useReducedMotion();
   const figureRef = useRef<HTMLDivElement>(null);
   const listRef = useRef<HTMLOListElement>(null);
@@ -267,16 +266,16 @@ export function SelectionSection() {
         <style>{`#selection [data-draw]{stroke-dashoffset:0!important;transition:none!important}#selection [data-dropped]{opacity:.12!important}#selection [data-late]{opacity:1!important}`}</style>
       </noscript>
       <div className={`${COLUMN} py-[120px] max-md:py-[80px]`}>
-        <BracketLabel>Stock selection</BracketLabel>
+        {content.label ? <BracketLabel>{content.label}</BracketLabel> : null}
         <h2 id="selection-heading" className={`mt-[18px] ${SUBHEAD}`}>
-          Stock Selection
+          {content.heading}
         </h2>
 
         <div className="mt-[64px] grid grid-cols-1 gap-y-[48px] md:mt-[96px] md:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] md:gap-x-[clamp(24px,3vw,44px)]">
           <ol ref={listRef} className="m-0 grid list-none gap-y-[clamp(36px,4vw,56px)] p-0">
-            {STEPS.map((step, index) => (
+            {(content.steps ?? []).slice(0, LAST_STEP).map((step, index) => (
               <li
-                key={step.name}
+                key={index}
                 ref={(element) => {
                   stepRefs.current[index] = element;
                 }}

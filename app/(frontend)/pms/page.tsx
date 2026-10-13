@@ -1,17 +1,13 @@
 import type { Metadata } from "next";
+import { draftMode } from "next/headers";
 import SiteFooter from "@/components/footer/site-footer";
-import PerformanceChart from "@/components/pms-v2/performance-chart";
-import { WealthDiscs } from "@/components/performance-v3/wealth-discs";
-import { PhilosophySection } from "@/components/pms-v3/philosophy";
-import { PortfolioApproachSection } from "@/components/pms-v3/portfolio-stats";
-import ProductHero from "@/components/pms-v3/product-hero";
-import { RiskSection } from "@/components/pms-v3/risk-blocks";
-import { SelectionSection } from "@/components/pms-v3/selection-lines";
-import { WhySection } from "@/components/pms-v3/why-sticky";
+import { DraftTools } from "@/components/site-editor/draft-tools";
+import { PageSections } from "@/components/site-editor/page-sections";
 import SiteNavigation from "@/components/ui/site-navigation";
-import { PMS_HERO } from "@/lib/pms-v3-hero";
-import { PageEndDoors } from "@/components/cta/page-end-doors";
 import { ENQUIRY_HREF } from "@/lib/contact-v2";
+import { pageSections } from "@/lib/pages/load";
+import { PMS_SECTIONS } from "@/lib/pages/pms-content";
+import { pmsFigures } from "@/lib/site/figures";
 
 export const metadata: Metadata = {
   title: "Moneybee PMS: small and mid-cap portfolio management",
@@ -32,21 +28,18 @@ export const metadata: Metadata = {
  * converging lines, the portfolio approach as Titan Gate's stats band, and
  * risk management on stacked blocks.
  * Ends with the closing door pair (components/cta/page-end-doors.tsx).
+ * Staff edit the sections in /admin (globals/PmsPage.ts); the returns and
+ * their date come from the latest published PMS fact sheet.
  */
-export default function PmsPage() {
+export default async function PmsPage() {
+  const { isEnabled: draft } = await draftMode();
+  const [sections, figures] = await Promise.all([pageSections("pms-page", draft, PMS_SECTIONS), pmsFigures()]);
   return (
     <SiteNavigation>
       <main id="top" className="option-one bg-white text-black">
-        <ProductHero data={PMS_HERO} />
-        <PerformanceChart />
-        <WealthDiscs />
-        <WhySection />
-        <PhilosophySection />
-        <SelectionSection />
-        <PortfolioApproachSection />
-        <RiskSection />
-        <PageEndDoors />
+        <PageSections sections={sections} figures={figures} draft={draft} />
       </main>
+      {draft ? <DraftTools path="/pms" /> : null}
       <SiteFooter
         explore={[
           ["About Moneybee", "/about"],

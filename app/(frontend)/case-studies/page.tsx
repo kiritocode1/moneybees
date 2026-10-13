@@ -1,10 +1,13 @@
 import type { Metadata } from "next";
-import { CaseStudyList, TimelineSection } from "@/components/case-studies/case-study-sections";
+import { draftMode } from "next/headers";
+import { DraftTools } from "@/components/site-editor/draft-tools";
+import { PageSections } from "@/components/site-editor/page-sections";
+import { CASE_STUDIES_SECTIONS } from "@/lib/pages/case-studies-content";
+import { pageSections } from "@/lib/pages/load";
+import { caseStudies } from "@/lib/site/case-studies";
+import { pmsFigures } from "@/lib/site/figures";
 import SiteFooter from "@/components/footer/site-footer";
-import ProductHero from "@/components/pms-v3/product-hero";
 import SiteNavigation from "@/components/ui/site-navigation";
-import { CASES_HERO } from "@/lib/page-heroes";
-import { PageEndDoors } from "@/components/cta/page-end-doors";
 
 export const metadata: Metadata = {
   title: "Case studies: KPI Green, Uni Abex, Pitti Engineering",
@@ -22,16 +25,18 @@ export const metadata: Metadata = {
  * a shared timeline and the plan's disclaimer. Copy lives in
  * lib/case-studies.ts.
  * Ends with the closing door pair (components/cta/page-end-doors.tsx).
+ * Staff edit the sections in /admin (globals/CaseStudiesPage.ts) and the
+ * companies in Website › Case studies (collections/CaseStudies.ts).
  */
-export default function CaseStudiesPage() {
+export default async function CaseStudiesPage() {
+  const { isEnabled: draft } = await draftMode();
+  const [sections, figures, studies] = await Promise.all([pageSections("case-studies-page", draft, CASE_STUDIES_SECTIONS), pmsFigures(), caseStudies()]);
   return (
     <SiteNavigation>
       <main id="top" className="option-one bg-white text-black">
-        <ProductHero data={CASES_HERO} />
-        <CaseStudyList />
-        <TimelineSection />
-        <PageEndDoors />
+        <PageSections sections={sections} figures={figures} studies={studies} draft={draft} />
       </main>
+      {draft ? <DraftTools path="/case-studies" /> : null}
       <SiteFooter
         explore={[
           ["KPI Green Energy", "#kpi-green-energy"],

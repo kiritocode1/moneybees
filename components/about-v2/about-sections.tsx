@@ -5,7 +5,7 @@ import { useEffect, useId, useState } from "react";
 import { Draw, Hatch, MOVE, OUT, RM, tr } from "@/components/drawing/plate";
 import { BracketLabel } from "@/components/fact-sections/fact-section";
 import { COLUMN, EYEBROW, SUBHEAD } from "@/components/hero/tokens";
-import { FOUNDER, STORY } from "@/lib/about-v2";
+import { ABOUT_STORY, FOUNDER_PORTRAIT, FOUNDER_PROFILE, type FounderProfileContent, type PlacedPicture, type StoryContent } from "@/lib/pages/about-content";
 import { hexPoints, ORANGE, useShown } from "./shared";
 
 /*
@@ -32,42 +32,51 @@ function CountUp({ to, on, instant }: { to: number; on: boolean; instant: boolea
   return <>{instant ? to : value}</>;
 }
 
-/** The founder on black: photograph, qualifications, the years counted up, and each point marked in turn. */
-export function FounderSection() {
+/**
+ * The founder on black: photograph, qualifications, the years counted up, and
+ * each point marked in turn. The words come from the About page in /admin;
+ * with no qualifications or no years there, those rows are left out.
+ */
+export function FounderSection({ content = FOUNDER_PROFILE, photo = FOUNDER_PORTRAIT }: { content?: FounderProfileContent; photo?: PlacedPicture }) {
+  const qualifications = content.qualifications ?? [];
   const { ref, shown, t } = useShown<HTMLDivElement>(0.3);
   const instant = t(1) === "0ms";
   return (
     <section id="founder" aria-labelledby="founder-heading" className="scroll-mt-[96px] bg-black text-white">
       <div ref={ref} className={`${COLUMN} grid grid-cols-1 items-start gap-12 py-[120px] md:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] md:gap-20 max-md:py-[80px]`}>
         <div className="relative aspect-[868/824] w-full overflow-hidden bg-white/10">
-          <Image src={FOUNDER.photo} alt={FOUNDER.name} fill sizes="(max-width: 768px) 100vw, 520px" className="object-cover" />
+          <Image src={photo.src} alt={photo.alt} fill sizes="(max-width: 768px) 100vw, 520px" className="object-cover" />
         </div>
         <div>
-          <BracketLabel>Founder</BracketLabel>
+          {content.label ? <BracketLabel>{content.label}</BracketLabel> : null}
           <h2 id="founder-heading" className={`mt-[18px] ${SUBHEAD}`}>
-            {FOUNDER.name}
+            {content.name}
           </h2>
-          <p className={`mt-[10px] ${EYEBROW} text-[12px] text-[#F6A11A]`}>{FOUNDER.role}</p>
-          <ul className="mt-[24px] flex list-none flex-wrap gap-[8px] p-0" aria-label="Qualifications">
-            {FOUNDER.qualifications.map((item, index) => (
-              <li
-                key={item}
-                className="rounded-full border border-white/30 px-[14px] py-[6px] text-[14px]"
-                style={{ opacity: shown ? 1 : 0, transition: `opacity ${t(500, 200 + index * 120)}` }}
-              >
-                {item}
-              </li>
-            ))}
-          </ul>
-          <div className="mt-[40px] flex items-end gap-[18px] border-t border-white/20 pt-[28px]">
-            <span className="text-[clamp(4rem,8vw,7rem)] leading-[.85] font-light tracking-[-.05em] text-[#F6A11A] tabular-nums">
-              <CountUp to={45} on={shown} instant={instant} />+
-            </span>
-            <span className={`${EYEBROW} pb-[6px] text-white/60`}>Years of experience</span>
-          </div>
+          {content.role ? <p className={`mt-[10px] ${EYEBROW} text-[12px] text-[#F6A11A]`}>{content.role}</p> : null}
+          {qualifications.length ? (
+            <ul className="mt-[24px] flex list-none flex-wrap gap-[8px] p-0" aria-label="Qualifications">
+              {qualifications.map(({ qualification }, index) => (
+                <li
+                  key={index}
+                  className="rounded-full border border-white/30 px-[14px] py-[6px] text-[14px]"
+                  style={{ opacity: shown ? 1 : 0, transition: `opacity ${t(500, 200 + index * 120)}` }}
+                >
+                  {qualification}
+                </li>
+              ))}
+            </ul>
+          ) : null}
+          {typeof content.years === "number" ? (
+            <div className="mt-[40px] flex items-end gap-[18px] border-t border-white/20 pt-[28px]">
+              <span className="text-[clamp(4rem,8vw,7rem)] leading-[.85] font-light tracking-[-.05em] text-[#F6A11A] tabular-nums">
+                <CountUp to={content.years} on={shown} instant={instant} />+
+              </span>
+              {content.yearsLabel ? <span className={`${EYEBROW} pb-[6px] text-white/60`}>{content.yearsLabel}</span> : null}
+            </div>
+          ) : null}
           <ol className="mt-[32px] list-none border-t border-white/40 p-0">
-            {FOUNDER.points.map((point, index) => (
-              <li key={point} className="grid grid-cols-[30px_minmax(0,1fr)] items-start gap-x-[14px] border-b border-white/15 py-[16px]">
+            {content.points?.map(({ point }, index) => (
+              <li key={index} className="grid grid-cols-[30px_minmax(0,1fr)] items-start gap-x-[14px] border-b border-white/15 py-[16px]">
                 <svg viewBox="0 0 24 24" className="mt-[3px] h-[22px] w-[22px]" aria-hidden="true">
                   <polygon points={hexPoints(12, 12, 10.5)} fill={shown ? ORANGE : "transparent"} stroke={shown ? ORANGE : "rgba(255,255,255,.3)"} strokeWidth="1.2" style={{ transition: `fill ${t(400, 500 + index * 160)}, stroke ${t(400, 500 + index * 160)}` }} />
                 </svg>
@@ -201,17 +210,17 @@ function MoneyDrawing({ on }: { on: boolean; t: (ms: number, delay?: number) => 
 }
 
 /** The story line, drawn as its two halves side by side. */
-export function StorySection() {
+export function StorySection({ content = ABOUT_STORY }: { content?: StoryContent }) {
   const { ref, shown, t } = useShown<HTMLDivElement>(0.35);
   return (
     <section id="story" aria-labelledby="story-heading" className="scroll-mt-[96px] border-t border-dashed border-black/10 bg-white text-black">
       <div className={`${COLUMN} py-[120px] max-md:py-[80px]`}>
         <h2 id="story-heading" className={SUBHEAD}>
-          {STORY.heading}
+          {content.heading}
         </h2>
         <blockquote className="mt-[40px] max-w-[980px] font-serif text-[clamp(1.9rem,1.2rem+2.4vw,3.4rem)] leading-[1.12] tracking-[-.015em]">
           <span className="text-[#F6A11A]">&ldquo;</span>
-          {STORY.line}
+          {content.line}
           <span className="text-[#F6A11A]">&rdquo;</span>
         </blockquote>
         <div ref={ref} className="mt-[64px] grid grid-cols-1 gap-[2px] bg-black/10 md:grid-cols-2">

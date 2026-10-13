@@ -3,7 +3,7 @@
 import { useRef } from "react";
 import { BracketLabel } from "@/components/fact-sections/fact-section";
 import { BODY, COLUMN, SUBHEAD } from "@/components/hero/tokens";
-import { CATEGORY_III } from "@/lib/aif-v2";
+import { AIF_POOLING, type PoolingContent } from "@/lib/pages/aif-content";
 import { stage, usePinnedProgress } from "./use-pinned-progress";
 
 /*
@@ -127,7 +127,8 @@ function FillingText({ text, p }: { text: string; p: number }) {
   );
 }
 
-export function PoolingSection() {
+/** The words are edited in /admin; the PMS and AIF panels are drawings. */
+export function PoolingSection({ content = AIF_POOLING }: { content?: PoolingContent }) {
   const ref = useRef<HTMLElement>(null);
   const { progress: p } = usePinnedProgress(ref);
   return (
@@ -135,13 +136,13 @@ export function PoolingSection() {
       <div className="flex flex-col justify-center py-[96px] md:sticky md:top-0 md:h-screen md:overflow-hidden md:py-0">
         <div className={`${COLUMN} grid grid-cols-1 items-end gap-8 md:grid-cols-12 md:gap-x-6`}>
           <div className="md:col-span-5">
-            <BracketLabel>Category III AIF</BracketLabel>
-            <h2 id="category-iii-heading" className={`mt-[18px] ${SUBHEAD}`}>
-              {CATEGORY_III.heading}
+            {content.label ? <BracketLabel>{content.label}</BracketLabel> : null}
+            <h2 id="category-iii-heading" className={`${content.label ? "mt-[18px] " : ""}${SUBHEAD}`}>
+              {content.heading}
             </h2>
           </div>
           <div className="md:col-span-6 md:col-start-7">
-            <FillingText text={CATEGORY_III.text} p={p} />
+            <FillingText text={content.text} p={p} />
           </div>
         </div>
         <div className={`${COLUMN} mt-12 grid grid-cols-1 md:mt-[min(6vh,64px)] md:grid-cols-2`}>

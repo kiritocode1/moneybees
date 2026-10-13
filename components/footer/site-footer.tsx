@@ -1,7 +1,11 @@
 import Link from "@/components/transition/transition-link";
 import type { ReactNode } from "react";
 import { BracketLabel } from "@/components/fact-sections/fact-section";
-import { CONTACT, RECORD_METHOD, REGISTRATIONS } from "@/lib/insights";
+import { METHOD_NOTE } from "@/lib/pages/pms-content";
+import { telHref } from "@/lib/site/details";
+import { pmsFigures } from "@/lib/site/figures";
+import { siteDetails } from "@/lib/site/load-details";
+import { fillTokens } from "@/lib/site/tokens";
 import DotMarquee from "./dot-marquee";
 import DotWordmark from "./dot-wordmark";
 import MumbaiClock from "./mumbai-clock";
@@ -33,10 +37,11 @@ const LINK = `text-[16px] leading-[1.35] tracking-[-.015em] text-[#000] no-under
  * marquee, four columns on the page's own
  * gutter, the legal lines, and United Carriers' dot-matrix wordmark to end on.
  * Everything shares one left edge. The office clock sits with the office
- * address it belongs to. Every line is either the existing footer's or the
- * decks' own (contact p17, registrations p15).
+ * address it belongs to. The contact details, registrations and disclaimer
+ * come from Office details in /admin (lib/site/load-details.ts).
  */
-export default function SiteFooter({ explore }: { explore: readonly FooterLink[] }) {
+export default async function SiteFooter({ explore }: { explore: readonly FooterLink[] }) {
+  const [details, figures] = await Promise.all([siteDetails(), pmsFigures()]);
   const columns: readonly (readonly [string, readonly FooterLink[]])[] = [
     ["Explore", explore],
     // The regulatory links land on the investor centre's document groups (stable ids in lib/investor-centre.ts).
@@ -69,7 +74,7 @@ export default function SiteFooter({ explore }: { explore: readonly FooterLink[]
         <div>
           <BracketLabel>Write to us</BracketLabel>
           <dl className="mt-[22px] grid gap-[16px]">
-            {CONTACT.emails.map(([label, email]) => (
+            {details.desks.map(({ label, email }) => (
               <div key={email}>
                 <dt className={LABEL}>{label}</dt>
                 <dd className="mt-[4px]">
@@ -84,16 +89,16 @@ export default function SiteFooter({ explore }: { explore: readonly FooterLink[]
         <address className="not-italic">
           <BracketLabel>Visit us</BracketLabel>
           <p className="mt-[22px] text-[16px] leading-[1.45] tracking-[-.015em]">
-            <b className="font-[550]">{CONTACT.company}</b>
+            <b className="font-[550]">{details.company}</b>
             <br />
-            {CONTACT.address[0]}
+            {details.address.line1}
             <br />
-            {CONTACT.address[1]}
+            {details.address.line2}
           </p>
           <p className="mt-[16px] flex flex-wrap gap-x-[20px] gap-y-[4px]">
-            {CONTACT.phones.map((phone) => (
-              <a key={phone} href={`tel:${phone.replace(/\s/g, "")}`} className={LINK}>
-                {phone}
+            {details.phones.map(({ number }) => (
+              <a key={number} href={telHref(number)} className={LINK}>
+                {number}
               </a>
             ))}
           </p>
@@ -106,7 +111,7 @@ export default function SiteFooter({ explore }: { explore: readonly FooterLink[]
       <div className={`border-t border-t-[rgba(0,0,0,.13)] pt-[24px] pb-[28px] text-[11px] leading-[1.6] ${GUTTER}`}>
         <div className="flex flex-wrap items-baseline justify-between gap-x-[40px] gap-y-[12px] uppercase tracking-[.06em]">
           <p className="flex flex-wrap gap-x-[28px] gap-y-[4px] text-[#000]">
-            {REGISTRATIONS.map(([business, number]) => (
+            {details.registrations.map(({ business, number }) => (
               <span key={number}>
                 {business} <span className="text-[rgba(0,0,0,.55)]">{number}</span>
               </span>
@@ -122,11 +127,9 @@ export default function SiteFooter({ explore }: { explore: readonly FooterLink[]
           </nav>
         </div>
         <div className="mt-[16px] grid grid-cols-2 gap-[48px] text-[rgba(0,0,0,.6)] max-[900px]:grid-cols-1 max-[900px]:gap-[10px]">
-          <p>
-            Investments in securities are subject to market risk, including the loss of principal. Read all related documents carefully before investing. Registration with SEBI does not imply approval or endorsement of the portfolio manager by the Board. Past performance is not indicative of future results.
-          </p>
-          {/* The method behind the returns shown on the page, AIF presentation p12. */}
-          <p>{RECORD_METHOD}</p>
+          <p>{details.disclaimer}</p>
+          {/* The method behind the returns shown on the page, AIF presentation p12, dated by the latest PMS fact sheet. */}
+          <p>{fillTokens(METHOD_NOTE, figures)}</p>
         </div>
       </div>
 

@@ -8,6 +8,8 @@ const dirname = path.dirname(fileURLToPath(import.meta.url));
 const nextConfig: NextConfig = {
   // Pin the workspace root so Turbopack does not pick up a lockfile further up the tree.
   turbopack: { root: dirname },
+  // No "X-Powered-By: Next.js, Payload" on responses; withPayload adds it unless this is false.
+  poweredByHeader: false,
   // Our Approach became Our Philosophy on 2026-10-11; old links and search results land on the new page.
   async redirects() {
     return [{ source: "/our-approach", destination: "/our-philosophy", permanent: true }];
@@ -23,6 +25,11 @@ const nextConfig: NextConfig = {
       {
         protocol: "https",
         hostname: "i.ytimg.com",
+      },
+      // Files uploaded in /admin (a new portrait, say), once Vercel Blob holds them.
+      {
+        protocol: "https",
+        hostname: "*.public.blob.vercel-storage.com",
       },
     ],
   },

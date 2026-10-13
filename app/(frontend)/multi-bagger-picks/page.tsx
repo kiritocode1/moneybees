@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
-import { PageEndDoors } from "@/components/cta/page-end-doors";
-import PicksSection from "@/components/fact-sections/picks-section";
+import { draftMode } from "next/headers";
+import { DraftTools } from "@/components/site-editor/draft-tools";
+import { PageSections } from "@/components/site-editor/page-sections";
+import { PICKS_SECTIONS } from "@/lib/pages/picks-content";
+import { pageSections } from "@/lib/pages/load";
+import { pmsFigures } from "@/lib/site/figures";
 import SiteFooter from "@/components/footer/site-footer";
-import ProductHero from "@/components/pms-v3/product-hero";
 import SiteNavigation from "@/components/ui/site-navigation";
-import { PICKS_HERO } from "@/lib/page-heroes";
 
 const DESCRIPTION =
   "Moneybee's multibagger picks by multiple, from more than 25 stocks at 2X or more to Fairchem Organics and Privi Speciality Chemicals at over 100X, with case studies.";
@@ -21,15 +23,18 @@ export const metadata: Metadata = {
  * /multi-bagger-picks: the pyramid section, moved off the homepage onto its own
  * page (client, 2026-10-08), under the internal-page hero. Tiers and case
  * studies live in lib/insights.ts (PICK_TIERS). Ends with the closing door pair.
+ * Staff edit the sections in /admin (globals/PicksPage.ts); the tiers and
+ * stocks are compliance's.
  */
-export default function MultibaggerPicksPage() {
+export default async function MultibaggerPicksPage() {
+  const { isEnabled: draft } = await draftMode();
+  const [sections, figures] = await Promise.all([pageSections("picks-page", draft, PICKS_SECTIONS), pmsFigures()]);
   return (
     <SiteNavigation>
       <main id="top" className="option-one bg-white text-black">
-        <ProductHero data={PICKS_HERO} />
-        <PicksSection />
-        <PageEndDoors />
+        <PageSections sections={sections} figures={figures} draft={draft} />
       </main>
+      {draft ? <DraftTools path="/multi-bagger-picks" /> : null}
       <SiteFooter
         explore={[
           ["Case studies", "/case-studies"],

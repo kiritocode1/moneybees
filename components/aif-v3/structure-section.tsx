@@ -4,7 +4,7 @@ import type { CSSProperties } from "react";
 import { useShown } from "@/components/about-v2/shared";
 import { BracketLabel } from "@/components/fact-sections/fact-section";
 import { COLUMN, SUBHEAD } from "@/components/hero/tokens";
-import { STRUCTURE } from "@/lib/aif-v2";
+import { AIF_STRUCTURE, type StructureContent } from "@/lib/pages/aif-content";
 
 /*
  * Flyingbee Structure (content plan §4) as the plan's diagram and nothing
@@ -43,9 +43,11 @@ function Arrow({ down, shown, t, delay }: { down?: boolean; shown: boolean; t: T
   );
 }
 
-export function StructureSection() {
+/** The names are edited in /admin; there are always three in the chain and four parties on the rail. */
+export function StructureSection({ content = AIF_STRUCTURE }: { content?: StructureContent }) {
   const { ref, shown, t } = useShown<HTMLDivElement>(0.3);
-  const [investors, fund, manager] = STRUCTURE.chain;
+  const { investors, fund, manager } = content;
+  const parties = (content.parties ?? []).map(({ name }) => name);
   const appear = (delay: number): CSSProperties => ({
     opacity: shown ? 1 : 0,
     transform: shown ? "none" : "translateY(12px)",
@@ -54,9 +56,9 @@ export function StructureSection() {
   return (
     <section id="structure" aria-labelledby="structure-heading" className="scroll-mt-[96px] bg-white text-black">
       <div className={`${COLUMN} py-[120px] max-md:py-[80px]`}>
-        <BracketLabel>Flyingbee</BracketLabel>
-        <h2 id="structure-heading" className={`mt-[18px] ${SUBHEAD}`}>
-          {STRUCTURE.heading}
+        {content.label ? <BracketLabel>{content.label}</BracketLabel> : null}
+        <h2 id="structure-heading" className={`${content.label ? "mt-[18px] " : ""}${SUBHEAD}`}>
+          {content.heading}
         </h2>
 
         <div ref={ref} className="mt-[56px]">
@@ -86,8 +88,8 @@ export function StructureSection() {
                 className="absolute top-0 right-[calc((100%-72px)/8)] left-[calc((100%-72px)/8)] h-px bg-black"
                 style={{ transform: shown ? "none" : "scaleX(0)", transition: `transform ${t(600, 1550)}` }}
               />
-              {STRUCTURE.parties.map((party, index) => (
-                <li key={party} className="flex flex-col items-center">
+              {parties.map((party, index) => (
+                <li key={index} className="flex flex-col items-center">
                   <span aria-hidden="true" className="block h-[28px] w-px origin-top bg-black" style={{ transform: shown ? "none" : "scaleY(0)", transition: `transform ${t(300, 2050 + index * 90)}` }} />
                   <div className={`${BOX} w-full flex-1`} style={appear(2200 + index * 90)}>
                     <span className={NAME}>{party}</span>
@@ -108,8 +110,8 @@ export function StructureSection() {
                 <span className={NAME}>{fund}</span>
               </div>
               <ul className="m-0 grid list-none grid-cols-2 gap-[8px] border border-t-0 border-[#F6A11A] p-[8px]">
-                {STRUCTURE.parties.map((party) => (
-                  <li key={party} className="flex items-center border border-black/25 bg-white px-[14px] py-[14px] text-[15px] leading-[1.3]">
+                {parties.map((party, index) => (
+                  <li key={index} className="flex items-center border border-black/25 bg-white px-[14px] py-[14px] text-[15px] leading-[1.3]">
                     {party}
                   </li>
                 ))}

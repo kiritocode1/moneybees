@@ -2,7 +2,7 @@
 
 import { useInView, useMotionValueEvent } from "motion/react";
 import { useReducedMotion } from "@/lib/use-reduced-motion";
-import { useCallback, useLayoutEffect, useRef, useState } from "react";
+import { createContext, useCallback, useContext, useLayoutEffect, useRef, useState } from "react";
 import { path, type Point } from "@/components/iso/geometry";
 import {
   PYRAMID_NORMALS,
@@ -12,7 +12,8 @@ import {
   squareCorners,
   winding,
 } from "@/components/insight-cards/moneybee-figures";
-import { type CaseStudy, HEADINGS, PICK_TIERS } from "@/lib/insights";
+import { type CaseStudy, PICK_TIERS, type PickTier } from "@/lib/insights";
+import { PICKS, type PicksContent, pickTiers } from "@/lib/pages/picks-content";
 import FactSection, {
   Bloom,
   clamp,
@@ -31,11 +32,17 @@ import FactSection, {
 const REST = Math.PI / 4;
 const APEX = PYRAMID_TIERS[PYRAMID_TIERS.length - 1];
 
-/** PYRAMID_TIERS runs base to apex; PICK_TIERS runs apex to base. */
-const pickFor = (tier: number) => PICK_TIERS[PYRAMID_TIERS.length - 1 - tier];
+/**
+ * The tiers in /admin, apex first, for the figure and the panels. FactSection
+ * renders the figure as a component of its own, so it reads them from here.
+ */
+const Tiers = createContext<readonly PickTier[]>(PICK_TIERS);
+
+/** PYRAMID_TIERS runs base to apex; the tiers run apex to base. */
+const pickFor = (tiers: readonly PickTier[], tier: number): PickTier => tiers[PYRAMID_TIERS.length - 1 - tier] ?? { multiple: "", picks: "" };
 /** The tier label as the slide prints it, and a short form for the figure. */
-const labelFor = (tier: number) => pickFor(tier).multiple;
-const shortLabel = (tier: number) => pickFor(tier).multiple.replace(" or more", "").replace(" ", "");
+const labelFor = (tiers: readonly PickTier[], tier: number) => pickFor(tiers, tier).multiple;
+const shortLabel = (tiers: readonly PickTier[], tier: number) => pickFor(tiers, tier).multiple.replace(" or more", "").replace(" ", "");
 
 /** Paper to a light grey by angle to the light, or the site orange to its wall shade when selected. */
 function faceFill(shade: number, selected: boolean) {
@@ -86,6 +93,7 @@ const SIDES = [0, 1, 2, 3] as const;
  * leader lines, straight to the SVG, so the turning figure never re-renders.
  */
 export function PicksFigure({ progress, selected, onSelect }: FigureState) {
+  const tiers = useContext(Tiers);
   const settled = progress > 0.8;
   const svgRef = useRef<SVGSVGElement>(null);
   const inView = useInView(svgRef);
@@ -161,7 +169,7 @@ export function PicksFigure({ progress, selected, onSelect }: FigureState) {
             key={tier.baseRadius}
             role="button"
             tabIndex={settled ? 0 : -1}
-            aria-label={`${labelFor(index)}`}
+            aria-label={`${labelFor(tiers, index)}`}
             aria-pressed={active}
             onKeyDown={(event) => event.key === "Enter" && onSelect(index)}
             onClick={() => onSelect(index)}
@@ -208,7 +216,7 @@ export function PicksFigure({ progress, selected, onSelect }: FigureState) {
                 style={{ filter: active ? LINE_GLOW : "none" }}
               />
               <text x="258" y={y + 4} fontSize="12" fill="#000" fontFamily="ui-monospace, Menlo, monospace" letterSpacing=".04em">
-                {shortLabel(index)}
+                {shortLabel(tiers, index)}
               </text>
             </g>
           );
@@ -249,14 +257,15 @@ function FinancialsChart({ caseStudy }: { caseStudy: CaseStudy }) {
 }
 
 function TierPanel({ tier }: { tier: number }) {
-  const { picks } = pickFor(tier);
+  const tiers = useContext(Tiers);
+  const { picks } = pickFor(tiers, tier);
   const named = typeof picks === "string" ? [] : picks;
   const [open, setOpen] = useState<string | null>(named.find((pick) => pick.caseStudy)?.name ?? null);
   const study = named.find((pick) => pick.name === open)?.caseStudy;
 
   return (
     <div>
-      <PanelTitle>{labelFor(tier)}</PanelTitle>
+      <PanelTitle>{labelFor(tiers, tier)}</PanelTitle>
 
       {typeof picks === "string" ? (
         <p className="mt-[28px] border-t border-t-[rgba(0,0,0,.13)] pt-[18px] text-[clamp(1.4rem,2vw,1.9rem)] font-light tracking-[-.03em]">
@@ -310,16 +319,19 @@ function TierPanel({ tier }: { tier: number }) {
 /**
  * "Our multibagger picks", the deck's own title for slide 20, the body of
  * /multi-bagger-picks. Its lead is the page hero's sentence there. Panels run
- * base to apex, so it ends on the highest multiple.
+ * base to apex, so it ends on the highest multiple. The tiers and their stocks
+ * are edited in /admin; there are always five, one per step of the pyramid.
  */
-export default function PicksSection() {
+export default function PicksSection({ content = PICKS }: { content?: PicksContent }) {
   return (
-    <FactSection
-      id="picks"
-      label="Our multibagger picks"
-      heading={HEADINGS.picks}
-      panels={PYRAMID_TIERS.map((_, tier) => ({ part: tier, content: <TierPanel tier={tier} /> }))}
-      figure={PicksFigure}
-    />
+    <Tiers.Provider value={pickTiers(content)}>
+      <FactSection
+        id="picks"
+        label={content.label}
+        heading={content.heading ?? undefined}
+        panels={PYRAMID_TIERS.map((_, tier) => ({ part: tier, content: <TierPanel tier={tier} /> }))}
+        figure={PicksFigure}
+      />
+    </Tiers.Provider>
   );
 }

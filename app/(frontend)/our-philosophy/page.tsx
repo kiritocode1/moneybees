@@ -1,13 +1,12 @@
 import type { Metadata } from "next";
-import { CriteriaLists } from "@/components/approach-v3/criteria-lists";
-import { PhilosophyDiscs } from "@/components/approach-v3/philosophy-discs";
-import { RiskRings } from "@/components/approach-v3/risk-rings";
+import { draftMode } from "next/headers";
+import { DraftTools } from "@/components/site-editor/draft-tools";
+import { PageSections } from "@/components/site-editor/page-sections";
+import { PHILOSOPHY_SECTIONS } from "@/lib/pages/philosophy-content";
+import { pageSections } from "@/lib/pages/load";
+import { pmsFigures } from "@/lib/site/figures";
 import SiteFooter from "@/components/footer/site-footer";
-import ProductHero from "@/components/pms-v3/product-hero";
 import SiteNavigation from "@/components/ui/site-navigation";
-import { APPROACH_HERO } from "@/lib/page-heroes";
-import { PageEndDoors } from "@/components/cta/page-end-doors";
-import { TholosSection } from "@/components/philosophy-tholos/tholos-section";
 
 export const metadata: Metadata = {
   title: "Our philosophy: screen, analyse, monitor, exit",
@@ -26,25 +25,23 @@ export const metadata: Metadata = {
  * 2026-10-11), what we look for and don't do, and risk management
  * as concentric half-rings. Copy lives in lib/approach.ts.
  * Ends with the closing door pair (components/cta/page-end-doors.tsx).
+ * Staff edit the sections in /admin (globals/OurPhilosophyPage.ts).
  */
-export default function OurPhilosophyPage() {
+export default async function OurPhilosophyPage() {
+  const { isEnabled: draft } = await draftMode();
+  const [sections, figures] = await Promise.all([pageSections("our-philosophy-page", draft, PHILOSOPHY_SECTIONS), pmsFigures()]);
   return (
     <SiteNavigation>
       <main id="top" className="option-one bg-white text-black">
-        <ProductHero data={APPROACH_HERO} />
-        <PhilosophyDiscs />
-        {/* The stock selection process is off the page until it is reworked (user, 2026-10-11). */}
-        <TholosSection />
-        <CriteriaLists />
-        <RiskRings />
-        <PageEndDoors />
+        <PageSections sections={sections} figures={figures} draft={draft} />
       </main>
+      {draft ? <DraftTools path="/our-philosophy" /> : null}
       <SiteFooter
         explore={[
           ["About Moneybee", "/about"],
           ["Our philosophy", "#philosophy"],
           ["Our strategies", "/pms-vs-aif"],
-          ["Team", "/about#key-members"],
+          ["Team", "/about#team"],
         ]}
       />
     </SiteNavigation>

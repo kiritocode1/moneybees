@@ -18,8 +18,10 @@ export const FactSheets: CollectionConfig = {
   admin: {
     useAsTitle: "title",
     defaultColumns: ["title", "status", "asOf", "updatedAt"],
-    group: "This month",
+    group: "Publishing",
     description: "Draft, submit for review, and compliance publishes. A published sheet never changes; fix a mistake with a new sheet for the same month.",
+    // Adding and checking a month happens on one guided screen (components/admin/fact-sheet), not Payload's form.
+    components: { views: { edit: { root: { Component: "/components/admin/fact-sheet/fact-sheet-view#FactSheetView" } } } },
   },
   versions: { maxPerDoc: 0 },
   access: {
@@ -96,6 +98,7 @@ export const FactSheets: CollectionConfig = {
       type: "textarea",
       admin: { description: "Only when replacing a sheet already published for the same month: what was wrong." },
     },
+    { name: "reviewNote", type: "textarea", admin: { description: "Compliance's note when sending a sheet back." } },
     { name: "submittedBy", type: "relationship", relationTo: "users", admin: { position: "sidebar", readOnly: true } },
     { name: "submittedAt", type: "date", admin: { position: "sidebar", readOnly: true } },
     { name: "approvedBy", type: "relationship", relationTo: "users", admin: { position: "sidebar", readOnly: true } },

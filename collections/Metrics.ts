@@ -9,7 +9,7 @@ import { allow, everyone } from "@/lib/backend/roles";
  */
 export const Metrics: CollectionConfig = {
   slug: "metrics",
-  admin: { useAsTitle: "label", defaultColumns: ["label", "value", "unit"], group: "Website" },
+  admin: { useAsTitle: "label", defaultColumns: ["label", "value", "unit"], group: "Publishing" },
   access: { read: everyone, create: allow("editor", "compliance"), update: allow("editor", "compliance"), delete: allow() },
   hooks: { afterChange: [auditChange("metrics")] },
   fields: [

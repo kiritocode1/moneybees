@@ -3,24 +3,14 @@
 import { ChevronDown, Mail, MapPin, Phone } from "lucide-react";
 import { motion } from "motion/react";
 import { useSearchParams } from "next/navigation";
-import { type FormEvent, type KeyboardEvent, Suspense, useId, useRef, useState } from "react";
+import { type FormEvent, type KeyboardEvent, Suspense, useId, useRef, useState, useTransition } from "react";
 import { BracketLabel } from "@/components/fact-sections/fact-section";
 import { COLUMN, EYEBROW, SUBHEAD } from "@/components/hero/tokens";
-import {
-  CONTACT_PAGE,
-  DIRECTIONS_HREF,
-  EMAIL,
-  ENQUIRIES,
-  type Enquiry,
-  type EnquiryField,
-  enquiryFromParam,
-  enquiryMailto,
-  MAP_EMBED,
-  OFFICE,
-  PHONE,
-  PHONE_HREF,
-} from "@/lib/contact-v2";
-import { CONTACT } from "@/lib/insights";
+import { useSiteDetails } from "@/components/site/site-details";
+import { ENQUIRIES, type Enquiry, type EnquiryField, enquiryFromParam, enquiryMailto } from "@/lib/contact-v2";
+import { type EnquiryResult, sendEnquiry } from "@/lib/crm/enquiry-actions";
+import { ENQUIRY_SECTION, type EnquiryContent } from "@/lib/pages/contact-content";
+import { directionsHref, mapEmbed, telHref } from "@/lib/site/details";
 import { useReducedMotion } from "@/lib/use-reduced-motion";
 
 /*
@@ -28,10 +18,13 @@ import { useReducedMotion } from "@/lib/use-reduced-motion";
  * 2026-10-08). The form sits in a white card on the site grey, in the same
  * card language as the client sign-in and the door cards: a segmented
  * control for the four topics, outlined fields two to a row, one orange
- * action. The direct lines sit beside it. Then the office card and its map. The form
- * has no backend yet: sending it opens a mailto to info@moneybee.in with the
- * filled fields. Every enquiry link on the site lands here on the General tab
+ * action. The direct lines sit beside it. Then the office card and its map. Sending
+ * stores the enquiry in the CRM (lib/crm/enquiry-actions.ts) and shows its
+ * reference; a deployment without a database still opens a mailto to
+ * info@moneybee.in. Every enquiry link on the site lands here on the General tab
  * (ENQUIRY_HREF); `?enquiry=pms` (or aif, support) preselects another.
+ * Phone, email, the AIF desks and the office come from Office details in
+ * /admin, through components/site/site-details.tsx.
  */
 
 const FOCUS = "focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-current";
@@ -63,17 +56,20 @@ function DirectLine({ icon: Icon, label, value, href }: { icon: typeof Phone; la
  * absolute nav (113px, 75px on phones), so #enquiry needs no scroll margin.
  * Desktop: the heading and the direct lines on the left, the form card on the
  * right. Phones: heading, form card, then the lines, so the enquiry is always
- * the first thing after the heading.
+ * the first thing after the heading. The label, heading and desks label are
+ * edited in /admin; the four forms stay in code.
  */
-export function EnquirySection() {
+export function EnquirySection({ content = ENQUIRY_SECTION }: { content?: EnquiryContent }) {
+  const { phones, email, desks } = useSiteDetails();
+  const main = phones[0];
   return (
     <section id="enquiry" aria-labelledby="enquiry-heading" className="bg-white pt-[113px] text-black max-md:pt-[75px]">
       <div className="border-t border-black/10 bg-[#F6F6F6]">
         <div className={`${COLUMN} grid grid-cols-1 gap-x-6 gap-y-10 pt-[64px] pb-[96px] md:grid-cols-12 md:grid-rows-[auto_1fr] max-md:pt-[36px] max-md:pb-[56px]`}>
           <div className="md:col-span-4 md:row-start-1">
-            <BracketLabel>Get Started</BracketLabel>
-            <h1 id="enquiry-heading" className={`mt-[18px] ${SUBHEAD}`}>
-              {CONTACT_PAGE.heading}
+            {content.label ? <BracketLabel>{content.label}</BracketLabel> : null}
+            <h1 id="enquiry-heading" className={`${content.label ? "mt-[18px] " : ""}${SUBHEAD}`}>
+              {content.heading}
             </h1>
           </div>
           <div className={`${CARD} p-[32px] md:col-span-7 md:col-start-6 md:row-span-2 md:row-start-1 max-md:p-[20px]`}>
@@ -82,10 +78,10 @@ export function EnquirySection() {
             </Suspense>
           </div>
           <dl className="m-0 grid content-start gap-y-[20px] md:col-span-4 md:row-start-2">
-            <DirectLine icon={Phone} label="Phone" value={PHONE} href={PHONE_HREF} />
-            <DirectLine icon={Mail} label="Email" value={EMAIL} href={`mailto:${EMAIL}`} />
-            <p className={`${EYEBROW} mt-[12px] text-black/55`}>Flyingbee AIF desks</p>
-            {CONTACT.emails.map(([label, address]) => (
+            {main ? <DirectLine icon={Phone} label="Phone" value={main.number} href={telHref(main.number)} /> : null}
+            <DirectLine icon={Mail} label="Email" value={email} href={`mailto:${email}`} />
+            {desks.length > 0 && content.desksLabel ? <p className={`${EYEBROW} mt-[12px] text-black/55`}>{content.desksLabel}</p> : null}
+            {desks.map(({ label, email: address }) => (
               <DirectLine key={address} icon={Mail} label={label} value={address} href={`mailto:${address}`} />
             ))}
           </dl>
@@ -101,6 +97,7 @@ export function EnquirySection() {
  * rounded card (user, 2026-10-08, replacing the black band and its lorem).
  */
 export function OfficeSection() {
+  const details = useSiteDetails();
   return (
     <section id="office" aria-labelledby="office-heading" className="scroll-mt-[96px] border-t border-black/10 bg-white text-black">
       <div className={`${COLUMN} grid grid-cols-1 gap-[16px] py-[96px] md:grid-cols-[minmax(0,.85fr)_minmax(0,1.15fr)] max-md:py-[56px]`}>
@@ -112,10 +109,10 @@ export function OfficeSection() {
             <span className={`${EYEBROW} text-black/55`}>Office</span>
           </div>
           <h2 id="office-heading" className="mt-[32px] font-serif text-[clamp(2rem,1.6rem+1vw,2.5rem)] leading-[1.05] font-bold tracking-[-.015em]">
-            {OFFICE.name}
+            {details.officeName}
           </h2>
           <address className="mt-[12px] text-[16px] leading-[1.6] not-italic text-black/70">
-            {OFFICE.lines.map((line) => (
+            {[details.address.line1, details.address.line2].map((line) => (
               <span key={line} className="block">
                 {line}
               </span>
@@ -123,7 +120,7 @@ export function OfficeSection() {
           </address>
           <div className="mt-auto pt-[36px]">
             <a
-              href={DIRECTIONS_HREF}
+              href={directionsHref(details)}
               target="_blank"
               rel="noreferrer"
               className={`inline-flex items-center justify-center rounded-full bg-[#F6A11A] px-[26px] py-[13px] text-[15px] font-medium text-black no-underline transition-[color,background-color,scale] duration-200 ease-[cubic-bezier(.23,1,.32,1)] hover:bg-black hover:text-white active:scale-[0.97] motion-reduce:transition-none ${FOCUS}`}
@@ -134,7 +131,7 @@ export function OfficeSection() {
           </div>
         </div>
         <div className={`${CARD} relative min-h-[360px] overflow-hidden md:min-h-[420px]`}>
-          <iframe title="Map of Peninsula Business Park, Lower Parel, Mumbai" src={MAP_EMBED} loading="lazy" referrerPolicy="no-referrer-when-downgrade" className="absolute inset-0 h-full w-full border-0" />
+          <iframe title={`Map of ${details.address.line1.replace(/,$/, "")} ${details.address.line2}`} src={mapEmbed(details)} loading="lazy" referrerPolicy="no-referrer-when-downgrade" className="absolute inset-0 h-full w-full border-0" />
         </div>
       </div>
     </section>
@@ -234,7 +231,14 @@ function pairedFields(fields: readonly EnquiryField[]) {
   return fields.map((field) => ({ field, half: HALF.has(field.name) && field.name !== alone }));
 }
 
-/** The form for one topic. Sending it opens the visitor's mail app with the fields filled in. */
+/** Hidden from people and from screen readers; a bot that fills every field fills this one too. */
+const HONEYPOT = "absolute -left-[9999px] h-px w-px overflow-hidden";
+
+/**
+ * The form for one topic. Sending stores the enquiry and swaps the form for
+ * its reference. Without a database on the deployment it falls back to
+ * opening the visitor's mail app with the fields filled in.
+ */
 function EnquiryForm({
   id,
   labelledBy,
@@ -248,26 +252,76 @@ function EnquiryForm({
   values: Readonly<Record<string, string>>;
   onChange: (name: string, value: string) => void;
 }) {
+  const [result, setResult] = useState<EnquiryResult | null>(null);
+  const [pending, startTransition] = useTransition();
+  const main = useSiteDetails().phones[0];
   const onSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    window.location.href = enquiryMailto(enquiry, values);
+    const website = new FormData(event.currentTarget).get("website");
+    const search = new URLSearchParams(window.location.search);
+    const utm = Object.fromEntries([...search].filter(([key]) => key.startsWith("utm_")));
+    startTransition(async () => {
+      const sent = await sendEnquiry(enquiry.id, { ...values, website }, { page: `${window.location.pathname}${window.location.search}`, utm });
+      if (!sent.ok && sent.mailto) window.location.href = enquiryMailto(enquiry, values);
+      else setResult(sent);
+    });
   };
+
+  if (result?.ok) {
+    return (
+      <div id={id} role="tabpanel" aria-labelledby={labelledBy} className="mt-[28px] rounded-[16px] bg-[#F6F6F6] p-[28px] max-md:p-[20px]">
+        <p role="status" className="text-[22px] leading-[1.25] font-semibold tracking-[-.01em]">
+          Your enquiry is with us.
+        </p>
+        <p className="mt-[10px] text-[15px] leading-[1.6] text-black/70">
+          Your reference is <span className="font-medium text-black tabular-nums">{result.reference}</span>.{" "}
+          {result.acknowledged && result.email ? `A copy is on its way to ${result.email}. ` : ""}
+          {main ? (
+            <>
+              For anything urgent, call <a href={telHref(main.number)} className={`text-black ${FOCUS}`}>{main.number}</a>.
+            </>
+          ) : null}
+        </p>
+        <button
+          type="button"
+          onClick={() => {
+            onChange("message", "");
+            setResult(null);
+          }}
+          className={`mt-[20px] cursor-pointer border-0 bg-transparent p-0 text-[14px] font-medium text-black underline underline-offset-4 ${FOCUS}`}
+        >
+          Send another enquiry
+        </button>
+      </div>
+    );
+  }
+
   return (
-    <form id={id} role="tabpanel" aria-labelledby={labelledBy} onSubmit={onSubmit} className="mt-[28px]">
+    <form id={id} role="tabpanel" aria-labelledby={labelledBy} onSubmit={onSubmit} className="relative mt-[28px]">
       <div className="grid grid-cols-1 gap-x-[16px] gap-y-[18px] @min-[30rem]:grid-cols-2">
         {pairedFields(enquiry.fields).map(({ field, half }) => (
           <Field key={field.name} field={field} half={half} value={values[field.name] ?? ""} onChange={(value) => onChange(field.name, value)} />
         ))}
       </div>
+      <div aria-hidden="true" className={HONEYPOT}>
+        <label>
+          Website
+          <input type="text" name="website" tabIndex={-1} autoComplete="off" />
+        </label>
+      </div>
+      {result && !result.ok && (
+        <p role="alert" className="mt-[20px] text-[14px] leading-[1.5] text-[#B42318]">
+          {result.error}
+        </p>
+      )}
       <button
         type="submit"
-        className={`mt-[28px] inline-flex h-[52px] w-full cursor-pointer items-center justify-center rounded-full border-0 bg-[#F6A11A] px-[28px] text-[15px] font-medium text-black transition-[color,background-color,scale] duration-200 ease-[cubic-bezier(.23,1,.32,1)] hover:bg-black hover:text-white active:scale-[0.98] motion-reduce:transition-none ${FOCUS}`}
+        disabled={pending}
+        className={`mt-[28px] inline-flex h-[52px] w-full cursor-pointer items-center justify-center rounded-full border-0 bg-[#F6A11A] px-[28px] text-[15px] font-medium text-black transition-[color,background-color,scale] duration-200 ease-[cubic-bezier(.23,1,.32,1)] hover:bg-black hover:text-white active:scale-[0.98] disabled:cursor-default disabled:bg-[#F6A11A]/60 disabled:text-black/60 motion-reduce:transition-none ${FOCUS}`}
       >
-        Send enquiry
+        {pending ? "Sending" : "Send enquiry"}
       </button>
-      <p className="mt-[14px] text-center text-[13px] leading-[1.5] text-black/55">
-        Sending opens your email app with these details filled in, addressed to {EMAIL}. Fields marked * are required.
-      </p>
+      <p className="mt-[14px] text-center text-[13px] leading-[1.5] text-black/55">Fields marked * are required. We use these details only to reply to you.</p>
     </form>
   );
 }

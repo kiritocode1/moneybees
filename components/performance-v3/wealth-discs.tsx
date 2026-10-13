@@ -5,7 +5,9 @@ import { useShown } from "@/components/about-v2/shared";
 import { Person, PERSON_HEIGHT } from "@/components/drawing/lookout";
 import { BracketLabel } from "@/components/fact-sections/fact-section";
 import { BODY, COLUMN, EYEBROW, SUBHEAD } from "@/components/hero/tokens";
-import { GROWTH, PERFORMANCE, PERFORMANCE_LOREM, PMS_NAMES } from "@/lib/performance";
+import { PMS_WEALTH, type WealthContent } from "@/lib/pages/pms-content";
+import { GROWTH, PMS_NAMES } from "@/lib/performance";
+import { DECK_FIGURES, dayMonthYear, type PmsFigures, shortMonth } from "@/lib/site/tokens";
 
 /*
  * Wealth growth (content plan §7, "Wealth-growth illustration") in study 08's
@@ -19,6 +21,8 @@ import { GROWTH, PERFORMANCE, PERFORMANCE_LOREM, PMS_NAMES } from "@/lib/perform
  * the S&P BSE 500 TRI and in Moneybee PMS by July 2026 (lib/insights WEALTH).
  * They are two outcomes of the same Rs. 1 Mn, so they are two progressions on
  * one axis, each starting from its own Rs. 1 Mn disc, and never one chain.
+ * The values and the end date come from the latest published PMS fact sheet
+ * (lib/site/figures.ts); the words from the PMS page in /admin.
  */
 
 const D0 = 60;
@@ -31,25 +35,25 @@ const ORANGE = "#F6A11A";
 
 type Disc = { key: string; x: number; r: number; fill: string; value: number; name: string; date: string };
 
-const radius = (value: number) => (D0 / 2) * Math.sqrt(value / GROWTH.start);
+/** What the discs draw: Rs. 1 Mn at inception and what it became in each, with the two dates. */
+type Growth = { start: number; ours: number; benchmark: number; from: string; to: string };
 
-/** A Rs. 1 Mn disc at `left`, then its outcome beside it. */
-function progression(key: string, left: number, value: number, name: string, fill: string): Disc[] {
-  const r = radius(value);
-  return [
-    { key: `${key}-start`, x: left + D0 / 2, r: D0 / 2, fill: GREY, value: GROWTH.start, name: "Invested", date: GROWTH.from },
-    { key: `${key}-end`, x: left + D0 + GAP + r, r, fill, value, name, date: GROWTH.to },
-  ];
+/** The two progressions, laid out once for desktop (one axis) and once for phones (one per row). */
+function layout(growth: Growth) {
+  const radius = (value: number) => (D0 / 2) * Math.sqrt(value / growth.start);
+  /** A Rs. 1 Mn disc at `left`, then its outcome beside it. */
+  const progression = (key: string, left: number, value: number, name: string, fill: string): Disc[] => {
+    const r = radius(value);
+    return [
+      { key: `${key}-start`, x: left + D0 / 2, r: D0 / 2, fill: GREY, value: growth.start, name: "Invested", date: growth.from },
+      { key: `${key}-end`, x: left + D0 + GAP + r, r, fill, value, name, date: growth.to },
+    ];
+  };
+  const benchmark = progression("benchmark", 0, growth.benchmark, PMS_NAMES.benchmark, "#000");
+  const ours = (left: number) => progression("ours", left, growth.ours, PMS_NAMES.ours, ORANGE);
+  const narrow = [benchmark, ours(0)];
+  return { wide: [...benchmark, ...ours(benchmark[1].x + benchmark[1].r + BETWEEN)], narrow, narrowWidth: Math.max(...narrow.map((discs) => frame(discs).w)) };
 }
-
-const benchmark = (left: number) => progression("benchmark", left, GROWTH.benchmark, PMS_NAMES.benchmark, "#000");
-const ours = (left: number) => progression("ours", left, GROWTH.ours, PMS_NAMES.ours, ORANGE);
-
-const BENCHMARK = benchmark(0);
-/** Desktop: both progressions on one axis. */
-const WIDE = [...BENCHMARK, ...ours(BENCHMARK[1].x + BENCHMARK[1].r + BETWEEN)];
-
-const NARROW = [BENCHMARK, ours(0)];
 
 const label = (disc: Disc) => `Rs. ${disc.value} Mn`;
 
@@ -59,8 +63,6 @@ function frame(discs: Disc[]) {
   const figure = discs.some((disc) => disc.fill === ORANGE) ? tallest * 0.5 : 0;
   return { x: -4, y: -tallest - figure - 4, w: right + 8, h: tallest * 2 + figure + 8 };
 }
-
-const NARROW_WIDTH = Math.max(...NARROW.map((discs) => frame(discs).w));
 
 type Motion = { shown: boolean; t: (ms: number, delay?: number) => string };
 
@@ -126,41 +128,43 @@ function Columns({ discs, motion }: { discs: Disc[]; motion: Motion }) {
   );
 }
 
-export function WealthDiscs() {
+export function WealthDiscs({ content = PMS_WEALTH, figures = DECK_FIGURES }: { content?: WealthContent; figures?: PmsFigures }) {
   const { ref, shown, t } = useShown<HTMLDivElement>(0.3);
   const motion = { shown, t };
+  const growth: Growth = { start: figures.wealth.start, ours: figures.wealth.ours, benchmark: figures.wealth.benchmark, from: GROWTH.from, to: shortMonth(figures.asOf) };
+  const { wide, narrow, narrowWidth } = layout(growth);
   return (
     <section id="wealth" aria-labelledby="wealth-heading" className="scroll-mt-[96px] bg-[#F6F6F6] text-black">
       <div className={`${COLUMN} py-[120px] max-md:py-[80px]`}>
         <div className="grid grid-cols-1 items-end gap-8 md:grid-cols-2 md:gap-16">
           <div>
-            <BracketLabel>Wealth growth</BracketLabel>
+            {content.label ? <BracketLabel>{content.label}</BracketLabel> : null}
             <h2 id="wealth-heading" className={`mt-[18px] ${SUBHEAD}`}>
-              Wealth Growth
+              {content.heading}
             </h2>
           </div>
-          <p className={`text-black/70 ${BODY}`}>{PERFORMANCE_LOREM.long}</p>
+          {content.lead ? <p className={`text-black/70 ${BODY}`}>{content.lead}</p> : null}
         </div>
         <p className="mt-[40px]">
           <span className={`${EYEBROW} inline-flex items-center gap-[10px] border border-black/20 px-[12px] py-[7px] text-[11px] text-black`}>
             <i className="h-[8px] w-[8px] bg-[#F6A11A]" aria-hidden="true" />
-            {PERFORMANCE.asOf}
+            As of {dayMonthYear(figures.asOf)}
           </span>
         </p>
         <div
           ref={ref}
           role="img"
-          aria-label={`Rs. ${GROWTH.start} Mn invested in ${GROWTH.from} was worth Rs. ${GROWTH.ours} Mn in ${PMS_NAMES.ours} and Rs. ${GROWTH.benchmark} Mn in the ${PMS_NAMES.benchmark} by ${GROWTH.to}.`}
+          aria-label={`Rs. ${growth.start} Mn invested in ${growth.from} was worth Rs. ${growth.ours} Mn in ${PMS_NAMES.ours} and Rs. ${growth.benchmark} Mn in the ${PMS_NAMES.benchmark} by ${growth.to}.`}
           className="mt-16"
         >
           <div className="mx-auto max-w-[940px] max-md:hidden">
-            <Discs discs={WIDE} motion={motion} />
-            <Columns discs={WIDE} motion={motion} />
+            <Discs discs={wide} motion={motion} />
+            <Columns discs={wide} motion={motion} />
           </div>
           {/* Phones: one progression per row, both at the same scale so the areas still compare. */}
           <div className="flex flex-col gap-14 md:hidden">
-            {NARROW.map((discs) => (
-              <div key={discs[1].key} style={{ width: `${(frame(discs).w / NARROW_WIDTH) * 100}%` }}>
+            {narrow.map((discs) => (
+              <div key={discs[1].key} style={{ width: `${(frame(discs).w / narrowWidth) * 100}%` }}>
                 <Discs discs={discs} motion={motion} />
                 <Columns discs={discs} motion={motion} />
               </div>

@@ -3,27 +3,33 @@
 import { useShown } from "@/components/about-v2/shared";
 import { ENQUIRY_GLYPHS } from "@/components/contact-v2/glyphs";
 import { COLUMN, DashedRule, SUBHEAD } from "@/components/hero/editorial";
+import { useSiteDetails } from "@/components/site/site-details";
 import Link from "@/components/transition/transition-link";
-import { EMAIL, ENQUIRIES, PHONE, PHONE_HREF } from "@/lib/contact-v2";
+import { ENQUIRIES } from "@/lib/contact-v2";
+import { GET_STARTED, type GetStartedContent } from "@/lib/pages/home-content";
+import { telHref } from "@/lib/site/details";
 
 /*
  * The content plan's Get Started section on Home (§1), built from its own
  * content: the four enquiry options of §11 as study 04's line cards (the
  * /careers openings card), each with the drawing made for that option in
  * components/contact-v2/glyphs.tsx and a link that opens /contact on it.
- * The direct lines sit under the cards.
+ * The direct lines sit under the cards. The heading and link words come from
+ * the Home page in /admin; the cards are the Contact page's enquiry choices,
+ * and the phone and email come from Office details in /admin.
  */
 
 const FOCUS = "focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-black";
 
-export function GetStartedSection() {
+export function GetStartedSection({ content = GET_STARTED }: { content?: GetStartedContent }) {
   const { ref, shown, t } = useShown<HTMLDivElement>(0.2);
+  const { phones, email } = useSiteDetails();
   return (
     <section id="get-started" aria-labelledby="get-started-heading" className="bg-white text-black">
       <DashedRule />
       <div className={`${COLUMN} py-[120px] max-[600px]:py-[80px]`}>
         <h2 id="get-started-heading" className={SUBHEAD}>
-          Get Started
+          {content.heading}
         </h2>
         <div ref={ref} className="mt-[48px] grid grid-cols-1 gap-[14px] sm:grid-cols-2 lg:grid-cols-4">
           {ENQUIRIES.map((enquiry, index) => {
@@ -43,10 +49,10 @@ export function GetStartedSection() {
                 {/* 04's link: a label and a small outlined square. */}
                 <Link
                   href={`/contact?enquiry=${enquiry.id}#enquiry`}
-                  aria-label={`Enquire: ${enquiry.name}`}
+                  aria-label={`${content.linkLabel}: ${enquiry.name}`}
                   className={`inline-flex w-fit items-center gap-[10px] text-[14px] font-medium text-black no-underline underline-offset-4 hover:underline ${FOCUS}`}
                 >
-                  Enquire
+                  {content.linkLabel}
                   <span aria-hidden="true" className="h-[9px] w-[9px] border border-current" />
                 </Link>
               </article>
@@ -54,11 +60,13 @@ export function GetStartedSection() {
           })}
         </div>
         <p className="mt-[28px] flex flex-wrap gap-x-[32px] gap-y-[8px] text-[15px] leading-[1.6]">
-          <a href={PHONE_HREF} className={`text-black no-underline transition-colors duration-200 hover:text-[#F6A11A] ${FOCUS}`}>
-            {PHONE}
-          </a>
-          <a href={`mailto:${EMAIL}`} className={`text-black no-underline transition-colors duration-200 hover:text-[#F6A11A] ${FOCUS}`}>
-            {EMAIL}
+          {phones[0] ? (
+            <a href={telHref(phones[0].number)} className={`text-black no-underline transition-colors duration-200 hover:text-[#F6A11A] ${FOCUS}`}>
+              {phones[0].number}
+            </a>
+          ) : null}
+          <a href={`mailto:${email}`} className={`text-black no-underline transition-colors duration-200 hover:text-[#F6A11A] ${FOCUS}`}>
+            {email}
           </a>
         </p>
       </div>

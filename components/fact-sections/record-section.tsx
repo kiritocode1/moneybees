@@ -3,25 +3,25 @@
 import { motion, useInView } from "motion/react";
 import { useRef } from "react";
 import { BODY, COLUMN, DashedRule, EYEBROW, Rise, SUBHEAD } from "@/components/hero/editorial";
-import { HEADINGS, RECORD_LEAD, WEALTH } from "@/lib/insights";
 import { useReducedMotion } from "@/lib/use-reduced-motion";
 import Link from "@/components/transition/transition-link";
 import LitRows from "@/components/motion/lit-rows";
-import { PMS_NAMES, PMS_ROWS } from "@/lib/performance";
+import { RECORD, type RecordContent } from "@/lib/pages/home-content";
+import { PMS_NAMES } from "@/lib/performance";
+import { DECK_FIGURES, fillContent, monthYear, type PmsFigures, rupees } from "@/lib/site/tokens";
 import { FRONT_FROM, FRONT_TO, onCircle, path, type Point } from "@/components/iso/geometry";
 
 /*
  * Wealth creation, set like the intro under the hero: paragraphs beside a
  * figure, alternating sides row by row. Each figure draws itself when it
  * comes into view. The TWRR method note that used to sit under this section is
- * in the footer's legal lines.
+ * in the footer's legal lines. The words come from the Home page in /admin
+ * and the figures from the latest published PMS fact sheet (lib/site/figures.ts);
+ * without them, today's words and the deck's figures.
  */
 
-/** Rupees in millions, written the way the deck writes them: "Rs. 28.85 Mn". */
-const rupees = (millions: number) => `Rs. ${millions.toFixed(2).replace(/\.00$/, "")} Mn`;
-
 /** The long periods, as the homepage shows them. */
-const HOME_ROWS = PMS_ROWS.filter((row) => ["1 Year", "3 Years", "5 Years", "Since Inception"].includes(row.period));
+const LONG_PERIODS = ["1 Year", "3 Years", "5 Years", "Since Inception"];
 
 /** Disc size in figure space. Every disc is Rs. 1 Mn; the top disc of a stack is cut to its fraction. */
 const DISC_R = 62;
@@ -50,19 +50,19 @@ function discHeights(value: number) {
 
 /**
  * Rs. 1 Mn from August 2007 as two stacks of discs, one disc per Rs. 1 Mn, in
- * the picks pyramid's projection: Moneybee PMS in orange rising to 28.85, the
- * S&P BSE 500 TRI in grey stopping at 5.97. Once in view the discs drop in one
- * at a time at the same pace, so the index's stack finishes early and
- * Moneybee's keeps climbing.
+ * the picks pyramid's projection: Moneybee PMS in orange (28.85 in the deck),
+ * the S&P BSE 500 TRI in grey (5.97). Once in view the discs drop in one at a
+ * time at the same pace, so the index's stack finishes early and Moneybee's
+ * keeps climbing.
  */
-function WealthStacks() {
+function WealthStacks({ wealth, asOf }: { wealth: PmsFigures["wealth"]; asOf: string }) {
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, amount: 0.4 });
   const reduceMotion = useReducedMotion();
   const base = 452;
   const stacks = [
-    { key: "index", name: "S&P BSE 500 TRI", value: WEALTH.benchmark, cx: 170, top: "#eeece8", wall: "#d8d6d1", edge: "rgba(0,0,0,.55)" },
-    { key: "moneybee", name: "Moneybee PMS", value: WEALTH.queenbee, cx: 440, top: "#F6A11A", wall: "#d98c10", edge: "rgba(90,50,0,.7)" },
+    { key: "index", name: "S&P BSE 500 TRI", value: wealth.benchmark, cx: 170, top: "#eeece8", wall: "#d8d6d1", edge: "rgba(0,0,0,.55)" },
+    { key: "moneybee", name: "Moneybee PMS", value: wealth.ours, cx: 440, top: "#F6A11A", wall: "#d98c10", edge: "rgba(90,50,0,.7)" },
   ] as const;
 
   return (
@@ -70,7 +70,7 @@ function WealthStacks() {
       <svg
         viewBox="0 0 640 520"
         role="img"
-        aria-label={`Rs. 1 Mn invested in August 2007: ${rupees(WEALTH.queenbee)} in Moneybee PMS by July 2026, against ${rupees(WEALTH.benchmark)} in the S&P BSE 500 TRI. One disc is Rs. 1 Mn.`}
+        aria-label={`Rs. 1 Mn invested in August 2007: ${rupees(wealth.ours)} in Moneybee PMS by ${monthYear(asOf)}, against ${rupees(wealth.benchmark)} in the S&P BSE 500 TRI. One disc is Rs. 1 Mn.`}
         className="block h-auto w-full overflow-visible"
       >
         {stacks.map((stack) => {
@@ -128,36 +128,45 @@ function WealthStacks() {
         })}
       </svg>
       <p className={`${EYEBROW} mt-[10px] text-center text-black/55`} aria-hidden="true">
-        One disc is {rupees(WEALTH.start)}, August 2007 to July 2026
+        One disc is {rupees(wealth.start)}, August 2007 to {monthYear(asOf)}
       </p>
     </div>
   );
 }
 
 /** Wealth creation by Moneybee PMS: two rows, text and figure trading sides. */
-export default function RecordSection() {
+export default function RecordSection({
+  figures = DECK_FIGURES,
+  content = fillContent(RECORD, figures),
+}: {
+  figures?: PmsFigures;
+  content?: RecordContent;
+}) {
+  const { more = {} } = content;
   return (
     <section id="record" aria-labelledby="record-heading" className="bg-white text-black">
       <DashedRule />
       <div className={`${COLUMN} grid grid-cols-1 items-center gap-12 py-[100px] md:grid-cols-2`}>
         <Rise onView>
           <div className="flex flex-col gap-8">
-            <span className={`${EYEBROW} text-black/60`}>Performance</span>
+            {content.eyebrow ? <span className={`${EYEBROW} text-black/60`}>{content.eyebrow}</span> : null}
             <h2 id="record-heading" className={SUBHEAD}>
-              {HEADINGS.record}
+              {content.heading}
             </h2>
-            <p className={BODY}>{RECORD_LEAD}</p>
+            {content.lead ? <p className={BODY}>{content.lead}</p> : null}
           </div>
         </Rise>
-        <WealthStacks />
+        <WealthStacks wealth={figures.wealth} asOf={figures.asOf} />
       </div>
       <DashedRule />
       {/* The plan's performance highlight: the lit rows /pms opens with, for the long periods. */}
       <div className={`${COLUMN} py-[100px]`}>
-        <LitRows rows={HOME_ROWS} names={PMS_NAMES} />
-        <Link href="/pms#performance" className="mt-10 inline-flex text-[15px] font-medium text-black underline decoration-[#F6A11A] decoration-2 underline-offset-[6px]">
-          Performance
-        </Link>
+        <LitRows rows={figures.rows.filter((row) => LONG_PERIODS.includes(row.period))} names={PMS_NAMES} />
+        {more.label && more.link ? (
+          <Link href={more.link} className="mt-10 inline-flex text-[15px] font-medium text-black underline decoration-[#F6A11A] decoration-2 underline-offset-[6px]">
+            {more.label}
+          </Link>
+        ) : null}
       </div>
     </section>
   );

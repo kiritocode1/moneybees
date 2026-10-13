@@ -3,22 +3,22 @@
 import { useShown } from "@/components/about-v2/shared";
 import { BracketLabel } from "@/components/fact-sections/fact-section";
 import { COLUMN } from "@/components/hero/tokens";
-import { TIMELINE_STOPS } from "@/lib/about-v3";
+import { TIMELINE, type TimelineContent } from "@/lib/pages/about-content";
 
 /*
  * The plan's "simple company timeline" (§2) as one ruled line with a stop per
  * date: the line draws left to right as the section comes into view, and each
  * stop's orange square lands as the line reaches it. Below 768px the line
  * runs down the left edge instead. The isometric solid that once carried these
- * dates is on /aif now.
+ * dates is on /aif now. The dates come from the About page in /admin.
  */
-export function TimelineSection() {
+export function TimelineSection({ content = TIMELINE }: { content?: TimelineContent }) {
   const { ref, shown, t } = useShown<HTMLOListElement>(0.35);
   return (
     <section id="timeline" aria-labelledby="timeline-heading" className="scroll-mt-[96px] bg-[#F6F6F6] text-black">
       <div className={`${COLUMN} py-[120px] max-md:py-[80px]`}>
         <h2 id="timeline-heading">
-          <BracketLabel>Timeline</BracketLabel>
+          <BracketLabel>{content.label}</BracketLabel>
         </h2>
         <ol ref={ref} className="relative mt-[56px] grid list-none grid-cols-1 gap-y-[40px] p-0 max-md:pl-[28px] md:grid-cols-3 md:gap-x-6">
           {/* The line: across the top from md, down the left edge below it. */}
@@ -27,8 +27,8 @@ export function TimelineSection() {
             className="absolute top-0 left-0 h-px w-full origin-left bg-black max-md:h-full max-md:w-px max-md:origin-top"
             style={{ transform: shown ? "none" : "scale(0)", transition: `transform ${t(1400)}` }}
           />
-          {TIMELINE_STOPS.map((stop, index) => (
-            <li key={stop.label} className="relative md:pt-[36px]">
+          {content.stops?.map((stop, index) => (
+            <li key={index} className="relative md:pt-[36px]">
               <span
                 aria-hidden="true"
                 className="absolute top-[-5px] left-0 h-[11px] w-[11px] bg-[#F6A11A] max-md:top-[10px] max-md:left-[-33px]"

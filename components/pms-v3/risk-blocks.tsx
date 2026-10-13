@@ -4,7 +4,7 @@ import type { CSSProperties } from "react";
 import { useShown } from "@/components/about-v2/shared";
 import { BracketLabel } from "@/components/fact-sections/fact-section";
 import { COLUMN, SUBHEAD } from "@/components/hero/tokens";
-import { PMS_RISKS } from "@/lib/pms-v3-hero";
+import { PMS_RISKS_CONTENT, type RisksContent } from "@/lib/pages/pms-content";
 import { PERSON_HEIGHT, Standing } from "@/components/drawing/lookout";
 
 /*
@@ -129,7 +129,7 @@ const BOX: Record<Side, { left: string; width: string }> = {
 };
 const boxTop = (row: number) => `${((row - 0.84 * 24 - 88) / 536) * 100}%`;
 
-export function RiskSection() {
+export function RiskSection({ content = PMS_RISKS_CONTENT }: { content?: RisksContent }) {
   const { ref, shown, t } = useShown<HTMLDivElement>(0.35);
   return (
     <section id="risk" aria-labelledby="risk-heading" className="scroll-mt-[96px] bg-white text-black">
@@ -137,9 +137,9 @@ export function RiskSection() {
         <style>{"[data-pv3-risk] [style]{opacity:1!important;transform:none!important;stroke-dashoffset:0!important}"}</style>
       </noscript>
       <div className={`${COLUMN} py-[120px] max-md:py-[80px]`}>
-        <BracketLabel>Risk management</BracketLabel>
+        {content.label ? <BracketLabel>{content.label}</BracketLabel> : null}
         <h2 id="risk-heading" className={`mt-[18px] ${SUBHEAD}`}>
-          Risk Management
+          {content.heading}
         </h2>
 
         <div ref={ref} data-pv3-risk="" className="relative mx-auto mt-[56px] w-full max-w-[1000px] @container md:aspect-[746/536]">
@@ -147,11 +147,11 @@ export function RiskSection() {
           <Tower layout="narrow" shown={shown} t={t} className="mx-auto block h-auto w-full max-w-[420px] md:hidden" />
 
           <ol className="m-0 mt-10 list-none border-t border-black/10 p-0 md:mt-0 md:border-0">
-            {PMS_RISKS.map((risk, index) => {
+            {(content.risks ?? []).slice(0, BLOCKS.length).map((risk, index) => {
               const { side, row } = BLOCKS[index];
               return (
                 <li
-                  key={risk.name}
+                  key={index}
                   className="border-b border-black/10 py-[18px] md:absolute md:top-[var(--box-top)] md:left-[var(--box-left)] md:w-[var(--box-width)] md:border-0 md:py-0"
                   style={
                     {

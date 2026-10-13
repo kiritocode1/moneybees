@@ -49,14 +49,32 @@ export type InvestorDocument = {
   date?: string;
 };
 
-export type DocumentGlyph = "charter" | "disclosures" | "risk" | "policies" | "complaints" | "grievance" | "scores" | "odr" | "forms" | "pms" | "aif";
+/** Each card's drawing, by the name staff pick it by in /admin (collections/Documents.ts). */
+export const DOCUMENT_ART_NAMES = {
+  charter: "Charter",
+  disclosures: "Disclosures",
+  risk: "Risk",
+  policies: "Policies",
+  complaints: "Complaints",
+  grievance: "Grievance",
+  scores: "SCORES",
+  odr: "ODR",
+  forms: "Forms",
+  pms: "PMS",
+  aif: "AIF",
+} as const;
+
+export type DocumentGlyph = keyof typeof DOCUMENT_ART_NAMES;
+
+/** One ruled group of cards. The ids are stable: the menu and the footer link to them. */
+export type DocumentGroup = { id: "investor-charter" | "disclosures" | "grievance" | "disclosure-document"; heading: string; glyph: DocumentGlyph; documents: readonly InvestorDocument[] };
 
 /**
  * The plan's eleven sections, in its order, grouped into four ruled lists.
  * Group headings are the plan's own section names. The group ids are stable:
  * the site footer links to them.
  */
-export const DOCUMENT_GROUPS: readonly { id: string; heading: string; glyph: DocumentGlyph; documents: readonly InvestorDocument[] }[] = [
+export const DOCUMENT_GROUPS: readonly DocumentGroup[] = [
   {
     id: "investor-charter",
     heading: "Investor Charter",

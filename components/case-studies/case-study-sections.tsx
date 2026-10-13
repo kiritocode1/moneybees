@@ -4,7 +4,8 @@ import { useInView } from "motion/react";
 import { useRef, useState } from "react";
 import { BracketLabel } from "@/components/fact-sections/fact-section";
 import { BODY, COLUMN, EYEBROW, SUBHEAD } from "@/components/hero/tokens";
-import { CASE_DISCLAIMER, CASE_LOREM, CASE_STUDIES, type CaseStudyEntry } from "@/lib/case-studies";
+import { CASE_STUDIES, type CaseStudyEntry } from "@/lib/case-studies";
+import { CASE_TIMELINE, type CaseTimelineContent } from "@/lib/pages/case-studies-content";
 import { DRAWINGS } from "./drawings";
 
 /*
@@ -164,24 +165,25 @@ export function CaseStudySection({ study }: { study: CaseStudyEntry }) {
 /**
  * The three companies on one FY20 to FY24 line: each year's PAT as a disc
  * sized by its value, drawn in left to right, the last year in orange. The
- * plan's disclaimer closes the section.
+ * plan's disclaimer closes the section. The companies come from Website ›
+ * Case studies; the words from the page record.
  */
-export function TimelineSection() {
+export function TimelineSection({ content = CASE_TIMELINE, studies = CASE_STUDIES }: { content?: CaseTimelineContent; studies?: readonly CaseStudyEntry[] }) {
   const { ref, shown } = useShown<HTMLDivElement>(0.3);
-  const years = CASE_STUDIES[0].financials.map((row) => row.year);
-  const maxPat = Math.max(...CASE_STUDIES.flatMap((study) => study.financials.map((row) => row.pat)));
+  const years = (studies[0]?.financials ?? []).map((row) => row.year);
+  const maxPat = Math.max(1, ...studies.flatMap((study) => study.financials.map((row) => row.pat)));
   const size = (pat: number) => Math.max(6, Math.sqrt(pat / maxPat) * 44);
   return (
     <section id="timeline" aria-labelledby="timeline-heading" className="scroll-mt-[96px] border-t border-dashed border-black/10 bg-white text-black">
       <div className={`${COLUMN} py-[120px] max-md:py-[80px]`}>
         <div className="grid grid-cols-1 items-end gap-8 md:grid-cols-2 md:gap-16">
           <div>
-            <BracketLabel>Timeline</BracketLabel>
-            <h2 id="timeline-heading" className={`mt-[18px] ${SUBHEAD}`}>
-              Historical Investment Timeline
+            {content.label ? <BracketLabel>{content.label}</BracketLabel> : null}
+            <h2 id="timeline-heading" className={`${content.label ? "mt-[18px] " : ""}${SUBHEAD}`}>
+              {content.heading}
             </h2>
           </div>
-          <p className={`text-black/70 ${BODY}`}>{CASE_LOREM.long}</p>
+          {content.lead ? <p className={`text-black/70 ${BODY}`}>{content.lead}</p> : null}
         </div>
 
         <div ref={ref} className="mt-[56px]">
@@ -193,7 +195,7 @@ export function TimelineSection() {
               </span>
             ))}
           </div>
-          {CASE_STUDIES.map((study, row) => (
+          {studies.map((study, row) => (
             <div key={study.id} className="border-b border-black/15 py-[22px]">
               <a href={`#${study.id}`} className="font-serif text-[clamp(1.2rem,1rem+.6vw,1.5rem)] leading-[1.2] text-black no-underline md:hidden">
                 {study.name}
@@ -236,6 +238,7 @@ export function TimelineSection() {
           ))}
         </div>
 
+        {content.disclaimer ? (
         <div className="mt-[64px] grid grid-cols-[34px_minmax(0,1fr)] gap-x-[14px] border-t border-black pt-[24px]">
           <span className="mt-[4px] grid h-[24px] w-[24px] place-items-center border border-black/30" aria-hidden="true">
             <svg width="12" height="12" viewBox="0 0 12 12">
@@ -244,18 +247,19 @@ export function TimelineSection() {
           </span>
           <div>
             <span className={`${EYEBROW} text-black/60`}>Disclaimer</span>
-            <p className="mt-[10px] max-w-[880px] font-serif text-[clamp(1.2rem,1rem+.6vw,1.5rem)] leading-[1.3] text-black/80">{CASE_DISCLAIMER}</p>
+            <p className="mt-[10px] max-w-[880px] font-serif text-[clamp(1.2rem,1rem+.6vw,1.5rem)] leading-[1.3] text-black/80">{content.disclaimer}</p>
           </div>
         </div>
+        ) : null}
       </div>
     </section>
   );
 }
 
-export function CaseStudyList() {
+export function CaseStudyList({ studies = CASE_STUDIES }: { studies?: readonly CaseStudyEntry[] }) {
   return (
     <>
-      {CASE_STUDIES.map((study) => (
+      {studies.map((study) => (
         <CaseStudySection key={study.id} study={study} />
       ))}
     </>
