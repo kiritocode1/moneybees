@@ -1,7 +1,9 @@
 import type { AdminViewServerProps } from "payload";
 import { AdminView } from "@/components/admin/admin-view";
+import { EmailBanner } from "@/components/admin/email-banner";
 import { CRM_ROLES, hasRole } from "@/lib/backend/roles";
 import { INBOX_TABS, type InboxTab, inboxCounts, inboxRows } from "@/lib/crm/inbox";
+import { emailConnected } from "@/lib/crm/mail";
 import { InboxScreen } from "./inbox-screen";
 
 /** /admin/inbox: every enquiry, most urgent first (payload.config.ts admin.components.views). */
@@ -14,7 +16,14 @@ export async function InboxView(props: AdminViewServerProps) {
 
   return (
     <AdminView {...props} roles={CRM_ROLES}>
-      {() => counts && <InboxScreen tab={tab} rows={rows} counts={counts} />}
+      {() =>
+        counts && (
+          <>
+            {emailConnected() ? null : <EmailBanner />}
+            <InboxScreen tab={tab} rows={rows} counts={counts} />
+          </>
+        )
+      }
     </AdminView>
   );
 }

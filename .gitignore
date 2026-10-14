@@ -42,3 +42,6 @@ next-env.d.ts
 
 # scratch: extracted video frames, screenshots, local tool shims
 /tmp/
+
+# Resumes kept on a laptop without the private Blob store (lib/hiring/resume-store.ts)
+/.data/

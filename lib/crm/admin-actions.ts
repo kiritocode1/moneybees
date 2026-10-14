@@ -80,7 +80,11 @@ export async function setEnquiryStatus(id: number, input: { status: string; note
 
 const ReplyInput = type({ subject: "1 <= string <= 200", body: "1 <= string <= 20000" });
 
-/** Emails the person from the signed-in staff member, starts "waiting on them", and stops the reply clock. */
+/**
+ * Emails the person from the signed-in staff member. Once it has really gone,
+ * the enquiry is "waiting on them" and the reply clock stops; a reply saved
+ * while email is not connected leaves both as they were.
+ */
 export async function replyToEnquiry(id: number, input: { subject: string; body: string }): Promise<ActionResult> {
   const parsed = ReplyInput(input);
   if (parsed instanceof type.errors) return { ok: false, error: "Write a subject and a message." };
@@ -89,7 +93,8 @@ export async function replyToEnquiry(id: number, input: { subject: string; body:
   const contact = typeof enquiry.contact === "object" ? enquiry.contact : null;
   if (!contact?.email) return { ok: false, error: "This person has no email address on record." };
 
-  await sendCrmEmail(payload, { to: contact.email, subject: parsed.subject, text: parsed.body, contact: contact.id, enquiry: id, sentBy: user });
+  const sent = await sendCrmEmail(payload, { to: contact.email, subject: parsed.subject, text: parsed.body, contact: contact.id, enquiry: id, sentBy: user });
+  if (sent.status !== "sent") return { ok: true };
   const now = new Date().toISOString();
   await payload.update({
     collection: "enquiries",

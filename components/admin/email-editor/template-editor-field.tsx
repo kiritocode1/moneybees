@@ -39,6 +39,10 @@ const MERGE_FIELDS = [
   { key: "reference", label: "Reference" },
   { key: "senderName", label: "Sender" },
   { key: "role", label: "Role applied for" },
+  { key: "keptUntil", label: "Application kept until" },
+  { key: "interviewAt", label: "Interview time" },
+  { key: "interviewPlace", label: "Interview place" },
+  { key: "interviewWith", label: "Interviewer" },
 ] as const;
 const DRAG_TYPE = "application/x-moneybee-email";
 const EXPORT_DELAY_MS = 400;

@@ -5,6 +5,7 @@ import { resendAdapter } from "@payloadcms/email-resend";
 import { vercelBlobStorage } from "@payloadcms/storage-vercel-blob";
 import { buildConfig } from "payload";
 import { Activities } from "./collections/Activities";
+import { Applications } from "./collections/Applications";
 import { AuditLog } from "./collections/AuditLog";
 import { Contacts } from "./collections/Contacts";
 import { Deals } from "./collections/Deals";
@@ -68,13 +69,15 @@ export default buildConfig({
         dashboard: { Component: "/components/admin/today/today-view#TodayView" },
         inbox: { Component: "/components/admin/inbox/inbox-view#InboxView", path: "/inbox", exact: true },
         enquiry: { Component: "/components/admin/inbox/enquiry-view#EnquiryView", path: "/inbox/:id" },
+        hiring: { Component: "/components/admin/hiring/hiring-view#HiringView", path: "/hiring", exact: true },
+        applicant: { Component: "/components/admin/hiring/applicant-view#ApplicantView", path: "/hiring/:id" },
         guide: { Component: "/components/admin/guide/guide-view#GuideView", path: "/guide", exact: true },
         website: { Component: "/components/admin/website/website-view#WebsiteView", path: "/website", exact: true },
       },
     },
   },
   // Sidebar order follows this list: Publishing (fact sheets first), then Settings.
-  // The CRM collections are out of the sidebar (group: false); the Desk links reach them.
+  // The CRM and hiring collections are out of the sidebar (group: false); the Desk links reach them.
   collections: [
     FactSheets,
     Products,
@@ -96,6 +99,7 @@ export default buildConfig({
     Activities,
     Tasks,
     Emails,
+    Applications,
     LoginChallenges,
   ],
   globals: [HomePage, PmsPage, AifPage, PmsVsAifPage, OurPhilosophyPage, AboutPage, CaseStudiesPage, PicksPage, InvestorCentrePage, ContactPage, CareersPage, SiteDetails, CrmSettings],

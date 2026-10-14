@@ -10,6 +10,8 @@ const nextConfig: NextConfig = {
   turbopack: { root: dirname },
   // No "X-Powered-By: Next.js, Payload" on responses; withPayload adds it unless this is false.
   poweredByHeader: false,
+  // The apply form sends a resume of up to 4 MB through a server action (lib/hiring/apply-actions.ts).
+  experimental: { serverActions: { bodySizeLimit: "5mb" } },
   // Our Approach became Our Philosophy on 2026-10-11; old links and search results land on the new page.
   async redirects() {
     return [{ source: "/our-approach", destination: "/our-philosophy", permanent: true }];

@@ -1,10 +1,13 @@
 import Link from "next/link";
 import type { AdminViewServerProps } from "payload";
 import { AdminView } from "@/components/admin/admin-view";
+import { EmailBanner } from "@/components/admin/email-banner";
 import { SeverityBadge } from "@/components/admin/severity-badge";
 import { CRM_ROLES, hasRole, ROLES } from "@/lib/backend/roles";
 import { istDateTime, relative } from "@/lib/crm/format";
 import { inboxRows } from "@/lib/crm/inbox";
+import { emailConnected } from "@/lib/crm/mail";
+import { upcomingInterviews } from "@/lib/hiring/desk";
 import type { User } from "@/payload-types";
 import { ScreenIntro } from "@/components/admin/screen-intro";
 
@@ -12,7 +15,8 @@ import { ScreenIntro } from "@/components/admin/screen-intro";
  * /admin's home, in place of Payload's collection grid
  * (payload.config.ts admin.components.views.dashboard). It shows only what
  * is waiting on the person signed in, by role: enquiries for the CRM roles,
- * fact sheets to approve for compliance. Payload's sidebar still lists every
+ * new applications and interviews for HR, fact sheets to approve for
+ * compliance. Payload's sidebar still lists every
  * collection for plain record editing.
  */
 
@@ -20,13 +24,16 @@ async function load(props: AdminViewServerProps, user: User) {
   const { payload } = props.initPageResult.req;
   const now = new Date();
   const crm = hasRole(user, ...CRM_ROLES);
-  const [urgent, mine, tasks, toApprove] = await Promise.all([
+  const hr = hasRole(user, "hr");
+  const [urgent, mine, tasks, toApprove, applications, interviews] = await Promise.all([
     crm ? inboxRows(payload, user, "waiting", now) : null,
     crm ? payload.count({ collection: "enquiries", where: { assignee: { equals: user.id }, status: { in: ["new", "open"] } }, user, overrideAccess: false }) : null,
     crm ? payload.find({ collection: "tasks", where: { owner: { equals: user.id }, doneAt: { exists: false } }, sort: "dueAt", limit: 8, depth: 1, user, overrideAccess: false }) : null,
     hasRole(user, "compliance") ? payload.count({ collection: "fact-sheets", where: { status: { equals: "in_review" } }, user, overrideAccess: false }) : null,
+    hr ? payload.count({ collection: "applications", where: { stage: { equals: "new" } }, user, overrideAccess: false }) : null,
+    hr ? upcomingInterviews(payload, user, now) : null,
   ]);
-  return { now, urgent, mine: mine?.totalDocs ?? null, tasks: tasks?.docs ?? null, toApprove: toApprove?.totalDocs ?? null };
+  return { now, urgent, mine: mine?.totalDocs ?? null, tasks: tasks?.docs ?? null, toApprove: toApprove?.totalDocs ?? null, applications: applications?.totalDocs ?? null, interviews };
 }
 
 function Stat({ label, value, href, tone }: { label: string; value: number; href: string; tone?: "alert" }) {
@@ -54,13 +61,37 @@ export async function TodayView(props: AdminViewServerProps) {
               </p>
               <ScreenIntro screen="today" />
             </header>
+            {emailConnected() ? null : <EmailBanner className="mb-6" />}
 
             <div className="grid grid-cols-[repeat(auto-fill,minmax(200px,1fr))] gap-3">
               {data.urgent ? <Stat label="Enquiries waiting on us" value={data.urgent.length} href="/admin/inbox" /> : null}
               {data.urgent ? <Stat label="Past their reply time" value={data.urgent.filter((row) => row.overdue).length} href="/admin/inbox" tone="alert" /> : null}
               {data.mine !== null ? <Stat label="Taken by you" value={data.mine} href="/admin/inbox?tab=mine" /> : null}
               {data.toApprove !== null ? <Stat label="Fact sheets to approve" value={data.toApprove} href="/admin/collections/fact-sheets?where[status][equals]=in_review" /> : null}
+              {data.applications !== null ? <Stat label="New applications" value={data.applications} href="/admin/hiring" /> : null}
+              {data.interviews ? <Stat label="Interviews in the next 7 days" value={data.interviews.length} href="/admin/hiring?tab=interview" /> : null}
             </div>
+
+            {data.interviews && data.interviews.length > 0 ? (
+              <section className="mt-10">
+                <h2 className="mb-3 border-b pb-2 text-title font-semibold text-foreground">Interviews coming up</h2>
+                <ul className="m-0 grid list-none p-0">
+                  {data.interviews.map((interview) => (
+                    <li key={`${interview.id}-${interview.at}`}>
+                      <Link href={`/admin/hiring/${interview.id}`} className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 rounded-lg px-2 py-2.5 no-underline hover:bg-accent/40">
+                        <span className="truncate text-body text-foreground">
+                          {interview.name}
+                          <span className="text-muted-foreground">
+                            , {interview.role}, with {interview.with}
+                          </span>
+                        </span>
+                        <span className="text-caption text-muted-foreground tabular-nums">{istDateTime(interview.at)}</span>
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            ) : null}
 
             {data.urgent && data.urgent.length > 0 ? (
               <section className="mt-10">

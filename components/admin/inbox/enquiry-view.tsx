@@ -1,5 +1,6 @@
 import type { AdminViewServerProps } from "payload";
 import { AdminView } from "@/components/admin/admin-view";
+import { EmailBanner } from "@/components/admin/email-banner";
 import { CRM_ROLES, hasRole } from "@/lib/backend/roles";
 import { enquiryDetail } from "@/lib/crm/enquiry-detail";
 import { EnquiryScreen } from "./enquiry-screen";
@@ -14,7 +15,16 @@ export async function EnquiryView(props: AdminViewServerProps) {
 
   return (
     <AdminView {...props} roles={CRM_ROLES}>
-      {() => (detail ? <EnquiryScreen enquiry={detail} /> : <p className="mt-10 text-body text-muted-foreground">There is no enquiry with this number.</p>)}
+      {() =>
+        detail ? (
+          <>
+            {detail.emailConnected ? null : <EmailBanner />}
+            <EnquiryScreen enquiry={detail} />
+          </>
+        ) : (
+          <p className="mt-10 text-body text-muted-foreground">There is no enquiry with this number.</p>
+        )
+      }
     </AdminView>
   );
 }

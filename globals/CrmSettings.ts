@@ -1,16 +1,24 @@
 import type { GlobalConfig } from "payload";
-import { allow, CRM_ROLES } from "@/lib/backend/roles";
+import { allow, allowField, CRM_ROLES } from "@/lib/backend/roles";
 import { screenIntro } from "@/lib/admin/screens";
 
-/** Defaults the enquiry desk runs on. A playbook's own reply time wins over these. */
+/** Only compliance changes a field marked with this; HR can change the Hiring group too. */
+const complianceOnly = { update: allowField("compliance") };
+
+/**
+ * Defaults the two desks run on: Enquiries (a playbook's own reply time wins
+ * over these) and Hiring. Compliance owns the screen; HR may change the
+ * Hiring group.
+ */
 export const CrmSettings: GlobalConfig = {
   slug: "crm-settings",
-  label: "Enquiry settings",
+  label: "Desk settings",
   admin: { group: "Settings", hideAPIURL: true, components: { elements: screenIntro("enquirySettings") } },
-  access: { read: allow(...CRM_ROLES), update: allow("compliance") },
+  access: { read: allow(...CRM_ROLES, "hr"), update: allow("compliance", "hr") },
   fields: [
     {
       name: "responseHours",
+      access: complianceOnly,
       type: "group",
       label: "Reply within (hours), when no playbook says otherwise",
       fields: [
@@ -22,11 +30,23 @@ export const CrmSettings: GlobalConfig = {
         ] },
       ],
     },
-    { name: "acknowledge", type: "checkbox", defaultValue: true, label: "Email the visitor that their enquiry arrived" },
+    { name: "acknowledge", type: "checkbox", defaultValue: true, label: "Email the visitor that their enquiry arrived", access: complianceOnly },
+    {
+      name: "hiring",
+      type: "group",
+      label: "Hiring",
+      fields: [
+        { type: "row", fields: [
+          { name: "keepMonths", type: "number", required: true, defaultValue: 12, min: 1, max: 36, label: "Keep applications for (months)", admin: { description: "Then the application and its resume are deleted. The applicant agrees to this period when they apply." } },
+          { name: "acknowledge", type: "checkbox", defaultValue: true, label: "Email applicants that their application arrived" },
+        ] },
+      ],
+    },
     {
       name: "ai",
       type: "group",
       label: "AI",
+      access: complianceOnly,
       admin: {
         description: "Every AI feature starts off. Each sends only what its line says, through Vercel AI Gateway with zero data retention, and needs Gateway credits to run.",
       },
@@ -48,6 +68,7 @@ export const CrmSettings: GlobalConfig = {
       name: "visitorId",
       type: "checkbox",
       defaultValue: false,
+      access: complianceOnly,
       label: "Remember a visitor's page views before they enquire",
       admin: { description: "Keeps an anonymous ID in the visitor's browser, so the pages they read show on their record once they enquire." },
     },

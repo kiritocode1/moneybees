@@ -7,7 +7,7 @@ import type { CrmSetting } from "@/payload-types";
 /*
  * Switches for everything that sends personal data to an AI model or keeps an
  * ID in a visitor's browser (user, 2026-10-12). All start off. Staff flip them
- * in /admin › Enquiry settings (globals/CrmSettings.ts, user, 2026-10-14:
+ * in /admin › Desk settings (globals/CrmSettings.ts, user, 2026-10-14:
  * "where are the ai toggles"); compliance owns that screen. On a laptop,
  * FLAG_<KEY>=1 in the environment also turns one on, e.g.
  * FLAG_AI_ENQUIRY_TRIAGE=1.
@@ -18,7 +18,7 @@ const OPTIONS = [
   { value: true, label: "On" },
 ];
 
-/** Enquiry settings, read once per request. Without a database every switch is off. */
+/** Desk settings, read once per request. Without a database every switch is off. */
 const settings = cache(async (): Promise<CrmSetting | null> => {
   if (!process.env.DATABASE_URL) return null;
   const payload = await getPayload({ config });

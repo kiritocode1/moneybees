@@ -4,7 +4,7 @@ import { CAREERS } from "@/lib/careers";
  * What each /careers section says, in the shape the Careers page record in
  * /admin stores it: today's words, written by the first migration so the page
  * reads the same. The roles are a list of their own (collections/Openings.ts);
- * resumes go to the main email in Office details.
+ * resumes come in through the apply form (/careers/apply) to Hiring in /admin.
  */
 
 export type CareersIntroContent = { label?: string | null; heading: string; lead?: string | null; buttonLabel?: string | null; resumeLabel?: string | null };
@@ -35,7 +35,6 @@ export const CAREERS_RESUME: CareersResumeContent = {
   heading: "Tell us about yourself.",
   text: "Send your resume with a short note about your experience and the team you would like to work with.",
   buttonLabel: "Send your resume",
-  note: "Opens your email app.",
 };
 
 /** /careers as it stood before it was editable, top to bottom. */

@@ -27,6 +27,8 @@ import { VercelBlobClientUploadHandler as VercelBlobClientUploadHandler_16c82c5e
 import { TodayView as TodayView_7e14692523b88ea4bef5978b9d7ecd98 } from '../../../components/admin/today/today-view'
 import { InboxView as InboxView_bf7eef67c04420058cdc723acba39c27 } from '../../../components/admin/inbox/inbox-view'
 import { EnquiryView as EnquiryView_8aac8230f745b4a5b6053a2c5617de52 } from '../../../components/admin/inbox/enquiry-view'
+import { HiringView as HiringView_0de470dda89a079f48bb7c3af714c007 } from '../../../components/admin/hiring/hiring-view'
+import { ApplicantView as ApplicantView_4c259d973d589073cadb45908d5249e3 } from '../../../components/admin/hiring/applicant-view'
 import { GuideView as GuideView_c998883bde77ad23f332b49fa8050c7a } from '../../../components/admin/guide/guide-view'
 import { WebsiteView as WebsiteView_93a548e37f325b47fe775b3396299818 } from '../../../components/admin/website/website-view'
 import { CollectionCards as CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1 } from '@payloadcms/next/rsc'
@@ -62,6 +64,8 @@ export const importMap = {
   "/components/admin/today/today-view#TodayView": TodayView_7e14692523b88ea4bef5978b9d7ecd98,
   "/components/admin/inbox/inbox-view#InboxView": InboxView_bf7eef67c04420058cdc723acba39c27,
   "/components/admin/inbox/enquiry-view#EnquiryView": EnquiryView_8aac8230f745b4a5b6053a2c5617de52,
+  "/components/admin/hiring/hiring-view#HiringView": HiringView_0de470dda89a079f48bb7c3af714c007,
+  "/components/admin/hiring/applicant-view#ApplicantView": ApplicantView_4c259d973d589073cadb45908d5249e3,
   "/components/admin/guide/guide-view#GuideView": GuideView_c998883bde77ad23f332b49fa8050c7a,
   "/components/admin/website/website-view#WebsiteView": WebsiteView_93a548e37f325b47fe775b3396299818,
   "@payloadcms/next/rsc#CollectionCards": CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1

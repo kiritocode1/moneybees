@@ -27,6 +27,7 @@ export type ScreenIcon =
   | "inbox"
   | "people"
   | "deals"
+  | "hiring"
   | "pages"
   | "team"
   | "documents"
@@ -49,7 +50,7 @@ export const SCREENS = {
     group: "Desk",
     href: "/admin",
     icon: "today",
-    line: "What needs you today: enquiries waiting on Moneybee, ones past their reply time, the ones you took, and fact sheets to approve.",
+    line: "What needs you today: enquiries waiting on Moneybee, ones past their reply time, the ones you took, fact sheets to approve, and for HR new applications and interviews.",
     example: "You open the admin at 9:30. Past their reply time says 3, so you click it and answer those three before anything else. Fact sheets to approve says 1: if you are compliance, that is a month waiting for your check.",
     controls: [
       { at: "has:Enquiries waiting on us", label: "The counts", text: "Each card counts work in one state. Anything above zero needs someone; click a card for its list." },
@@ -97,6 +98,19 @@ export const SCREENS = {
       { at: "text:Create New", label: "Create New", text: "Starts a deal by hand. Usually you start one from an enquiry with Turn into a deal, once someone is serious." },
       { at: "text:Filters", label: "Filters", text: "Filter by stage to see who is at Meeting or Documents sent." },
       { at: "css:.search-filter__input", label: "Search", text: "Find a deal by its title. Inside a deal, move the stage as it happens and fill in the product and amount, so the totals add up." },
+    ],
+  },
+  hiring: {
+    name: "Hiring",
+    group: "Desk",
+    href: "/admin/hiring",
+    icon: "hiring",
+    line: "Every application from the Careers page, by stage: New, Shortlisted, Interview, Offer, Hired, Closed. Applications delete themselves on their keep-until day.",
+    example: "Priya Shah applies for Equity Research Analyst and says yes to all three must-haves. You open her, read the resume, and Shortlist. Add an interview with the invitation email, then Make an offer with the terms written in. When she accepts, Mark as hired, Close the role, and Tell the others it is filled.",
+    controls: [
+      { at: "css:[role=tablist]", label: "Stages", text: "One tab per stage. New is where every application arrives; work it to Shortlisted or Not taken forward." },
+      { at: "text:Must-haves", label: "Must-haves", text: "How many of the role's must-haves they said yes to. Write the must-haves on the role in Openings." },
+      { at: "css:tbody tr", label: "An application", text: "Click it to open: the resume, their answers, the next step, emails and the timeline." },
     ],
   },
   pages: {
@@ -155,11 +169,11 @@ export const SCREENS = {
     group: "Website",
     href: "/admin/collections/openings",
     icon: "openings",
-    line: "The roles on the Careers page. A Sample role is labelled as not a live vacancy; a Live one offers Apply.",
-    example: "Moneybee is really hiring an Equity Research Analyst. Open that role, check the team, location and type, and set Kind to Live: the Careers page now shows Apply. Once the seat is filled, set it back to Sample or delete it.",
+    line: "The roles on the Careers page. A Live one takes applications into Hiring; a Sample is labelled as not a live vacancy; a Closed one leaves the site.",
+    example: "Moneybee is really hiring an Equity Research Analyst. Open that role, check the team, location and type, write its must-haves, and set Kind to Live: the Careers page now offers Apply, and applications arrive in Hiring. Once the seat is filled, Close the role from the hired person's screen.",
     controls: [
-      { at: "text:Create New", label: "Create New", text: "Adds a role with its team, location and type." },
-      { at: "text:Kind", label: "Kind", text: "Live offers Apply. Sample is labelled as not a live vacancy. Set Live only for a real vacancy, and set it back to Sample, or delete it, once filled." },
+      { at: "text:Create New", label: "Create New", text: "Adds a role with its team, location, type and must-haves. Each must-have becomes a yes or no question on the apply form." },
+      { at: "text:Kind", label: "Kind", text: "Live takes applications. Sample is labelled as not a live vacancy. Closed takes the role off the site and keeps its applications." },
       { at: "css:tbody tr td:first-child", label: "Drag handle", text: "Drag to change the order on the Careers page." },
     ],
   },
@@ -225,7 +239,7 @@ export const SCREENS = {
     example: "Investors asking to withdraw should hear back within 4 hours, from a senior person. Open the Investor withdrawal or complaint playbook, set Reply within to 4, say who takes it, and write the steps the way you would say them on the call.",
     controls: [
       { at: "css:tbody tr a", label: "A playbook", text: "Open one to change its reply time, who takes it, the steps and the reply to start from. Keep the steps short enough to follow on a call." },
-      { at: "text:Reply within (hours)", label: "Reply within", text: "How fast to answer. It overrides the reply times in Enquiry settings." },
+      { at: "text:Reply within (hours)", label: "Reply within", text: "How fast to answer. It overrides the reply times in Desk settings." },
       { at: "text:Create New", label: "Create New", text: "Write one for each kind and severity that needs its own approach. When several match, the one with the lowest Order is shown." },
     ],
   },
@@ -282,15 +296,16 @@ export const SCREENS = {
     ],
   },
   enquirySettings: {
-    name: "Enquiry settings",
+    name: "Desk settings",
     group: "Settings",
     href: "/admin/globals/crm-settings",
     icon: "settings",
-    line: "The reply times the enquiry desk runs on, the acknowledgement email, and the AI switches with their thresholds. A playbook's own reply time wins.",
+    line: "The reply times the enquiry desk runs on, the acknowledgement emails, how long applications are kept, and the AI switches with their thresholds. A playbook's own reply time wins.",
     example: "During results season the team cannot answer Normal enquiries within 24 hours. Change Normal to 48 and Save: new enquiries get the longer time. A playbook with its own time still wins.",
     controls: [
       { at: "has:Critical ^ .field-type", label: "Reply times", text: "How many hours each severity has. Set times the team can keep; a playbook's own time wins." },
       { at: "has:Email the visitor ^ .field-type", label: "Acknowledgement", text: "Leave it on, so visitors know their message arrived." },
+      { at: "has:Keep applications for ^ .field-type", label: "Keep applications", text: "How many months an application and its resume are kept before they delete themselves. Applicants agree to this when they apply. HR can change it." },
       { at: "has:Read new enquiries ^ .field-type", label: "AI switches", text: "Each says what it sends and to which model. Turn one on only once AI Gateway has credits." },
       { at: "text:Save", label: "Save", text: "The new settings apply to the next enquiry." },
     ],
@@ -318,6 +333,7 @@ export const GROUPS: readonly { group: Group; title: string; leads: readonly { k
       { keys: ["enquiries"], text: "leads to every message from the Contact page, each with its reply clock." },
       { keys: ["people"], text: "leads to everyone who has written in or invests, with their history." },
       { keys: ["deals"], text: "leads to each prospective investment and the stage it has reached." },
+      { keys: ["hiring"], text: "leads to every application from the Careers page, for HR." },
     ],
   },
   {
@@ -343,7 +359,7 @@ export const GROUPS: readonly { group: Group; title: string; leads: readonly { k
     group: "Settings",
     title: "how the desk runs and who may do what",
     leads: [
-      { keys: ["playbooks", "emailTemplates", "enquirySettings"], text: "lead to how enquiries are answered." },
+      { keys: ["playbooks", "emailTemplates", "enquirySettings"], text: "lead to how enquiries are answered and how long applications are kept." },
       { keys: ["clientAccounts", "staff"], text: "lead to who can sign in, to the portal and to this admin." },
       { keys: ["auditLog"], text: "leads to every change and who made it." },
     ],

@@ -1,5 +1,6 @@
 import type { Payload } from "payload";
 import { answersFor, enquiryReference } from "@/lib/crm/enquiries";
+import { emailConnected } from "@/lib/crm/mail";
 import { effectiveSeverity, type EnquiryKind, type Reason, type Severity } from "@/lib/crm/severity";
 import type { TriageAnswers } from "@/lib/crm/triage";
 import { ACTIVITY_TYPES, type ActivityType, CONTACT_KINDS, EMAIL_STATUSES, ENQUIRY_KIND_LABELS, ENQUIRY_STATUSES, labelOf } from "@/lib/crm/vocabulary";
@@ -12,7 +13,7 @@ import type { Contact, Email, Playbook, User } from "@/payload-types";
 
 const asDoc = <T extends { id: number }>(value: number | T | null | undefined): T | null => (value && typeof value === "object" ? value : null);
 
-export type TimelineItem = { id: number; type: ActivityType; typeLabel: string; summary: string; body: string | null; at: string; actor: string | null; emailStatus: string | null };
+export type TimelineItem = { id: number; type: ActivityType; typeLabel: string; summary: string; body: string | null; at: string; actor: string | null; emailStatus: string | null; emailOk: boolean | null };
 
 export async function enquiryDetail(payload: Payload, user: User, id: number, now = new Date()) {
   const enquiry = await payload.findByID({ collection: "enquiries", id, depth: 1, user, overrideAccess: false, disableErrors: true });
@@ -39,6 +40,8 @@ export async function enquiryDetail(payload: Payload, user: User, id: number, no
     id: enquiry.id,
     /** The signed-in staff member, who signs any reply. */
     sender: user.name,
+    /** False while RESEND_API_KEY is unset: replies are saved, not sent. */
+    emailConnected: emailConnected(),
     reference: enquiryReference(enquiry.id),
     title: enquiry.title,
     kind,
@@ -91,6 +94,7 @@ export async function enquiryDetail(payload: Payload, user: User, id: number, no
         at: item.at,
         actor: asDoc<User>(item.actor)?.name ?? null,
         emailStatus: asDoc<Email>(item.email) ? labelOf(EMAIL_STATUSES, (item.email as Email).status) : null,
+        emailOk: asDoc<Email>(item.email) ? !["logged", "failed", "bounced"].includes((item.email as Email).status) : null,
       }),
     ),
     staff: staff.docs.map((member) => ({ id: member.id, name: member.name })),

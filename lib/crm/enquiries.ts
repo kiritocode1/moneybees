@@ -77,7 +77,7 @@ export async function matchPlaybook(payload: Payload, kind: EnquiryKind, severit
   return docs.find((playbook) => (!playbook.kinds?.length || playbook.kinds.includes(kind)) && (!playbook.severities?.length || playbook.severities.includes(severity)));
 }
 
-/** Reply deadline: the playbook's hours, else the default for the severity in Enquiry settings. */
+/** Reply deadline: the playbook's hours, else the default for the severity in Desk settings. */
 export async function replyDeadline(payload: Payload, from: Date, severity: Severity, playbook: Playbook | undefined) {
   const settings = await payload.findGlobal({ slug: "crm-settings", depth: 0, overrideAccess: true });
   const hours = playbook?.responseHours ?? settings.responseHours?.[severity] ?? 24;
@@ -188,7 +188,7 @@ export async function followUp(enquiryId: number, options: { siteOrigin: string;
       const template = (await payload.find({ collection: "email-templates", where: { purpose: { equals: "enquiry_ack" } }, limit: 1, depth: 0, overrideAccess: true })).docs[0] ?? DEFAULT_ACK;
       const values = { firstName: contact.name.split(/\s+/)[0], name: contact.name, reference: enquiryReference(enquiry.id) };
       const html = "html" in template && template.html ? fillTemplateHtml(template.html, values) : undefined;
-      await sendCrmEmail(payload, { to: contact.email, subject: fillTemplate(template.subject, values), text: fillTemplate(template.body ?? "", values), html, contact: contact.id, enquiry: enquiry.id, summary: "Acknowledgement sent" });
+      await sendCrmEmail(payload, { to: contact.email, subject: fillTemplate(template.subject, values), text: fillTemplate(template.body ?? "", values), html, contact: contact.id, enquiry: enquiry.id, summary: "Acknowledgement" });
     } catch (error) {
       payload.logger.error({ err: error, msg: "Acknowledgement failed", enquiryId });
     }

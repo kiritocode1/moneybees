@@ -81,7 +81,7 @@ export type ActivityType = ValueOf<typeof ACTIVITY_TYPES>;
 
 export const EMAIL_STATUSES = [
   { value: "queued", label: "Queued" },
-  { value: "logged", label: "Logged, not sent" },
+  { value: "logged", label: "Not sent, email not connected" },
   { value: "sent", label: "Sent" },
   { value: "delivered", label: "Delivered" },
   { value: "opened", label: "Opened" },

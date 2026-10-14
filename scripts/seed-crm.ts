@@ -14,6 +14,7 @@ import { writeFileSync } from "node:fs";
 import config from "@payload-config";
 import { getPayload } from "payload";
 import { receiveEnquiry } from "@/lib/crm/enquiries";
+import { STARTER_PLAYBOOKS, STARTER_TEMPLATES } from "@/lib/crm/starter-content";
 
 const payload = await getPayload({ config });
 if (process.env.NODE_ENV === "production" || /planetscale|psdb/.test(process.env.DATABASE_URL ?? "")) throw new Error("Refusing to seed what looks like production.");
@@ -26,54 +27,25 @@ async function once<T>(collection: "products" | "playbooks" | "email-templates",
 await once("products", "slug", "moneybee-pms", { name: "Moneybee PMS", slug: "moneybee-pms", kind: "pms", benchmark: "S&P BSE 500 TRI", inception: "2007-08-01", showPerformancePublicly: true });
 await once("products", "slug", "flyingbee", { name: "Flyingbee Investment Fund", slug: "flyingbee", kind: "aif", benchmark: "S&P BSE 500 TRI", inception: "2025-01-01", showPerformancePublicly: false });
 
-const ack = await once("email-templates", "name", "Enquiry received", {
-  name: "Enquiry received",
-  purpose: "enquiry_ack",
-  subject: "We have your enquiry ({{reference}})",
-  body: "Hello {{firstName}},\n\nThank you for writing to Moneybee. Your reference is {{reference}}. Someone from our team will reply to this address.\n\nIf it is urgent, call us on 022-4030 2080.\n\nMoneybee",
-});
-const pmsReply = await once("email-templates", "name", "PMS first reply", {
-  name: "PMS first reply",
-  purpose: "enquiry_reply",
-  subject: "Moneybee PMS: your enquiry ({{reference}})",
-  body: "Hello {{firstName}},\n\nThank you for your interest in Moneybee PMS. The minimum investment is Rs. 50 lakh, as SEBI sets for portfolio management services.\n\nI have attached our latest fact sheet. Could we find 20 minutes this week to talk through how we invest and whether it suits you?\n\n{{senderName}}\nMoneybee",
-});
-const aifReply = await once("email-templates", "name", "AIF first reply", {
-  name: "AIF first reply",
-  purpose: "enquiry_reply",
-  subject: "Flyingbee Investment Fund: your enquiry ({{reference}})",
-  body: "Hello {{firstName}},\n\nThank you for asking about the Flyingbee Investment Fund, our Category III AIF. The minimum commitment is Rs. 1 crore.\n\nBefore I send the fund's documents, could you confirm you are investing as an individual, HUF, family office or company? I would also like to set up a call with the fund team.\n\n{{senderName}}\nMoneybee",
-});
-const complaint = await once("email-templates", "name", "Investor concern, first reply", {
-  name: "Investor concern, first reply",
-  purpose: "enquiry_reply",
-  subject: "Your message to Moneybee ({{reference}})",
-  body: "Hello {{firstName}},\n\nThank you for telling us. I am looking into this now with our operations team and will call you today.\n\nYour reference is {{reference}}. Please quote it if you write to us again.\n\n{{senderName}}\nMoneybee",
-});
-
-const playbooks = [
-  { name: "Investor withdrawal or complaint", order: 10, kinds: [], severities: ["critical"], responseHours: 2, handlerRoles: ["operations", "compliance"], template: complaint.id, steps: ["Call the investor before writing.", "Check their account with operations before promising anything.", "Copy compliance on the reply.", "Log the call and what was agreed here."] },
-  { name: "Large PMS investor", order: 20, kinds: ["pms"], severities: ["high"], responseHours: 4, handlerRoles: ["sales"], template: pmsReply.id, steps: ["Call within the reply time; email only if they don't pick up.", "Offer a meeting with the fund manager.", "Open a deal once a meeting is set."] },
-  { name: "Large AIF investor", order: 21, kinds: ["aif"], severities: ["high"], responseHours: 4, handlerRoles: ["sales"], template: aifReply.id, steps: ["Call within the reply time; email only if they don't pick up.", "Confirm the Rs. 1 crore minimum and how they invest before sending documents.", "Open a deal once a meeting is set."] },
-  { name: "PMS enquiry", order: 30, kinds: ["pms"], severities: [], responseHours: 24, handlerRoles: ["sales"], template: pmsReply.id, steps: ["Reply with the fact sheet and the Rs. 50 lakh minimum.", "Ask for a time to call."] },
-  { name: "AIF enquiry", order: 40, kinds: ["aif"], severities: [], responseHours: 24, handlerRoles: ["sales"], template: aifReply.id, steps: ["Confirm the Rs. 1 crore minimum before sending any material.", "Send no AIF returns until compliance has cleared them for this person."] },
-  { name: "Investor support", order: 50, kinds: ["support"], severities: [], responseHours: 24, handlerRoles: ["operations"], template: null, steps: ["Find the client code in the back office.", "Reply with what will happen and by when."] },
-  { name: "General enquiry", order: 90, kinds: ["general"], severities: [], responseHours: 72, handlerRoles: ["sales"], template: null, steps: ["Answer it, or pass it to the right desk.", "Close it with a line on what was done."] },
-];
-// Replaced by the separate PMS and AIF playbooks above.
-await payload.delete({ collection: "playbooks", where: { name: { equals: "Large PMS or AIF investor" } }, overrideAccess: true });
-for (const { steps, ...playbook } of playbooks) {
-  const row = await once("playbooks", "name", playbook.name, { ...playbook, steps: steps.map((step) => ({ step })) });
-  await payload.update({ collection: "playbooks", id: row.id, data: { ...playbook, steps: steps.map((step) => ({ step })) } as never, overrideAccess: true });
+// Starter templates and playbooks (lib/crm/starter-content.ts); the hiring migration writes the same ones where none exist.
+const templateIds = new Map<string, number>();
+for (const [key, template] of Object.entries(STARTER_TEMPLATES)) {
+  templateIds.set(key, (await once("email-templates", "name", template.name, template)).id);
 }
-void ack;
+// Replaced by the separate PMS and AIF playbooks.
+await payload.delete({ collection: "playbooks", where: { name: { equals: "Large PMS or AIF investor" } }, overrideAccess: true });
+for (const { steps, template, ...playbook } of STARTER_PLAYBOOKS) {
+  const data = { ...playbook, template: template ? templateIds.get(template) : null, steps: steps.map((step) => ({ step })) };
+  const row = await once("playbooks", "name", playbook.name, data);
+  await payload.update({ collection: "playbooks", id: row.id, data: data as never, overrideAccess: true });
+}
 
 const email = "qa.admin@moneybee.local";
 const existing = await payload.find({ collection: "users", where: { email: { equals: email } }, limit: 1, overrideAccess: true });
 const password = randomBytes(9).toString("base64url");
 if (existing.docs[0]) await payload.update({ collection: "users", id: existing.docs[0].id, data: { password }, overrideAccess: true });
 else await payload.create({ collection: "users", data: { email, password, name: "QA Admin", roles: ["admin"] }, overrideAccess: true });
-for (const [name, mail, roles] of [["Asha Rao", "asha.sales@moneybee.local", ["sales"]], ["Vikram Iyer", "vikram.compliance@moneybee.local", ["compliance"]]] as const) {
+for (const [name, mail, roles] of [["Asha Rao", "asha.sales@moneybee.local", ["sales"]], ["Vikram Iyer", "vikram.compliance@moneybee.local", ["compliance"]], ["Meera Nair", "meera.hr@moneybee.local", ["hr"]]] as const) {
   const found = await payload.find({ collection: "users", where: { email: { equals: mail } }, limit: 1, overrideAccess: true });
   if (!found.docs[0]) await payload.create({ collection: "users", data: { email: mail, password: randomBytes(12).toString("base64url"), name, roles: [...roles] }, overrideAccess: true });
 }

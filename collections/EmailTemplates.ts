@@ -8,7 +8,8 @@ import { screenIntro } from "@/lib/admin/screens";
  * Email's editor (components/admin/email-editor). `design` is what staff
  * edit; `html` and `body` (plain text) are exported from it on every change,
  * so sending never needs the editor. Merge fields in double braces are filled
- * in at send time: {{firstName}}, {{name}}, {{reference}}, {{role}}, {{senderName}}.
+ * in at send time: {{firstName}}, {{name}}, {{reference}}, {{role}}, {{senderName}},
+ * and for hiring {{keptUntil}}, {{interviewAt}}, {{interviewPlace}}, {{interviewWith}}.
  */
 export const EmailTemplates: CollectionConfig = {
   slug: "email-templates",

@@ -88,6 +88,7 @@ export interface Config {
     activities: Activity;
     tasks: Task;
     emails: Email;
+    applications: Application;
     'login-challenges': LoginChallenge;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
@@ -124,6 +125,7 @@ export interface Config {
     activities: ActivitiesSelect<false> | ActivitiesSelect<true>;
     tasks: TasksSelect<false> | TasksSelect<true>;
     emails: EmailsSelect<false> | EmailsSelect<true>;
+    applications: ApplicationsSelect<false> | ApplicationsSelect<true>;
     'login-challenges': LoginChallengesSelect<false> | LoginChallengesSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
@@ -474,9 +476,9 @@ export interface Opening {
   _order?: string | null;
   title: string;
   /**
-   * A sample is labelled on the page as not a live vacancy.
+   * Live takes applications. A sample is labelled on the page as not a live vacancy. Closed leaves the site and keeps its applications.
    */
-  status: 'live' | 'sample';
+  status: 'live' | 'sample' | 'closed';
   team: 'research' | 'portfolio' | 'advisory' | 'compliance' | 'services';
   location: string;
   /**
@@ -485,6 +487,15 @@ export interface Opening {
   employment: string;
   summary: string;
   responsibilities?:
+    | {
+        line: string;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Each one is asked as a yes or no question on the apply form, e.g. "Two or more years of equity research".
+   */
+  mustHaves?:
     | {
         line: string;
         id?: string | null;
@@ -840,6 +851,7 @@ export interface Email {
   text?: string | null;
   contact?: (number | null) | Contact;
   enquiry?: (number | null) | Enquiry;
+  application?: (number | null) | Application;
   sentBy?: (number | null) | User;
   inReplyTo?: (number | null) | Email;
   resendId?: string | null;
@@ -850,6 +862,102 @@ export interface Email {
         id?: string | null;
       }[]
     | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "applications".
+ */
+export interface Application {
+  id: number;
+  name: string;
+  email: string;
+  phone?: string | null;
+  city?: string | null;
+  linkedin?: string | null;
+  notice?: ('now' | '15' | '30' | '60' | '90') | null;
+  /**
+   * Empty for an open application.
+   */
+  opening?: (number | null) | Opening;
+  /**
+   * The role as it was named when they applied.
+   */
+  roleTitle: string;
+  team?: ('research' | 'portfolio' | 'advisory' | 'compliance' | 'services') | null;
+  stage: 'new' | 'shortlisted' | 'interview' | 'offer' | 'hired' | 'closed';
+  closeReason?: ('not_taken_forward' | 'role_filled' | 'withdrew') | null;
+  owner?: (number | null) | User;
+  /**
+   * Each must-have on the opening when they applied, and their answer.
+   */
+  mustHaves?:
+    | {
+        question: string;
+        answer: 'yes' | 'no';
+        id?: string | null;
+      }[]
+    | null;
+  why?: string | null;
+  /**
+   * Asked only when they sent no resume.
+   */
+  experience?: string | null;
+  /**
+   * Kept privately (lib/hiring/resume-store.ts) and opened from the Hiring screen.
+   */
+  resume?: {
+    key?: string | null;
+    name?: string | null;
+    size?: number | null;
+    type?: string | null;
+  };
+  interviews?:
+    | {
+        at: string;
+        with: string;
+        place: string;
+        note?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Everything that happened to the application, newest last.
+   */
+  history?:
+    | {
+        at: string;
+        kind: 'applied' | 'stage' | 'email' | 'interview' | 'note' | 'owner' | 'system';
+        actor?: (number | null) | User;
+        summary: string;
+        body?: string | null;
+        email?: (number | null) | Email;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Jev's reading of the answers, when Score applicants is on. A suggestion only.
+   */
+  screen?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  receivedAt: string;
+  consentAt: string;
+  /**
+   * The application and its resume are deleted on this day.
+   */
+  deleteAfter: string;
+  origin?: {
+    page?: string | null;
+    ipHash?: string | null;
+  };
   updatedAt: string;
   createdAt: string;
 }
@@ -990,6 +1098,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'emails';
         value: number | Email;
+      } | null)
+    | ({
+        relationTo: 'applications';
+        value: number | Application;
       } | null)
     | ({
         relationTo: 'login-challenges';
@@ -1206,6 +1318,12 @@ export interface OpeningsSelect<T extends boolean = true> {
   employment?: T;
   summary?: T;
   responsibilities?:
+    | T
+    | {
+        line?: T;
+        id?: T;
+      };
+  mustHaves?:
     | T
     | {
         line?: T;
@@ -1462,6 +1580,7 @@ export interface EmailsSelect<T extends boolean = true> {
   text?: T;
   contact?: T;
   enquiry?: T;
+  application?: T;
   sentBy?: T;
   inReplyTo?: T;
   resendId?: T;
@@ -1471,6 +1590,73 @@ export interface EmailsSelect<T extends boolean = true> {
         type?: T;
         at?: T;
         id?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "applications_select".
+ */
+export interface ApplicationsSelect<T extends boolean = true> {
+  name?: T;
+  email?: T;
+  phone?: T;
+  city?: T;
+  linkedin?: T;
+  notice?: T;
+  opening?: T;
+  roleTitle?: T;
+  team?: T;
+  stage?: T;
+  closeReason?: T;
+  owner?: T;
+  mustHaves?:
+    | T
+    | {
+        question?: T;
+        answer?: T;
+        id?: T;
+      };
+  why?: T;
+  experience?: T;
+  resume?:
+    | T
+    | {
+        key?: T;
+        name?: T;
+        size?: T;
+        type?: T;
+      };
+  interviews?:
+    | T
+    | {
+        at?: T;
+        with?: T;
+        place?: T;
+        note?: T;
+        id?: T;
+      };
+  history?:
+    | T
+    | {
+        at?: T;
+        kind?: T;
+        actor?: T;
+        summary?: T;
+        body?: T;
+        email?: T;
+        id?: T;
+      };
+  screen?: T;
+  receivedAt?: T;
+  consentAt?: T;
+  deleteAfter?: T;
+  origin?:
+    | T
+    | {
+        page?: T;
+        ipHash?: T;
       };
   updatedAt?: T;
   createdAt?: T;
@@ -2864,6 +3050,13 @@ export interface CrmSetting {
     low: number;
   };
   acknowledge?: boolean | null;
+  hiring: {
+    /**
+     * Then the application and its resume are deleted. The applicant agrees to this period when they apply.
+     */
+    keepMonths: number;
+    acknowledge?: boolean | null;
+  };
   /**
    * Every AI feature starts off. Each sends only what its line says, through Vercel AI Gateway with zero data retention, and needs Gateway credits to run.
    */
@@ -3991,6 +4184,12 @@ export interface CrmSettingsSelect<T extends boolean = true> {
         low?: T;
       };
   acknowledge?: T;
+  hiring?:
+    | T
+    | {
+        keepMonths?: T;
+        acknowledge?: T;
+      };
   ai?:
     | T
     | {

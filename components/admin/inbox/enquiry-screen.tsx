@@ -195,7 +195,11 @@ function Timeline({ enquiryId, items, now }: { enquiryId: number; items: Timelin
               <div className="min-w-0 pt-1">
                 <div className="flex flex-wrap items-baseline gap-x-2">
                   <span className="text-body text-foreground">{item.summary}</span>
-                  {item.emailStatus ? <Badge size="compact">{item.emailStatus}</Badge> : null}
+                  {item.emailStatus ? (
+                    <Badge size="compact" color={item.emailOk ? "gray" : "amber"}>
+                      {item.emailStatus}
+                    </Badge>
+                  ) : null}
                   <span className="text-caption text-muted-foreground tabular-nums" title={istDateTime(item.at)}>
                     {relative(item.at, now)}
                   </span>

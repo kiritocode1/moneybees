@@ -64,10 +64,12 @@ export function ReplyComposer({ enquiry }: { enquiry: EnquiryDetail }) {
         {error ? <p className="text-caption text-destructive">{error}</p> : null}
         <div className="flex flex-wrap items-center justify-between gap-3">
           <p className="text-caption text-muted-foreground">
-            From {enquiry.sender} at Moneybee to {enquiry.contact?.email}. Their reply comes to your inbox.
+            {enquiry.emailConnected
+              ? `From ${enquiry.sender} at Moneybee to ${enquiry.contact?.email}. Their reply comes to your inbox.`
+              : "Email is not connected, so this reply will be saved on the timeline but not sent."}
           </p>
           <Button type="submit" loading={pending} disabled={!body.trim() || !subject.trim()}>
-            Send reply
+            {enquiry.emailConnected ? "Send reply" : "Save reply without sending"}
           </Button>
         </div>
       </form>

@@ -63,13 +63,15 @@ export function DateCell({ cellData }: DefaultCellComponentProps) {
   return <span>{new Date(String(cellData)).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric", timeZone: "Asia/Kolkata" })}</span>;
 }
 
-/** Openings › Kind: Live or Sample. */
+/** Openings › Kind: Live, Sample or Closed. */
+const KINDS = { live: { label: "Live", color: "green" }, sample: { label: "Sample", color: "gray" }, closed: { label: "Closed", color: "red" } } as const;
+
 export function KindCell({ cellData }: DefaultCellComponentProps) {
-  const live = cellData === "live";
+  const kind = KINDS[cellData as keyof typeof KINDS] ?? KINDS.sample;
   return (
     <span className="fluid">
-      <Badge variant="dot" color={live ? "green" : "gray"} size="compact">
-        {live ? "Live" : "Sample"}
+      <Badge variant="dot" color={kind.color} size="compact">
+        {kind.label}
       </Badge>
     </span>
   );

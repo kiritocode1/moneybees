@@ -84,6 +84,19 @@ export const HOW_TO: readonly HowTask[] = [
     ],
   },
   {
+    key: "hire",
+    title: "Hire someone, start to finish",
+    when: "Moneybee has a real vacancy.",
+    steps: [
+      { text: "Open Website › Openings, open the role or Create New, write its must-haves, and set Kind to Live. The Careers page now offers Apply.", shot: { url: "/admin/collections/openings", at: "text:Kind" } },
+      { text: "Applications arrive in Desk › Hiring under New, with how many must-haves each one said yes to.", shot: { url: "/admin/hiring", at: "css:tbody tr" } },
+      { text: "Open one. Read the resume and their answers, then Shortlist, or Not taken forward to tell them it is not going ahead." },
+      { text: "Add an interview: when, with whom and where. Leave Email them the invitation ticked and it goes from you, filled in." },
+      { text: "After the interviews, Make an offer. Write the terms where the brackets are, then send it." },
+      { text: "When they accept, Mark as hired. Then Close the role, which takes it off the site, and Tell the others it is filled." },
+    ],
+  },
+  {
     key: "undo",
     title: "Undo a change",
     when: "Something went live, or is about to, that should not have.",
@@ -107,6 +120,7 @@ export const RULES: readonly { rule: string; why: string }[] = [
   { rule: "Words in braces, like {sinceInception}, print a figure from that fact sheet. Keep the braces.", why: "Without them the figure stays fixed and goes out of date next month." },
   { rule: "Never promise or hint at future returns.", why: "SEBI's advertising rules bar it, on the site and in every email." },
   { rule: "Every publish is kept, and any earlier version can be brought back.", why: "So a mistake costs minutes, not a rebuild." },
+  { rule: "Applications delete themselves, resume included, on their keep-until day. Delete now removes one at once.", why: "Applicants agree to that period when they apply, and the law lets them ask to be removed." },
   {
     rule: "Documents, team members, case studies and openings have no draft: Save puts them on the site. Upload only a file compliance has approved.",
     why: "They are short records, so a draft would only add a step. That is why the check happens before you upload.",

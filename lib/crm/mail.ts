@@ -20,6 +20,9 @@ async function officeLine(payload: Payload) {
   return `${officeName}, ${address.line1} ${address.line2}`;
 }
 
+/** False while RESEND_API_KEY is unset: emails are saved with the status "logged" and nobody receives them. */
+export const emailConnected = () => Boolean(process.env.RESEND_API_KEY);
+
 let client: Resend | null | undefined;
 const resend = () => (client === undefined ? (client = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null) : client);
 
@@ -43,20 +46,23 @@ export type CrmEmail = {
   html?: string;
   contact?: number;
   enquiry?: number;
+  application?: number;
   sentBy?: Pick<User, "id" | "name" | "email">;
-  /** Shown on the timeline, e.g. "Acknowledgement sent". Defaults to the subject. */
+  /** Shown on the timeline, e.g. "Acknowledgement". Defaults to the subject; the email's status shows beside it. */
   summary?: string;
 };
 
-/** Sends one email, records it, and returns the Emails row id. A Resend failure is recorded, not thrown. */
-export async function sendCrmEmail(payload: Payload, email: CrmEmail, req?: Partial<PayloadRequest>) {
+export type SentEmail = { id: number; status: "sent" | "failed" | "logged" };
+
+/** Sends one email, records it, and returns the Emails row and what became of it. A Resend failure is recorded, not thrown. */
+export async function sendCrmEmail(payload: Payload, email: CrmEmail, req?: Partial<PayloadRequest>): Promise<SentEmail> {
   const fromName = email.sentBy ? `${email.sentBy.name} at Moneybee` : "Moneybee";
   const from = `${fromName} <${FROM_ADDRESS}>`;
   const row = await payload.create({
     collection: "emails",
     overrideAccess: true,
     req,
-    data: { direction: "out", status: resend() ? "queued" : "logged", from, to: email.to, subject: email.subject, text: email.text, contact: email.contact, enquiry: email.enquiry, sentBy: email.sentBy?.id },
+    data: { direction: "out", status: resend() ? "queued" : "logged", from, to: email.to, subject: email.subject, text: email.text, contact: email.contact, enquiry: email.enquiry, application: email.application, sentBy: email.sentBy?.id },
   });
 
   let status: "sent" | "failed" | "logged" = "logged";
@@ -87,5 +93,5 @@ export async function sendCrmEmail(payload: Payload, email: CrmEmail, req?: Part
       data: { contact: email.contact, enquiry: email.enquiry, type: "email_out", at: new Date().toISOString(), summary: email.summary ?? email.subject, body: email.text, email: row.id, actor: email.sentBy?.id, meta: { status } },
     });
   }
-  return row.id;
+  return { id: row.id, status };
 }

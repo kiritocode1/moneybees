@@ -10,7 +10,8 @@ const LOREM = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do e
 const LOREM_SHORT = "Lorem ipsum dolor sit amet, consectetur adipiscing elit.";
 
 export const RESUME_EMAIL = "info@moneybee.in";
-export const RESUME_HREF = `mailto:${RESUME_EMAIL}?subject=${encodeURIComponent("Resume")}`;
+/** Resumes come in through the apply form, as an open application, so they reach Hiring in /admin. */
+export const RESUME_HREF = "/careers/apply";
 
 export const CAREERS = {
   heading: "Build Your Career with Moneybee",
@@ -54,9 +55,6 @@ export const CAREER_AREAS = [
   { team: "compliance", description: "Compliance and risk management" },
   { team: "services", description: "Equity broking and related financial services" },
 ] as const satisfies readonly { team: Team; description: string }[];
-
-/** The mailto an opening's Apply link opens. */
-export const applyHref = (role: string) => `mailto:${RESUME_EMAIL}?subject=${encodeURIComponent(`Application: ${role}`)}`;
 
 export const LIFE = {
   /** LOREM */

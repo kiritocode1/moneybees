@@ -2,7 +2,7 @@
 
 import { useRef, useState } from "react";
 import { BUTTON, COLUMN, SUBHEAD } from "@/components/hero/tokens";
-import { useSiteDetails } from "@/components/site/site-details";
+import Link from "@/components/transition/transition-link";
 import { TEAM_NAMES } from "@/lib/careers";
 import { CAREER_ROLES, type CareerRole } from "@/lib/career-roles";
 import { JOB_BOARD, type JobBoardContent } from "@/lib/pages/careers-content";
@@ -14,11 +14,10 @@ const CONTROL = `min-h-11 rounded-md border border-black/20 bg-white px-3 text-[
 /**
  * Search and filters reset pagination; only five roles render at once,
  * regardless of dataset size. The roles are Website › Openings; a sample role
- * is labelled as not a live vacancy, and a live one offers Apply by email to
- * the main address in Office details.
+ * is labelled as not a live vacancy and points to an open application, and a
+ * live one lists its must-haves and opens its apply form, /careers/apply/<id>.
  */
 export function CareersJobBoard({ roles = CAREER_ROLES, content = JOB_BOARD }: { roles?: readonly CareerRole[]; content?: JobBoardContent }) {
-  const { email } = useSiteDetails();
   const samples = roles.some((role) => role.status === "sample");
   const [query, setQuery] = useState("");
   const [team, setTeam] = useState("all");
@@ -129,13 +128,19 @@ export function CareersJobBoard({ roles = CAREER_ROLES, content = JOB_BOARD }: {
             <p className="mt-6 text-[16px] leading-[1.6] text-black/75">{selectedRole.summary}</p>
             <h3 className="mt-7 text-[15px] font-semibold">About the work</h3>
             <ul className="mt-3 list-disc space-y-2 pl-5 text-[14px] leading-[1.6] text-black/75">{selectedRole.responsibilities.map((item) => <li key={item}>{item}</li>)}</ul>
+            {selectedRole.mustHaves.length ? (
+              <>
+                <h3 className="mt-7 text-[15px] font-semibold">What you need</h3>
+                <ul className="mt-3 list-disc space-y-2 pl-5 text-[14px] leading-[1.6] text-black/75">{selectedRole.mustHaves.map((item) => <li key={item}>{item}</li>)}</ul>
+              </>
+            ) : null}
             <div className="mt-8 border-t border-black/15 pt-6">
               {selectedRole.status === "live" ? (
-                <a href={`mailto:${email}?subject=${encodeURIComponent(`Application: ${selectedRole.title}`)}`} className={`${BUTTON} bg-[#F6A11A] text-black hover:bg-black hover:text-white`}>Apply with your resume</a>
+                <Link href={`/careers/apply/${selectedRole.id}`} className={`${BUTTON} bg-[#F6A11A] text-black hover:bg-black hover:text-white`}>Apply for this role</Link>
               ) : (
                 <>
                   <p className="mb-5 text-[13px] leading-[1.5] text-black/60">This listing demonstrates the careers page. Contact Moneybee to ask about actual openings.</p>
-                  <a href={`mailto:${email}?subject=${encodeURIComponent(`Career enquiry: ${selectedRole.title}`)}`} className={`${BUTTON} bg-[#F6A11A] text-black hover:bg-black hover:text-white`}>Enquire about opportunities</a>
+                  <Link href="/careers/apply" className={`${BUTTON} bg-[#F6A11A] text-black hover:bg-black hover:text-white`}>Enquire about opportunities</Link>
                 </>
               )}
             </div>

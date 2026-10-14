@@ -6,7 +6,7 @@ import { type EnquiryKind, highest, rank, type Reason, type Severity } from "@/l
  * AI triage of a new enquiry, behind the ai-enquiry-triage flag. Jev answers
  * typed questions with probabilities; it writes nothing. Its answer can only
  * raise the severity the rules gave, and only when it is at least as sure as
- * the confidence set in /admin (Enquiry settings). Every answer is kept on the
+ * the confidence set in /admin (Desk settings). Every answer is kept on the
  * enquiry so staff see what the AI thought and how sure it was.
  */
 

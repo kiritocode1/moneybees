@@ -17,7 +17,7 @@ export default async function PortalHome() {
   if (!investor) redirect("/portal/login");
 
   return (
-    <PortalFrame wide>
+    <PortalFrame size="wide">
       <div className="flex max-w-[880px] flex-wrap items-end justify-between gap-6 border-b border-black/10 pb-8">
         <div>
           <p className={`${EYEBROW} text-black/60`}>{investor.email}</p>
