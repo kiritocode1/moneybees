@@ -2,7 +2,7 @@
 
 import Link from "@/components/transition/transition-link";
 import { usePathname } from "next/navigation";
-import { type ReactNode, useEffect, useId, useRef } from "react";
+import { type KeyboardEvent as ReactKeyboardEvent, type ReactNode, useEffect, useId, useRef, useState } from "react";
 
 export interface MenuLink {
   label: string;
@@ -12,6 +12,13 @@ export interface MenuLink {
   /** "login" sets the link apart in the bar; "cta" makes it the orange button. */
   kind?: "login" | "cta";
 }
+
+/** A bar entry that opens a small panel of links instead of going anywhere itself, such as Login. */
+export interface MenuGroup extends Omit<MenuLink, "href"> {
+  links: MenuLink[];
+}
+
+export type BarItem = MenuLink | MenuGroup;
 
 export interface OverlayMenuProps {
   logo?: string;
@@ -26,7 +33,7 @@ export interface OverlayMenuProps {
   panelColors?: [string, string, string, string];
   menuColor?: string;
   togglerColor?: string;
-  visibleLinks?: MenuLink[];
+  visibleLinks?: BarItem[];
 }
 
 const ASSET_BASE = "https://ui.aryank.space/assets/overlay-menu";
@@ -53,7 +60,6 @@ const DEFAULT_PRIMARY: MenuLink[] = [
 
 const DEFAULT_SECONDARY: MenuLink[] = [
   { label: "Case studies", href: "#case-studies" },
-  { label: "Investor login", href: "/portal/login" },
   { label: "PMS", href: "#services" },
   { label: "AIF", href: "#services" },
 ];
@@ -98,6 +104,124 @@ function MenuAnchor({ link, className }: { link: MenuLink; className?: string })
     <a href={link.href} className={classes}>
       {link.label}
     </a>
+  );
+}
+
+/** How long the panel waits after the pointer leaves, so crossing to it or brushing past does not shut it. */
+const HOVER_GRACE_MS = 150;
+
+/**
+ * A bar entry with a panel of links (Login: Client Login and Distributor
+ * Login). It opens on click or tap, and on hover with a mouse; a click while
+ * hovering pins it open rather than shutting it. It closes on Escape, a click
+ * outside, focus leaving it, a second click, or (unpinned) the pointer
+ * leaving for a moment. Enter, Space or the down arrow opens it on the first
+ * link, and the arrows move between links. It is lit as the current page when
+ * one of its links is.
+ */
+function MenuDropdown({ group }: { group: MenuGroup }) {
+  const pathname = usePathname();
+  const [open, setOpen] = useState(false);
+  const rootRef = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const timer = useRef<number | undefined>(undefined);
+  /** Opened by a click or the keyboard, so the pointer leaving does not close it. */
+  const pinned = useRef(false);
+  const panelId = useId();
+  const current = group.links.some((link) => link.href === pathname);
+
+  const items = () => Array.from(rootRef.current?.querySelectorAll<HTMLAnchorElement>(".om-dropdown-panel a") ?? []);
+  const hover = () => window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+  const close = (refocus = false) => {
+    window.clearTimeout(timer.current);
+    pinned.current = false;
+    setOpen(false);
+    if (refocus) triggerRef.current?.focus();
+  };
+
+  useEffect(() => {
+    if (!open) return;
+    const onPointerDown = (event: PointerEvent) => {
+      if (!rootRef.current?.contains(event.target as Node)) close();
+    };
+    document.addEventListener("pointerdown", onPointerDown);
+    return () => document.removeEventListener("pointerdown", onPointerDown);
+  }, [open]);
+
+  useEffect(() => () => window.clearTimeout(timer.current), []);
+
+  const onKeyDown = (event: ReactKeyboardEvent<HTMLDivElement>) => {
+    const links = items();
+    const at = links.indexOf(document.activeElement as HTMLAnchorElement);
+    if (event.key === "Escape" && open) {
+      event.preventDefault();
+      close(true);
+    } else if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+      event.preventDefault();
+      if (!open) {
+        pinned.current = true;
+        setOpen(true);
+      }
+      const step = event.key === "ArrowDown" ? 1 : -1;
+      const next = at === -1 ? (step === 1 ? 0 : links.length - 1) : (at + step + links.length) % links.length;
+      requestAnimationFrame(() => items()[next]?.focus());
+    }
+  };
+
+  const classes = ["om-dropdown", group.hideBelow ? `om-hide-${group.hideBelow}` : undefined, group.kind ? `om-${group.kind}` : undefined].filter(Boolean).join(" ");
+
+  return (
+    <div
+      ref={rootRef}
+      className={classes}
+      data-open={open || undefined}
+      data-current={current || undefined}
+      onKeyDown={onKeyDown}
+      onPointerEnter={() => {
+        if (!hover()) return;
+        window.clearTimeout(timer.current);
+        setOpen(true);
+      }}
+      onPointerLeave={() => {
+        if (!hover() || pinned.current) return;
+        timer.current = window.setTimeout(() => setOpen(false), HOVER_GRACE_MS);
+      }}
+      onBlur={(event) => {
+        if (!rootRef.current?.contains(event.relatedTarget as Node)) close();
+      }}
+    >
+      <button
+        ref={triggerRef}
+        type="button"
+        className="om-dropdown-trigger"
+        aria-expanded={open}
+        aria-controls={panelId}
+        onClick={() => {
+          if (open && pinned.current) return close();
+          pinned.current = true;
+          setOpen(true);
+        }}
+        onKeyDown={(event) => {
+          if ((event.key === "Enter" || event.key === " ") && !open) {
+            event.preventDefault();
+            pinned.current = true;
+            setOpen(true);
+            requestAnimationFrame(() => items()[0]?.focus());
+          }
+        }}
+      >
+        {group.label}
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+          <path d="M3 4.5 6 7.5 9 4.5" />
+        </svg>
+      </button>
+      {/* A link chosen in the panel closes it as the page changes. */}
+      <div id={panelId} className="om-dropdown-panel" inert={!open} onClick={(event) => (event.target as Element).closest("a") && close()}>
+        {group.links.map((link) => (
+          <MenuAnchor key={link.label} link={link} />
+        ))}
+      </div>
+    </div>
   );
 }
 
@@ -280,9 +404,7 @@ export default function OverlayMenu({
         </div>
         {visibleLinks.length > 0 && (
           <div className="om-visible-links">
-            {visibleLinks.map((link) => (
-              <MenuAnchor key={link.label} link={link} />
-            ))}
+            {visibleLinks.map((item) => ("links" in item ? <MenuDropdown key={item.label} group={item} /> : <MenuAnchor key={item.label} link={item} />))}
           </div>
         )}
         <button
@@ -568,12 +690,64 @@ const styles = `
   padding-block: 6px;
 }
 .om-root .om-items a[aria-current="page"] { color: #F6A11A; }
-/* Client Login sits apart from the pages, behind a hairline. */
+/* Login sits apart from the pages, behind a hairline. */
 .om-root .om-visible-links .om-login {
   padding-left: 28px;
   border-left: 1px solid rgba(0,0,0,.2);
   line-height: 1.6;
 }
+/* A dropdown in the bar (Login): its panel is the Client Login card made small. */
+.om-root .om-dropdown { position: relative; }
+.om-root .om-dropdown-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  font-size: 13px;
+  line-height: inherit;
+  color: #000;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.om-root .om-dropdown-trigger svg { transition: transform 160ms cubic-bezier(.23,1,.32,1); }
+.om-root .om-dropdown[data-open] .om-dropdown-trigger svg { transform: rotate(180deg); }
+.om-root .om-dropdown[data-current] .om-dropdown-trigger { box-shadow: inset 0 -2px 0 #F6A11A; padding-block: 6px; }
+.om-root .om-dropdown-trigger:focus-visible { outline: 2px solid #000; outline-offset: 5px; }
+.om-root .om-dropdown-panel {
+  position: absolute;
+  top: calc(100% + 14px);
+  left: 12px;
+  min-width: 210px;
+  padding: 6px;
+  background: #fff;
+  border: 1px solid rgba(0,0,0,.08);
+  border-radius: 14px;
+  box-shadow: 0 1px 2px rgba(0,0,0,.04), 0 16px 40px -16px rgba(0,0,0,.18);
+  opacity: 0;
+  transform: translateY(-4px) scale(.98);
+  transform-origin: top left;
+  pointer-events: none;
+  transition: opacity 160ms cubic-bezier(.23,1,.32,1), transform 160ms cubic-bezier(.23,1,.32,1);
+}
+/* Covers the gap under the trigger, so the pointer can cross to the panel. */
+.om-root .om-dropdown-panel::before { content: ""; position: absolute; left: 0; right: 0; top: -15px; height: 15px; }
+.om-root .om-dropdown[data-open] .om-dropdown-panel { opacity: 1; transform: none; pointer-events: auto; }
+.om-root .om-visible-links .om-dropdown-panel a {
+  display: block;
+  padding: 9px 12px;
+  border-radius: 9px;
+  font-size: 14px;
+  line-height: 1.4;
+  color: #000;
+  text-decoration: none;
+  box-shadow: none;
+}
+.om-root .om-visible-links .om-dropdown-panel a:hover,
+.om-root .om-visible-links .om-dropdown-panel a:focus-visible { background: #F6F6F6; text-decoration: none; outline: none; }
+.om-root .om-visible-links .om-dropdown-panel a[aria-current="page"] { color: #000; box-shadow: inset 2px 0 0 #F6A11A; }
 .om-root .om-visible-links .om-cta {
   display: inline-flex;
   align-items: center;
@@ -608,6 +782,7 @@ const styles = `
   .om-root .om-secondary-links { display: block; }
   .om-root .om-primary-links { column-gap: 20px; }
   .om-root .om-primary-links a { font-size: clamp(18px, min(4.2vw, 5.2svh), 36px); min-height: 40px; }
+  .om-root .om-secondary-links a { min-height: 40px; }
   .om-root .om-secondary-links { display: flex; }
   .om-root .om-socials { position: static; }
 }
@@ -633,5 +808,7 @@ const styles = `
 }
 @media (prefers-reduced-motion: reduce) {
   .om-root .om-toggler span { transition: none; }
+  .om-root .om-dropdown-panel { transform: none; transition: opacity 160ms ease; }
+  .om-root .om-dropdown-trigger svg { transition: none; }
 }
 `;

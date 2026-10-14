@@ -1,10 +1,18 @@
 import type { ReactNode } from "react";
 import Link from "@/components/transition/transition-link";
-import OverlayMenu, { type MenuLink } from "./overlay-menu";
+import OverlayMenu, { type BarItem, type MenuLink } from "./overlay-menu";
 import { ENQUIRY_HREF } from "@/lib/contact-v2";
 
-/** The client portal's sign-in page (app/(frontend)/portal/login). */
-const CLIENT_LOGIN_URL = "/portal/login";
+/**
+ * The two ways in, under Login in the bar and in the menu (user, 2026-10-15).
+ * Client Login is the portal's sign-in page; distributors cannot sign in yet,
+ * so Distributor Login opens the login cards on /investor-centre, where its
+ * card asks the office for an account.
+ */
+const LOGIN_LINKS: MenuLink[] = [
+  { label: "Client Login", href: "/portal/login" },
+  { label: "Distributor Login", href: "/investor-centre#logins" },
+];
 
 /** The pages in the content plan's user-journey order. Our Team, Performance and the logins are reached from the pages themselves, not here. */
 const primaryLinks = [
@@ -18,19 +26,18 @@ const primaryLinks = [
   { label: "Multibagger Picks", href: "/multi-bagger-picks" },
   { label: "Contact Us", href: ENQUIRY_HREF },
   { label: "Careers", href: "/careers" },
-  // Until the investor centre has a better way in, this is its only route below 1200px, where the bar drops it.
+  // Investor Centre left the bar for the Login dropdown (user, 2026-10-15); the menu and the footer are its way in.
   { label: "Investor Centre", href: "/investor-centre" },
 ];
 
-/** The content plan's bar in its order, with Client Login set apart before Get Started. Below 1200px Investor Centre leaves the bar and below 900px the other pages do; the menu still lists them. Below 480px Client Login leaves too, and the login card at the foot of each page is the way in. */
-const barLinks: MenuLink[] = [
+/** The content plan's bar in its order, with Login set apart before Get Started. Below 900px the other pages leave the bar; the menu still lists them. Below 480px Login leaves too, and the menu's Client Login and Distributor Login are the way in. */
+const barLinks: BarItem[] = [
   { label: "Home", href: "/", hideBelow: 900 },
   { label: "About Us", href: "/about", hideBelow: 900 },
   { label: "PMS", href: "/pms" },
   { label: "AIF", href: "/aif" },
   { label: "Our Philosophy", href: "/our-philosophy", hideBelow: 900 },
-  { label: "Investor Centre", href: "/investor-centre", hideBelow: 1200 },
-  { label: "Client Login", href: CLIENT_LOGIN_URL, kind: "login", hideBelow: 480 },
+  { label: "Login", links: LOGIN_LINKS, kind: "login", hideBelow: 480 },
   { label: "Get Started", href: ENQUIRY_HREF, kind: "cta" },
 ];
 
@@ -65,7 +72,7 @@ export default function SiteNavigation({ children }: { children: ReactNode }) {
       primaryLinks={primaryLinks}
       // Home to Our Philosophy in the first column, the rest in the second.
       primaryRows={6}
-      secondaryLinks={[]}
+      secondaryLinks={LOGIN_LINKS}
       legal={legalLinks}
       panelColors={["#9D9EA1", "#000000", "#9D9EA1", "#000000"]}
       menuColor="#000000"
