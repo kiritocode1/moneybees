@@ -10,6 +10,7 @@ import * as migration_20261013_105359_pms_page from './20261013_105359_pms_page'
 import * as migration_20261013_111455_about_page_and_team from './20261013_111455_about_page_and_team';
 import * as migration_20261013_112654_investor_centre_contact_documents from './20261013_112654_investor_centre_contact_documents';
 import * as migration_20261013_115823_remaining_pages from './20261013_115823_remaining_pages';
+import * as migration_20261014_062217_ai_switches_in_admin from './20261014_062217_ai_switches_in_admin';
 
 export const migrations = [
   {
@@ -70,6 +71,11 @@ export const migrations = [
   {
     up: migration_20261013_115823_remaining_pages.up,
     down: migration_20261013_115823_remaining_pages.down,
-    name: '20261013_115823_remaining_pages'
+    name: '20261013_115823_remaining_pages',
+  },
+  {
+    up: migration_20261014_062217_ai_switches_in_admin.up,
+    down: migration_20261014_062217_ai_switches_in_admin.down,
+    name: '20261014_062217_ai_switches_in_admin'
   },
 ];

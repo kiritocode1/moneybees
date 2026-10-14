@@ -2,6 +2,7 @@ import type { CollectionConfig } from "payload";
 import { allow, CRM_ROLES, ROLES } from "@/lib/backend/roles";
 import { ENQUIRY_KINDS, SEVERITIES, SEVERITY_LABELS } from "@/lib/crm/severity";
 import { ENQUIRY_KIND_LABELS } from "@/lib/crm/vocabulary";
+import { screenIntro } from "@/lib/admin/screens";
 
 /**
  * What to do with an enquiry of a given kind and severity: how fast to
@@ -11,7 +12,7 @@ import { ENQUIRY_KIND_LABELS } from "@/lib/crm/vocabulary";
  */
 export const Playbooks: CollectionConfig = {
   slug: "playbooks",
-  admin: { useAsTitle: "name", defaultColumns: ["name", "kinds", "severities", "responseHours"], group: "Settings" },
+  admin: { useAsTitle: "name", defaultColumns: ["name", "kinds", "severities", "responseHours"], group: "Settings", components: screenIntro("playbooks") },
   defaultSort: "order",
   access: { read: allow(...CRM_ROLES), create: allow("compliance"), update: allow("compliance"), delete: allow("compliance") },
   fields: [

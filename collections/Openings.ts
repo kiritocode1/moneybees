@@ -3,6 +3,7 @@ import type { CollectionAfterChangeHook, CollectionAfterDeleteHook, CollectionCo
 import { auditChange } from "@/lib/backend/audit";
 import { allow, everyone } from "@/lib/backend/roles";
 import { TEAM_NAMES } from "@/lib/careers";
+import { screenIntro } from "@/lib/admin/screens";
 
 /** The roles are on /careers; any change rebuilds it. */
 const rebuild = (req: PayloadRequest) => {
@@ -27,7 +28,7 @@ export const Openings: CollectionConfig = {
     // Listed under Website in the sidebar by components/admin/nav-links.tsx.
     group: false,
     hideAPIURL: true,
-    description: "The roles on the Careers page, in this order. Drag a row to move one.",
+    components: screenIntro("openings"),
     pagination: { defaultLimit: 50 },
   },
   access: { read: everyone, create: allow("hr", "editor"), update: allow("hr", "editor"), delete: allow("hr", "editor") },

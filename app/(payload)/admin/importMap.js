@@ -1,3 +1,4 @@
+import { ScreenIntro as ScreenIntro_7542a15ee6588310d29254095b309b00 } from '../../../components/admin/screen-intro'
 import { FactSheetView as FactSheetView_2073cd3e706a6dbceb2220c7a27a1aaa } from '../../../components/admin/fact-sheet/fact-sheet-view'
 import { PersonCell as PersonCell_be203baf76600e10d6ffd30b9fae3d01 } from '../../../components/admin/cells/cells'
 import { FileCell as FileCell_be203baf76600e10d6ffd30b9fae3d01 } from '../../../components/admin/cells/cells'
@@ -32,6 +33,7 @@ import { CollectionCards as CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1 } f
 
 /** @type import('payload').ImportMap */
 export const importMap = {
+  "/components/admin/screen-intro#ScreenIntro": ScreenIntro_7542a15ee6588310d29254095b309b00,
   "/components/admin/fact-sheet/fact-sheet-view#FactSheetView": FactSheetView_2073cd3e706a6dbceb2220c7a27a1aaa,
   "/components/admin/cells/cells#PersonCell": PersonCell_be203baf76600e10d6ffd30b9fae3d01,
   "/components/admin/cells/cells#FileCell": FileCell_be203baf76600e10d6ffd30b9fae3d01,

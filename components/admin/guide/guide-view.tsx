@@ -15,6 +15,11 @@ import { monthYear } from "@/lib/site/tokens";
 import { SECTION_KINDS, type SectionKind } from "@/lib/pages/sections";
 import { editorHref, SITE_PAGES, type SitePage } from "@/lib/pages/site-pages";
 import { PagePicker } from "./page-picker";
+import { ScreenIcon } from "@/components/admin/screen-intro";
+import { SCREENS, type ScreenKey } from "@/lib/admin/screens";
+
+/** Every screen in the Guide, in the sidebar's order. */
+const SCREEN_KEYS = Object.keys(SCREENS) as ScreenKey[];
 
 /*
  * /admin/guide (payload.config.ts admin.components.views.guide): how the
@@ -166,6 +171,7 @@ export async function GuideView(props: AdminViewServerProps) {
               {[
                 ["#what", "What changes what"],
                 ["#how", "How to"],
+                ["#screens", "Every screen"],
                 ["#fact-sheets", "Fact sheets, explained"],
                 ["#rules", "The rules"],
                 ["#map", "Where things come from"],
@@ -224,6 +230,43 @@ export async function GuideView(props: AdminViewServerProps) {
                 </div>
               ))}
             </div>
+          </section>
+
+          <section id="screens" className="mt-12 scroll-mt-24">
+            <h2 className="text-title font-semibold text-foreground">Every screen</h2>
+            {(["Desk", "Website", "Publishing", "Settings"] as const).map((group) => (
+              <div key={group} className="mt-6">
+                <h3 className="text-caption font-medium tracking-[.08em] text-muted-foreground uppercase">{group}</h3>
+                {SCREEN_KEYS.filter((key) => SCREENS[key].group === group).map((key) => (
+                  <article
+                    key={key}
+                    id={`screen-${key}`}
+                    className="mt-3 grid scroll-mt-24 grid-cols-1 gap-6 border-t pt-5 target:border-t-[#F6A11A] lg:grid-cols-[minmax(0,260px)_minmax(0,1fr)]"
+                  >
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <span className="grid h-8 w-8 place-items-center rounded-lg bg-muted">
+                          <ScreenIcon screen={key} />
+                        </span>
+                        <h4 className="text-title font-semibold text-foreground">{SCREENS[key].name}</h4>
+                      </div>
+                      <p className="mt-2 text-caption text-muted-foreground">{SCREENS[key].line}</p>
+                      <LinkButton href={SCREENS[key].href} className="mt-3">
+                        Open {SCREENS[key].name}
+                      </LinkButton>
+                    </div>
+                    <ol className="m-0 grid list-none content-start gap-3 p-0">
+                      {SCREENS[key].steps.map((step, index) => (
+                        <li key={index} className="grid grid-cols-[22px_minmax(0,1fr)] gap-3 text-body text-foreground">
+                          <Marker n={index + 1} />
+                          {step}
+                        </li>
+                      ))}
+                    </ol>
+                  </article>
+                ))}
+              </div>
+            ))}
           </section>
 
           <section id="fact-sheets" className="mt-12 scroll-mt-24">

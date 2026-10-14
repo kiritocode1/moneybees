@@ -3,6 +3,7 @@ import type { CollectionAfterChangeHook, CollectionAfterDeleteHook, CollectionCo
 import { auditChange } from "@/lib/backend/audit";
 import { allow, everyone } from "@/lib/backend/roles";
 import { DOCUMENT_ART_NAMES, DOCUMENT_GROUPS } from "@/lib/investor-centre";
+import { screenIntro } from "@/lib/admin/screens";
 
 /** The cards are on /investor-centre; any change rebuilds it. */
 const rebuild = (req: PayloadRequest) => {
@@ -28,7 +29,7 @@ export const Documents: CollectionConfig = {
     // Listed under Website in the sidebar by components/admin/nav-links.tsx.
     group: false,
     hideAPIURL: true,
-    description: "The cards on the Investor Centre page, in this order under their group. Drag a row to move it.",
+    components: screenIntro("documents"),
     // All on one page, so any row can be dragged anywhere.
     pagination: { defaultLimit: 50 },
   },

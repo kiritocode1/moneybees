@@ -1,6 +1,7 @@
 import type { CollectionConfig } from "payload";
 import { allow, CRM_ROLES } from "@/lib/backend/roles";
 import { TEMPLATE_PURPOSES } from "@/lib/crm/vocabulary";
+import { screenIntro } from "@/lib/admin/screens";
 
 /**
  * Emails staff send from /admin, and the automatic ones, designed in React
@@ -12,7 +13,7 @@ import { TEMPLATE_PURPOSES } from "@/lib/crm/vocabulary";
 export const EmailTemplates: CollectionConfig = {
   slug: "email-templates",
   labels: { singular: "Email template", plural: "Email templates" },
-  admin: { useAsTitle: "name", defaultColumns: ["name", "purpose", "updatedAt"], group: "Settings" },
+  admin: { useAsTitle: "name", defaultColumns: ["name", "purpose", "updatedAt"], group: "Settings", components: screenIntro("emailTemplates") },
   access: { read: allow(...CRM_ROLES, "hr"), create: allow("compliance", "hr"), update: allow("compliance", "hr"), delete: allow("compliance") },
   fields: [
     { type: "row", fields: [

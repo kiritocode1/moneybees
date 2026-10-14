@@ -7,6 +7,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { TabsSubtle, TabsSubtleItem } from "@/components/fluid/tabs-subtle";
 import { istDateTime, relative } from "@/lib/crm/format";
 import { INBOX_TABS, type InboxRow, type InboxTab } from "@/lib/crm/inbox-tabs";
+import { ScreenIntro } from "@/components/admin/screen-intro";
 
 /** Reloads the list this often, so new enquiries and the deadlines stay current while the screen is open. */
 const REFRESH_MS = 60_000;
@@ -45,6 +46,7 @@ export function InboxScreen({ tab, rows, counts }: { tab: InboxTab; rows: InboxR
             {counts.waiting === 0 ? "Nothing is waiting on us." : `${counts.waiting} waiting on us.`}
             {tab === "waiting" && overdue > 0 ? ` ${overdue} ${overdue === 1 ? "is" : "are"} past the reply time.` : ""}
           </p>
+          <ScreenIntro screen="enquiries" />
         </div>
         <TabsSubtle selectedIndex={INBOX_TABS.findIndex(({ key }) => key === tab)} onSelect={(index) => router.push(`/admin/inbox?tab=${INBOX_TABS[index].key}`)} idPrefix="inbox">
           {INBOX_TABS.map(({ key, label }, index) => (

@@ -1,6 +1,7 @@
 import { APIError, type CollectionBeforeLoginHook, type CollectionConfig } from "payload";
 import { auditChange } from "@/lib/backend/audit";
 import { allow, hasRole, nobodyField } from "@/lib/backend/roles";
+import { screenIntro } from "@/lib/admin/screens";
 
 /** A disabled account cannot sign in, whatever the password. */
 const refuseDisabled: CollectionBeforeLoginHook = ({ user }) => {
@@ -15,7 +16,7 @@ const refuseDisabled: CollectionBeforeLoginHook = ({ user }) => {
 export const Investors: CollectionConfig = {
   slug: "investors",
   labels: { singular: "Client account", plural: "Client accounts" },
-  admin: { useAsTitle: "name", defaultColumns: ["name", "email", "status", "updatedAt"], group: "Settings" },
+  admin: { useAsTitle: "name", defaultColumns: ["name", "email", "status", "updatedAt"], group: "Settings", components: screenIntro("clientAccounts") },
   auth: {
     tokenExpiration: 7200,
     maxLoginAttempts: 5,

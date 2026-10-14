@@ -2,6 +2,7 @@ import type { CollectionBeforeChangeHook, CollectionConfig } from "payload";
 import { auditChange } from "@/lib/backend/audit";
 import { allow, CRM_ROLES } from "@/lib/backend/roles";
 import { DEAL_STAGES } from "@/lib/crm/vocabulary";
+import { screenIntro } from "@/lib/admin/screens";
 
 /** Records when a deal last moved, so the board can show how long it has sat in a stage. */
 const stampStage: CollectionBeforeChangeHook = ({ data, originalDoc, operation }) =>
@@ -14,7 +15,7 @@ const stampStage: CollectionBeforeChangeHook = ({ data, originalDoc, operation }
  */
 export const Deals: CollectionConfig = {
   slug: "deals",
-  admin: { useAsTitle: "title", defaultColumns: ["title", "stage", "ticketSize", "owner"], group: false },
+  admin: { useAsTitle: "title", defaultColumns: ["title", "stage", "ticketSize", "owner"], group: false, components: screenIntro("deals") },
   access: { read: allow(...CRM_ROLES), create: allow(...CRM_ROLES), update: allow(...CRM_ROLES), delete: allow() },
   hooks: { beforeChange: [stampStage], afterChange: [auditChange("deals")] },
   fields: [

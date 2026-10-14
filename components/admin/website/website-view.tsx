@@ -5,6 +5,7 @@ import { AdminView } from "@/components/admin/admin-view";
 import { Badge } from "@/components/fluid/badge";
 import { LinkButton } from "@/components/admin/link-button";
 import { editorHref, pagePicture, SITE_PAGES, type SitePage } from "@/lib/pages/site-pages";
+import { ScreenIntro } from "@/components/admin/screen-intro";
 
 /*
  * /admin/website (payload.config.ts admin.components.views.website), the
@@ -116,6 +117,7 @@ export async function WebsiteView(props: AdminViewServerProps) {
       {() => (
         <div className="max-w-[1320px]">
           <h1 className="mt-8 text-display font-semibold tracking-[-0.01em] text-foreground">Website</h1>
+          <ScreenIntro screen="pages" />
           <div className="mt-6 grid grid-cols-[repeat(auto-fill,minmax(280px,1fr))] gap-4">
             {SITE_PAGES.map((page, index) => (
               <PageCard key={page.slug} page={page} changed={changes[index]} />

@@ -1,6 +1,7 @@
 import type { CollectionBeforeChangeHook, CollectionConfig } from "payload";
 import { auditChange } from "@/lib/backend/audit";
 import { allow, allowField, hasRole, ROLES } from "@/lib/backend/roles";
+import { screenIntro } from "@/lib/admin/screens";
 
 /** The very first account becomes the admin, so a fresh database can be set up from /admin. */
 const firstUserIsAdmin: CollectionBeforeChangeHook = async ({ data, operation, req }) => {
@@ -17,7 +18,7 @@ const firstUserIsAdmin: CollectionBeforeChangeHook = async ({ data, operation, r
 export const Users: CollectionConfig = {
   slug: "users",
   labels: { singular: "Staff member", plural: "Staff" },
-  admin: { useAsTitle: "name", defaultColumns: ["name", "email", "roles"], group: "Settings" },
+  admin: { useAsTitle: "name", defaultColumns: ["name", "email", "roles"], group: "Settings", components: screenIntro("staff") },
   auth: { tokenExpiration: 7200, maxLoginAttempts: 5, lockTime: 600_000 },
   access: {
     admin: ({ req }) => Boolean(req.user),

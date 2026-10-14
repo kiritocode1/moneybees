@@ -2,6 +2,7 @@ import { revalidatePath } from "next/cache";
 import type { CollectionAfterChangeHook, CollectionAfterDeleteHook, CollectionConfig, PayloadRequest } from "payload";
 import { auditChange } from "@/lib/backend/audit";
 import { allow, everyone } from "@/lib/backend/roles";
+import { screenIntro } from "@/lib/admin/screens";
 
 /** The carousel is on /about; any change rebuilds it. */
 const rebuildAbout = (req: PayloadRequest) => {
@@ -25,7 +26,7 @@ export const TeamMembers: CollectionConfig = {
     // Listed under Website in the sidebar by components/admin/nav-links.tsx.
     group: false,
     hideAPIURL: true,
-    description: "The people in the Our Team carousel on the About page, in this order. Drag a row to move someone.",
+    components: screenIntro("team"),
   },
   access: { read: everyone, create: allow("editor", "hr"), update: allow("editor", "hr"), delete: allow("editor", "hr") },
   hooks: { afterChange: [afterChange, auditChange("team-members")], afterDelete: [afterDelete] },

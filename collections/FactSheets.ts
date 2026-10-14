@@ -3,6 +3,7 @@ import { auditChange } from "@/lib/backend/audit";
 import { afterStatusChange, enforceWorkflow, setTitle, STATUSES } from "@/lib/backend/fact-sheet-workflow";
 import { allow, hasRole } from "@/lib/backend/roles";
 import { numberWithin, PERIODS, RETURN, SECTOR, WEALTH } from "@/lib/figure-limits";
+import { screenIntro } from "@/lib/admin/screens";
 
 /** What the public may read: published sheets of products whose returns are cleared for the site. */
 const PUBLIC: Where = { status: { equals: "published" }, "product.showPerformancePublicly": { equals: true } };
@@ -19,9 +20,8 @@ export const FactSheets: CollectionConfig = {
     useAsTitle: "title",
     defaultColumns: ["title", "status", "asOf", "updatedAt"],
     group: "Publishing",
-    description: "Draft, submit for review, and compliance publishes. A published sheet never changes; fix a mistake with a new sheet for the same month.",
     // Adding and checking a month happens on one guided screen (components/admin/fact-sheet), not Payload's form.
-    components: { views: { edit: { root: { Component: "/components/admin/fact-sheet/fact-sheet-view#FactSheetView" } } } },
+    components: { ...screenIntro("factSheets"), views: { edit: { root: { Component: "/components/admin/fact-sheet/fact-sheet-view#FactSheetView" } } } },
   },
   versions: { maxPerDoc: 0 },
   access: {

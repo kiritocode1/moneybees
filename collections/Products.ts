@@ -1,6 +1,7 @@
 import type { CollectionConfig } from "payload";
 import { auditChange } from "@/lib/backend/audit";
 import { allow, everyone } from "@/lib/backend/roles";
+import { screenIntro } from "@/lib/admin/screens";
 
 /**
  * One PMS strategy or one AIF scheme. Fact sheets hang off a product, and
@@ -8,7 +9,7 @@ import { allow, everyone } from "@/lib/backend/roles";
  */
 export const Products: CollectionConfig = {
   slug: "products",
-  admin: { useAsTitle: "name", defaultColumns: ["name", "kind", "benchmark"], group: "Publishing" },
+  admin: { useAsTitle: "name", defaultColumns: ["name", "kind", "benchmark"], group: "Publishing", components: screenIntro("products") },
   access: { read: everyone, create: allow("compliance"), update: allow("compliance"), delete: allow() },
   hooks: { afterChange: [auditChange("products")] },
   fields: [

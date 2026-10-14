@@ -211,8 +211,6 @@ export interface UserAuthOperations {
   };
 }
 /**
- * Draft, submit for review, and compliance publishes. A published sheet never changes; fix a mistake with a new sheet for the same month.
- *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "fact-sheets".
  */
@@ -366,8 +364,6 @@ export interface Metric {
   createdAt: string;
 }
 /**
- * The people in the Our Team carousel on the About page, in this order. Drag a row to move someone.
- *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "team-members".
  */
@@ -401,8 +397,6 @@ export interface TeamMember {
   createdAt: string;
 }
 /**
- * The cards on the Investor Centre page, in this order under their group. Drag a row to move it.
- *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "documents".
  */
@@ -440,8 +434,6 @@ export interface Document {
   createdAt: string;
 }
 /**
- * The companies on the Case Studies page, in this order. Drag a row to move one.
- *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "case-studies".
  */
@@ -474,8 +466,6 @@ export interface CaseStudy {
   createdAt: string;
 }
 /**
- * The roles on the Careers page, in this order. Drag a row to move one.
- *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "openings".
  */
@@ -2805,8 +2795,6 @@ export interface SectionCareersResume {
   blockType: 'careersResume';
 }
 /**
- * Shown in the footer of every page, on the Contact page and on the Home page. Saving puts changes live.
- *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "site-details".
  */
@@ -2877,12 +2865,36 @@ export interface CrmSetting {
   };
   acknowledge?: boolean | null;
   /**
-   * Only used while the matching AI flag is on.
+   * Every AI feature starts off. Each sends only what its line says, through Vercel AI Gateway with zero data retention, and needs Gateway credits to run.
    */
   ai: {
+    /**
+     * Sends the enquiry's answers, without name, email or phone. Jev can raise its severity, never lower it.
+     */
+    triage?: boolean | null;
     triageConfidence: number;
+    /**
+     * Sends each outgoing email. One that promises returns, skips a disclaimer or sends AIF material to a non-holder is held for compliance.
+     */
+    complianceGate?: boolean | null;
     complianceBlock: number;
+    /**
+     * Sends the enquiry, its playbook and the person's history, only when someone clicks Draft.
+     */
+    drafts?: boolean | null;
+    /**
+     * Sends the applicant's resume as they upload it.
+     */
+    resumeReading?: boolean | null;
+    /**
+     * Sends each application and the opening's must-haves.
+     */
+    applicantScreen?: boolean | null;
   };
+  /**
+   * Keeps an anonymous ID in the visitor's browser, so the pages they read show on their record once they enquire.
+   */
+  visitorId?: boolean | null;
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -3982,9 +3994,15 @@ export interface CrmSettingsSelect<T extends boolean = true> {
   ai?:
     | T
     | {
+        triage?: T;
         triageConfidence?: T;
+        complianceGate?: T;
         complianceBlock?: T;
+        drafts?: T;
+        resumeReading?: T;
+        applicantScreen?: T;
       };
+  visitorId?: T;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;

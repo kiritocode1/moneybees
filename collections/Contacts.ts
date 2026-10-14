@@ -2,6 +2,7 @@ import type { CollectionBeforeChangeHook, CollectionConfig } from "payload";
 import { auditChange } from "@/lib/backend/audit";
 import { allow, CRM_ROLES } from "@/lib/backend/roles";
 import { CONTACT_KINDS, CONTACT_SOURCES, TOPICS } from "@/lib/crm/vocabulary";
+import { screenIntro } from "@/lib/admin/screens";
 
 /** One person per email: lowercase it and keep phones as digits, so the website, imports and staff entries land on the same row. */
 const normalise: CollectionBeforeChangeHook = ({ data }) => ({
@@ -24,6 +25,7 @@ export const Contacts: CollectionConfig = {
     defaultColumns: ["name", "email", "kind", "owner", "lastActivityAt"],
     group: false,
     listSearchableFields: ["name", "email", "phone"],
+    components: screenIntro("people"),
   },
   access: { read: allow(...CRM_ROLES), create: allow(...CRM_ROLES, "integration"), update: allow(...CRM_ROLES, "integration"), delete: allow() },
   hooks: { beforeChange: [normalise], afterChange: [auditChange("contacts")] },

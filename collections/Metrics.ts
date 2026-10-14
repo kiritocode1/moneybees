@@ -3,13 +3,14 @@ import { auditChange } from "@/lib/backend/audit";
 import { allow, everyone } from "@/lib/backend/roles";
 
 /**
- * Numbers that sit inside sentences, such as the founder's 45+ years. The
- * sentences stay in code and read the value by key, so one edit changes every
- * page that says it.
+ * Numbers that sit inside sentences, such as the founder's 45+ years. Nothing
+ * reads them any more: those numbers are fields in the page records
+ * (globals/pages), so the list is hidden from the sidebar (2026-10-14). The
+ * table stays; set `hidden` to false to bring it back.
  */
 export const Metrics: CollectionConfig = {
   slug: "metrics",
-  admin: { useAsTitle: "label", defaultColumns: ["label", "value", "unit"], group: "Publishing" },
+  admin: { useAsTitle: "label", defaultColumns: ["label", "value", "unit"], group: "Publishing", hidden: true },
   access: { read: everyone, create: allow("editor", "compliance"), update: allow("editor", "compliance"), delete: allow() },
   hooks: { afterChange: [auditChange("metrics")] },
   fields: [

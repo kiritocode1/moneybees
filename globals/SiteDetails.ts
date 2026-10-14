@@ -2,6 +2,7 @@ import { revalidatePath } from "next/cache";
 import type { GlobalAfterChangeHook, GlobalConfig } from "payload";
 import { allow, allowField, everyone } from "@/lib/backend/roles";
 import { DEFAULT_DETAILS } from "@/lib/site/details";
+import { screenIntro } from "@/lib/admin/screens";
 
 /** Every page prints these, so a save rebuilds the whole site. */
 const revalidateSite: GlobalAfterChangeHook = ({ doc, context }) => {
@@ -21,7 +22,7 @@ export const SiteDetails: GlobalConfig = {
   slug: "site-details",
   label: "Office details",
   // Listed under Website in the sidebar by components/admin/nav-links.tsx.
-  admin: { group: false, hideAPIURL: true, description: "Shown in the footer of every page, on the Contact page and on the Home page. Saving puts changes live." },
+  admin: { group: false, hideAPIURL: true, components: { elements: screenIntro("officeDetails") } },
   access: { read: everyone, update: allow("editor", "compliance") },
   hooks: { afterChange: [revalidateSite] },
   fields: [

@@ -6,6 +6,7 @@ import { CRM_ROLES, hasRole, ROLES } from "@/lib/backend/roles";
 import { istDateTime, relative } from "@/lib/crm/format";
 import { inboxRows } from "@/lib/crm/inbox";
 import type { User } from "@/payload-types";
+import { ScreenIntro } from "@/components/admin/screen-intro";
 
 /*
  * /admin's home, in place of Payload's collection grid
@@ -51,6 +52,7 @@ export async function TodayView(props: AdminViewServerProps) {
               <p className="mt-1 text-body text-muted-foreground">
                 {data.now.toLocaleDateString("en-IN", { timeZone: "Asia/Kolkata", weekday: "long", day: "numeric", month: "long" })}, signed in as {staff.name}
               </p>
+              <ScreenIntro screen="today" />
             </header>
 
             <div className="grid grid-cols-[repeat(auto-fill,minmax(200px,1fr))] gap-3">

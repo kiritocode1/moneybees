@@ -2,6 +2,7 @@ import { revalidatePath } from "next/cache";
 import type { CollectionAfterChangeHook, CollectionAfterDeleteHook, CollectionConfig, PayloadRequest } from "payload";
 import { auditChange } from "@/lib/backend/audit";
 import { allow, everyone } from "@/lib/backend/roles";
+import { screenIntro } from "@/lib/admin/screens";
 
 /** The studies are on /case-studies; any change rebuilds it. */
 const rebuild = (req: PayloadRequest) => {
@@ -26,7 +27,7 @@ export const CaseStudies: CollectionConfig = {
     // Listed under Website in the sidebar by components/admin/nav-links.tsx.
     group: false,
     hideAPIURL: true,
-    description: "The companies on the Case Studies page, in this order. Drag a row to move one.",
+    components: screenIntro("caseStudies"),
   },
   access: { read: everyone, create: allow("editor", "compliance"), update: allow("editor", "compliance"), delete: allow("editor", "compliance") },
   hooks: { afterChange: [afterChange, auditChange("case-studies")], afterDelete: [afterDelete] },

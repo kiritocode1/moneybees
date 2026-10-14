@@ -1,11 +1,12 @@
 import type { CollectionConfig } from "payload";
 import { allow, nobody } from "@/lib/backend/roles";
+import { screenIntro } from "@/lib/admin/screens";
 
 /** Every change, who made it and what moved. Written only by hooks; nobody edits or deletes it. */
 export const AuditLog: CollectionConfig = {
   slug: "audit-log",
   labels: { singular: "Audit entry", plural: "Audit log" },
-  admin: { useAsTitle: "summary", defaultColumns: ["createdAt", "actor", "summary"], group: "Settings" },
+  admin: { useAsTitle: "summary", defaultColumns: ["createdAt", "actor", "summary"], group: "Settings", components: screenIntro("auditLog") },
   access: { read: allow("compliance"), create: nobody, update: nobody, delete: nobody },
   fields: [
     { name: "actor", type: "relationship", relationTo: "users" },
