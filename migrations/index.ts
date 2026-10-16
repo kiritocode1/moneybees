@@ -14,6 +14,8 @@ import * as migration_20261014_062217_ai_switches_in_admin from './20261014_0622
 import * as migration_20261014_151509_hiring from './20261014_151509_hiring';
 import * as migration_20261016_071849_email_letters from './20261016_071849_email_letters';
 import * as migration_20261016_072000_email_letters_words from './20261016_072000_email_letters_words';
+import * as migration_20261016_154424_email_desk from './20261016_154424_email_desk';
+import * as migration_20261016_154500_email_desk_words from './20261016_154500_email_desk_words';
 
 export const migrations = [
   {
@@ -94,6 +96,16 @@ export const migrations = [
   {
     up: migration_20261016_072000_email_letters_words.up,
     down: migration_20261016_072000_email_letters_words.down,
-    name: '20261016_072000_email_letters_words'
+    name: '20261016_072000_email_letters_words',
+  },
+  {
+    up: migration_20261016_154424_email_desk.up,
+    down: migration_20261016_154424_email_desk.down,
+    name: '20261016_154424_email_desk',
+  },
+  {
+    up: migration_20261016_154500_email_desk_words.up,
+    down: migration_20261016_154500_email_desk_words.down,
+    name: '20261016_154500_email_desk_words'
   },
 ];

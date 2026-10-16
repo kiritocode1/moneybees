@@ -30,10 +30,11 @@ export type WordsValue = { text: string; html?: string | null };
  * paragraphs, a blank line starting a new one.
  */
 export function Words({ text, html }: WordsValue) {
-  if (html) return <div className="mb-words" dangerouslySetInnerHTML={{ __html: editorBody(html) }} />;
+  // data-mb-words marks the editable part; the /admin Emails page outlines it.
+  if (html) return <div data-mb-words="true" dangerouslySetInnerHTML={{ __html: editorBody(html) }} />;
   const paragraphs = text.trim().split(/\n{2,}/).filter(Boolean);
   return (
-    <>
+    <div data-mb-words="true">
       {paragraphs.map((paragraph, i) => (
         <P key={i}>
           {paragraph.split("\n").map((line, j) => (
@@ -44,7 +45,7 @@ export function Words({ text, html }: WordsValue) {
           ))}
         </P>
       ))}
-    </>
+    </div>
   );
 }
 

@@ -1,5 +1,5 @@
 import { MigrateUpArgs, MigrateDownArgs } from '@payloadcms/db-postgres'
-import { STARTER_TEMPLATES } from '../lib/crm/starter-content'
+import { TEMPLATES_2026_10_16 as STARTER_TEMPLATES } from './data/templates-2026-10-16'
 import { TEMPLATES_2026_10_14 } from './data/templates-2026-10-14'
 
 /*

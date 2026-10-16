@@ -16,16 +16,16 @@ type Base = { name: string; date?: string; site?: SiteDetails };
 const ALWAYS_SENT = "Statements and regulatory notices are sent regardless of your mailing choices.";
 const longDate = (iso: string) => new Date(iso).toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric", timeZone: "Asia/Kolkata" });
 
-export type WelcomeProps = Base & { clientCode: string; approach: string; benchmark: string; activatedOn: string; distributor: string; manager: { name: string; phone?: string; email?: string }; documents: DocumentItem[] };
+export type WelcomeProps = Base & { words: WordsValue; clientCode: string; approach: string; benchmark: string; activatedOn: string; distributor: string; manager: { name: string; phone?: string; email?: string }; documents: DocumentItem[] };
 
 export const welcomeSubject = () => "Your Moneybee PMS account is open";
 
 /** When a PMS account is activated: everything the client will need to refer to later. */
-export function Welcome({ name, clientCode, approach, benchmark, activatedOn, distributor, manager, documents, date, site }: WelcomeProps) {
+export function Welcome({ name, words, clientCode, approach, benchmark, activatedOn, distributor, manager, documents, date, site }: WelcomeProps) {
   return (
     <MoneybeeEmail audience="investor" site={site} date={date} reference={clientCode} preview={`Client code ${clientCode}. Your account details and what to expect from us.`} eyebrow="Portfolio Management Service" title="Your account is open" reason={`You are receiving this email because your Moneybee PMS account was opened on ${activatedOn}. ${ALWAYS_SENT}`}>
       <Salutation name={name} />
-      <P>Thank you for placing your trust in Moneybee. Your Portfolio Management Service account is now open. Please keep this email; it holds the details you will need when you write to us.</P>
+      <Words {...words} />
       <Facts
         rows={[
           [{ label: "Client code", value: clientCode, mono: true }, { label: "Account opened", value: activatedOn }],
@@ -54,16 +54,16 @@ export function Welcome({ name, clientCode, approach, benchmark, activatedOn, di
   );
 }
 
-export type AccountDetailsProps = Base & { clientCode: string; custodian: string; demat: string; bank: { name: string; account: string; ifsc: string } };
+export type AccountDetailsProps = Base & { words: WordsValue; clientCode: string; custodian: string; demat: string; bank: { name: string; account: string; ifsc: string } };
 
 export const accountDetailsSubject = ({ clientCode }: Pick<AccountDetailsProps, "clientCode">) => `Your PMS account details (${clientCode})`;
 
 /** Within 3 working days of opening (PMS MC Annexure 4B items 16 and 29). */
-export function AccountDetails({ name, clientCode, custodian, demat, bank, date, site }: AccountDetailsProps) {
+export function AccountDetails({ name, words, clientCode, custodian, demat, bank, date, site }: AccountDetailsProps) {
   return (
     <MoneybeeEmail audience="investor" site={site} date={date} reference={clientCode} preview="Your custodian, demat account and the bank account that holds your funds." eyebrow="Portfolio Management Service" title="Your account details" reason={`You are receiving this email because your Moneybee PMS account was opened. ${ALWAYS_SENT}`}>
       <Salutation name={name} />
-      <P>As SEBI requires, here are the details of where your securities and funds are held. Your securities are held in your own name.</P>
+      <Words {...words} />
       <Facts
         rows={[
           [{ label: "Client code", value: clientCode, mono: true }, { label: "Custodian", value: custodian }],
@@ -79,16 +79,16 @@ export function AccountDetails({ name, clientCode, custodian, demat, bank, date,
   );
 }
 
-export type FundsReceivedProps = Base & { product: "pms" | "aif"; reference: string; amount: string; receivedOn: string; facts: { label: string; value: string }[] };
+export type FundsReceivedProps = Base & { words: WordsValue; product: "pms" | "aif"; reference: string; amount: string; receivedOn: string; facts: { label: string; value: string }[] };
 
 export const fundsReceivedSubject = ({ product, amount }: Pick<FundsReceivedProps, "product" | "amount">) => (product === "pms" ? `We have received ${amount} for your PMS account` : `Your contribution of ${amount} to Flyingbee has been received`);
 
 /** Money received: for the PMS, received and invested; for Flyingbee, units allotted. */
-export function FundsReceived({ name, product, reference, amount, receivedOn, facts, date, site }: FundsReceivedProps) {
+export function FundsReceived({ name, words, product, reference, amount, receivedOn, facts, date, site }: FundsReceivedProps) {
   return (
     <MoneybeeEmail audience="investor" site={site} date={date} reference={reference} preview={`${amount}, received on ${receivedOn}.`} eyebrow={product === "pms" ? "Portfolio Management Service" : "Private and confidential. Flyingbee Investment Fund"} title={product === "pms" ? "Your funds have been received" : "Your contribution has been received"} reason={`You are receiving this email as a Moneybee ${product === "pms" ? "PMS client" : "unit holder"}. ${ALWAYS_SENT}`}>
       <Salutation name={name} />
-      <P>{product === "pms" ? `We have received ${amount} on ${receivedOn}, and will invest it in your portfolio according to the investment approach.` : `We have received your contribution of ${amount} on ${receivedOn}, and units have been allotted to you as below.`}</P>
+      <Words {...words} />
       <Facts rows={[[{ label: "Amount", value: amount }, { label: "Received", value: receivedOn }], ...facts.map((fact) => [fact])]} />
       {product === "aif" ? <P small muted style={{ marginTop: 10 }}>{INDICATIVE_NAV}</P> : null}
       <Signature name="Client Services" />
@@ -161,16 +161,16 @@ export function PmsMonthlyUpdate({ name, month, asOf, rows, chart, words, change
   );
 }
 
-export type PmsQuarterlyReportProps = Base & { quarter: string; clientCode: string; approach: string; benchmark: string; distributor: string; href: string; contact: string };
+export type PmsQuarterlyReportProps = Base & { words: WordsValue; quarter: string; clientCode: string; approach: string; benchmark: string; distributor: string; href: string; contact: string };
 
 export const pmsQuarterlyReportSubject = ({ quarter }: Pick<PmsQuarterlyReportProps, "quarter">) => `Your PMS account statement for the quarter ended ${quarter}`;
 
 /** The cover note for the quarterly report; the report itself follows SEBI's Annexure 5D (PMS MC 5.5.1). */
-export function PmsQuarterlyReport({ name, quarter, clientCode, approach, benchmark, distributor, href, contact, date, site }: PmsQuarterlyReportProps) {
+export function PmsQuarterlyReport({ name, words, quarter, clientCode, approach, benchmark, distributor, href, contact, date, site }: PmsQuarterlyReportProps) {
   return (
     <MoneybeeEmail audience="investor" site={site} date={date} reference={clientCode} preview={`Your holdings, transactions, fees and performance for the quarter ended ${quarter}.`} eyebrow="Quarterly report" title={`Your statement for the quarter ended ${quarter}`} reason={`You are receiving this report as a Moneybee PMS client. ${ALWAYS_SENT}`}>
       <Salutation name={name} />
-      <P>Your account statement for the quarter ended {quarter} is ready in the investor portal. It is in the format SEBI prescribes for portfolio managers.</P>
+      <Words {...words} />
       <Facts
         rows={[
           [{ label: "Client code", value: clientCode, mono: true }, { label: "Quarter ended", value: quarter }],
@@ -195,16 +195,16 @@ export function PmsQuarterlyReport({ name, quarter, clientCode, approach, benchm
   );
 }
 
-export type FeeStatementProps = Base & { clientCode: string; period: string; lines: { label: string; value: string }[]; highWaterMark?: { before: string; after: string }; hurdle?: string; total: string; href: string };
+export type FeeStatementProps = Base & { words: WordsValue; clientCode: string; period: string; lines: { label: string; value: string }[]; highWaterMark?: { before: string; after: string }; hurdle?: string; total: string; href: string };
 
 export const feeStatementSubject = ({ period }: Pick<FeeStatementProps, "period">) => `Your PMS fee statement for ${period}`;
 
 /** Fees charged for a period, with the high water mark before and after (PMS MC 6.1.3.6). */
-export function FeeStatement({ name, clientCode, period, lines, highWaterMark, hurdle, total, href, date, site }: FeeStatementProps) {
+export function FeeStatement({ name, words, clientCode, period, lines, highWaterMark, hurdle, total, href, date, site }: FeeStatementProps) {
   return (
     <MoneybeeEmail audience="investor" site={site} date={date} reference={clientCode} preview={`Total charged for ${period}: ${total}.`} eyebrow="Fee statement" title={`Fees for ${period}`} reason={`You are receiving this statement as a Moneybee PMS client. ${ALWAYS_SENT}`}>
       <Salutation name={name} />
-      <P>Here are the fees and expenses charged to your account for {period}, calculated as set out in the fees annexure to your agreement.</P>
+      <Words {...words} />
       <Facts rows={[...lines.map((line) => [line]), [{ label: "Total charged", value: total }]]} />
       {highWaterMark || hurdle ? (
         <>
@@ -291,32 +291,32 @@ export function AifInvestorUpdate({ name, asOf, rows, chart, firstClose, nav, fa
   );
 }
 
-export type StatementReadyProps = Base & { reference: string; statement: string; period: string; href: string };
+export type StatementReadyProps = Base & { words: WordsValue; reference: string; statement: string; period: string; href: string };
 
 export const statementReadySubject = ({ statement }: Pick<StatementReadyProps, "statement">) => `${statement} is ready`;
 
 /** A statement or report has been added to the investor portal. */
-export function StatementReady({ name, reference, statement, period, href, date, site }: StatementReadyProps) {
+export function StatementReady({ name, words, reference, statement, period, href, date, site }: StatementReadyProps) {
   return (
     <MoneybeeEmail audience="investor" site={site} date={date} reference={reference} preview={`${statement}, for ${period}, in the investor portal.`} eyebrow="Investor portal" title={`${statement} is ready`} reason={`You are receiving this email because a new document was added to your investor portal. ${ALWAYS_SENT}`}>
       <Salutation name={name} />
-      <P>{statement} for {period} has been added to your investor portal. For your security, we do not attach statements to emails.</P>
+      <Words {...words} />
       <Action href={href}>Open the investor portal</Action>
       <Signature name="Client Services" />
     </MoneybeeEmail>
   );
 }
 
-export type WithdrawalProps = Base & { reference: string; stage: "received" | "paid"; amount: string; account: string; requestedOn: string; expectedBy?: string; paidOn?: string; utr?: string };
+export type WithdrawalProps = Base & { words: WordsValue; reference: string; stage: "received" | "paid"; amount: string; account: string; requestedOn: string; expectedBy?: string; paidOn?: string; utr?: string };
 
 export const withdrawalSubject = ({ stage, amount }: Pick<WithdrawalProps, "stage" | "amount">) => (stage === "received" ? `Your withdrawal request for ${amount} has been received` : `Your withdrawal of ${amount} has been paid`);
 
 /** A withdrawal: first that it was received and when to expect it, then that it was paid. */
-export function Withdrawal({ name, reference, stage, amount, account, requestedOn, expectedBy, paidOn, utr, date, site }: WithdrawalProps) {
+export function Withdrawal({ name, words, reference, stage, amount, account, requestedOn, expectedBy, paidOn, utr, date, site }: WithdrawalProps) {
   return (
     <MoneybeeEmail audience="investor" site={site} date={date} reference={reference} preview={stage === "received" ? `Expected in your account by ${expectedBy}.` : `Paid on ${paidOn}.`} eyebrow="Withdrawal" title={stage === "received" ? "Your withdrawal request has been received" : "Your withdrawal has been paid"} reason={`You are receiving this email about a withdrawal from your Moneybee account. ${ALWAYS_SENT}`}>
       <Salutation name={name} />
-      <P>{stage === "received" ? `We have received your request to withdraw ${amount}. We will pay it to your registered bank account below.` : `We have paid ${amount} to your registered bank account.`}</P>
+      <Words {...words} />
       <Facts
         rows={[
           [{ label: "Amount", value: amount }, { label: "Requested", value: requestedOn }],
@@ -348,16 +348,16 @@ export function NoticeOfChange({ name, reference, product, change, effectiveFrom
   );
 }
 
-export type KycDueProps = Base & { reference: string; item: string; dueBy: string; how: string[] };
+export type KycDueProps = Base & { words: WordsValue; reference: string; item: string; dueBy: string; how: string[] };
 
 export const kycDueSubject = ({ item }: Pick<KycDueProps, "item">) => `Action needed: ${item}`;
 
 /** Something the investor must update, such as KYC or a nomination. */
-export function KycDue({ name, reference, item, dueBy, how, date, site }: KycDueProps) {
+export function KycDue({ name, words, reference, item, dueBy, how, date, site }: KycDueProps) {
   return (
     <MoneybeeEmail audience="investor" site={site} date={date} reference={reference} preview={`Please complete this by ${dueBy}.`} eyebrow="Action needed" title={item} reason={`You are receiving this email because your Moneybee account needs an update. ${ALWAYS_SENT}`}>
       <Salutation name={name} />
-      <P>Our records show that your account needs the update below. Please complete it by {dueBy}.</P>
+      <Words {...words} />
       <Facts rows={[[{ label: "What is needed", value: item }, { label: "By", value: dueBy }]]} />
       <Label>How to do it</Label>
       <Steps items={how} />
@@ -368,27 +368,29 @@ export function KycDue({ name, reference, item, dueBy, how, date, site }: KycDue
 
 /** Who sets the deadline: a PMS complaint made to us, a Flyingbee one, or one raised on SCORES. */
 export type ComplaintRule = "pms" | "aif" | "scores";
-const COMPLAINT_DEADLINE: Record<ComplaintRule, string> = {
-  pms: "within 30 working days of receiving it. Should we need further information from you, we will ask for it promptly, and the 30 days will run from when we receive it",
-  aif: "within 21 days of receiving it",
-  scores: "within 21 days of receiving it, and upload our response to SCORES",
+/** The deadline as the letter states it, by the rule that sets it (PMS MC Annexure 4B item 30; AIF MC Annexure 4; SCORES circular 2023/156). */
+export const COMPLAINT_DEADLINE: Record<ComplaintRule, string> = {
+  pms: "30 working days from receiving all the information we need",
+  aif: "21 days from receiving it",
+  scores: "21 days from receiving it, with our response on SCORES",
 };
 
-export type ComplaintRegisteredProps = Base & { number: string; receivedAt: string; concerning: string; dueBy: string; rule: ComplaintRule; message: string };
+export type ComplaintRegisteredProps = Base & { words: WordsValue; number: string; receivedAt: string; concerning: string; dueBy: string; rule: ComplaintRule; message: string };
 
 export const complaintRegisteredSubject = ({ number }: Pick<ComplaintRegisteredProps, "number">) => `Your complaint has been registered (${number})`;
 
 /** A complaint is logged. No rule sets a time to acknowledge, so none is promised; the response deadline follows the product. */
-export function ComplaintRegistered({ name, number, receivedAt, concerning, dueBy, rule, message, date, site = DEFAULT_DETAILS }: ComplaintRegisteredProps) {
+export function ComplaintRegistered({ name, words, number, receivedAt, concerning, dueBy, rule, message, date, site = DEFAULT_DETAILS }: ComplaintRegisteredProps) {
   const grievance = grievanceEmail(site);
   return (
     <MoneybeeEmail audience="investor" site={site} date={date} reference={number} preview={`We will respond in writing by ${dueBy}. Please quote ${number}.`} eyebrow="Investor complaint" title="Your complaint has been registered" reason={`You are receiving this email because you raised a complaint with Moneybee on ${receivedAt.split(",")[0]}.`} complaintRoute={false}>
       <Salutation name={name} />
-      <P>We have registered your complaint and will respond to you in writing by {dueBy}, {COMPLAINT_DEADLINE[rule]}.</P>
+      <Words {...words} />
       <Facts
         rows={[
           [{ label: "Complaint number", value: number, mono: true }, { label: "Received", value: receivedAt }],
           [{ label: "Concerning", value: concerning }, { label: "Response due by", value: dueBy }],
+          [{ label: "Deadline", value: COMPLAINT_DEADLINE[rule] }],
           [{ label: "Handled by", value: `Investor Grievance Officer, ${site.company}` }],
         ]}
       />
@@ -436,16 +438,17 @@ export function ComplaintResolved({ name, number, receivedAt, resolvedOn, words,
   );
 }
 
-export type InsightsProps = { name: string; date?: string; site?: SiteDetails; title: string; summary: string; href: string; unsubscribeHref: string };
+export type InsightsProps = { name: string; date?: string; site?: SiteDetails; words: WordsValue; title: string; summary: string; href: string; unsubscribeHref: string };
 
 export const insightsSubject = ({ title }: Pick<InsightsProps, "title">) => title;
 
 /** A new article, to contacts who chose Insights. */
-export function Insights({ name, title, summary, href, unsubscribeHref, date, site }: InsightsProps) {
+export function Insights({ name, words, title, summary, href, unsubscribeHref, date, site }: InsightsProps) {
   return (
     <MoneybeeEmail audience="investor" site={site} date={date} preview={summary} eyebrow="Insights" title={title} reason="You are receiving Insights because you asked for them." unsubscribe={{ label: "Stop Insights.", href: unsubscribeHref }}>
       <Salutation name={name} />
-      <P>{summary}</P>
+      <Words {...words} />
+      <Facts rows={[[{ label: "The article", value: title }], [{ label: "In short", value: summary }]]} />
       <Action href={href}>Read the article</Action>
       <P small muted style={{ marginTop: 24 }}>
         This article is for information only and is not investment advice or an offer. Past performance may or may not be sustained in the future.{" "}

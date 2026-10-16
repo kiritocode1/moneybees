@@ -552,12 +552,29 @@ export interface EmailTemplate {
     | 'follow_up'
     | 'pms_checklist'
     | 'aif_checklist'
+    | 'event_invitation'
+    | 'welcome'
+    | 'account_details'
+    | 'funds_received'
+    | 'pms_monthly_update'
+    | 'pms_quarterly_report'
+    | 'fee_statement'
+    | 'aif_investor_update'
+    | 'statement_ready'
+    | 'withdrawal_received'
+    | 'withdrawal_paid'
+    | 'notice_of_change'
+    | 'kyc_due'
+    | 'complaint_registered'
+    | 'complaint_resolved'
+    | 'insights'
     | 'application_ack'
     | 'application_reject'
     | 'interview_invite'
     | 'offer'
     | 'other';
   subject: string;
+  body?: string | null;
   design?:
     | {
         [k: string]: unknown;
@@ -568,7 +585,6 @@ export interface EmailTemplate {
     | boolean
     | null;
   html?: string | null;
-  body?: string | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -1367,9 +1383,9 @@ export interface EmailTemplatesSelect<T extends boolean = true> {
   name?: T;
   purpose?: T;
   subject?: T;
+  body?: T;
   design?: T;
   html?: T;
-  body?: T;
   updatedAt?: T;
   createdAt?: T;
 }

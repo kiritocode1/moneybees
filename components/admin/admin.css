@@ -50,51 +50,6 @@
 }
 
 /*
- * The React Email editor (components/admin/email-editor): its menus and
- * inspector read --re-* variables; these point them at Fluid
- * Functionalism's tokens so they follow the admin's light and dark themes.
- * The canvas itself stays light, because it shows the email as sent.
- */
-:root {
-  --re-bg: var(--popover);
-  --re-border: var(--border);
-  --re-text: var(--foreground);
-  --re-text-muted: var(--muted-foreground);
-  --re-hover: var(--hover);
-  --re-active: var(--active);
-  --re-pressed: var(--active);
-  --re-radius: 0.5rem;
-  --re-radius-sm: 0.25rem;
-}
-.mb-email-surface {
-  background: #f7f7f8;
-  color-scheme: light;
-}
-/* The editor's injected theme sets margin: 0 on [data-editor-theme-scope]; this centres the email like an inbox does. */
-.mb-email-surface .tiptap.ProseMirror[data-editor-theme-scope] {
-  outline: none;
-  max-width: 600px;
-  margin-inline: auto;
-}
-.mb-drag-handle {
-  display: flex;
-  height: 24px;
-  width: 18px;
-  align-items: center;
-  justify-content: center;
-  border-radius: 6px;
-  color: #8b8d91;
-  cursor: grab;
-}
-.mb-drag-handle:hover {
-  background: rgb(0 0 0 / 0.06);
-  color: #272727;
-}
-.mb-drag-handle:active {
-  cursor: grabbing;
-}
-
-/*
  * The page editor (globals/pages/page-global.ts), from here down: Payload's
  * own markup. The section list hides the blocks field's Collapse All, Show
  * All and copy menu; staff open a section by clicking it on the page.

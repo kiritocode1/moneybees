@@ -26,17 +26,24 @@ await esbuild.build({
   external: ["react", "react-dom", "react-email"],
   logLevel: "error",
 });
-const { CATALOGUE, GROUPS, EMAIL_FOR_PURPOSE, renderEmail } = await import(pathToFileURL(outfile).href);
+const { CATALOGUE, GROUPS, compose, mergeFields, renderEmail, STARTER_TEMPLATES } = await import(pathToFileURL(outfile).href);
 
 test("the catalogue lists every group and unique ids", () => {
   assert.deepEqual([...new Set(CATALOGUE.map((entry) => entry.group))], [...GROUPS]);
   assert.equal(new Set(CATALOGUE.map((entry) => entry.id)).size, CATALOGUE.length);
-  for (const id of Object.values(EMAIL_FOR_PURPOSE)) assert.ok(CATALOGUE.some((entry) => entry.id === id), `purpose points at a missing email: ${id}`);
+});
+
+test("every merge field a template uses is one its email fills", () => {
+  for (const entry of CATALOGUE.filter((item) => item.template)) {
+    const known = new Set(mergeFields(entry).map(({ key }) => key));
+    const { subject, body } = STARTER_TEMPLATES[entry.template];
+    for (const [, key] of `${subject} ${body}`.matchAll(/\{\{\s*(\w+)\s*\}\}/g)) assert.ok(known.has(key), `${entry.id} uses {{${key}}}, which nothing fills`);
+  }
 });
 
 for (const entry of CATALOGUE) {
   test(`${entry.group}: ${entry.name}`, async () => {
-    const { subject, element } = entry.sample();
+    const { subject, element } = compose(entry);
     const { html, text } = await renderEmail(element, "https://www.moneybee.in");
     assert.ok(subject.trim(), "has a subject");
     assert.ok(text.trim().length > 100, "has a plain-text version");
@@ -48,6 +55,7 @@ for (const entry of CATALOGUE) {
     assert.doesNotMatch(html, /data-absolute-text="true">\/(?!\/)/, "a link written out as text is absolute");
     assert.doesNotMatch(text, /(^|[\s[(])\/(admin|portal|investor-centre|contact|email|pms|aif)\b/m, "the plain text has no relative links");
     if (/Difference \(pts\)/.test(html)) assert.match(html, /not verified|has not been independently verified/, "returns carry their disclosure");
-    if (entry.status === "planned") assert.ok(entry.needs, "a planned email says what it needs");
+    if (entry.channel === "mailing") assert.ok(entry.needs, "a mailing says what it waits on");
+    if (entry.channel === "here") assert.ok(entry.template && entry.fields?.length, "an email sent from the page has words to edit and facts to fill");
   });
 }

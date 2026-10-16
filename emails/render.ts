@@ -27,10 +27,10 @@ export async function renderEmail(email: ReactElement, origin?: string): Promise
 }
 
 /**
- * The body of an email designed in the template editor (@react-email/editor),
- * without the editor's own document around it, so it can sit inside the
- * Moneybee frame. The editor's theme (lib/crm/email-theme.ts) leaves body and
- * container transparent and unpadded for this.
+ * The body of words designed in the earlier block editor (@react-email/editor,
+ * since removed), without that editor's own document around it, so a design
+ * saved before the Emails page still sits inside the Moneybee frame. Saving
+ * on the Emails page replaces it with plain words.
  */
 export function editorBody(html: string) {
   const body = /<body[^>]*>([\s\S]*)<\/body>/i.exec(html)?.[1] ?? html;

@@ -5,7 +5,6 @@ import { FileCell as FileCell_be203baf76600e10d6ffd30b9fae3d01 } from '../../../
 import { DateCell as DateCell_be203baf76600e10d6ffd30b9fae3d01 } from '../../../components/admin/cells/cells'
 import { CompanyCell as CompanyCell_be203baf76600e10d6ffd30b9fae3d01 } from '../../../components/admin/cells/cells'
 import { KindCell as KindCell_be203baf76600e10d6ffd30b9fae3d01 } from '../../../components/admin/cells/cells'
-import { TemplateEditorField as TemplateEditorField_e705557fb60c499cffc610d5c8695845 } from '../../../components/admin/email-editor/template-editor-field'
 import { PreviewBridge as PreviewBridge_42d21390ffe440979752f7114bdd8b7a } from '../../../components/admin/site-editor/preview-bridge'
 import { SectionLabel as SectionLabel_7669d1767e9f58d7b9fb6fd7b0312c58 } from '../../../components/admin/site-editor/section-label'
 import { PerformanceSource as PerformanceSource_68876d0fa8202cff4fcaf5103cc0dd60 } from '../../../components/admin/site-editor/performance-source'
@@ -43,7 +42,6 @@ export const importMap = {
   "/components/admin/cells/cells#DateCell": DateCell_be203baf76600e10d6ffd30b9fae3d01,
   "/components/admin/cells/cells#CompanyCell": CompanyCell_be203baf76600e10d6ffd30b9fae3d01,
   "/components/admin/cells/cells#KindCell": KindCell_be203baf76600e10d6ffd30b9fae3d01,
-  "/components/admin/email-editor/template-editor-field#TemplateEditorField": TemplateEditorField_e705557fb60c499cffc610d5c8695845,
   "/components/admin/site-editor/preview-bridge#PreviewBridge": PreviewBridge_42d21390ffe440979752f7114bdd8b7a,
   "/components/admin/site-editor/section-label#SectionLabel": SectionLabel_7669d1767e9f58d7b9fb6fd7b0312c58,
   "/components/admin/site-editor/performance-source#PerformanceSource": PerformanceSource_68876d0fa8202cff4fcaf5103cc0dd60,
