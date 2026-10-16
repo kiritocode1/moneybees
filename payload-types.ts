@@ -546,7 +546,12 @@ export interface EmailTemplate {
   purpose:
     | 'enquiry_ack'
     | 'enquiry_reply'
+    | 'pms_introduction'
+    | 'aif_introduction'
+    | 'meeting_confirmation'
     | 'follow_up'
+    | 'pms_checklist'
+    | 'aif_checklist'
     | 'application_ack'
     | 'application_reject'
     | 'interview_invite'

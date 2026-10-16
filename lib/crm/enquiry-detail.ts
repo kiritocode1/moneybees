@@ -4,12 +4,22 @@ import { emailConnected } from "@/lib/crm/mail";
 import { effectiveSeverity, type EnquiryKind, type Reason, type Severity } from "@/lib/crm/severity";
 import type { TriageAnswers } from "@/lib/crm/triage";
 import { ACTIVITY_TYPES, type ActivityType, CONTACT_KINDS, EMAIL_STATUSES, ENQUIRY_KIND_LABELS, ENQUIRY_STATUSES, labelOf } from "@/lib/crm/vocabulary";
+import { DEFAULT_DETAILS } from "@/lib/site/details";
 import type { Contact, Email, Playbook, User } from "@/payload-types";
 
 /*
  * Everything /admin/inbox/:id shows, read in one pass with the staff
  * member's own access and flattened to plain values for the client screen.
  */
+
+/** The templates a reply can start from; each purpose draws its own email (lib/crm/reply.ts). */
+const REPLY_PURPOSES = ["enquiry_reply", "pms_introduction", "aif_introduction", "meeting_confirmation", "follow_up", "pms_checklist", "aif_checklist"] as const;
+
+async function officeLine(payload: Payload) {
+  const saved = await payload.findGlobal({ slug: "site-details", depth: 0, overrideAccess: true });
+  const { address } = saved.updatedAt ? saved : DEFAULT_DETAILS;
+  return `${address.line1} ${address.line2}`;
+}
 
 const asDoc = <T extends { id: number }>(value: number | T | null | undefined): T | null => (value && typeof value === "object" ? value : null);
 
@@ -27,7 +37,7 @@ export async function enquiryDetail(payload: Payload, user: User, id: number, no
     contact ? payload.count({ collection: "enquiries", where: { contact: { equals: contact.id }, id: { not_equals: id } }, user, overrideAccess: false }) : null,
     payload.find({ collection: "users", where: { roles: { in: ["sales", "operations", "compliance", "admin"] } }, sort: "name", limit: 100, depth: 0, user, overrideAccess: false }),
     payload.find({ collection: "products", sort: "name", limit: 50, depth: 0, user, overrideAccess: false }),
-    payload.find({ collection: "email-templates", where: { purpose: { in: ["enquiry_reply", "follow_up"] } }, sort: "name", limit: 50, depth: 0, user, overrideAccess: false }),
+    payload.find({ collection: "email-templates", where: { purpose: { in: [...REPLY_PURPOSES] } }, sort: "name", limit: 50, depth: 0, user, overrideAccess: false }),
   ]);
 
   const triage = (enquiry.triage ?? {}) as { rules?: Reason[]; ai?: TriageAnswers; existingInvestor?: boolean };
@@ -69,7 +79,7 @@ export async function enquiryDetail(payload: Payload, user: User, id: number, no
           responseHours: playbook.responseHours,
           handlers: playbook.handlerRoles ?? [],
           steps: (playbook.steps ?? []).map((step) => step.step),
-          template: playbookTemplate ? { id: playbookTemplate.id, name: playbookTemplate.name, subject: playbookTemplate.subject, body: playbookTemplate.body } : null,
+          template: playbookTemplate ? { id: playbookTemplate.id, name: playbookTemplate.name, purpose: playbookTemplate.purpose, subject: playbookTemplate.subject, body: playbookTemplate.body } : null,
         }
       : null,
     contact: contact
@@ -102,9 +112,12 @@ export async function enquiryDetail(payload: Payload, user: User, id: number, no
     templates: [...(playbookTemplate ? [playbookTemplate] : []), ...templates.docs.filter((template) => template.id !== playbookTemplate?.id)].map((template) => ({
       id: template.id,
       name: template.name,
+      purpose: template.purpose,
       subject: template.subject,
       body: template.body,
     })),
+    /** Where a meeting is held unless the composer says otherwise: the office in Office details. */
+    office: await officeLine(payload),
   };
 }
 

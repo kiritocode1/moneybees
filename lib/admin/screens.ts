@@ -243,12 +243,25 @@ export const SCREENS = {
       { at: "text:Create New", label: "Create New", text: "Write one for each kind and severity that needs its own approach. When several match, the one with the lowest Order is shown." },
     ],
   },
+  emails: {
+    name: "Emails",
+    group: "Desk",
+    href: "/admin/emails",
+    icon: "templates",
+    line: "Every email Moneybee sends, as the person receiving it sees it: who gets it, when, the rule behind it, and the words from its template.",
+    example: "Compliance wants to read what a PMS prospect receives before the first reply goes out. Open Emails, choose PMS introduction, read it at phone size and in dark, check the disclosures at the end, and use Edit the words to change the opening paragraphs.",
+    controls: [
+      { at: "css:nav[aria-label='Emails']", label: "Every email", text: "Grouped by who receives it. A green dot means it sends today; the others are ready and wait on the feature named in Before it sends." },
+      { at: "text:Edit the words", label: "Edit the words", text: "Opens the template. You change the letter's own words; the facts, signature and disclosures are drawn in, so an edit cannot drop them." },
+      { at: "text:Plain text", label: "Plain text", text: "What an email app without pictures shows. Every email sends both." },
+    ],
+  },
   emailTemplates: {
     name: "Email templates",
     group: "Settings",
     href: "/admin/collections/email-templates",
     icon: "templates",
-    line: "The emails staff send from an enquiry and the automatic ones. Words in double braces, like {{firstName}}, fill in when it sends.",
+    line: "The words of the emails staff send and the automatic ones. Words in double braces, like {{firstName}}, fill in when it sends; Desk › Emails shows each one whole.",
     example: "You want a warmer first reply for PMS enquiries. Open PMS first reply, change the words, keep {{firstName}} where the name goes, and send a test to yourself to read it on your phone before anyone uses it.",
     controls: [
       { at: "css:tbody tr a", label: "A template", text: "Open it to build the email from the blocks on the left; the preview shows computer and phone. Send a test to yourself before using it." },
@@ -334,6 +347,7 @@ export const GROUPS: readonly { group: Group; title: string; leads: readonly { k
       { keys: ["people"], text: "leads to everyone who has written in or invests, with their history." },
       { keys: ["deals"], text: "leads to each prospective investment and the stage it has reached." },
       { keys: ["hiring"], text: "leads to every application from the Careers page, for HR." },
+      { keys: ["emails"], text: "leads to every email Moneybee sends, as the reader sees it." },
     ],
   },
   {

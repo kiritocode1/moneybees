@@ -1,5 +1,6 @@
 import { MigrateUpArgs, MigrateDownArgs, sql } from '@payloadcms/db-postgres'
-import { STARTER_PLAYBOOKS, STARTER_TEMPLATES } from '../lib/crm/starter-content'
+import { STARTER_PLAYBOOKS } from '../lib/crm/starter-content'
+import { TEMPLATES_2026_10_14 as STARTER_TEMPLATES } from './data/templates-2026-10-14'
 
 export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   await db.execute(sql`

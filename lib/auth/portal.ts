@@ -1,5 +1,11 @@
 import { createCipheriv, createDecipheriv, createHash, randomBytes, randomInt, timingSafeEqual } from "node:crypto";
 import config from "@payload-config";
+import { createElement } from "react";
+import { shortDateTime } from "@/emails/format";
+import { renderEmail } from "@/emails/render";
+import { requestOrigin, siteOf } from "@/emails/request";
+import { SignInCode, signInCodeSubject } from "@/emails/security";
+import { siteDetails } from "@/lib/site/load-details";
 import { headers } from "next/headers";
 import { APIError, AuthenticationError, getPayload, LockedAuth } from "payload";
 
@@ -112,11 +118,24 @@ export async function startLogin(email: string, password: string, deviceToken: s
       attempts: 0,
     },
   });
-  await payload.sendEmail({
-    to: user.email,
-    subject: `${code} is your Moneybee sign-in code`,
-    text: `${code} is your code to sign in to the Moneybee investor portal. It expires in 10 minutes.\n\nIf you did not just try to sign in, change your password from the sign-in page.`,
-  });
+  const head = await headers();
+  const site = await siteDetails();
+  const expires = new Date(Date.now() + CODE_TTL_MS);
+  const message = await renderEmail(
+    createElement(SignInCode, {
+      name: user.name,
+      code,
+      validUntil: `${expires.toLocaleString("en-IN", { timeZone: "Asia/Kolkata", hour: "numeric", minute: "2-digit", hour12: true }).toLowerCase()} IST`,
+      account: maskEmail(user.email),
+      requestedAt: shortDateTime(new Date()),
+      ...requestOrigin(head),
+      resetHref: "/portal/forgot",
+      phone: site.phones[0]?.number,
+      site,
+    }),
+    siteOf(head),
+  );
+  await payload.sendEmail({ to: user.email, subject: signInCodeSubject({ code }), ...message });
   return { kind: "code-sent", challengeId: `${challenge.id}.${nonce}`, sentTo: maskEmail(user.email) };
 }
 

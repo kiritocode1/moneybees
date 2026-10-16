@@ -1,4 +1,5 @@
 import config from "@payload-config";
+import { createElement } from "react";
 import { type } from "arktype";
 import { getPayload, type Payload } from "payload";
 import { type Team, TEAM_NAMES } from "@/lib/careers";
@@ -9,6 +10,11 @@ import { resumesStored, resumeType, saveResume } from "@/lib/hiring/resume-store
 import { screenApplicant } from "@/lib/hiring/screen";
 import { applicationReference, NOTICE_PERIODS } from "@/lib/hiring/stages";
 import type { Application, Opening } from "@/payload-types";
+import { ApplicationReceived } from "@/emails/applicants";
+import { shortDateTime } from "@/emails/format";
+import { renderEmail } from "@/emails/render";
+import { StaffNewApplication, staffNewApplicationSubject } from "@/emails/staff";
+import { siteDetails } from "@/lib/site/load-details";
 
 /*
  * What happens when someone sends the apply form (/careers/apply, plan
@@ -182,12 +188,30 @@ export async function followUpApplication(id: number, options: { siteOrigin: str
     }
   }
 
+  const notice = NOTICE_PERIODS.find((option) => option.value === application.notice)?.label;
+  // For a fact box: an open application names its team ("{{role}}" reads "a role in ..." inside a sentence).
+  const roleLabel = application.opening || !application.team ? application.roleTitle : `Open application, ${TEAM_NAMES[application.team as Team]}`;
   if (settings.hiring?.acknowledge !== false) {
     try {
       const template = (await payload.find({ collection: "email-templates", where: { purpose: { equals: "application_ack" } }, limit: 1, depth: 0, overrideAccess: true })).docs[0] ?? STARTER_TEMPLATES.applicationAck;
       const values = applicantValues(application);
-      const html = "html" in template && template.html ? fillTemplateHtml(template.html, values) : undefined;
-      const sent = await sendCrmEmail(payload, { to: application.email, subject: fillTemplate(template.subject, values), text: fillTemplate(template.body ?? "", values), html, application: id, summary: "Confirmation" });
+      const words = { text: fillTemplate(template.body ?? "", values), html: "html" in template && template.html ? fillTemplateHtml(template.html, values) : null };
+      const email = await renderEmail(
+        createElement(ApplicationReceived, {
+          name: application.name,
+          reference: values.reference,
+          role: roleLabel,
+          words,
+          receivedAt: shortDateTime(application.receivedAt),
+          resume: application.resume?.name ?? undefined,
+          mustHaves: (application.mustHaves ?? []).map(({ question, answer }) => ({ question, answer })),
+          notice,
+          keptUntil: values.keptUntil,
+          site: await siteDetails(),
+        }),
+        options.siteOrigin,
+      );
+      const sent = await sendCrmEmail(payload, { to: application.email, subject: fillTemplate(template.subject, values), ...email, words: words.text, application: id, summary: "Confirmation" });
       await addHistory(payload, id, { kind: "email", summary: "Confirmation", email: sent.id });
     } catch (error) {
       payload.logger.error({ err: error, msg: "Application confirmation failed", applicationId: id });
@@ -197,19 +221,21 @@ export async function followUpApplication(id: number, options: { siteOrigin: str
   try {
     const { docs: staff } = await payload.find({ collection: "users", where: { roles: { in: ["hr", "admin"] } }, limit: 50, depth: 0, overrideAccess: true });
     if (staff.length) {
-      const yes = (application.mustHaves ?? []).filter(({ answer }) => answer === "yes").length;
-      const asked = application.mustHaves?.length ?? 0;
-      await payload.sendEmail({
-        to: staff.map((user) => user.email),
-        subject: `New application: ${application.name}, ${application.roleTitle}`,
-        text: [
-          `${application.name} applied for ${application.roleTitle} (${applicationReference(id)}).`,
-          asked ? `Must-haves: ${yes} of ${asked}.` : null,
-          `Open it: ${options.siteOrigin}/admin/hiring/${id}`,
-        ]
-          .filter(Boolean)
-          .join("\n\n"),
-      });
+      const answers = application.mustHaves ?? [];
+      const email = await renderEmail(
+        createElement(StaffNewApplication, {
+          reference: applicationReference(id),
+          name: application.name,
+          role: roleLabel,
+          receivedAt: shortDateTime(application.receivedAt),
+          facts: [...(notice ? [{ label: "Notice period", value: notice }] : []), ...(application.city ? [{ label: "City", value: application.city }] : []), { label: "Resume", value: application.resume?.name ?? "None; experience written in" }],
+          mustHaves: { asked: answers.length, met: answers.filter(({ answer }) => answer === "yes").length, missed: answers.filter(({ answer }) => answer === "no").map(({ question }) => question) },
+          href: `/admin/hiring/${id}`,
+          roleLabel: "HR",
+        }),
+        options.siteOrigin,
+      );
+      await payload.sendEmail({ to: staff.map((user) => user.email), subject: staffNewApplicationSubject({ name: application.name, role: roleLabel }), ...email });
     }
   } catch (error) {
     payload.logger.error({ err: error, msg: "HR notification failed", applicationId: id });

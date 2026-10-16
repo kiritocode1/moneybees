@@ -6,6 +6,7 @@ import { headers } from "next/headers";
 import { getPayload } from "payload";
 import { CRM_ROLES, hasRole } from "@/lib/backend/roles";
 import { sendCrmEmail } from "@/lib/crm/mail";
+import { buildReply, type ReplyDraft, ReplyInput } from "@/lib/crm/reply";
 import { ENQUIRY_STATUSES, labelOf } from "@/lib/crm/vocabulary";
 import type { User } from "@/payload-types";
 
@@ -78,22 +79,41 @@ export async function setEnquiryStatus(id: number, input: { status: string; note
   return { ok: true };
 }
 
-const ReplyInput = type({ subject: "1 <= string <= 200", body: "1 <= string <= 20000" });
+const requestOrigin = async () => {
+  const head = await headers();
+  return `${head.get("x-forwarded-proto") ?? "https"}://${head.get("x-forwarded-host") ?? head.get("host")}`;
+};
+
+async function draftFor({ payload, user }: Staff, id: number, input: ReplyDraft) {
+  const parsed = ReplyInput(input);
+  if (parsed instanceof type.errors) return { ok: false as const, error: "Write a subject and a message." };
+  const enquiry = await payload.findByID({ collection: "enquiries", id, depth: 1, user, overrideAccess: false });
+  const contact = typeof enquiry.contact === "object" ? enquiry.contact : null;
+  if (!contact) return { ok: false as const, error: "The enquiry has no person attached." };
+  return { ok: true as const, enquiry, contact, email: await buildReply(payload, user, enquiry, contact, parsed, await requestOrigin()) };
+}
+
+/** The reply exactly as it will go, for the composer's Preview. Sends nothing. */
+export async function previewReply(id: number, input: ReplyDraft): Promise<{ ok: true; html: string } | { ok: false; error: string }> {
+  const draft = await draftFor(await staff(), id, input);
+  return draft.ok ? { ok: true, html: draft.email.html } : draft;
+}
 
 /**
- * Emails the person from the signed-in staff member. Once it has really gone,
+ * Emails the person from the signed-in staff member, drawn as the email its
+ * template's purpose calls for (lib/crm/reply.ts). Once it has really gone,
  * the enquiry is "waiting on them" and the reply clock stops; a reply saved
  * while email is not connected leaves both as they were.
  */
-export async function replyToEnquiry(id: number, input: { subject: string; body: string }): Promise<ActionResult> {
-  const parsed = ReplyInput(input);
-  if (parsed instanceof type.errors) return { ok: false, error: "Write a subject and a message." };
-  const { payload, user } = await staff();
-  const enquiry = await payload.findByID({ collection: "enquiries", id, depth: 1, user, overrideAccess: false });
-  const contact = typeof enquiry.contact === "object" ? enquiry.contact : null;
-  if (!contact?.email) return { ok: false, error: "This person has no email address on record." };
+export async function replyToEnquiry(id: number, input: ReplyDraft): Promise<ActionResult> {
+  const ctx = await staff();
+  const { payload, user } = ctx;
+  const draft = await draftFor(ctx, id, input);
+  if (!draft.ok) return draft;
+  const { enquiry, contact, email } = draft;
+  if (!contact.email) return { ok: false, error: "This person has no email address on record." };
 
-  const sent = await sendCrmEmail(payload, { to: contact.email, subject: parsed.subject, text: parsed.body, contact: contact.id, enquiry: id, sentBy: user });
+  const sent = await sendCrmEmail(payload, { to: contact.email, ...email, contact: contact.id, enquiry: id, sentBy: user });
   if (sent.status !== "sent") return { ok: true };
   const now = new Date().toISOString();
   await payload.update({

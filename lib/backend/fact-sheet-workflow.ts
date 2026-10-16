@@ -127,8 +127,23 @@ export const afterStatusChange: CollectionAfterChangeHook = async ({ doc, previo
     const reviewers = await req.payload.find({ collection: "users", where: { roles: { in: ["compliance"] } }, depth: 0, limit: 50, overrideAccess: true, req });
     const to = reviewers.docs.map((user) => user.email).filter((email) => email !== req.user?.email);
     if (to.length > 0) {
+      // Drawn by emails/staff.tsx; imported only when a sheet goes to review, so the config does not load email rendering.
+      const [{ FactSheetWaiting, factSheetWaitingSubject }, { renderEmail }, { siteOf }, { shortDateTime }, { createElement }] = await Promise.all([import("@/emails/staff"), import("@/emails/render"), import("@/emails/request"), import("@/emails/format"), import("react")]);
+      const product = await req.payload.findByID({ collection: "products", id: idOf(doc.product) as number, depth: 0, overrideAccess: true, req });
+      const email = await renderEmail(
+        createElement(FactSheetWaiting, {
+          title: doc.title ?? product.name,
+          product: product.name,
+          month: new Date(doc.asOf).toLocaleDateString("en-GB", { month: "long", year: "numeric", timeZone: "UTC" }),
+          submittedBy: req.user && "name" in req.user ? String(req.user.name) : "A colleague",
+          submittedAt: shortDateTime(new Date()),
+          href: `/admin/collections/fact-sheets/${doc.id}`,
+          roleLabel: "Compliance",
+        }),
+        req.headers ? siteOf(req.headers) : undefined,
+      );
       await req.payload
-        .sendEmail({ to, subject: `Fact sheet waiting for approval: ${doc.title}`, text: `${doc.title} was submitted for review. Open /admin/collections/fact-sheets/${doc.id} to approve it or send it back.` })
+        .sendEmail({ to, subject: factSheetWaitingSubject({ title: doc.title ?? product.name }), ...email })
         .catch((error: unknown) => req.payload.logger.error({ err: error, msg: "Review email failed" }));
     }
   }

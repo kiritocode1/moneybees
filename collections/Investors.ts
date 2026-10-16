@@ -24,13 +24,8 @@ export const Investors: CollectionConfig = {
     forgotPassword: {
       expiration: 30 * 60_000,
       generateEmailSubject: () => "Set your Moneybee portal password",
-      // The origin comes from the request that asked for the reset, so the link
-      // points at the site the investor is on (local, preview or moneybee.in).
-      generateEmailHTML: ({ req, token, user } = {}) => {
-        const origin = (req?.context as { origin?: string } | undefined)?.origin ?? "https://www.moneybee.in";
-        const link = `${origin}/portal/reset?token=${token}`;
-        return `<p>Hello ${user?.name ?? ""},</p><p>Use this link to set your password for the Moneybee investor portal. It works for 30 minutes.</p><p><a href="${link}">${link}</a></p><p>If you did not ask for this, you can ignore this email; your password has not changed.</p>`;
-      },
+      // Drawn by emails/security.tsx SetPassword; imported here only when an email is sent.
+      generateEmailHTML: async (args) => (await import("@/emails/password-emails")).investorPasswordEmail(args),
     },
   },
   access: {

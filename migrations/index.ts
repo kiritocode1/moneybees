@@ -12,6 +12,8 @@ import * as migration_20261013_112654_investor_centre_contact_documents from './
 import * as migration_20261013_115823_remaining_pages from './20261013_115823_remaining_pages';
 import * as migration_20261014_062217_ai_switches_in_admin from './20261014_062217_ai_switches_in_admin';
 import * as migration_20261014_151509_hiring from './20261014_151509_hiring';
+import * as migration_20261016_071849_email_letters from './20261016_071849_email_letters';
+import * as migration_20261016_072000_email_letters_words from './20261016_072000_email_letters_words';
 
 export const migrations = [
   {
@@ -82,6 +84,16 @@ export const migrations = [
   {
     up: migration_20261014_151509_hiring.up,
     down: migration_20261014_151509_hiring.down,
-    name: '20261014_151509_hiring'
+    name: '20261014_151509_hiring',
+  },
+  {
+    up: migration_20261016_071849_email_letters.up,
+    down: migration_20261016_071849_email_letters.down,
+    name: '20261016_071849_email_letters',
+  },
+  {
+    up: migration_20261016_072000_email_letters_words.up,
+    down: migration_20261016_072000_email_letters_words.down,
+    name: '20261016_072000_email_letters_words'
   },
 ];

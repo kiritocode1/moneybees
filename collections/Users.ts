@@ -19,7 +19,16 @@ export const Users: CollectionConfig = {
   slug: "users",
   labels: { singular: "Staff member", plural: "Staff" },
   admin: { useAsTitle: "name", defaultColumns: ["name", "email", "roles"], group: "Settings", components: screenIntro("staff") },
-  auth: { tokenExpiration: 7200, maxLoginAttempts: 5, lockTime: 600_000 },
+  auth: {
+    tokenExpiration: 7200,
+    maxLoginAttempts: 5,
+    lockTime: 600_000,
+    forgotPassword: {
+      generateEmailSubject: () => "Set your Moneybee admin password",
+      // Drawn by emails/security.tsx SetPassword; imported here only when an email is sent.
+      generateEmailHTML: async (args) => (await import("@/emails/password-emails")).staffPasswordEmail(args),
+    },
+  },
   access: {
     admin: ({ req }) => Boolean(req.user),
     read: ({ req }) => Boolean(req.user),

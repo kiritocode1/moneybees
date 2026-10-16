@@ -4,6 +4,11 @@ import config from "@payload-config";
 import { type } from "arktype";
 import { headers } from "next/headers";
 import { getPayload } from "payload";
+import { createElement } from "react";
+import { InterviewInvitation, NotTakenForward, Offer } from "@/emails/applicants";
+import { Letter } from "@/emails/prospects";
+import { renderEmail } from "@/emails/render";
+import { siteDetails } from "@/lib/site/load-details";
 import { hasRole } from "@/lib/backend/roles";
 import { sendCrmEmail } from "@/lib/crm/mail";
 import { fillTemplate } from "@/lib/crm/template";
@@ -34,10 +39,27 @@ const load = ({ payload, user }: Ctx, id: number) => payload.findByID({ collecti
 const Email = type({ subject: "1 <= string <= 200", body: "1 <= string <= 20000" });
 type EmailInput = typeof Email.infer;
 
+/** Which email the words go into: an interview, an offer, a rejection, or a plain letter. */
+type Kind = { kind: "interview"; when: string; where: string; with: string } | { kind: "offer" } | { kind: "rejection" } | { kind: "letter" };
+
 /** Emails the applicant from the signed-in person; merge fields are filled for this applicant. */
-async function emailApplicant(ctx: Ctx, application: Application, input: EmailInput, summary: string, extra: Record<string, string> = {}) {
+async function emailApplicant(ctx: Ctx, application: Application, input: EmailInput, summary: string, letter: Kind = { kind: "letter" }) {
+  const extra = letter.kind === "interview" ? { interviewAt: letter.when, interviewPlace: letter.where, interviewWith: letter.with } : {};
   const values = applicantValues(application, { senderName: ctx.user.name, ...extra });
-  const sent = await sendCrmEmail(ctx.payload, { to: application.email, subject: fillTemplate(input.subject, values), text: fillTemplate(input.body, values), application: application.id, sentBy: ctx.user, summary });
+  const head = await headers();
+  const origin = `${head.get("x-forwarded-proto") ?? "https"}://${head.get("x-forwarded-host") ?? head.get("host")}`;
+  const base = { name: application.name, reference: values.reference, role: values.role, words: { text: fillTemplate(input.body, values) }, site: await siteDetails() };
+  const sender = { name: ctx.user.name, role: "Hiring Team", email: ctx.user.email };
+  const element =
+    letter.kind === "interview"
+      ? createElement(InterviewInvitation, { ...base, when: letter.when, where: letter.where, with: letter.with, sender })
+      : letter.kind === "offer"
+        ? createElement(Offer, { ...base, sender })
+        : letter.kind === "rejection"
+          ? createElement(NotTakenForward, { ...base, keptUntil: values.keptUntil, sender })
+          : createElement(Letter, { ...base, eyebrow: "Careers", title: fillTemplate(input.subject, values), sender, audience: "applicant", reason: "You are receiving this email because you applied for a role at Moneybee." });
+  const email = await renderEmail(element, origin);
+  const sent = await sendCrmEmail(ctx.payload, { to: application.email, subject: fillTemplate(input.subject, values), ...email, words: base.words.text, application: application.id, sentBy: ctx.user, summary });
   await addHistory(ctx.payload, application.id, { kind: "email", summary, actor: ctx.user.id, email: sent.id });
 }
 
@@ -88,7 +110,7 @@ export async function addInterview(id: number, input: { at: string; with: string
   const interviews = [...(application.interviews ?? []), { at: new Date(parsed.at).toISOString(), with: parsed.with, place: parsed.place, note: parsed.note }];
   await ctx.payload.update({ collection: "applications", id, user: ctx.user, overrideAccess: false, data: { interviews } });
   await addHistory(ctx.payload, id, { kind: "interview", summary: `Interview ${interviewTime(parsed.at)}, with ${parsed.with}`, body: parsed.place, actor: ctx.user.id });
-  if (parsed.email) await emailApplicant(ctx, application, parsed.email, "Interview invitation", { interviewAt: interviewTime(parsed.at), interviewPlace: parsed.place, interviewWith: parsed.with });
+  if (parsed.email) await emailApplicant(ctx, application, parsed.email, "Interview invitation", { kind: "interview", when: interviewTime(parsed.at), where: parsed.place, with: parsed.with });
   if (application.stage === "shortlisted") await moveTo(ctx, application, "interview");
   return { ok: true };
 }
@@ -102,7 +124,7 @@ export async function makeOffer(id: number, input: { email?: EmailInput }): Prom
     const email = Email(input.email);
     if (email instanceof type.errors) return { ok: false, error: "Write a subject and a message, or untick the email." };
     if (/\[Write the terms here/.test(email.body)) return { ok: false, error: "Write the terms where the brackets are before sending." };
-    await emailApplicant(ctx, application, email, "Offer");
+    await emailApplicant(ctx, application, email, "Offer", { kind: "offer" });
   }
   await moveTo(ctx, application, "offer");
   return { ok: true };
@@ -116,7 +138,7 @@ export async function notTakenForward(id: number, input: { email?: EmailInput })
   if (input.email) {
     const email = Email(input.email);
     if (email instanceof type.errors) return { ok: false, error: "Write a subject and a message, or close without emailing." };
-    await emailApplicant(ctx, application, email, "Not taken forward");
+    await emailApplicant(ctx, application, email, "Not taken forward", { kind: "rejection" });
   }
   await moveTo(ctx, application, "closed", { closeReason: "not_taken_forward" });
   return { ok: true };
@@ -184,7 +206,7 @@ export async function tellOthers(openingId: number, input: { ids: number[]; emai
     const application = await load(ctx, id);
     const opening = typeof application.opening === "object" ? application.opening?.id : application.opening;
     if (opening !== openingId || !isOpenStage(application.stage)) continue;
-    await emailApplicant(ctx, application, parsed.email, "Not taken forward, role filled");
+    await emailApplicant(ctx, application, parsed.email, "Not taken forward, role filled", { kind: "rejection" });
     await moveTo(ctx, application, "closed", { closeReason: "role_filled" });
   }
   return { ok: true };

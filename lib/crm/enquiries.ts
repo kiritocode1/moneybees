@@ -1,10 +1,17 @@
 import config from "@payload-config";
+import { createElement } from "react";
 import { type } from "arktype";
 import { getPayload, type Payload, type Where } from "payload";
 import { ENQUIRIES, type EnquiryField, PHONE } from "@/lib/contact-v2";
 import { sendCrmEmail } from "@/lib/crm/mail";
 import { enquiryReference } from "@/lib/crm/reference";
-import { type EnquiryKind, ENQUIRY_KINDS, highest, type Reason, rulesSeverity, type Severity, SEVERITY_LABELS } from "@/lib/crm/severity";
+import { STARTER_TEMPLATES } from "@/lib/crm/starter-content";
+import { siteDetails } from "@/lib/site/load-details";
+import { dueIn, longDateTime, shortDateTime } from "@/emails/format";
+import { EnquiryReceived } from "@/emails/prospects";
+import { renderEmail } from "@/emails/render";
+import { StaffNewEnquiry, staffNewEnquirySubject } from "@/emails/staff";
+import { type EnquiryKind, ENQUIRY_KINDS, highest, type Reason, rulesSeverity, type Severity } from "@/lib/crm/severity";
 import { fillTemplate, fillTemplateHtml } from "@/lib/crm/template";
 import { askJev, raiseWithAi } from "@/lib/crm/triage";
 import { ENQUIRY_KIND_LABELS } from "@/lib/crm/vocabulary";
@@ -134,17 +141,6 @@ export async function receiveEnquiry(kindInput: string, raw: Readonly<Record<str
   return { ok: true, id: enquiry.id, reference: enquiryReference(enquiry.id), email: contact.email ?? answers.email };
 }
 
-const DEFAULT_ACK = {
-  subject: "We have your enquiry ({{reference}})",
-  body: `Hello {{firstName}},
-
-Thank you for writing to Moneybee. Your reference is {{reference}}. Someone from our team will reply to this address.
-
-If it is urgent, call us on ${PHONE}.
-
-Moneybee`,
-};
-
 const idOf = (value: number | { id: number } | null | undefined) => (value && typeof value === "object" ? value.id : value ?? undefined);
 
 /**
@@ -183,12 +179,20 @@ export async function followUp(enquiryId: number, options: { siteOrigin: string;
     }
   }
 
+  const site = await siteDetails();
+  const answered = answersFor(kind, answers).filter(({ label }) => label !== "Message");
+
   if (settings.acknowledge !== false && contact.email) {
     try {
-      const template = (await payload.find({ collection: "email-templates", where: { purpose: { equals: "enquiry_ack" } }, limit: 1, depth: 0, overrideAccess: true })).docs[0] ?? DEFAULT_ACK;
-      const values = { firstName: contact.name.split(/\s+/)[0], name: contact.name, reference: enquiryReference(enquiry.id) };
-      const html = "html" in template && template.html ? fillTemplateHtml(template.html, values) : undefined;
-      await sendCrmEmail(payload, { to: contact.email, subject: fillTemplate(template.subject, values), text: fillTemplate(template.body ?? "", values), html, contact: contact.id, enquiry: enquiry.id, summary: "Acknowledgement" });
+      const template = (await payload.find({ collection: "email-templates", where: { purpose: { equals: "enquiry_ack" } }, limit: 1, depth: 0, overrideAccess: true })).docs[0] ?? STARTER_TEMPLATES.enquiryAck;
+      const reference = enquiryReference(enquiry.id);
+      const values = { firstName: contact.name.split(/\s+/)[0], name: contact.name, reference, replyBy: enquiry.dueAt ? longDateTime(enquiry.dueAt) : "the next working day" };
+      const words = { text: fillTemplate(template.body ?? "", values), html: "html" in template && template.html ? fillTemplateHtml(template.html, values) : null };
+      const email = await renderEmail(
+        createElement(EnquiryReceived, { name: contact.name, reference, kind, receivedAt: shortDateTime(enquiry.receivedAt), replyBy: enquiry.dueAt ? shortDateTime(enquiry.dueAt) : undefined, answers: answered, message: enquiry.message ?? undefined, words, site }),
+        options.siteOrigin,
+      );
+      await sendCrmEmail(payload, { to: contact.email, subject: fillTemplate(template.subject, values), ...email, words: words.text, contact: contact.id, enquiry: enquiry.id, summary: "Acknowledgement" });
     } catch (error) {
       payload.logger.error({ err: error, msg: "Acknowledgement failed", enquiryId });
     }
@@ -198,21 +202,32 @@ export async function followUp(enquiryId: number, options: { siteOrigin: string;
     const playbook = enquiry.playbook ? await payload.findByID({ collection: "playbooks", id: idOf(enquiry.playbook) as number, depth: 0, overrideAccess: true }) : undefined;
     const roles = playbook?.handlerRoles?.length ? playbook.handlerRoles : ["sales", "operations", "compliance"];
     const { docs: staff } = await payload.find({ collection: "users", where: { roles: { in: [...roles, "admin"] } }, limit: 50, depth: 0, overrideAccess: true });
-    const due = new Date(enquiry.dueAt ?? Date.now()).toLocaleString("en-IN", { timeZone: "Asia/Kolkata", day: "numeric", month: "short", hour: "numeric", minute: "2-digit" });
-    const reasons = ((enquiry.triage as { rules?: Reason[] } | null)?.rules ?? []).map((reason) => `- ${reason.why}`).join("\n");
+    const triage = (enquiry.triage ?? {}) as { rules?: Reason[]; existingInvestor?: boolean };
+    const reference = enquiryReference(enquiry.id);
+    const severity = enquiry.severity as Severity;
+    const due = new Date(enquiry.dueAt ?? Date.now());
     if (staff.length) {
-      await payload.sendEmail({
-        to: staff.map((user) => user.email),
-        subject: `[${SEVERITY_LABELS[enquiry.severity as Severity]}] ${enquiry.title}, reply by ${due}`,
-        text: [
-          `${enquiry.title} (${enquiryReference(enquiry.id)}).`,
-          reasons && `Why it is ${enquiry.severity}:\n${reasons}`,
-          playbook && `Playbook: ${playbook.name}`,
-          `Open it: ${options.siteOrigin}/admin/inbox/${enquiry.id}`,
-        ]
-          .filter(Boolean)
-          .join("\n\n"),
-      });
+      const email = await renderEmail(
+        createElement(StaffNewEnquiry, {
+          reference,
+          title: enquiry.title,
+          severity,
+          replyBy: dueIn(due),
+          receivedAt: shortDateTime(enquiry.receivedAt),
+          contact: [
+            // The person's own answers, phone as they typed it; the name is already in the title.
+            ...answered.filter(({ label }) => !/\bname\b/i.test(label)),
+            { label: "Existing relationship", value: triage.existingInvestor ? "Already a Moneybee investor." : `None. First contact${enquiry.origin?.page ? `, from ${enquiry.origin.page}` : ""}.` },
+          ],
+          message: enquiry.message ?? undefined,
+          reasons: (triage.rules ?? []).map((reason) => reason.why),
+          playbook: playbook ? { name: playbook.name, steps: (playbook.steps ?? []).map((step) => step.step) } : undefined,
+          href: `/admin/inbox/${enquiry.id}`,
+          roleLabel: roles.map((role) => role[0].toUpperCase() + role.slice(1)).join(" or "),
+        }),
+        options.siteOrigin,
+      );
+      await payload.sendEmail({ to: staff.map((user) => user.email), subject: staffNewEnquirySubject({ severity, title: enquiry.title, replyBy: shortDateTime(due).split(", ").at(-1) ?? "" }), ...email });
     }
   } catch (error) {
     payload.logger.error({ err: error, msg: "Staff notification failed", enquiryId });

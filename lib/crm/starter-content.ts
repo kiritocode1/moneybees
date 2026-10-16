@@ -4,6 +4,8 @@
  * that adds hiring (migrations/20261014_*_hiring.ts) writes them to
  * production too, where none exist yet; scripts/seed-crm.ts reuses them
  * locally. Merge fields in double braces are filled in when an email is sent.
+ * A body is only the letter's own words: the greeting, the facts, the
+ * signature and the disclosures are drawn by the email it goes into (emails/).
  */
 
 export type StarterTemplate = { name: string; purpose: string; subject: string; body: string };
@@ -12,50 +14,74 @@ export const STARTER_TEMPLATES = {
   enquiryAck: {
     name: "Enquiry received",
     purpose: "enquiry_ack",
-    subject: "We have your enquiry ({{reference}})",
-    body: "Hello {{firstName}},\n\nThank you for writing to Moneybee. Your reference is {{reference}}. Someone from our team will reply to this address.\n\nIf it is urgent, call us on 022-4030 2080.\n\nMoneybee",
+    subject: "Your enquiry has been received ({{reference}})",
+    body: "Thank you for writing to Moneybee. A member of our team will reply to this address by {{replyBy}}.",
   },
   pmsReply: {
-    name: "PMS first reply",
-    purpose: "enquiry_reply",
-    subject: "Moneybee PMS: your enquiry ({{reference}})",
-    body: "Hello {{firstName}},\n\nThank you for your interest in Moneybee PMS. The minimum investment is Rs. 50 lakh, as SEBI sets for portfolio management services.\n\nI have attached our latest fact sheet. Could we find 20 minutes this week to talk through how we invest and whether it suits you?\n\n{{senderName}}\nMoneybee",
+    name: "PMS introduction",
+    purpose: "pms_introduction",
+    subject: "Moneybee Portfolio Management Service: the information you requested ({{reference}})",
+    body: "Thank you for your interest in Moneybee's Portfolio Management Service. As requested, here are our latest fact sheet and Disclosure Document, with a summary below of how we manage portfolios.\n\nWe invest in small and mid-sized Indian companies that lead their niche, and hold them while they grow. The stocks are held in your own demat account, so you see every holding.",
   },
   aifReply: {
-    name: "AIF first reply",
-    purpose: "enquiry_reply",
+    name: "Flyingbee introduction",
+    purpose: "aif_introduction",
     subject: "Flyingbee Investment Fund: your enquiry ({{reference}})",
-    body: "Hello {{firstName}},\n\nThank you for asking about the Flyingbee Investment Fund, our Category III AIF. The minimum commitment is Rs. 1 crore.\n\nBefore I send the fund's documents, could you confirm you are investing as an individual, HUF, family office or company? I would also like to set up a call with the fund team.\n\n{{senderName}}\nMoneybee",
+    body: "Thank you for your interest in the Flyingbee Investment Fund, our Category III Alternative Investment Fund. It invests in high-growth listed companies, and in unlisted companies before they go public.\n\nThe fund is offered privately, to eligible investors only. Before I send the Private Placement Memorandum, could you please confirm how you would invest: as a resident or non-resident individual, an HUF or a company? The minimum commitment is Rs. 1 crore.",
   },
   complaint: {
     name: "Investor concern, first reply",
     purpose: "enquiry_reply",
     subject: "Your message to Moneybee ({{reference}})",
-    body: "Hello {{firstName}},\n\nThank you for telling us. I am looking into this now with our operations team and will call you today.\n\nYour reference is {{reference}}. Please quote it if you write to us again.\n\n{{senderName}}\nMoneybee",
+    body: "Thank you for bringing this to our attention. I am looking into it now with our operations team, and will call you today.\n\nPlease quote reference {{reference}} if you write to us again.",
+  },
+  meetingConfirmation: {
+    name: "Meeting confirmation",
+    purpose: "meeting_confirmation",
+    subject: "Our meeting on {{meetingAt}}",
+    body: "Thank you for making the time to meet us. I am writing to confirm the details below.\n\nShould anything change, please reply to this email or call me, and we will find another time.",
+  },
+  meetingFollowUp: {
+    name: "Meeting follow-up",
+    purpose: "follow_up",
+    subject: "Following our meeting on {{meetingOn}}",
+    body: "Thank you for meeting us on {{meetingOn}}. As promised, here is a summary of what we discussed.\n\n[Write the points discussed here, one paragraph each.]",
+  },
+  pmsChecklist: {
+    name: "PMS account opening",
+    purpose: "pms_checklist",
+    subject: "Opening your Moneybee PMS account ({{reference}})",
+    body: "Thank you for choosing to open an account with Moneybee's Portfolio Management Service. Below is everything we need from you, and the order in which it happens.",
+  },
+  aifChecklist: {
+    name: "Flyingbee subscription",
+    purpose: "aif_checklist",
+    subject: "Investing in Flyingbee Investment Fund ({{reference}})",
+    body: "Thank you for choosing to invest in the Flyingbee Investment Fund. Below is everything we need from you to complete your subscription.",
   },
   applicationAck: {
     name: "Application received",
     purpose: "application_ack",
-    subject: "We have your application ({{reference}})",
-    body: "Hello {{firstName}},\n\nThank you for applying for {{role}} at Moneybee. Your reference is {{reference}}.\n\nIf we would like to talk, we will write to you at this address.\n\nMoneybee",
+    subject: "Your application has been received ({{reference}})",
+    body: "Thank you for applying for {{role}} at Moneybee. We will read your application carefully, and if we would like to meet you, we will write to you at this address.",
   },
   applicationReject: {
     name: "Application not taken forward",
     purpose: "application_reject",
     subject: "Your application for {{role}}",
-    body: "Hello {{firstName}},\n\nThank you for applying to Moneybee. We have decided not to take your application for {{role}} forward.\n\nWe will keep your details until {{keptUntil}} in case a similar role opens, unless you ask us to delete them.\n\nMoneybee",
+    body: "Thank you for your interest in Moneybee and for the time you gave to your application. After careful consideration, we have decided not to take your application for {{role}} further.\n\nWe will keep your details until {{keptUntil}} in case a similar role opens, unless you ask us to delete them sooner.",
   },
   interviewInvite: {
     name: "Interview invitation",
     purpose: "interview_invite",
     subject: "Interview for {{role}} at Moneybee",
-    body: "Hello {{firstName}},\n\nWe would like to meet you about the {{role}} role.\n\nWhen: {{interviewAt}}\nWhere: {{interviewPlace}}\nWith: {{interviewWith}}\n\nIf that time does not suit you, reply with two or three times that do.\n\n{{senderName}}\nMoneybee",
+    body: "Thank you for your application for {{role}}. We would like to invite you to an interview; the details are below.\n\nIf the time does not suit you, please reply with two or three times that do.",
   },
   offer: {
     name: "Offer",
     purpose: "offer",
     subject: "Your offer from Moneybee",
-    body: "Hello {{firstName}},\n\nWe would like to offer you the {{role}} role at Moneybee.\n\n[Write the terms here: start date, salary, and anything else agreed.]\n\nReply to this email with any questions, or to accept.\n\n{{senderName}}\nMoneybee",
+    body: "We are pleased to offer you the position of {{role}} at Moneybee.\n\n[Write the terms here: start date, salary, and anything else agreed.]\n\nPlease reply to this email to accept, or with any questions.",
   },
 } as const satisfies Record<string, StarterTemplate>;
 

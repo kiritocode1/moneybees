@@ -1,5 +1,5 @@
 import { WEALTH } from "@/lib/insights";
-import { PMS_ROWS, type ReturnRow } from "@/lib/performance";
+import { AIF_ROWS, PMS_ROWS, type ReturnRow } from "@/lib/performance";
 
 /**
  * Numbers in editable site text. Staff write a word in braces, such as
@@ -21,6 +21,12 @@ export const DECK_FIGURES: PmsFigures = {
   wealth: { start: WEALTH.start, ours: WEALTH.queenbee, benchmark: WEALTH.benchmark },
   asOf: "2026-07-31",
 };
+
+/** Flyingbee's returns and the day they run to, for /aif and the investor update. */
+export type AifFigures = { rows: readonly ReturnRow[]; asOf: string };
+
+/** The Flyingbee deck's figures (p10, as on 31 July 2026), used until a sheet may be shown. */
+export const AIF_DECK_FIGURES: AifFigures = { rows: AIF_ROWS, asOf: "2026-07-31" };
 
 /** Rupees in millions, written the way the deck writes them: "Rs. 28.85 Mn". */
 export const rupees = (millions: number) => `Rs. ${millions.toFixed(2).replace(/\.00$/, "")} Mn`;

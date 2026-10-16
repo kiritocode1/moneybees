@@ -96,7 +96,12 @@ export type EmailStatus = ValueOf<typeof EMAIL_STATUSES>;
 export const TEMPLATE_PURPOSES = [
   { value: "enquiry_ack", label: "Enquiry received (automatic)" },
   { value: "enquiry_reply", label: "Reply to an enquiry" },
-  { value: "follow_up", label: "Follow-up" },
+  { value: "pms_introduction", label: "PMS introduction" },
+  { value: "aif_introduction", label: "Flyingbee introduction" },
+  { value: "meeting_confirmation", label: "Meeting confirmation" },
+  { value: "follow_up", label: "Follow-up after a meeting" },
+  { value: "pms_checklist", label: "PMS account opening" },
+  { value: "aif_checklist", label: "Flyingbee subscription" },
   { value: "application_ack", label: "Application received (automatic)" },
   { value: "application_reject", label: "Application not taken forward" },
   { value: "interview_invite", label: "Interview invitation" },

@@ -15,7 +15,7 @@ import { useAction } from "@/components/admin/use-action";
 import { Button } from "@/components/fluid/button";
 import { TabsSubtle, TabsSubtleItem } from "@/components/fluid/tabs-subtle";
 import { MONEYBEE_EMAIL_THEME } from "@/lib/crm/email-theme";
-import { sendTemplateTest } from "@/lib/crm/template-actions";
+import { previewTemplate, sendTemplateTest } from "@/lib/crm/template-actions";
 
 /*
  * The email template editor (EmailTemplates `design` field). React Email's
@@ -26,7 +26,8 @@ import { sendTemplateTest } from "@/lib/crm/template-actions";
  *     DragHandle);
  *   - merge fields ({{firstName}} and the rest) that the sender fills in;
  *   - the editor's inspector for the selected block's styles;
- *   - a preview of the exact HTML that will be sent, and a test send.
+ *   - a preview of the whole email as it will be sent (the Moneybee frame,
+ *     the facts and disclosures around these words; emails/), and a test send.
  * The design (editor JSON) is what staff edit; the HTML and the plain-text
  * version are exported from it on every change and saved beside it, so
  * sending never needs the editor.
@@ -38,6 +39,9 @@ const MERGE_FIELDS = [
   { key: "name", label: "Full name" },
   { key: "reference", label: "Reference" },
   { key: "senderName", label: "Sender" },
+  { key: "replyBy", label: "Reply due by" },
+  { key: "meetingAt", label: "Meeting time" },
+  { key: "meetingOn", label: "Meeting date" },
   { key: "role", label: "Role applied for" },
   { key: "keptUntil", label: "Application kept until" },
   { key: "interviewAt", label: "Interview time" },
@@ -124,6 +128,7 @@ export const TemplateEditorField: JSONFieldClientComponent = ({ path }) => {
   const html = useField<string>({ path: "html" });
   const text = useField<string>({ path: "body" });
   const subject = useField<string>({ path: "subject" });
+  const purpose = useField<string>({ path: "purpose" });
   const editorRef = useRef<EmailEditorRef>(null);
   const insertRef = useRef<((what: Insert, at?: { x: number; y: number }) => void) | null>(null);
   const exportTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -135,6 +140,16 @@ export const TemplateEditorField: JSONFieldClientComponent = ({ path }) => {
   }, []);
   const test = useAction();
   const [testSent, setTestSent] = useState(false);
+  const [drawn, setDrawn] = useState<{ html: string; text: string } | null>(null);
+  const [previewError, setPreviewError] = useState<string | null>(null);
+  const draft = () => ({ purpose: purpose.value ?? "other", subject: subject.value ?? "", html: html.value ?? "", text: text.value ?? "" });
+
+  // Preview and Plain text show the whole email, drawn on the server from these words when the tab opens.
+  const drawPreview = () => {
+    setDrawn(null);
+    setPreviewError(null);
+    void previewTemplate(draft()).then((result) => (result.ok ? setDrawn(result) : setPreviewError(result.error)));
+  };
 
   // The content the editor opens with; read once, so typing never resets it.
   const [initial] = useState(() => design.value ?? fromPlainText(text.value));
@@ -175,7 +190,14 @@ export const TemplateEditorField: JSONFieldClientComponent = ({ path }) => {
   return (
     <div className="fluid mb-email-editor my-6 grid gap-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <TabsSubtle selectedIndex={["design", "preview", "text"].indexOf(view)} onSelect={(index) => setView((["design", "preview", "text"] as const)[index])} idPrefix="email-view">
+        <TabsSubtle
+          selectedIndex={["design", "preview", "text"].indexOf(view)}
+          onSelect={(index) => {
+            setView((["design", "preview", "text"] as const)[index]);
+            if (index > 0) drawPreview();
+          }}
+          idPrefix="email-view"
+        >
           <TabsSubtleItem index={0} label="Design" />
           <TabsSubtleItem index={1} label="Preview" />
           <TabsSubtleItem index={2} label="Plain text" />
@@ -189,7 +211,7 @@ export const TemplateEditorField: JSONFieldClientComponent = ({ path }) => {
             loading={test.pending || exporting}
             onClick={() => {
               setTestSent(false);
-              test.run(() => sendTemplateTest({ subject: subject.value ?? "", html: html.value ?? "", text: text.value ?? "" }), () => setTestSent(true));
+              test.run(() => sendTemplateTest(draft()), () => setTestSent(true));
             }}
           >
             Send a test to me
@@ -275,13 +297,19 @@ export const TemplateEditorField: JSONFieldClientComponent = ({ path }) => {
             ))}
           </div>
           <div className="flex justify-center rounded-xl border bg-muted p-6">
-            <iframe title="Email preview" srcDoc={html.value ?? ""} className="h-[720px] rounded-lg border bg-white" style={{ width: device === "desktop" ? 680 : 375 }} />
+            {previewError ? (
+              <p className="text-caption text-destructive">{previewError}</p>
+            ) : drawn ? (
+              <iframe title="Email preview" srcDoc={drawn.html} className="h-[720px] rounded-lg border-0" style={{ width: device === "desktop" ? 680 : 375 }} />
+            ) : (
+              <p className="text-caption text-muted-foreground">Drawing the email…</p>
+            )}
           </div>
         </div>
       ) : null}
 
       {view === "text" ? (
-        <pre className="m-0 min-h-60 rounded-xl border bg-card p-5 text-body whitespace-pre-wrap text-foreground">{text.value || "Nothing yet."}</pre>
+        <pre className="m-0 min-h-60 rounded-xl border bg-card p-5 text-body whitespace-pre-wrap text-foreground">{previewError ?? drawn?.text ?? "Drawing the email…"}</pre>
       ) : null}
     </div>
   );

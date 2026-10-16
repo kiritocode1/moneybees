@@ -73,6 +73,7 @@ export default buildConfig({
         applicant: { Component: "/components/admin/hiring/applicant-view#ApplicantView", path: "/hiring/:id" },
         guide: { Component: "/components/admin/guide/guide-view#GuideView", path: "/guide", exact: true },
         website: { Component: "/components/admin/website/website-view#WebsiteView", path: "/website", exact: true },
+        emails: { Component: "/components/admin/emails/emails-view#EmailsView", path: "/emails", exact: true },
       },
     },
   },

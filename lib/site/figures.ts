@@ -1,8 +1,8 @@
 import config from "@payload-config";
 import { getPayload } from "payload";
 import { PERIODS } from "@/lib/figure-limits";
-import { AIF_ROWS, type ReturnRow } from "@/lib/performance";
-import { DECK_FIGURES, type PmsFigures } from "@/lib/site/tokens";
+import { AIF_ROWS } from "@/lib/performance";
+import { AIF_DECK_FIGURES, type AifFigures, DECK_FIGURES, type PmsFigures } from "@/lib/site/tokens";
 
 /**
  * Moneybee PMS's figures from its latest published fact sheet, cleared for
@@ -33,11 +33,8 @@ export async function pmsFigures(): Promise<PmsFigures> {
   };
 }
 
-/** Flyingbee's returns and the day they run to, for /aif. */
-export type AifFigures = { rows: readonly ReturnRow[]; asOf: string };
-
-/** The Flyingbee deck's figures (p10, as on 31 July 2026), used until a sheet may be shown. */
-export const AIF_DECK_FIGURES: AifFigures = { rows: AIF_ROWS, asOf: "2026-07-31" };
+// Kept in lib/site/tokens.ts so code that cannot load Payload (emails/) can use them too.
+export { AIF_DECK_FIGURES, type AifFigures } from "@/lib/site/tokens";
 
 /**
  * Flyingbee's returns from its latest published fact sheet, in the periods

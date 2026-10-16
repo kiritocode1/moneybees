@@ -8,7 +8,8 @@ import type { User } from "@/payload-types";
 /*
  * The Desk group: the screens staff work in every day, drawn with Payload's
  * own nav__link markup above its groups. Hiring is for HR; the rest of the
- * desk for the CRM roles. People and Deals are Payload lists;
+ * desk for the CRM roles; Emails, every email Moneybee sends, for all staff.
+ * People and Deals are Payload lists;
  * their collections are kept out of the sidebar (group: false) so they appear
  * once, here. The CRM's internal records (activities, emails, tasks, entities)
  * are reached from a person or an enquiry, never browsed. The Website group
@@ -20,6 +21,7 @@ const LINKS = [
   { href: "/admin/collections/contacts", label: "People", exact: false, desk: "crm" },
   { href: "/admin/collections/deals", label: "Deals", exact: false, desk: "crm" },
   { href: "/admin/hiring", label: "Hiring", exact: false, desk: "hr" },
+  { href: "/admin/emails", label: "Emails", exact: true, desk: "staff" },
 ] as const;
 
 /** The Website group: the pages behind one screen (components/admin/website), then the lists they share. */
@@ -53,7 +55,7 @@ export function NavLinks() {
   const { user } = useAuth<User>();
   // Only links the signed-in person's role can open.
   const staff = user ? { ...user, collection: "users" as const } : null;
-  const desks = { crm: hasRole(staff, ...CRM_ROLES), hr: hasRole(staff, "hr") };
+  const desks = { crm: hasRole(staff, ...CRM_ROLES), hr: hasRole(staff, "hr"), staff: hasRole(staff, ...CRM_ROLES, "hr", "editor") };
   return (
     <>
       <NavGroup label="Desk">
