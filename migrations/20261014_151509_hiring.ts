@@ -135,7 +135,7 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
     for (const { steps, template, kinds, severities, handlerRoles, ...playbook } of STARTER_PLAYBOOKS) {
       await payload.create({
         collection: 'playbooks',
-        data: { ...playbook, kinds: [...kinds] as never, severities: [...severities] as never, handlerRoles: [...handlerRoles] as never, template: template ? templateIds.get(template) : null, steps: steps.map((step) => ({ step })) },
+        data: { ...playbook, kinds: [...kinds] as never, severities: [...severities] as never, handlerRoles: [...handlerRoles] as never, template: template ? templateIds.get(template) : null, steps: steps.map((step) => ({ step, when: 'reply' as const })) },
         req,
       })
     }

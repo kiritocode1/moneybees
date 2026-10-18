@@ -97,7 +97,7 @@ export async function startLogin(email: string, password: string, deviceToken: s
   const known = deviceToken ? devices.find((device) => sameDigest(device.hash, digest(deviceToken))) : undefined;
   if (known) {
     known.lastUsedAt = new Date().toISOString();
-    await payload.update({ collection: "investors", id: user.id, data: { trustedDevices: devices }, overrideAccess: true });
+    await payload.update({ collection: "investors", id: user.id, data: { trustedDevices: devices, lastSignInAt: known.lastUsedAt }, overrideAccess: true });
     return { kind: "signed-in", session };
   }
 
@@ -160,7 +160,7 @@ export async function verifyCode(challengeId: string, code: string): Promise<Ver
   const investor = await payload.findByID({ collection: "investors", id: investorId, overrideAccess: true, depth: 0 });
   const deviceToken = randomBytes(32).toString("base64url");
   const devices = [...freshDevices(investor.trustedDevices).slice(-(TRUSTED_DEVICES_KEPT - 1)), { hash: digest(deviceToken), lastUsedAt: new Date().toISOString() }];
-  await payload.update({ collection: "investors", id: investorId, data: { trustedDevices: devices }, overrideAccess: true });
+  await payload.update({ collection: "investors", id: investorId, data: { trustedDevices: devices, lastSignInAt: new Date().toISOString() }, overrideAccess: true });
 
   return { kind: "signed-in", session: { token: unseal(challenge.sealedToken), expires: new Date(challenge.sessionExpires) }, deviceToken };
 }

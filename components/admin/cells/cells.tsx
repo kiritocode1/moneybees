@@ -29,6 +29,27 @@ function Linked({ collectionSlug, columnIndex, linkURL, rowData, children }: Pic
   );
 }
 
+/** People › Name: opens the person's screen (/admin/people/:id), not the data form. */
+export function ContactNameCell({ cellData, rowData }: DefaultCellComponentProps) {
+  return (
+    <Link href={`/admin/people/${rowData.id}`} prefetch={false}>
+      {String(cellData ?? "Unnamed")}
+    </Link>
+  );
+}
+
+/** Client accounts › Status: Invited until their first sign-in, then Active; Disabled when switched off. */
+export function InvestorStatusCell({ rowData }: DefaultCellComponentProps) {
+  const status = rowData.status === "disabled" ? "Disabled" : rowData.invitedAt && !rowData.lastSignInAt ? "Invited" : "Active";
+  return (
+    <span className="fluid">
+      <Badge variant="dot" color={status === "Active" ? "green" : status === "Invited" ? "amber" : "gray"} size="compact">
+        {status}
+      </Badge>
+    </span>
+  );
+}
+
 /** Documents › File: a PDF or a web address, or an amber No file. */
 export function FileCell({ cellData, rowData }: DefaultCellComponentProps) {
   const link = typeof rowData.link === "string" && rowData.link.trim() !== "";

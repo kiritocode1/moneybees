@@ -1,0 +1,42 @@
+/* .plannotator/hero-terrain/hero-terrain.module.css */
+.hero_terrain_figure {
+  position: relative;
+  width: 100%;
+}
+.hero_terrain_definitions {
+  position: absolute;
+  pointer-events: none;
+}
+.hero_terrain_terrain {
+  --hairline-plate: #fff;
+  --hairline-hi: #232327;
+}
+.hero_terrain_terrain svg {
+  overflow: visible;
+}
+.hero_terrain_terrain[data-active=true] g:has(> path.sil.hi) {
+  filter: drop-shadow(0 0 9px rgb(246 161 26 / 45%));
+}
+.hero_terrain_terrain[data-active=true] path.sil.hi {
+  fill: var(--terrain-fill);
+  stroke: #bc790e;
+}
+.hero_terrain_terrain[data-active=true] g:has(> path.sil.hi) > path.nf {
+  stroke: #d69938;
+}
+.hero_terrain_terrain[data-active=true] .dot {
+  fill: #9a6208;
+}
+.hero_terrain_terrain[data-flight=idle] g:has(> path.sil.hi) {
+  filter: drop-shadow(0 0 9px rgb(246 161 26 / 18%));
+}
+.hero_terrain_terrain[data-flight=idle] path.sil.hi {
+  fill: var(--terrain-idle-fill);
+  stroke: #c09c65;
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero_terrain_terrain path,
+  .hero_terrain_terrain ellipse {
+    transition: none;
+  }
+}

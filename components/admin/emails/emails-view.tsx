@@ -7,6 +7,7 @@ import { renderEmail } from "@/emails/render";
 import { siteOf } from "@/emails/request";
 import { CRM_ROLES, hasRole, ROLES } from "@/lib/backend/roles";
 import { templateRow } from "@/lib/crm/email-template-row";
+import { describeGoesWith, goesWithFiles } from "@/lib/files/library";
 import { STARTER_TEMPLATES } from "@/lib/crm/starter-content";
 import { siteDetails } from "@/lib/site/load-details";
 import { EmailsScreen, type EntrySummary, type SelectedEmail } from "./emails-screen";
@@ -34,6 +35,9 @@ export async function EmailsView(props: AdminViewServerProps) {
   const { html, text } = await renderEmail(email.element, siteOf(head));
   const starter = entry.template ? STARTER_TEMPLATES[entry.template] : null;
   const staff = user?.collection === "users" ? user : null;
+  // What the letter goes with: the rules as saved, and today's files for a send from here.
+  const saved = row?.goesWith ?? [];
+  const [goesWith, attached] = staff && starter ? await Promise.all([describeGoesWith(payload, staff, saved), goesWithFiles(payload, staff, saved)]) : [[], []];
 
   const selected: SelectedEmail = {
     ...summary(entry),
@@ -46,6 +50,8 @@ export async function EmailsView(props: AdminViewServerProps) {
     words: starter ? { subject: row?.subject ?? starter.subject, body: row?.body ?? starter.body, designed: Boolean(row?.html) } : null,
     canEdit: Boolean(starter) && hasRole(staff, "compliance", "hr"),
     canSend: entry.channel === "here" && hasRole(staff, ...CRM_ROLES),
+    goesWith,
+    goesWithFiles: attached.filter((file) => file.attachable),
   };
 
   return (

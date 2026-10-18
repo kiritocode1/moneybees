@@ -33,7 +33,12 @@ export type CrmEmail = {
   summary?: string;
   /** The letter's own words, shown under it on the timeline; the full plain text stays on the Emails row. */
   words?: string;
+  /** Files it carries, from lib/files/library.ts resolveAttachments. */
+  attachments?: EmailAttachment[];
 };
+
+/** One file an email carries: a public file by its address, a private one by its bytes. */
+export type EmailAttachment = { ref: string; filename: string; size: number | null; path?: string; content?: Buffer };
 
 export type SentEmail = { id: number; status: "sent" | "failed" | "logged" };
 
@@ -45,7 +50,19 @@ export async function sendCrmEmail(payload: Payload, email: CrmEmail, req?: Part
     collection: "emails",
     overrideAccess: true,
     req,
-    data: { direction: "out", status: resend() ? "queued" : "logged", from, to: email.to, subject: email.subject, text: email.text, contact: email.contact, enquiry: email.enquiry, application: email.application, sentBy: email.sentBy?.id },
+    data: {
+      direction: "out",
+      status: resend() ? "queued" : "logged",
+      from,
+      to: email.to,
+      subject: email.subject,
+      text: email.text,
+      contact: email.contact,
+      enquiry: email.enquiry,
+      application: email.application,
+      sentBy: email.sentBy?.id,
+      attachments: email.attachments?.map(({ ref, filename, size }) => ({ ref, name: filename, size })),
+    },
   });
 
   let status: "sent" | "failed" | "logged" = "logged";
@@ -60,6 +77,7 @@ export async function sendCrmEmail(payload: Payload, email: CrmEmail, req?: Part
       // Replies go to the sender's own inbox until inbound mail is set up on a Moneybee domain.
       replyTo: email.sentBy?.email ?? FROM_ADDRESS,
       tags: [{ name: "email_id", value: String(row.id) }],
+      ...(email.attachments?.length ? { attachments: email.attachments.map(({ filename, path, content }) => ({ filename, ...(content ? { content } : { path }) })) } : {}),
     });
     status = error ? "failed" : "sent";
     await payload.update({ collection: "emails", id: row.id, overrideAccess: true, req, data: { status, resendId: data?.id ?? null } });

@@ -28,6 +28,8 @@ export const ReplyInput = type({
   "purpose?": "string <= 40",
   "meeting?": { when: "1 <= string <= 120", where: "1 <= string <= 300", "link?": "string <= 500", with: "1 <= string <= 200" },
   "followUp?": { meetingOn: "1 <= string <= 60", steps: "string <= 4000" },
+  /** Files it carries, by lib/files/library.ts ref. */
+  "attachments?": "string[] <= 10",
 });
 export type ReplyDraft = typeof ReplyInput.infer;
 

@@ -1,0 +1,452 @@
+[
+  {
+    "width": 1280,
+    "links": [
+      {
+        "text": "Home",
+        "x": 482.125,
+        "y": 128,
+        "right": 583.5,
+        "bottom": 168.8125
+      },
+      {
+        "text": "About Us",
+        "x": 482.125,
+        "y": 180.8125,
+        "right": 637.5,
+        "bottom": 221.625
+      },
+      {
+        "text": "PMS",
+        "x": 482.125,
+        "y": 233.625,
+        "right": 555.1875,
+        "bottom": 274.4375
+      },
+      {
+        "text": "AIF",
+        "x": 482.125,
+        "y": 286.4375,
+        "right": 533.65625,
+        "bottom": 327.25
+      },
+      {
+        "text": "PMS vs AIF",
+        "x": 482.125,
+        "y": 339.25,
+        "right": 660.546875,
+        "bottom": 380.0625
+      },
+      {
+        "text": "Our Approach",
+        "x": 482.125,
+        "y": 392.0625,
+        "right": 720.578125,
+        "bottom": 432.875
+      },
+      {
+        "text": "Performance",
+        "x": 849.0625,
+        "y": 128,
+        "right": 1065.046875,
+        "bottom": 168.8125
+      },
+      {
+        "text": "Case Studies",
+        "x": 849.0625,
+        "y": 180.8125,
+        "right": 1069.828125,
+        "bottom": 221.625
+      },
+      {
+        "text": "Our Team",
+        "x": 849.0625,
+        "y": 233.625,
+        "right": 1011.359375,
+        "bottom": 274.4375
+      },
+      {
+        "text": "Careers",
+        "x": 849.0625,
+        "y": 286.4375,
+        "right": 980.90625,
+        "bottom": 327.25
+      },
+      {
+        "text": "Contact Us",
+        "x": 849.0625,
+        "y": 339.25,
+        "right": 1038.0625,
+        "bottom": 380.0625
+      },
+      {
+        "text": "Investor Centre",
+        "x": 849.0625,
+        "y": 392.0625,
+        "right": 1104.90625,
+        "bottom": 432.875
+      }
+    ],
+    "overflow": false
+  },
+  {
+    "width": 1024,
+    "links": [
+      {
+        "text": "Home",
+        "x": 389.96875,
+        "y": 112,
+        "right": 475.375,
+        "bottom": 146.390625
+      },
+      {
+        "text": "About Us",
+        "x": 389.96875,
+        "y": 158.390625,
+        "right": 520.890625,
+        "bottom": 192.78125
+      },
+      {
+        "text": "PMS",
+        "x": 389.96875,
+        "y": 204.78125,
+        "right": 451.53125,
+        "bottom": 239.171875
+      },
+      {
+        "text": "AIF",
+        "x": 389.96875,
+        "y": 251.171875,
+        "right": 433.375,
+        "bottom": 285.5625
+      },
+      {
+        "text": "PMS vs AIF",
+        "x": 389.96875,
+        "y": 297.5625,
+        "right": 540.3125,
+        "bottom": 331.953125
+      },
+      {
+        "text": "Our Approach",
+        "x": 389.96875,
+        "y": 343.953125,
+        "right": 590.890625,
+        "bottom": 378.34375
+      },
+      {
+        "text": "Performance",
+        "x": 681.390625,
+        "y": 112,
+        "right": 863.375,
+        "bottom": 146.390625
+      },
+      {
+        "text": "Case Studies",
+        "x": 681.390625,
+        "y": 158.390625,
+        "right": 867.40625,
+        "bottom": 192.78125
+      },
+      {
+        "text": "Our Team",
+        "x": 681.390625,
+        "y": 204.78125,
+        "right": 818.140625,
+        "bottom": 239.171875
+      },
+      {
+        "text": "Careers",
+        "x": 681.390625,
+        "y": 251.171875,
+        "right": 792.484375,
+        "bottom": 285.5625
+      },
+      {
+        "text": "Contact Us",
+        "x": 681.390625,
+        "y": 297.5625,
+        "right": 840.640625,
+        "bottom": 331.953125
+      },
+      {
+        "text": "Investor Centre",
+        "x": 681.390625,
+        "y": 343.953125,
+        "right": 896.953125,
+        "bottom": 378.34375
+      }
+    ],
+    "overflow": false
+  },
+  {
+    "width": 768,
+    "links": [
+      {
+        "text": "Home",
+        "x": 32,
+        "y": 142,
+        "right": 116.078125,
+        "bottom": 182
+      },
+      {
+        "text": "About Us",
+        "x": 32,
+        "y": 194,
+        "right": 160.875,
+        "bottom": 234
+      },
+      {
+        "text": "PMS",
+        "x": 32,
+        "y": 246,
+        "right": 92.609375,
+        "bottom": 286
+      },
+      {
+        "text": "AIF",
+        "x": 32,
+        "y": 298,
+        "right": 74.734375,
+        "bottom": 338
+      },
+      {
+        "text": "PMS vs AIF",
+        "x": 32,
+        "y": 350,
+        "right": 180,
+        "bottom": 390
+      },
+      {
+        "text": "Our Approach",
+        "x": 32,
+        "y": 402,
+        "right": 229.796875,
+        "bottom": 442
+      },
+      {
+        "text": "Performance",
+        "x": 394,
+        "y": 142,
+        "right": 573.15625,
+        "bottom": 182
+      },
+      {
+        "text": "Case Studies",
+        "x": 394,
+        "y": 194,
+        "right": 577.125,
+        "bottom": 234
+      },
+      {
+        "text": "Our Team",
+        "x": 394,
+        "y": 246,
+        "right": 528.625,
+        "bottom": 286
+      },
+      {
+        "text": "Careers",
+        "x": 394,
+        "y": 298,
+        "right": 503.359375,
+        "bottom": 338
+      },
+      {
+        "text": "Contact Us",
+        "x": 394,
+        "y": 350,
+        "right": 550.765625,
+        "bottom": 390
+      },
+      {
+        "text": "Investor Centre",
+        "x": 394,
+        "y": 402,
+        "right": 606.203125,
+        "bottom": 442
+      }
+    ],
+    "overflow": false
+  },
+  {
+    "width": 390,
+    "links": [
+      {
+        "text": "Home",
+        "x": 32,
+        "y": 142,
+        "right": 78.9375,
+        "bottom": 182
+      },
+      {
+        "text": "About Us",
+        "x": 32,
+        "y": 194,
+        "right": 103.9375,
+        "bottom": 234
+      },
+      {
+        "text": "PMS",
+        "x": 32,
+        "y": 246,
+        "right": 65.828125,
+        "bottom": 286
+      },
+      {
+        "text": "AIF",
+        "x": 32,
+        "y": 298,
+        "right": 55.859375,
+        "bottom": 338
+      },
+      {
+        "text": "PMS vs AIF",
+        "x": 32,
+        "y": 350,
+        "right": 114.609375,
+        "bottom": 390
+      },
+      {
+        "text": "Our Approach",
+        "x": 32,
+        "y": 402,
+        "right": 142.40625,
+        "bottom": 442
+      },
+      {
+        "text": "Performance",
+        "x": 205,
+        "y": 142,
+        "right": 305,
+        "bottom": 182
+      },
+      {
+        "text": "Case Studies",
+        "x": 205,
+        "y": 194,
+        "right": 307.21875,
+        "bottom": 234
+      },
+      {
+        "text": "Our Team",
+        "x": 205,
+        "y": 246,
+        "right": 280.140625,
+        "bottom": 286
+      },
+      {
+        "text": "Careers",
+        "x": 205,
+        "y": 298,
+        "right": 266.046875,
+        "bottom": 338
+      },
+      {
+        "text": "Contact Us",
+        "x": 205,
+        "y": 350,
+        "right": 292.5,
+        "bottom": 390
+      },
+      {
+        "text": "Investor Centre",
+        "x": 205,
+        "y": 402,
+        "right": 323.453125,
+        "bottom": 442
+      }
+    ],
+    "overflow": false
+  },
+  {
+    "width": 320,
+    "links": [
+      {
+        "text": "Home",
+        "x": 32,
+        "y": 142,
+        "right": 78.9375,
+        "bottom": 182
+      },
+      {
+        "text": "About Us",
+        "x": 32,
+        "y": 194,
+        "right": 103.9375,
+        "bottom": 234
+      },
+      {
+        "text": "PMS",
+        "x": 32,
+        "y": 246,
+        "right": 65.828125,
+        "bottom": 286
+      },
+      {
+        "text": "AIF",
+        "x": 32,
+        "y": 298,
+        "right": 55.859375,
+        "bottom": 338
+      },
+      {
+        "text": "PMS vs AIF",
+        "x": 32,
+        "y": 350,
+        "right": 114.609375,
+        "bottom": 390
+      },
+      {
+        "text": "Our Approach",
+        "x": 32,
+        "y": 402,
+        "right": 142.40625,
+        "bottom": 442
+      },
+      {
+        "text": "Performance",
+        "x": 170,
+        "y": 142,
+        "right": 270,
+        "bottom": 182
+      },
+      {
+        "text": "Case Studies",
+        "x": 170,
+        "y": 194,
+        "right": 272.21875,
+        "bottom": 234
+      },
+      {
+        "text": "Our Team",
+        "x": 170,
+        "y": 246,
+        "right": 245.140625,
+        "bottom": 286
+      },
+      {
+        "text": "Careers",
+        "x": 170,
+        "y": 298,
+        "right": 231.046875,
+        "bottom": 338
+      },
+      {
+        "text": "Contact Us",
+        "x": 170,
+        "y": 350,
+        "right": 257.5,
+        "bottom": 390
+      },
+      {
+        "text": "Investor Centre",
+        "x": 170,
+        "y": 402,
+        "right": 231.171875,
+        "bottom": 442
+      }
+    ],
+    "overflow": false
+  }
+]

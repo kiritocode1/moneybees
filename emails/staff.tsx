@@ -120,3 +120,50 @@ export function MailingWaiting({ title, audience, recipients, writtenBy, sendOn,
     </MoneybeeEmail>
   );
 }
+
+export type TaskLine = { title: string; due: string; overdue?: boolean; person: string; href: string };
+
+export type TaskAssignedProps = Base & { assignedBy: string; tasks: TaskLine[]; reference?: string };
+
+export const taskAssignedSubject = ({ assignedBy, tasks }: Pick<TaskAssignedProps, "assignedBy" | "tasks">) => (tasks.length === 1 ? `A task for you from ${assignedBy}: ${tasks[0].title}` : `${tasks.length} tasks for you from ${assignedBy}`);
+
+/** To a staff member when someone else gives them a task, or an enquiry's playbook steps (lib/crm/tasks.ts). */
+export function TaskAssigned({ assignedBy, tasks, reference, href, roleLabel, date }: TaskAssignedProps) {
+  const first = tasks[0];
+  return (
+    <MoneybeeEmail audience="staff" date={date} reference={reference} preview={`${first.title}, due ${first.due}.`} eyebrow="Tasks" title={tasks.length === 1 ? `${assignedBy} gave you a task` : `${assignedBy} gave you ${tasks.length} tasks`} reason={reason(roleLabel)}>
+      {tasks.map((task) => (
+        <Facts key={`${task.title}-${task.href}`} rows={[[{ label: "Task", value: task.title }], [{ label: "For", value: task.person }, { label: "Due", value: task.due }]]} />
+      ))}
+      <Action href={href}>{tasks.length === 1 ? "Open it" : "Open your tasks"}</Action>
+    </MoneybeeEmail>
+  );
+}
+
+export type TasksTodayProps = Base & { name: string; overdue: TaskLine[]; today: TaskLine[] };
+
+export const tasksTodaySubject = ({ overdue, today }: Pick<TasksTodayProps, "overdue" | "today">) =>
+  [overdue.length ? `${overdue.length} overdue` : null, today.length ? `${today.length} due today` : null].filter(Boolean).join(", ").replace(/^./, (c) => c.toUpperCase()) + ": your tasks";
+
+/** Each working morning at 9:00, to each staff member with tasks overdue or due that day (app/api/cron/task-digest). Not sent on an empty day. */
+export function TasksToday({ name, overdue, today, href, roleLabel, date }: TasksTodayProps) {
+  // A playbook step ends in a full stop; the line goes on, so it is dropped. Under Due today, the time alone.
+  const lines = (tasks: TaskLine[]) => tasks.map((task) => `${task.title.replace(/\.$/, "")}, ${task.person}, ${task.overdue ? `was due ${task.due}` : task.due.replace(/^Today, /, "")}`);
+  return (
+    <MoneybeeEmail audience="staff" date={date} preview={tasksTodaySubject({ overdue, today })} eyebrow="Tasks" title={`Good morning, ${name.split(/\s+/)[0]}`} reason={reason(roleLabel)}>
+      {overdue.length ? (
+        <>
+          <Label>Overdue</Label>
+          <Bullets items={lines(overdue)} />
+        </>
+      ) : null}
+      {today.length ? (
+        <>
+          <Label>Due today</Label>
+          <Bullets items={lines(today)} />
+        </>
+      ) : null}
+      <Action href={href}>Open your tasks</Action>
+    </MoneybeeEmail>
+  );
+}

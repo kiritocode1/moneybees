@@ -4,6 +4,7 @@ import { Inter } from "next/font/google";
 import type { ReactNode } from "react";
 import { FluidProvider } from "@/components/fluid/lib/fluid-provider";
 import { untitleduiIcons } from "@/components/fluid/lib/icons-untitledui";
+import { QuickTaskKey } from "./tasks/quick-task";
 import "./admin.css";
 
 /*
@@ -11,6 +12,7 @@ import "./admin.css";
  * screens and the menus they open share Fluid Functionalism's settings:
  * rounded corners, the default size step, Untitled UI icons, and reduced
  * motion that follows the OS. Payload's own views ignore these contexts.
+ * It also listens for T anywhere in the admin, to add a task.
  */
 
 // Inter with its optical-size axis: FF animates a label's weight together
@@ -22,6 +24,7 @@ export function AdminProvider({ children }: { children: ReactNode }) {
     <FluidProvider shape="rounded" size="default" icons={untitleduiIcons}>
       <style>{`:root{--font-fluid:${inter.style.fontFamily}}`}</style>
       {children}
+      <QuickTaskKey />
     </FluidProvider>
   );
 }

@@ -7,6 +7,8 @@ import { getPayload } from "payload";
 import { CRM_ROLES, hasRole } from "@/lib/backend/roles";
 import { sendCrmEmail } from "@/lib/crm/mail";
 import { buildReply, type ReplyDraft, ReplyInput } from "@/lib/crm/reply";
+import { movePlaybookTasks, tasksFromPlaybook, tellNewOwner, tickSteps } from "@/lib/crm/tasks";
+import { resolveAttachments } from "@/lib/files/library";
 import { ENQUIRY_STATUSES, labelOf } from "@/lib/crm/vocabulary";
 import type { User } from "@/payload-types";
 
@@ -14,7 +16,9 @@ import type { User } from "@/payload-types";
  * What staff do to an enquiry from /admin/inbox/:id. Every action checks the
  * signed-in staff member's role, writes through Payload with their access,
  * and leaves a line on the person's timeline, so the record shows who did
- * what and when.
+ * what and when. Taking an enquiry makes its playbook steps the owner's
+ * tasks, and a reply, a call or a deal ticks the steps that wait on them
+ * (lib/crm/tasks.ts).
  */
 
 export type ActionResult = { ok: true } | { ok: false; error: string };
@@ -53,6 +57,7 @@ export async function takeEnquiry(id: number): Promise<ActionResult> {
     data: { assignee: user.id, claimedAt: new Date().toISOString(), ...(enquiry.status === "new" ? { status: "open" } : {}) },
   });
   await logOnTimeline(ctx, id, `${user.name} took the enquiry`);
+  await tasksFromPlaybook(payload, id, user, user);
   return { ok: true };
 }
 
@@ -63,6 +68,8 @@ export async function assignEnquiry(id: number, assigneeId: number): Promise<Act
   const enquiry = await payload.findByID({ collection: "enquiries", id, depth: 0, user, overrideAccess: false });
   await payload.update({ collection: "enquiries", id, user, overrideAccess: false, data: { assignee: assignee.id, claimedAt: new Date().toISOString(), ...(enquiry.status === "new" ? { status: "open" } : {}) } });
   await logOnTimeline(ctx, id, `${user.name} gave it to ${assignee.name}`);
+  await movePlaybookTasks(payload, id, assignee.id);
+  await tellNewOwner(payload, assignee.id, user, await tasksFromPlaybook(payload, id, assignee, user), await requestOrigin());
   return { ok: true };
 }
 
@@ -112,16 +119,21 @@ export async function replyToEnquiry(id: number, input: ReplyDraft): Promise<Act
   if (!draft.ok) return draft;
   const { enquiry, contact, email } = draft;
   if (!contact.email) return { ok: false, error: "This person has no email address on record." };
+  const files = await resolveAttachments(payload, user, input.attachments, await requestOrigin());
+  if (!files.ok) return files;
 
-  const sent = await sendCrmEmail(payload, { to: contact.email, ...email, contact: contact.id, enquiry: id, sentBy: user });
+  const sent = await sendCrmEmail(payload, { to: contact.email, ...email, contact: contact.id, enquiry: id, sentBy: user, attachments: files.attachments });
   if (sent.status !== "sent") return { ok: true };
+  await tickSteps(payload, id, "reply", user);
   const now = new Date().toISOString();
+  // A converted or closed enquiry keeps its status when someone writes again.
+  const answered = ["new", "open"].includes(enquiry.status) ? { status: "waiting" as const } : {};
   await payload.update({
     collection: "enquiries",
     id,
     user,
     overrideAccess: false,
-    data: { status: "waiting", firstResponseAt: enquiry.firstResponseAt ?? now, ...(enquiry.assignee ? {} : { assignee: user.id, claimedAt: now }) },
+    data: { ...answered, firstResponseAt: enquiry.firstResponseAt ?? now, ...(enquiry.assignee ? {} : { assignee: user.id, claimedAt: now }) },
   });
   await payload.update({ collection: "contacts", id: contact.id, user, overrideAccess: false, data: { lastActivityAt: now } });
   return { ok: true };
@@ -136,6 +148,7 @@ export async function addEnquiryNote(id: number, input: { kind: string; text: st
   const { user } = ctx;
   const summary = { note: `${user.name} added a note`, call: `${user.name} logged a call`, meeting: `${user.name} logged a meeting` }[parsed.kind];
   await logOnTimeline(ctx, id, summary, { type: parsed.kind, body: parsed.text });
+  if (parsed.kind === "call") await tickSteps(ctx.payload, id, "call", user);
   return { ok: true };
 }
 
@@ -161,5 +174,6 @@ export async function convertToDeal(id: number, input: { product: number; ticket
   });
   await payload.update({ collection: "enquiries", id, user, overrideAccess: false, data: { status: "converted", deal: deal.id } });
   await logOnTimeline(ctx, id, `${user.name} opened a ${product.name} deal`, { type: "stage" });
+  await tickSteps(payload, id, "deal", user);
   return { ok: true };
 }

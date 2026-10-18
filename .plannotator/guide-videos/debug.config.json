@@ -1,0 +1,48 @@
+{
+  "$schema": "https://webreel.dev/schema/v1.json",
+  "outDir": "./out",
+  "baseUrl": "https://moneybees.localhost:1355",
+  "viewport": {
+    "width": 1440,
+    "height": 900
+  },
+  "videos": {
+    "debug": {
+      "url": "/admin/login",
+      "output": "debug.mp4",
+      "steps": [
+        {
+          "action": "wait",
+          "selector": "input[name=email]",
+          "timeout": 30000
+        },
+        {
+          "action": "pause",
+          "ms": 3000
+        },
+        {
+          "action": "click",
+          "selector": "input[name=email]"
+        },
+        {
+          "action": "type",
+          "text": "$GUIDE_EMAIL",
+          "charDelay": 5
+        },
+        {
+          "action": "click",
+          "selector": "input[name=password]"
+        },
+        {
+          "action": "type",
+          "text": "$GUIDE_PASSWORD",
+          "charDelay": 5
+        },
+        {
+          "action": "screenshot",
+          "output": "debug-typed.png"
+        }
+      ]
+    }
+  }
+}

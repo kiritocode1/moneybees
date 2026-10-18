@@ -1,0 +1,134 @@
+[
+  {
+    "check": "combined filters empty state",
+    "result": "true"
+  },
+  {
+    "check": "reset shows five roles",
+    "result": "true"
+  },
+  {
+    "check": "search from second page resets pagination",
+    "result": "true"
+  },
+  {
+    "check": "team filter returns two roles",
+    "result": "true"
+  },
+  {
+    "check": "trimmed case-insensitive keyword search",
+    "result": "true"
+  },
+  {
+    "check": "no horizontal overflow 768",
+    "result": "true"
+  },
+  {
+    "check": "last page three rows 768",
+    "result": "true"
+  },
+  {
+    "check": "first page five rows 768",
+    "result": "true"
+  },
+  {
+    "check": "keyboard opens details 768",
+    "result": "true"
+  },
+  {
+    "check": "dialog fits viewport 768",
+    "result": "true"
+  },
+  {
+    "check": "Tab reaches dialog action 768",
+    "result": "true"
+  },
+  {
+    "check": "Shift Tab returns to Close 768",
+    "result": "true"
+  },
+  {
+    "check": "Escape restores row focus 768",
+    "result": "true"
+  },
+  {
+    "check": "Close returns focus 768",
+    "result": "true"
+  },
+  {
+    "check": "no horizontal overflow 390",
+    "result": "true"
+  },
+  {
+    "check": "last page three rows 390",
+    "result": "true"
+  },
+  {
+    "check": "first page five rows 390",
+    "result": "true"
+  },
+  {
+    "check": "keyboard opens details 390",
+    "result": "true"
+  },
+  {
+    "check": "dialog fits viewport 390",
+    "result": "true"
+  },
+  {
+    "check": "Tab reaches dialog action 390",
+    "result": "true"
+  },
+  {
+    "check": "Shift Tab returns to Close 390",
+    "result": "true"
+  },
+  {
+    "check": "Escape restores row focus 390",
+    "result": "true"
+  },
+  {
+    "check": "Close returns focus 390",
+    "result": "true"
+  },
+  {
+    "check": "no horizontal overflow 320",
+    "result": "true"
+  },
+  {
+    "check": "last page three rows 320",
+    "result": "true"
+  },
+  {
+    "check": "first page five rows 320",
+    "result": "true"
+  },
+  {
+    "check": "keyboard opens details 320",
+    "result": "true"
+  },
+  {
+    "check": "dialog fits viewport 320",
+    "result": "true"
+  },
+  {
+    "check": "Tab reaches dialog action 320",
+    "result": "true"
+  },
+  {
+    "check": "Shift Tab returns to Close 320",
+    "result": "true"
+  },
+  {
+    "check": "Escape restores row focus 320",
+    "result": "true"
+  },
+  {
+    "check": "Close returns focus 320",
+    "result": "true"
+  },
+  {
+    "check": "reduced motion enabled",
+    "result": "true"
+  }
+]

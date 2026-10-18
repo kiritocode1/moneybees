@@ -19,6 +19,7 @@ import { LoginChallenges } from "./collections/LoginChallenges";
 import { Media } from "./collections/Media";
 import { Metrics } from "./collections/Metrics";
 import { Playbooks } from "./collections/Playbooks";
+import { PrivateFiles } from "./collections/PrivateFiles";
 import { Products } from "./collections/Products";
 import { Tasks } from "./collections/Tasks";
 import { TeamMembers } from "./collections/TeamMembers";
@@ -69,11 +70,15 @@ export default buildConfig({
         dashboard: { Component: "/components/admin/today/today-view#TodayView" },
         inbox: { Component: "/components/admin/inbox/inbox-view#InboxView", path: "/inbox", exact: true },
         enquiry: { Component: "/components/admin/inbox/enquiry-view#EnquiryView", path: "/inbox/:id" },
+        person: { Component: "/components/admin/people/person-view#PersonView", path: "/people/:id" },
+        tasks: { Component: "/components/admin/tasks/tasks-view#TasksView", path: "/tasks", exact: true },
+        deals: { Component: "/components/admin/deals/deals-view#DealsView", path: "/deals", exact: true },
         hiring: { Component: "/components/admin/hiring/hiring-view#HiringView", path: "/hiring", exact: true },
         applicant: { Component: "/components/admin/hiring/applicant-view#ApplicantView", path: "/hiring/:id" },
         guide: { Component: "/components/admin/guide/guide-view#GuideView", path: "/guide", exact: true },
         website: { Component: "/components/admin/website/website-view#WebsiteView", path: "/website", exact: true },
         emails: { Component: "/components/admin/emails/emails-view#EmailsView", path: "/emails", exact: true },
+        files: { Component: "/components/admin/files/files-view#FilesView", path: "/files", exact: true },
       },
     },
   },
@@ -84,6 +89,7 @@ export default buildConfig({
     Products,
     Metrics,
     Media,
+    PrivateFiles,
     TeamMembers,
     Documents,
     CaseStudies,

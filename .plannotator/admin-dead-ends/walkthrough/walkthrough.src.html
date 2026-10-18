@@ -1,0 +1,510 @@
+<title>Moneybee admin walkthrough</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rethink+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap">
+<style>
+@font-face {
+  font-family: "Overused Grotesk";
+  src: url(data:font/woff2;base64,/*FONT*/) format("woff2");
+  font-weight: 300 900;
+  font-display: swap;
+}
+
+/* Layout: one reading column with a sticky contents rail on wide screens; screenshots run wider than the text. */
+:root {
+  --bg: #F7F7F8;
+  --paper: #FFFFFF;
+  --ink: #272727;
+  --muted: #5E6065;
+  --rule: #E2E3E5;
+  --honey: #F6A11A;
+  --honey-ink: #8A5300;
+  --red: #B8352A;
+  --amber: #8A5A00;
+  --green: #1D7449;
+  --display: "Overused Grotesk", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --body: "Rethink Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  --text: 42rem;
+  --wide: 66rem;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #151617; --paper: #1D1E20; --ink: #ECECED; --muted: #A3A5A9; --rule: #2E2F32;
+    --honey: #F6A11A; --honey-ink: #F6A11A; --red: #F07167; --amber: #F0C060; --green: #7FD3A6;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #151617; --paper: #1D1E20; --ink: #ECECED; --muted: #A3A5A9; --rule: #2E2F32;
+  --honey: #F6A11A; --honey-ink: #F6A11A; --red: #F07167; --amber: #F0C060; --green: #7FD3A6;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--body);
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 0;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: inherit; text-underline-offset: 3px; text-decoration-color: color-mix(in srgb, var(--ink) 35%, transparent); }
+a:hover { text-decoration-color: var(--honey); }
+a:focus-visible, summary:focus-visible { outline: 2px solid var(--honey); outline-offset: 3px; border-radius: 2px; }
+
+.shell {
+  max-width: 80rem;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 3rem;
+  padding-block: 3.5rem 6rem;
+}
+@media (min-width: 1100px) {
+  .shell { grid-template-columns: 12rem minmax(0, 1fr); gap: 4rem; }
+}
+
+/* Contents rail */
+.rail { display: none; }
+@media (min-width: 1100px) {
+  .rail { display: block; position: sticky; top: calc(env(safe-area-inset-top, 0px) + 2rem); align-self: start; }
+}
+.rail p { font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin: 0 0 0.75rem; }
+.rail ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.15rem; }
+.rail a { display: block; text-decoration: none; color: var(--muted); font-size: 0.875rem; padding: 0.3rem 0 0.3rem 0.75rem; border-left: 2px solid var(--rule); }
+.rail a:hover { color: var(--ink); border-left-color: var(--honey); }
+
+main { min-width: 0; display: grid; gap: 4.5rem; }
+.text { max-width: var(--text); }
+
+/* Header */
+.eyebrow { font-family: var(--mono); font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin: 0; }
+h1, h2, h3 { font-family: var(--display); font-weight: 700; letter-spacing: -0.015em; line-height: 1.12; text-wrap: balance; margin: 0; }
+h1 { font-size: clamp(2.2rem, 5vw, 3.4rem); margin-top: 0.75rem; }
+h2 { font-size: clamp(1.6rem, 3vw, 2.1rem); }
+h3 { font-size: 1.2rem; font-weight: 600; letter-spacing: -0.005em; }
+.lede { font-size: 1.2rem; line-height: 1.55; margin: 1.25rem 0 0; }
+p { margin: 0; }
+.stack { display: grid; gap: 1rem; }
+
+.status { display: flex; flex-wrap: wrap; gap: 0.5rem 1.5rem; margin: 2rem 0 0; padding: 0; list-style: none; font-size: 0.9rem; color: var(--muted); }
+.status li { display: flex; align-items: center; gap: 0.5rem; }
+.status li::before { content: ""; width: 0.5rem; height: 0.5rem; border-radius: 50%; background: var(--green); flex: none; }
+.status li.wait::before { background: var(--honey); }
+
+/* Tables */
+.table-wrap { overflow-x: auto; max-width: var(--wide); border-top: 1px solid var(--rule); }
+table { border-collapse: collapse; width: 100%; font-size: 0.95rem; }
+th, td { text-align: left; vertical-align: top; padding: 0.75rem 1rem 0.75rem 0; border-bottom: 1px solid var(--rule); }
+th { font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.07em; text-transform: uppercase; color: var(--muted); font-weight: 500; }
+td:first-child { font-weight: 600; white-space: nowrap; }
+td.was { color: var(--muted); }
+
+/* Sections */
+section { display: grid; gap: 1.5rem; scroll-margin-top: 2rem; }
+.part { display: flex; align-items: center; gap: 0.6rem; }
+.part::before { content: ""; width: 0.6rem; height: 0.6rem; background: var(--honey); flex: none; }
+.where { font-family: var(--mono); font-size: 0.85rem; color: var(--muted); }
+
+ol.steps, ul.points { margin: 0; padding-left: 1.25rem; display: grid; gap: 0.5rem; }
+ol.steps li::marker { font-family: var(--mono); font-size: 0.85em; color: var(--muted); }
+ul.points li::marker { color: var(--honey); }
+.ui { font-weight: 600; }
+kbd { font-family: var(--mono); font-size: 0.85em; padding: 0.05rem 0.4rem; border: 1px solid var(--rule); border-bottom-width: 2px; border-radius: 4px; background: var(--paper); }
+code { font-family: var(--mono); font-size: 0.85em; overflow-wrap: anywhere; }
+.red { color: var(--red); font-weight: 600; }
+.amber { color: var(--amber); font-weight: 600; }
+
+figure { margin: 0; max-width: var(--wide); display: grid; gap: 0.6rem; }
+figure img { display: block; width: 100%; height: auto; max-width: 100%; border-radius: 10px; border: 1px solid var(--rule); background: #18191a; }
+figure.small { max-width: 38rem; }
+figure.small.narrow { max-width: 24rem; }
+figcaption { font-size: 0.9rem; color: var(--muted); max-width: var(--text); }
+.pair { display: grid; gap: 1.5rem; max-width: var(--wide); align-items: start; }
+@media (min-width: 900px) { .pair.duo { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
+.note { font-size: 0.95rem; color: var(--muted); }
+.columns { display: grid; gap: 2rem; max-width: var(--wide); }
+@media (min-width: 900px) { .columns { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.columns > div { min-width: 0; display: grid; gap: 0.75rem; align-content: start; }
+
+details { max-width: var(--wide); border-top: 1px solid var(--rule); padding-top: 1rem; }
+summary { cursor: pointer; font-weight: 600; }
+details[open] summary { margin-bottom: 1rem; }
+
+footer { color: var(--muted); font-size: 0.9rem; border-top: 1px solid var(--rule); padding-top: 1.5rem; max-width: var(--wide); }
+
+@media (prefers-reduced-motion: no-preference) {
+  html { scroll-behavior: smooth; }
+}
+</style>
+
+<div class="shell">
+  <nav class="rail" aria-label="Contents">
+    <p>Contents</p>
+    <ol>
+      <li><a href="#overview">What changed</a></li>
+      <li><a href="#journey">One investor's path</a></li>
+      <li><a href="#person">A person's page</a></li>
+      <li><a href="#files">Files</a></li>
+      <li><a href="#tasks">Tasks</a></li>
+      <li><a href="#portal">Portal invitation</a></li>
+      <li><a href="#deals">Deals board</a></li>
+      <li><a href="#entities">Entities</a></li>
+      <li><a href="#checks">Checks and gaps</a></li>
+      <li><a href="#next">Before it ships</a></li>
+    </ol>
+  </nav>
+
+  <main>
+    <header class="text">
+      <p class="eyebrow">Moneybee admin · 17 October 2026</p>
+      <h1>The admin, without dead ends</h1>
+      <p class="lede">Several admin screens used to stop where the work should start. A person was a bare form, files could not go in an email, tasks could be read but not added, and deals were an empty list. Each screen now leads to the next thing to do, and the work makes its own follow-ups.</p>
+      <ul class="status" aria-label="State of the work">
+        <li>Production build passes</li>
+        <li>Typecheck clean, 0 lint errors</li>
+        <li>56 tests pass</li>
+        <li>Every flow tried in the browser</li>
+        <li class="wait">Not committed, not pushed</li>
+      </ul>
+    </header>
+
+    <section id="overview" aria-labelledby="overview-h">
+      <h2 id="overview-h">What changed</h2>
+      <p class="text">Six pieces, built in this order. Each one was checked working before the next began.</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Screen</th><th>Before</th><th>Now</th></tr></thead>
+          <tbody>
+            <tr><td><a href="#person">A person</a></td><td class="was">A form of their details</td><td>Their page: write, log a call or meeting, plan the next step, see everything that has happened</td></tr>
+            <tr><td><a href="#files">Files</a></td><td class="was">Uploads only the website could use</td><td>Any file goes in any email; each file shows where it is used and who received it</td></tr>
+            <tr><td><a href="#tasks">Tasks</a></td><td class="was">Shown on Today, never added</td><td>A Tasks desk; calls, playbooks and deals make tasks; reminders by email</td></tr>
+            <tr><td><a href="#portal">Client accounts</a></td><td class="was">Made by hand, and the investor was never told</td><td>Invite to the portal from their page; they set their own password</td></tr>
+            <tr><td><a href="#deals">Deals</a></td><td class="was">An empty list of data forms</td><td>A board by stage, with each deal's next step and the details each move needs</td></tr>
+            <tr><td><a href="#entities">Entities</a></td><td class="was">Stored, shown nowhere</td><td>Invests as on the person, offered from the enquiry, shown on deals</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="journey" aria-labelledby="journey-h">
+      <h2 id="journey-h">One investor's path</h2>
+      <p class="text">How the pieces meet for one prospect, from the Contact page to money in.</p>
+      <ol class="steps text">
+        <li>Vikram Malhotra sends the Flyingbee form and says he invests as an HUF. The enquiry lands in Enquiries with its reply clock.</li>
+        <li>Someone takes it. The AIF playbook's steps become their <a href="#tasks">tasks</a>, and the enquiry offers to record the <a href="#entities">HUF</a>.</li>
+        <li>They reply with the Flyingbee introduction. Its <a href="#files">files</a> come attached by themselves, and the reply step ticks off.</li>
+        <li>They call him. No answer, so a call-back appears for the next working day at 10:00.</li>
+        <li>He is serious, so they open a <a href="#deals">deal</a>. It shows on the board under Contacted, carrying the HUF.</li>
+        <li>They drag it to Meeting, give the time and place, and the Meeting confirmation opens already filled in.</li>
+        <li>The forms go out. Documents sent records which files went, and a chase call appears three working days later.</li>
+        <li>The money lands. Invested keeps the amount and date, <a href="#portal">invites him to the portal</a>, and opens the Funds received letter.</li>
+      </ol>
+    </section>
+
+    <section id="person" aria-labelledby="person-h">
+      <p class="part eyebrow">Step 1 of 6</p>
+      <h2 id="person-h">A person's page</h2>
+      <p class="where">/admin/people/:id · from a name in People, a task, or a deal card</p>
+      <p class="text">Everything about one person on one screen, laid out like an enquiry. The main column is for doing things and reading what happened. The side column holds one decision per panel.</p>
+      <figure>
+        <img src="img/person.webp" width="1440" height="760" alt="Rohan Mehta's page with the PMS introduction letter open in the composer, his timeline below, and Tasks, Enquiry, Deal and Account panels on the right">
+        <figcaption>The composer with the PMS introduction picked. Words come from the letter; "Dear Rohan Mehta," and the signature are added.</figcaption>
+      </figure>
+      <div class="columns">
+        <div>
+          <h3>The composer</h3>
+          <ul class="points">
+            <li><span class="ui">Email</span> sends any letter that can go to them: a reply on their enquiry, a client letter with its facts, or one in your own words.</li>
+            <li><span class="ui">Call</span> and <span class="ui">Meeting</span> ask how it went (Spoke, No answer, Left a message, Wrong number) and offer a <span class="ui">Then</span> follow-up. No answer suggests a call-back next working day at 10:00.</li>
+            <li><span class="ui">Note</span> leaves a line for whoever opens them next. <span class="ui">Task</span> plans something for anyone on the desk.</li>
+          </ul>
+        </div>
+        <div>
+          <h3>The side panels</h3>
+          <ul class="points">
+            <li><span class="ui">Tasks</span>: tick one, write what happened, save it to the timeline, or Undo.</li>
+            <li><span class="ui">Enquiries</span>: each of theirs, with its state.</li>
+            <li><span class="ui">Deal</span>: the stage to move it to, or a form to open one.</li>
+            <li><span class="ui">Account</span>: portal, invests as, mailings, owner, where they came from. Edit changes them in place.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="pair">
+        <figure>
+          <img src="img/call.webp" width="1440" height="640" alt="A call logged as No answer, with a Call again task added for Monday at 10:00" loading="lazy">
+          <figcaption>A call logged as No answer. The follow-up became a task for Monday 10:00.</figcaption>
+        </figure>
+        <figure>
+          <img src="img/task-done.webp" width="1440" height="620" alt="The Call again task ticked, with a line typed about what happened and a Save button" loading="lazy">
+          <figcaption>Ticked, with a line on what was agreed. It saves to the timeline.</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section id="files" aria-labelledby="files-h">
+      <p class="part eyebrow">Step 2 of 6</p>
+      <h2 id="files-h">Files, in every email and on one screen</h2>
+      <p class="where">Attach on every letter · /admin/files</p>
+      <p class="text">Any file Moneybee keeps can go in any email: from a person's page, an enquiry reply, an HR email, or the Emails page. A file uploaded while writing stays private to the people it is sent to. The whole email is capped at 30 MB, under Resend's limit.</p>
+      <div class="pair">
+        <figure>
+          <img src="img/attach.webp" width="1440" height="840" alt="The Attach picker open under a letter, with a search box, a file list and Upload a file" loading="lazy">
+          <figcaption>Attach: search, pick, or upload. Files suggested for the letter come first.</figcaption>
+        </figure>
+        <figure>
+          <img src="img/goes-with.webp" width="1440" height="957" alt="The Emails page showing the PMS introduction letter, with a Goes with panel listing the latest approved PMS fact sheet" loading="lazy">
+          <figcaption>Goes with: the PMS introduction always carries the latest approved PMS fact sheet. One not yet approved cannot go.</figcaption>
+        </figure>
+      </div>
+      <figure>
+        <img src="img/files.webp" width="1440" height="820" alt="The Files screen with a list of files and a side panel showing a PDF preview, who can see it, where it is used and who it was sent to" loading="lazy">
+        <figcaption>Desk › Files. The panel shows the file, who can see it, where it is used and every email it went in.</figcaption>
+      </figure>
+      <ul class="points text">
+        <li>Tabs: All, PDFs, Pictures, Private, and Not used (no page, card or letter uses it, and it was never sent).</li>
+        <li><span class="ui">Used in</span> is worked out from what points at the file: a team photo, a document card, a fact sheet, a page, a letter.</li>
+        <li><span class="ui">Send to someone</span> opens a person's page with the file attached. <span class="ui">Replace</span> keeps every link working. <span class="ui">Delete</span> is refused while the file is in use.</li>
+        <li>A public PDF can become a document card on the site in one step.</li>
+      </ul>
+    </section>
+
+    <section id="tasks" aria-labelledby="tasks-h">
+      <p class="part eyebrow">Step 3 of 6</p>
+      <h2 id="tasks-h">Tasks</h2>
+      <p class="where">/admin/tasks · <kbd>T</kbd> anywhere in the admin</p>
+      <p class="text">A task is something one of us owes someone, with a time. Most are made by the work itself, so the desk rarely types them.</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Made by</th><th>What appears</th></tr></thead>
+          <tbody>
+            <tr><td>A call or meeting</td><td>The <span class="ui">Then</span> row's follow-up, such as Call again on the next working day</td></tr>
+            <tr><td>Taking an enquiry</td><td>Each playbook step, timed by compliance: with the reply, next working day, in three working days, in a week</td></tr>
+            <tr><td>Moving a deal</td><td>The meeting itself, or the chase for signed documents</td></tr>
+            <tr><td>Anyone, by hand</td><td>Press <kbd>T</kbd>: what, for whom, when, and who does it</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <figure>
+        <img src="img/tasks.webp" width="1440" height="480" alt="The Tasks desk with tabs Mine, Team, Asked of others and Done, a quick add bar, and a task grouped under This week" loading="lazy">
+        <figcaption>Desk › Tasks. Mine, Team, Asked of others and Done; grouped Overdue, Today, Tomorrow, This week and Later.</figcaption>
+      </figure>
+      <ul class="points text">
+        <li>Each row is done from the row. A call shows the number to dial. An email has <span class="ui">Write</span>, which opens the person's letter; sending it ticks the task.</li>
+        <li>A playbook step ticks itself when its event happens: a reply sent, a call logged, a deal opened. Rules that are not tasks sit under <span class="ui">Keep in mind</span>.</li>
+        <li>The Desk menu shows how many of yours are overdue or due today, and Today lists them.</li>
+      </ul>
+      <div class="pair">
+        <figure>
+          <img src="img/playbook.webp" width="1440" height="900" alt="An AIF enquiry with the playbook panel showing a step as a task with its owner and due time, and a Keep in mind rule" loading="lazy">
+          <figcaption>On the enquiry, the playbook's steps are tasks with an owner and a time. This one is overdue.</figcaption>
+        </figure>
+        <figure>
+          <img src="img/quick-task.webp" width="1440" height="700" alt="The Add a task dialog opened with the T key, with fields for what, for whom, when and who" loading="lazy">
+          <figcaption><kbd>T</kbd> opens Add a task on any screen. On a person's page it is already for them.</figcaption>
+        </figure>
+      </div>
+      <div class="pair">
+        <figure>
+          <img src="img/today.webp" width="1440" height="1000" alt="The Today screen with counts, the most urgent enquiries, and Your tasks today grouped Overdue and Today" loading="lazy">
+          <figcaption>Today now starts each person's day with their own tasks.</figcaption>
+        </figure>
+        <figure>
+          <img src="img/email-task.webp" width="1440" height="900" alt="The A task for you email in the Moneybee letter frame" loading="lazy">
+          <figcaption>Two new emails: A task for you, when someone gives you one, and Your tasks today at 9:03 am on weekdays. A day with nothing due sends nothing.</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section id="portal" aria-labelledby="portal-h">
+      <p class="part eyebrow">Step 4 of 6</p>
+      <h2 id="portal-h">Inviting a client to the portal</h2>
+      <p class="where">Account panel on their page · Settings › Client accounts</p>
+      <p class="text">Operations press <span class="ui">Invite to the portal</span> on the person. That makes their client account and emails a link to set their own password. Nobody at Moneybee types or sees an investor's password.</p>
+      <ol class="steps text">
+        <li>The link works once, for seven days. It is never stored on a record staff can open; the timeline says it went and until when.</li>
+        <li>The Account row then reads <span class="ui">Invited 2d ago, not signed in yet</span>, with <span class="ui">Send the invitation again</span>.</li>
+        <li>Once they sign in it reads <span class="ui">Signed in just now</span>, and the invite button goes.</li>
+      </ol>
+      <div class="pair">
+        <figure>
+          <img src="img/invite.webp" width="1440" height="1000" alt="Kavita Shah's page with the Account panel showing No account yet and an Invite to the portal button" loading="lazy">
+          <figcaption>Before: no account yet, and the button in the Account panel.</figcaption>
+        </figure>
+        <figure>
+          <img src="img/email-invite.webp" width="1440" height="900" alt="The Portal invitation email with a Set your password button, the account email masked, and who opened it" loading="lazy">
+          <figcaption>The Portal invitation. The address is shown masked, with who opened the account.</figcaption>
+        </figure>
+      </div>
+      <figure>
+        <img src="img/client-accounts.webp" width="1440" height="480" alt="The Client accounts list with Status, Person and Last signed in columns" loading="lazy">
+        <figcaption>Client accounts now shows each one's status (Invited, Active, Disabled), their person, and the last sign-in.</figcaption>
+      </figure>
+    </section>
+
+    <section id="deals" aria-labelledby="deals-h">
+      <p class="part eyebrow">Step 5 of 6</p>
+      <h2 id="deals-h">Deals board</h2>
+      <p class="where">Desk › Deals · /admin/deals</p>
+      <p class="text">Every prospective investment of one product, on a board by stage. PMS and Flyingbee AIF have a board each, on equal footing. The line under the title gives the money in open deals and how many have no next step.</p>
+      <figure>
+        <img src="img/deals-board.webp" width="1440" height="900" alt="The PMS deals board with columns Enquiry to Invested, a folded Lost column, and cards showing person, amount, next step, days at stage and owner" loading="lazy">
+        <figcaption>"Rs. 8 crore in 2 open PMS deals. 1 has no next step." Each column shows its count and total.</figcaption>
+      </figure>
+      <div class="columns">
+        <div>
+          <h3>Reading a card</h3>
+          <ul class="points">
+            <li>The person, and the entity they invest through.</li>
+            <li>The amount in Rs. crore, and the owner's initials.</li>
+            <li>The next task, in <span class="red">red when overdue</span>, or <span class="amber">No next step</span> when nothing is planned.</li>
+            <li>Days at this stage, <span class="amber">amber from 14</span>.</li>
+            <li>Invested shows this quarter. Lost shows the last 90 days, folded until clicked.</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Moving one</h3>
+          <ul class="points">
+            <li>Drag the card to its new stage, or click it and press <kbd>M</kbd> for a Move to menu.</li>
+            <li>Clicking a card opens the person. Back returns to the board as it was.</li>
+            <li>The same moves work from the Deal panel on a person's page.</li>
+            <li>Every move is a line on the person's timeline.</li>
+          </ul>
+        </div>
+      </div>
+      <h3>Moves that ask first</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Moving to</th><th>It asks</th><th>Then</th></tr></thead>
+          <tbody>
+            <tr><td>Meeting</td><td>When (next working day at 11:00 to start) and where</td><td>Adds the meeting to the owner's tasks and opens the Meeting confirmation, filled in</td></tr>
+            <tr><td>Documents sent</td><td>Which files went, ticked from their last two months of emails</td><td>Adds "Chase the signed documents", a call in three working days</td></tr>
+            <tr><td>Invested</td><td>The amount and the date</td><td>Offers the portal invitation, then opens the Welcome letter (PMS) or Funds received (Flyingbee), filled in</td></tr>
+            <tr><td>Lost</td><td>Why: went with another manager, below the minimum, not eligible, not now, stopped replying, other; and a line</td><td>Closes the deal's open tasks</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="pair duo">
+        <figure class="small">
+          <img src="img/move-meeting.webp" width="600" height="240" alt="The Move to Meeting dialog with When, Where and Then write the Meeting confirmation" loading="lazy">
+          <figcaption>Meeting asks when and where.</figcaption>
+        </figure>
+        <figure class="small">
+          <img src="img/move-invested.webp" width="600" height="260" alt="The Move to Invested dialog with amount, date, invite to the portal and Then write the Welcome letter" loading="lazy">
+          <figcaption>Invested asks the amount and date.</figcaption>
+        </figure>
+      </div>
+      <div class="pair">
+        <figure>
+          <img src="img/letter-filled.webp" width="1440" height="760" alt="Kavita Shah's page with the Meeting confirmation open, When and Where already filled, and the meeting in her tasks" loading="lazy">
+          <figcaption>After the Meeting move: the letter is open with the time and place, and the meeting is in her tasks.</figcaption>
+        </figure>
+        <figure>
+          <img src="img/docs-sent.webp" width="1440" height="820" alt="Rohan Mehta's timeline showing the deal moved to Documents sent with the file that went, and a Chase the signed documents call task for Wednesday" loading="lazy">
+          <figcaption>After Documents sent: the file that went is on the timeline, and the chase is due Wednesday 10:00.</figcaption>
+        </figure>
+      </div>
+      <div class="pair">
+        <figure>
+          <img src="img/deals-lost.webp" width="1440" height="760" alt="The board with the Lost column opened, showing each lost deal's reason" loading="lazy">
+          <figcaption>Lost, opened. Each card keeps its reason.</figcaption>
+        </figure>
+        <figure>
+          <img src="img/deals-list.webp" width="1440" height="560" alt="The deals List view as a table with person, product, stage, amount, days at stage, next step and owner" loading="lazy">
+          <figcaption>List: the same deals as a table. Arrow keys or <kbd>j</kbd> <kbd>k</kbd> move, Enter opens, <kbd>M</kbd> moves.</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section id="entities" aria-labelledby="entities-h">
+      <p class="part eyebrow">Step 6 of 6</p>
+      <h2 id="entities-h">Who the money comes from</h2>
+      <p class="where">Invests as, on the person · the enquiry's Person panel</p>
+      <p class="text">HNI money often comes through an HUF, a family office, a company or a trust, and one of them can have several people. The person's Account panel says what they invest as, and <span class="ui">Change</span> sets it.</p>
+      <ul class="points text">
+        <li>Choose Themselves, or HUF, Family office, Company, Trust or Other, and give its name.</li>
+        <li>Typing the name of one that already exists links them to it, so a father and son share one HUF. The row lists the others.</li>
+        <li>The Flyingbee form asks for an investor type. When it says HUF, Family office, or Company or trust, the enquiry and the person offer to record it.</li>
+        <li>Their open deals follow, so the board shows it. Invested and Lost deals keep the entity they closed with.</li>
+      </ul>
+      <div class="pair">
+        <figure class="small narrow">
+          <img src="img/entity-offer.webp" width="380" height="360" alt="The enquiry's Person panel saying their enquiry says they invest as an HUF, with a Name field and Add the HUF" loading="lazy">
+          <figcaption>The offer, from a real Flyingbee form sent as an HUF.</figcaption>
+        </figure>
+        <figure>
+          <img src="img/entity-card.webp" width="1440" height="440" alt="The Flyingbee board with Vikram Malhotra's card showing Vikram Malhotra HUF under his name" loading="lazy">
+          <figcaption>The deal opened from that enquiry carries the HUF onto its card.</figcaption>
+        </figure>
+      </div>
+      <figure>
+        <img src="img/entity-shared.webp" width="1440" height="860" alt="Sameer Joshi's page with Invests as Vikram Malhotra HUF, with Vikram Malhotra, and his deal reading Through Vikram Malhotra HUF" loading="lazy">
+        <figcaption>A second person linked to the same HUF by typing its name: it shows who else is in it, and his deal reads "Through Vikram Malhotra HUF".</figcaption>
+      </figure>
+    </section>
+
+    <section id="checks" aria-labelledby="checks-h">
+      <h2 id="checks-h">Checks and gaps</h2>
+      <div class="columns">
+        <div>
+          <h3>Checked</h3>
+          <ul class="points">
+            <li>A production build of the uncommitted code compiles and builds all 31 pages.</li>
+            <li>Typecheck clean; 0 lint errors in the app code; 13 CRM and 43 email tests pass.</li>
+            <li>Each flow above was done in the browser against the local database, including a real Flyingbee form and a full portal sign-in with the emailed link.</li>
+            <li>Tasks closed by a Lost move, the chase task's date, and the stage clock surviving an entity change were read back from the database.</li>
+            <li>The admin Guide covers Tasks, Files and Deals, with new pictures of each and of the sidebar.</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Not yet checked</h3>
+          <ul class="points">
+            <li>A real email through Resend with attachments. There is no Resend key yet, so emails are saved on the timeline and not sent.</li>
+            <li>Uploading straight to the private file store. It needs the store's token; the laptop path was tested instead.</li>
+            <li>Replaying every migration on an empty database. An older migration (12 October, remaining pages) already fails there because it seeds openings before the hiring table exists. Existing databases are unaffected.</li>
+          </ul>
+          <p class="note">One known quirk: the Meeting confirmation's subject shows <code>{{meetingAt}}</code> while you write it. The time from the When field is put in when it is sent, as it was before on the enquiry reply.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="next" aria-labelledby="next-h">
+      <h2 id="next-h">Before it ships</h2>
+      <ol class="steps text">
+        <li><strong>Review and commit.</strong> Nothing is committed or pushed. Seven new migrations run by themselves on the next deploy, before the build.</li>
+        <li><strong>Connect Resend.</strong> Portal invitations, task emails and replies all wait on the key.</li>
+        <li><strong>Clear the local test data</strong> if you want a clean board: <code>npx payload run .plannotator/admin-dead-ends/check/remove-board.ts</code> removes the "QA board:" deals. Vikram Malhotra's enquiry, HUF and deal came from the real form and stay until deleted.</li>
+      </ol>
+      <p class="text note">Still waiting, as before: client statements (India hosting under CSCRF), distributor logins (what a distributor sees is your call), the AI features (gateway credits), the mailing desk for lists, and tracked links for the PPM.</p>
+      <details>
+        <summary>What changed underneath</summary>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Migration</th><th>Adds</th></tr></thead>
+            <tbody>
+              <tr><td><code>20261014_151508_columns_for_seeds</code></td><td>Columns the hiring seed needs, so fresh databases get them in order</td></tr>
+              <tr><td><code>20261016_184252_files_and_tasks</code></td><td>Private files; attachments on emails; task kind, letter, outcome, source and creator; Goes with on letters</td></tr>
+              <tr><td><code>20261016_184300_letters_go_with</code></td><td>The PMS introduction goes with the latest PMS fact sheet</td></tr>
+              <tr><td><code>20261017_054250_playbook_step_tasks</code></td><td>Which playbook step a task came from</td></tr>
+              <tr><td><code>20261017_054300_playbook_step_timing</code></td><td>When each playbook step is due, and what ticks it</td></tr>
+              <tr><td><code>20261017_060832_investor_invitations</code></td><td>Invited, invited by and last sign-in on client accounts</td></tr>
+              <tr><td><code>20261017_061857_deal_moves</code></td><td>Why a deal was lost, and when it was invested</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="note" style="margin-top:1rem">The new screens live in <code>components/admin/people</code>, <code>files</code>, <code>tasks</code> and <code>deals</code>, with their data in <code>lib/crm</code> and <code>lib/files</code>. The daily task email runs from <code>/api/cron/task-digest</code> at 03:33 UTC on weekdays.</p>
+      </details>
+    </section>
+
+    <footer>
+      Built 16 and 17 October 2026 from the plan in <code>.plannotator/admin-dead-ends/plan.md</code>. Screenshots are from the local database with test people.
+    </footer>
+  </main>
+</div>

@@ -1,0 +1,110 @@
+<!doctype html><html><head><meta charset="utf-8"><title>Business drawing preview</title>
+<style>
+body{margin:0;background:#f6f6f6;font-family:-apple-system,Inter,system-ui,sans-serif;color:#111}
+.row{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;padding:32px;width:1376px}
+.card{margin:0;background:#fff;border-radius:10px;box-shadow:0 0 0 1px rgba(0,0,0,.12);padding:24px}
+figcaption{display:flex;flex-direction:column;gap:4px;margin-bottom:16px;font-size:13px}
+figcaption span{color:#666;font-size:12px;line-height:1.4}
+.plate svg,.plate img{display:block;width:100%;height:auto}
+.draw{stroke-dasharray:1 1;stroke-dashoffset:1;transition:stroke-dashoffset 520ms cubic-bezier(.23,1,.32,1)}
+.fade{opacity:0;transition:opacity 420ms cubic-bezier(.23,1,.32,1)}
+.flow{opacity:0;transition:opacity 400ms ease;animation:flow 1s linear infinite}
+@keyframes flow{to{stroke-dashoffset:-24}}
+.on .draw{stroke-dashoffset:0}.on .fade,.on .flow{opacity:1}
+.admin{background:#141414;color:#f2f2f2;padding:32px;width:1376px;font-size:13px}
+.admin h2{margin:0 0 6px;font-weight:500;font-size:14px}.admin p{color:#9b9b9b;margin:0 0 14px}
+.picker{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;width:900px}
+.opt{background:#1c1c1c;border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:10px}
+.opt.sel{border-color:#F6A11A;box-shadow:0 0 0 1px #F6A11A}
+.opt .plate{background:#fff;border-radius:6px;padding:6px}
+.opt div.name{margin-top:8px;display:flex;justify-content:space-between;align-items:center}
+.btn{display:inline-flex;gap:6px;align-items:center;height:28px;padding:0 10px;border-radius:7px;background:#2a2a2a;color:#f2f2f2;font-size:12px;font-weight:500}
+.btn.primary{background:#f2f2f2;color:#141414}
+</style></head><body>
+<div class="row" id="compare">
+<figure class="card"><figcaption><b>Hand-made, live on /case-studies</b><span>KPI Green Energy, drawn by hand in components/case-studies/drawings.tsx</span></figcaption><div class="plate"><img src="original-kpi.png"></div></figure>
+<figure class="card"><figcaption><b>Same company as a plate</b><span>The format the AI would return, written by me from the same business line, rendered by the plate renderer</span></figcaption><div class="plate"><svg viewBox="0 0 240 150" xmlns="http://www.w3.org/2000/svg">
+<defs><pattern id="kpi-hatch" width="2.2" height="2.2" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="2.2" stroke="#000" stroke-width=".55" stroke-opacity=".6"/></pattern></defs>
+<path d="M6 126 H234" fill="none" stroke="#000" stroke-width=".5" stroke-opacity=".4" stroke-dasharray="2 2"/>
+<circle cx="30" cy="26" r="8" class="fade" fill="url(#kpi-hatch)" stroke="#000" stroke-width=".9" style="transition-delay:150ms"/>
+<path d="M41.5 26 H46 M18.5 26 H14 M30 14.5 V10 M30 37.5 V42 M38 18 L41.3 14.7 M22 34 L18.7 37.3 M38 34 L41.3 37.3 M22 18 L18.7 14.7" fill="none" stroke="#000" stroke-width=".5" stroke-opacity=".4" stroke-dasharray="2 2"/>
+<path d="M36 38 L44 70 M28 40 L26 70 M42 34 L62 70" fill="none" stroke="#000" stroke-width=".5" stroke-opacity=".4" stroke-dasharray="2 2"/>
+<path d="M12 96 l8 -22 h14 l-8 22 Z" class="fade" fill="url(#kpi-hatch)" stroke="#000" stroke-width=".9" style="transition-delay:150ms"/>
+<path d="M30 96 l8 -22 h14 l-8 22 Z" class="fade" fill="url(#kpi-hatch)" stroke="#000" stroke-width=".9" style="transition-delay:150ms"/>
+<path d="M48 96 l8 -22 h14 l-8 22 Z" class="fade" fill="url(#kpi-hatch)" stroke="#000" stroke-width=".9" style="transition-delay:150ms"/>
+<path d="M20 96 V126 M38 96 V126 M56 96 V126" fill="none" stroke="#000" stroke-width=".5" stroke-opacity=".4" stroke-dasharray="2 2"/>
+<text x="36" y="140" text-anchor="middle" font-size="6.4" fill="#000" fill-opacity=".65" font-family="ui-monospace, Menlo, monospace" letter-spacing=".12em">PLANT</text>
+<path d="M112 126 L120 62 L128 126 M114 110 H126 M116 94 H124 M110 70 H130" class="draw" fill="none" stroke="#000" stroke-width=".9" pathLength="1" style="transition-delay:150ms"/>
+<path d="M66 86 H120" class="draw" fill="none" stroke="#000" stroke-width="1.2" pathLength="1" style="transition-delay:290ms"/>
+<path d="M120 86 C 150 86, 158 52, 194 52" class="draw" fill="none" stroke="#000" stroke-width="1.2" pathLength="1" style="transition-delay:430ms"/>
+<path d="M120 86 C 150 86, 158 118, 194 118" class="draw" fill="none" stroke="#000" stroke-width="1.2" pathLength="1" style="transition-delay:570ms"/>
+<path d="M204 66 L210 36 L216 66 M200 42 H220 M203 52 H217" class="draw" fill="none" stroke="#000" stroke-width=".9" pathLength="1" style="transition-delay:710ms"/>
+<text x="234" y="28" text-anchor="end" font-size="6.4" fill="#000" fill-opacity=".65" font-family="ui-monospace, Menlo, monospace" letter-spacing=".12em">IPP · GRID</text>
+<path d="M198 132 V108 l8 6 v-6 l8 6 v-6 l8 6 V132 Z" class="fade" fill="url(#kpi-hatch)" stroke="#000" stroke-width=".9" style="transition-delay:850ms"/>
+<text x="234" y="144" text-anchor="end" font-size="6.4" fill="#000" fill-opacity=".65" font-family="ui-monospace, Menlo, monospace" letter-spacing=".12em">CPP · FACTORY</text>
+<path d="M66 86 H120 C 150 86, 158 52, 194 52" class="flow" fill="none" stroke="#F6A11A" stroke-width="2.2" stroke-dasharray="4 8" style="transition-delay:900ms"/>
+<path d="M120 86 C 150 86, 158 118, 194 118" class="flow" fill="none" stroke="#F6A11A" stroke-width="2.2" stroke-dasharray="4 8" style="transition-delay:900ms"/>
+<rect x="191" y="49" width="6" height="6" class="fade" fill="#F6A11A" stroke="#000" stroke-width=".6" style="transition-delay:900ms"/>
+<rect x="191" y="115" width="6" height="6" class="fade" fill="#F6A11A" stroke="#000" stroke-width=".6" style="transition-delay:1020ms"/>
+</svg></div></figure>
+<figure class="card"><figcaption><b>A company with no drawing</b><span>Sample input: Designs and makes optical and wireless networking equipment that telecom operators use to carry data.</span></figcaption><div class="plate"><svg viewBox="0 0 240 150" xmlns="http://www.w3.org/2000/svg">
+<defs><pattern id="tj-hatch" width="2.2" height="2.2" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="2.2" stroke="#000" stroke-width=".55" stroke-opacity=".6"/></pattern></defs>
+<path d="M6 126 H234" fill="none" stroke="#000" stroke-width=".5" stroke-opacity=".4" stroke-dasharray="2 2"/>
+<rect x="18" y="62" width="44" height="64" class="fade" fill="url(#tj-hatch)" stroke="#000" stroke-width=".9" style="transition-delay:150ms"/>
+<path d="M24 72 H56 M24 82 H56 M24 92 H56 M24 102 H56 M24 112 H56" class="draw" fill="none" stroke="#000" stroke-width=".9" pathLength="1" style="transition-delay:150ms"/>
+<circle cx="52" cy="72" r="1.6" class="fade" fill="#F6A11A" stroke="#000" stroke-width=".6" style="transition-delay:1180ms"/>
+<text x="40" y="140" text-anchor="middle" font-size="6.4" fill="#000" fill-opacity=".65" font-family="ui-monospace, Menlo, monospace" letter-spacing=".12em">EQUIPMENT</text>
+<path d="M62 82 C 96 82, 104 40, 150 40 M62 92 H150 M62 102 C 96 102, 104 118, 150 118" fill="none" stroke="#000" stroke-width=".5" stroke-opacity=".4" stroke-dasharray="2 2"/>
+<path d="M62 82 C 96 82, 104 40, 150 40" class="draw" fill="none" stroke="#000" stroke-width="1.2" pathLength="1" style="transition-delay:290ms"/>
+<path d="M62 92 H150" class="draw" fill="none" stroke="#000" stroke-width="1.2" pathLength="1" style="transition-delay:430ms"/>
+<path d="M62 102 C 96 102, 104 118, 150 118" class="draw" fill="none" stroke="#000" stroke-width="1.2" pathLength="1" style="transition-delay:570ms"/>
+<text x="108" y="86" text-anchor="middle" font-size="6.4" fill="#000" fill-opacity=".65" font-family="ui-monospace, Menlo, monospace" letter-spacing=".12em">FIBRE</text>
+<path d="M168 64 L174 20 L180 64 M170 50 H178 M171 36 H177" class="draw" fill="none" stroke="#000" stroke-width=".9" pathLength="1" style="transition-delay:710ms"/>
+<path d="M180 26 a10 10 0 0 1 0 14 M184 22 a16 16 0 0 1 0 22" fill="none" stroke="#000" stroke-width=".5" stroke-opacity=".4" stroke-dasharray="2 2"/>
+<text x="174" y="76" text-anchor="middle" font-size="6.4" fill="#000" fill-opacity=".65" font-family="ui-monospace, Menlo, monospace" letter-spacing=".12em">TOWER</text>
+<path d="M196 126 V104 l10 -10 10 10 V126 Z" class="fade" fill="url(#tj-hatch)" stroke="#000" stroke-width=".9" style="transition-delay:850ms"/>
+<path d="M218 126 V108 l8 -8 8 8 V126 Z" class="fade" fill="url(#tj-hatch)" stroke="#000" stroke-width=".9" style="transition-delay:850ms"/>
+<text x="214" y="140" text-anchor="middle" font-size="6.4" fill="#000" fill-opacity=".65" font-family="ui-monospace, Menlo, monospace" letter-spacing=".12em">HOMES</text>
+<path d="M150 118 H196" class="draw" fill="none" stroke="#000" stroke-width=".9" pathLength="1" style="transition-delay:850ms"/>
+<path d="M150 40 H168" class="draw" fill="none" stroke="#000" stroke-width=".9" pathLength="1" style="transition-delay:990ms"/>
+<path d="M62 82 C 96 82, 104 40, 150 40 H168" class="flow" fill="none" stroke="#F6A11A" stroke-width="2.2" stroke-dasharray="4 8" style="transition-delay:1180ms"/>
+<path d="M62 102 C 96 102, 104 118, 150 118 H196" class="flow" fill="none" stroke="#F6A11A" stroke-width="2.2" stroke-dasharray="4 8" style="transition-delay:1180ms"/>
+<rect x="147" y="89" width="6" height="6" class="fade" fill="#F6A11A" stroke="#000" stroke-width=".6" style="transition-delay:1300ms"/>
+</svg></div></figure>
+</div>
+<div class="admin" id="field">
+<h2>Business drawing</h2>
+<p>Pick one of the hand-made drawings, or have one drawn from this company&#39;s business model, edge and growth.</p>
+<div class="picker">
+<div class="opt"><div class="plate"><img src="original-kpi.png"></div><div class="name">Power plant</div></div>
+<div class="opt"><div class="plate" style="height:86px;display:grid;place-items:center;color:#999;font-size:11px">Castings</div><div class="name">Castings</div></div>
+<div class="opt"><div class="plate" style="height:86px;display:grid;place-items:center;color:#999;font-size:11px">Steel laminations</div><div class="name">Steel laminations</div></div>
+<div class="opt sel"><div class="plate"><svg viewBox="0 0 240 150" xmlns="http://www.w3.org/2000/svg">
+<defs><pattern id="tj2-hatch" width="2.2" height="2.2" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="2.2" stroke="#000" stroke-width=".55" stroke-opacity=".6"/></pattern></defs>
+<path d="M6 126 H234" fill="none" stroke="#000" stroke-width=".5" stroke-opacity=".4" stroke-dasharray="2 2"/>
+<rect x="18" y="62" width="44" height="64" class="fade" fill="url(#tj2-hatch)" stroke="#000" stroke-width=".9" style="transition-delay:150ms"/>
+<path d="M24 72 H56 M24 82 H56 M24 92 H56 M24 102 H56 M24 112 H56" class="draw" fill="none" stroke="#000" stroke-width=".9" pathLength="1" style="transition-delay:150ms"/>
+<circle cx="52" cy="72" r="1.6" class="fade" fill="#F6A11A" stroke="#000" stroke-width=".6" style="transition-delay:1180ms"/>
+<text x="40" y="140" text-anchor="middle" font-size="6.4" fill="#000" fill-opacity=".65" font-family="ui-monospace, Menlo, monospace" letter-spacing=".12em">EQUIPMENT</text>
+<path d="M62 82 C 96 82, 104 40, 150 40 M62 92 H150 M62 102 C 96 102, 104 118, 150 118" fill="none" stroke="#000" stroke-width=".5" stroke-opacity=".4" stroke-dasharray="2 2"/>
+<path d="M62 82 C 96 82, 104 40, 150 40" class="draw" fill="none" stroke="#000" stroke-width="1.2" pathLength="1" style="transition-delay:290ms"/>
+<path d="M62 92 H150" class="draw" fill="none" stroke="#000" stroke-width="1.2" pathLength="1" style="transition-delay:430ms"/>
+<path d="M62 102 C 96 102, 104 118, 150 118" class="draw" fill="none" stroke="#000" stroke-width="1.2" pathLength="1" style="transition-delay:570ms"/>
+<text x="108" y="86" text-anchor="middle" font-size="6.4" fill="#000" fill-opacity=".65" font-family="ui-monospace, Menlo, monospace" letter-spacing=".12em">FIBRE</text>
+<path d="M168 64 L174 20 L180 64 M170 50 H178 M171 36 H177" class="draw" fill="none" stroke="#000" stroke-width=".9" pathLength="1" style="transition-delay:710ms"/>
+<path d="M180 26 a10 10 0 0 1 0 14 M184 22 a16 16 0 0 1 0 22" fill="none" stroke="#000" stroke-width=".5" stroke-opacity=".4" stroke-dasharray="2 2"/>
+<text x="174" y="76" text-anchor="middle" font-size="6.4" fill="#000" fill-opacity=".65" font-family="ui-monospace, Menlo, monospace" letter-spacing=".12em">TOWER</text>
+<path d="M196 126 V104 l10 -10 10 10 V126 Z" class="fade" fill="url(#tj2-hatch)" stroke="#000" stroke-width=".9" style="transition-delay:850ms"/>
+<path d="M218 126 V108 l8 -8 8 8 V126 Z" class="fade" fill="url(#tj2-hatch)" stroke="#000" stroke-width=".9" style="transition-delay:850ms"/>
+<text x="214" y="140" text-anchor="middle" font-size="6.4" fill="#000" fill-opacity=".65" font-family="ui-monospace, Menlo, monospace" letter-spacing=".12em">HOMES</text>
+<path d="M150 118 H196" class="draw" fill="none" stroke="#000" stroke-width=".9" pathLength="1" style="transition-delay:850ms"/>
+<path d="M150 40 H168" class="draw" fill="none" stroke="#000" stroke-width=".9" pathLength="1" style="transition-delay:990ms"/>
+<path d="M62 82 C 96 82, 104 40, 150 40 H168" class="flow" fill="none" stroke="#F6A11A" stroke-width="2.2" stroke-dasharray="4 8" style="transition-delay:1180ms"/>
+<path d="M62 102 C 96 102, 104 118, 150 118 H196" class="flow" fill="none" stroke="#F6A11A" stroke-width="2.2" stroke-dasharray="4 8" style="transition-delay:1180ms"/>
+<rect x="147" y="89" width="6" height="6" class="fade" fill="#F6A11A" stroke="#000" stroke-width=".6" style="transition-delay:1300ms"/>
+</svg></div><div class="name">Drawn for this company <span class="btn">Draw again</span></div></div>
+</div>
+<div style="margin-top:16px;display:flex;gap:8px"><span class="btn primary">Draw from the business model</span><span style="color:#9b9b9b;align-self:center">Takes about 20 seconds. Nothing goes live until you save.</span></div>
+</div>
+<script>setTimeout(()=>document.querySelectorAll(".plate").forEach(p=>p.classList.add("on")),600)</script>
+</body></html>

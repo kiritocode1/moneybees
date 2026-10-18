@@ -26,6 +26,7 @@ export type ScreenIcon =
   | "today"
   | "inbox"
   | "people"
+  | "tasks"
   | "deals"
   | "hiring"
   | "pages"
@@ -50,7 +51,7 @@ export const SCREENS = {
     group: "Desk",
     href: "/admin",
     icon: "today",
-    line: "What needs you today: enquiries waiting on Moneybee, ones past their reply time, the ones you took, fact sheets to approve, and for HR new applications and interviews.",
+    line: "What needs you today: enquiries waiting on Moneybee, ones past their reply time, the ones you took, your tasks, fact sheets to approve, and for HR new applications and interviews.",
     example: "You open the admin at 9:30. Past their reply time says 3, so you click it and answer those three before anything else. Fact sheets to approve says 1: if you are compliance, that is a month waiting for your check.",
     controls: [
       { at: "has:Enquiries waiting on us", label: "The counts", text: "Each card counts work in one state. Anything above zero needs someone; click a card for its list." },
@@ -80,24 +81,37 @@ export const SCREENS = {
     href: "/admin/collections/contacts",
     icon: "people",
     line: "One row per person who has enquired or invests, with every enquiry, email and deal of theirs.",
-    example: "Kavita Shah rings the office instead of writing in. Search for her first: if she enquired on the site last year, she is already here with everything she was told. If not, Create New. If the money is her family's HUF, add the HUF inside her record.",
+    example: "Kavita Shah rings the office instead of writing in. Search for her first: if she enquired on the site last year, she is already here with everything she was told. If not, Create New. If the money is her family's HUF, open her page and Change Invests as to the HUF; her husband can be linked to the same HUF by its name.",
     controls: [
       { at: "css:.search-filter__input", label: "Search", text: "Search by name, email or phone before adding anyone. The website adds people by itself when they enquire." },
-      { at: "text:Create New", label: "Create New", text: "For someone who called or came in. When the money is a family's, HUF's, company's or trust's, add that inside the person." },
-      { at: "css:tbody tr a", label: "A person", text: "Open them before replying, to see every enquiry, email and deal they have had." },
+      { at: "text:Create New", label: "Create New", text: "For someone who called or came in. When the money is a family's, HUF's, company's or trust's, set Invests as on their page." },
+      { at: "css:tbody tr a", label: "A person", text: "Opens their page: write to them, log a call, plan the next step, and every enquiry, email and deal they have had." },
+    ],
+  },
+  tasks: {
+    name: "Tasks",
+    group: "Desk",
+    href: "/admin/tasks",
+    icon: "tasks",
+    line: "What each of us owes someone, and when. Most are made by the work itself: a call's outcome, a playbook, a deal moving.",
+    example: "Rohan Mehta does not pick up. Log the call as No answer: Call again appears here for the next working day at 10:00. Tomorrow tap his number from the row, then tick it and write what was agreed.",
+    controls: [
+      { at: "css:input[aria-label='What to do']", label: "Add a task", text: "What, for whom, when and who. Press T anywhere in the admin to add one without coming here." },
+      { at: "css:#tasks-tab-1", label: "Team", text: "Everyone's open tasks, with who owns each. Asked of others shows the ones you gave someone." },
+      { at: "has:Overdue", label: "Overdue first", text: "Then today, tomorrow and later. A call shows the number; an email has Write, and sending the letter ticks it." },
     ],
   },
   deals: {
     name: "Deals",
     group: "Desk",
-    href: "/admin/collections/deals",
+    href: "/admin/deals",
     icon: "deals",
-    line: "Each prospective investment, from first contact to money in, and the stage it has reached.",
-    example: "Arjun Desai has met the team and wants to put ₹1.5 crore into the AIF. Turn his enquiry into a deal, set the product to Flyingbee and the amount to ₹1.5 crore. Move it to Documents sent when the forms go out, and to Invested when the money lands.",
+    line: "Each prospective investment, from first contact to money in, on a board by stage. Every card shows its next step, so none goes quiet.",
+    example: "Arjun Desai wants to put ₹1.5 crore into Flyingbee. Turn his enquiry into a deal. When the forms go out, drag his card to Documents sent and tick what went: a call to chase the signed forms appears three working days later. When the money lands, move him to Invested with the amount and date, invite him to the portal, and the Funds received letter opens filled in.",
     controls: [
-      { at: "text:Create New", label: "Create New", text: "Starts a deal by hand. Usually you start one from an enquiry with Turn into a deal, once someone is serious." },
-      { at: "text:Filters", label: "Filters", text: "Filter by stage to see who is at Meeting or Documents sent." },
-      { at: "css:.search-filter__input", label: "Search", text: "Find a deal by its title. Inside a deal, move the stage as it happens and fill in the product and amount, so the totals add up." },
+      { at: "css:#deals-kind-tab-0", label: "PMS and Flyingbee", text: "One board each. Board or List, and Everyone or one person's deals, sit beside them." },
+      { at: "css:article[data-column]", label: "A deal", text: "Drag it to the stage it has reached, or click it and press M. Meeting, Documents sent, Invested and Lost ask one thing first. Click it to open the person." },
+      { at: "has:No next step", label: "No next step", text: "Nothing is planned for this deal. Open the person and add a task. A card past 14 days at one stage turns amber too." },
     ],
   },
   hiring: {
@@ -219,15 +233,15 @@ export const SCREENS = {
   },
   files: {
     name: "Files",
-    group: "Publishing",
-    href: "/admin/collections/media",
+    group: "Desk",
+    href: "/admin/files",
     icon: "files",
-    line: "Every PDF and picture uploaded for the site: document PDFs, portraits, fact sheets.",
-    example: "A portrait needs replacing. Find the old one here by its file name, open it, upload the new picture, and write what it shows in Alt, such as Portrait of Manan Shah.",
+    line: "Every PDF and picture Moneybee keeps, public and private, with where each is used and who it was sent to.",
+    example: "Compliance approves a new Disclosure Document. Open Files, open the old one and Replace it: the Investor Centre card and the PMS introduction letter show the new one at once. Then Send to someone to email it to a client.",
     controls: [
-      { at: "text:Bulk Upload", label: "Bulk Upload", text: "Uploads many at once. Usually you upload from the place that uses the file instead; it lands here by itself." },
-      { at: "css:.search-filter__input", label: "Search", text: "Find a file by its name to replace it." },
-      { at: "text:Create New", label: "Create New", text: "Every file here is public. Fill in Alt with what a picture shows, for screen readers." },
+      { at: "text:Upload", label: "Upload", text: "Adds a file. Choose who can see it: only the people it is sent to, or anyone, so it can go on the website." },
+      { at: "css:tbody tr", label: "A file", text: "Click it to see where it is used and every email it went with, and to send or replace it." },
+      { at: "css:#files-tab-4", label: "Not used", text: "Files nothing uses yet. Make a PDF into a document card, send it, or delete it." },
     ],
   },
   playbooks: {
@@ -262,10 +276,10 @@ export const SCREENS = {
     group: "Settings",
     href: "/admin/collections/investors",
     icon: "clients",
-    line: "Investor logins to the client portal. Moneybee creates each account; a disabled one cannot sign in.",
-    example: "A new PMS client with client code MB1042 wants portal access. Create New with their name, email and MB1042. When statements go live, files named MB1042 reach only them. If they leave, disable the account rather than delete it.",
+    line: "Investor logins to the client portal, each with its person and when they last signed in. Invite someone from their page in People; they set their own password.",
+    example: "A new PMS client wants portal access. Open them in People and choose Invite to the portal under Account: they get an email to set their own password, valid seven days, and read Invited here until they first sign in. Add their client code here, such as MB1042, so statements named MB1042 reach only them. If they leave, switch the account off rather than delete it.",
     controls: [
-      { at: "text:Create New", label: "Create New", text: "Creates an investor's portal login with their client codes from the back office. Statements named with those codes reach this investor." },
+      { at: "text:Create New", label: "Create New", text: "Rarely needed: Invite to the portal on the person's page makes the account without anyone typing a password. Use the account here to add client codes from the back office." },
       { at: "css:.search-filter__input", label: "Search", text: "Find an investor by name." },
       { at: "text:Filters", label: "Filters", text: "Find disabled accounts. Disable rather than delete when someone leaves." },
     ],
@@ -332,10 +346,12 @@ export const GROUPS: readonly { group: Group; title: string; leads: readonly { k
     leads: [
       { keys: ["today"], text: "leads to what needs you now: enquiries waiting, overdue replies, fact sheets to approve." },
       { keys: ["enquiries"], text: "leads to every message from the Contact page, each with its reply clock." },
+      { keys: ["tasks"], text: "leads to what each of us owes someone, and when. Press T anywhere to add one." },
       { keys: ["people"], text: "leads to everyone who has written in or invests, with their history." },
-      { keys: ["deals"], text: "leads to each prospective investment and the stage it has reached." },
+      { keys: ["deals"], text: "leads to the board of prospective investments, by stage, each with its next step." },
       { keys: ["hiring"], text: "leads to every application from the Careers page, for HR." },
       { keys: ["emails"], text: "leads to every email Moneybee sends, as the reader sees it." },
+      { keys: ["files"], text: "leads to every PDF and picture kept, where each is used and who it was sent to." },
     ],
   },
   {
@@ -354,7 +370,6 @@ export const GROUPS: readonly { group: Group; title: string; leads: readonly { k
     leads: [
       { keys: ["factSheets"], text: "leads to each month's returns; compliance approves them before the site changes." },
       { keys: ["products"], text: "leads to the PMS and the AIF, their benchmark and whether returns may be shown." },
-      { keys: ["files"], text: "leads to every PDF and picture uploaded." },
     ],
   },
   {

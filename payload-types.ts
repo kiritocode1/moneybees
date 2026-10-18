@@ -72,6 +72,7 @@ export interface Config {
     products: Product;
     metrics: Metric;
     media: Media;
+    'private-files': PrivateFile;
     'team-members': TeamMember;
     documents: Document;
     'case-studies': CaseStudy;
@@ -96,6 +97,9 @@ export interface Config {
     'payload-migrations': PayloadMigration;
   };
   collectionsJoins: {
+    investors: {
+      people: 'contacts';
+    };
     contacts: {
       enquiries: 'enquiries';
       deals: 'deals';
@@ -109,6 +113,7 @@ export interface Config {
     products: ProductsSelect<false> | ProductsSelect<true>;
     metrics: MetricsSelect<false> | MetricsSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
+    'private-files': PrivateFilesSelect<false> | PrivateFilesSelect<true>;
     'team-members': TeamMembersSelect<false> | TeamMembersSelect<true>;
     documents: DocumentsSelect<false> | DocumentsSelect<true>;
     'case-studies': CaseStudiesSelect<false> | CaseStudiesSelect<true>;
@@ -367,6 +372,21 @@ export interface Metric {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "private-files".
+ */
+export interface PrivateFile {
+  id: number;
+  title: string;
+  filename: string;
+  mimeType: string;
+  filesize: number;
+  key: string;
+  uploadedBy?: (number | null) | User;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "team-members".
  */
 export interface TeamMember {
@@ -529,6 +549,14 @@ export interface Playbook {
   steps?:
     | {
         step: string;
+        /**
+         * Each step becomes a task for whoever takes the enquiry.
+         */
+        when: 'reply' | 'next_day' | 'three_days' | 'week' | 'rule';
+        /**
+         * Leave empty to tick it by hand.
+         */
+        ticksWhen?: ('reply' | 'call' | 'deal') | null;
         id?: string | null;
       }[]
     | null;
@@ -585,6 +613,7 @@ export interface EmailTemplate {
     | boolean
     | null;
   html?: string | null;
+  goesWith?: string[] | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -601,6 +630,14 @@ export interface Investor {
    */
   clientCodes?: string[] | null;
   status: 'active' | 'disabled';
+  invitedAt?: string | null;
+  invitedBy?: (number | null) | User;
+  lastSignInAt?: string | null;
+  people?: {
+    docs?: (number | Contact)[];
+    hasNextPage?: boolean;
+    totalDocs?: number;
+  };
   trustedDevices?:
     | {
         hash: string;
@@ -626,96 +663,6 @@ export interface Investor {
     | null;
   password?: string | null;
   collection: 'investors';
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "audit-log".
- */
-export interface AuditLog {
-  id: number;
-  actor?: (number | null) | User;
-  action: string;
-  collectionSlug: string;
-  docId: string;
-  summary?: string | null;
-  changes?:
-    | {
-        [k: string]: unknown;
-      }
-    | unknown[]
-    | string
-    | number
-    | boolean
-    | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "enquiries".
- */
-export interface Enquiry {
-  id: number;
-  title: string;
-  contact: number | Contact;
-  kind: 'pms' | 'aif' | 'support' | 'general';
-  status: 'new' | 'open' | 'waiting' | 'converted' | 'closed' | 'spam';
-  severity: 'low' | 'normal' | 'high' | 'critical';
-  message?: string | null;
-  /**
-   * Every field the visitor filled in, by the form's field name.
-   */
-  answers?:
-    | {
-        [k: string]: unknown;
-      }
-    | unknown[]
-    | string
-    | number
-    | boolean
-    | null;
-  /**
-   * Why it has this severity: the rules that fired, and the AI's answers when AI triage is on.
-   */
-  triage?:
-    | {
-        [k: string]: unknown;
-      }
-    | unknown[]
-    | string
-    | number
-    | boolean
-    | null;
-  receivedAt: string;
-  /**
-   * When the first reply is due, from the playbook.
-   */
-  dueAt?: string | null;
-  firstResponseAt?: string | null;
-  assignee?: (number | null) | User;
-  claimedAt?: string | null;
-  playbook?: (number | null) | Playbook;
-  deal?: (number | null) | Deal;
-  closingNote?: string | null;
-  /**
-   * Where it came from.
-   */
-  origin?: {
-    page?: string | null;
-    visitorId?: string | null;
-    utm?:
-      | {
-          [k: string]: unknown;
-        }
-      | unknown[]
-      | string
-      | number
-      | boolean
-      | null;
-    ipHash?: string | null;
-  };
-  updatedAt: string;
-  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -792,6 +739,73 @@ export interface Entity {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "enquiries".
+ */
+export interface Enquiry {
+  id: number;
+  title: string;
+  contact: number | Contact;
+  kind: 'pms' | 'aif' | 'support' | 'general';
+  status: 'new' | 'open' | 'waiting' | 'converted' | 'closed' | 'spam';
+  severity: 'low' | 'normal' | 'high' | 'critical';
+  message?: string | null;
+  /**
+   * Every field the visitor filled in, by the form's field name.
+   */
+  answers?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  /**
+   * Why it has this severity: the rules that fired, and the AI's answers when AI triage is on.
+   */
+  triage?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  receivedAt: string;
+  /**
+   * When the first reply is due, from the playbook.
+   */
+  dueAt?: string | null;
+  firstResponseAt?: string | null;
+  assignee?: (number | null) | User;
+  claimedAt?: string | null;
+  playbook?: (number | null) | Playbook;
+  deal?: (number | null) | Deal;
+  closingNote?: string | null;
+  /**
+   * Where it came from.
+   */
+  origin?: {
+    page?: string | null;
+    visitorId?: string | null;
+    utm?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    ipHash?: string | null;
+  };
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "deals".
  */
 export interface Deal {
@@ -803,10 +817,35 @@ export interface Deal {
   stage: 'enquiry' | 'contacted' | 'meeting' | 'documents' | 'onboarding' | 'invested' | 'lost';
   ticketSize?: number | null;
   expectedClose?: string | null;
+  lostWhy?: ('elsewhere' | 'minimum' | 'not_eligible' | 'not_now' | 'stopped_replying' | 'other') | null;
   lostReason?: string | null;
+  investedOn?: string | null;
   owner?: (number | null) | User;
   enquiry?: (number | null) | Enquiry;
   stageChangedAt?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "audit-log".
+ */
+export interface AuditLog {
+  id: number;
+  actor?: (number | null) | User;
+  action: string;
+  collectionSlug: string;
+  docId: string;
+  summary?: string | null;
+  changes?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -835,6 +874,7 @@ export interface Activity {
   enquiry?: (number | null) | Enquiry;
   deal?: (number | null) | Deal;
   email?: (number | null) | Email;
+  task?: (number | null) | Task;
   actor?: (number | null) | User;
   meta?:
     | {
@@ -876,6 +916,14 @@ export interface Email {
   sentBy?: (number | null) | User;
   inReplyTo?: (number | null) | Email;
   resendId?: string | null;
+  attachments?:
+    | {
+        ref: string;
+        name: string;
+        size?: number | null;
+        id?: string | null;
+      }[]
+    | null;
   events?:
     | {
         type: string;
@@ -989,11 +1037,20 @@ export interface Application {
 export interface Task {
   id: number;
   title: string;
+  kind: 'call' | 'email' | 'meeting' | 'todo';
+  source: 'manual' | 'call' | 'meeting' | 'note' | 'follow_up' | 'playbook' | 'deal';
   dueAt: string;
   owner: number | User;
   contact?: (number | null) | Contact;
   enquiry?: (number | null) | Enquiry;
   deal?: (number | null) | Deal;
+  /**
+   * For an email task: the letter to write, by its id on the Emails page.
+   */
+  letter?: string | null;
+  step?: string | null;
+  outcome?: string | null;
+  createdBy?: (number | null) | User;
   doneAt?: string | null;
   doneBy?: (number | null) | User;
   updatedAt: string;
@@ -1055,6 +1112,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'media';
         value: number | Media;
+      } | null)
+    | ({
+        relationTo: 'private-files';
+        value: number | PrivateFile;
       } | null)
     | ({
         relationTo: 'team-members';
@@ -1267,6 +1328,20 @@ export interface MediaSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "private-files_select".
+ */
+export interface PrivateFilesSelect<T extends boolean = true> {
+  title?: T;
+  filename?: T;
+  mimeType?: T;
+  filesize?: T;
+  key?: T;
+  uploadedBy?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "team-members_select".
  */
 export interface TeamMembersSelect<T extends boolean = true> {
@@ -1369,6 +1444,8 @@ export interface PlaybooksSelect<T extends boolean = true> {
     | T
     | {
         step?: T;
+        when?: T;
+        ticksWhen?: T;
         id?: T;
       };
   template?: T;
@@ -1386,6 +1463,7 @@ export interface EmailTemplatesSelect<T extends boolean = true> {
   body?: T;
   design?: T;
   html?: T;
+  goesWith?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -1398,6 +1476,10 @@ export interface InvestorsSelect<T extends boolean = true> {
   phone?: T;
   clientCodes?: T;
   status?: T;
+  invitedAt?: T;
+  invitedBy?: T;
+  lastSignInAt?: T;
+  people?: T;
   trustedDevices?:
     | T
     | {
@@ -1547,7 +1629,9 @@ export interface DealsSelect<T extends boolean = true> {
   stage?: T;
   ticketSize?: T;
   expectedClose?: T;
+  lostWhy?: T;
   lostReason?: T;
+  investedOn?: T;
   owner?: T;
   enquiry?: T;
   stageChangedAt?: T;
@@ -1567,6 +1651,7 @@ export interface ActivitiesSelect<T extends boolean = true> {
   enquiry?: T;
   deal?: T;
   email?: T;
+  task?: T;
   actor?: T;
   meta?: T;
   updatedAt?: T;
@@ -1578,11 +1663,17 @@ export interface ActivitiesSelect<T extends boolean = true> {
  */
 export interface TasksSelect<T extends boolean = true> {
   title?: T;
+  kind?: T;
+  source?: T;
   dueAt?: T;
   owner?: T;
   contact?: T;
   enquiry?: T;
   deal?: T;
+  letter?: T;
+  step?: T;
+  outcome?: T;
+  createdBy?: T;
   doneAt?: T;
   doneBy?: T;
   updatedAt?: T;
@@ -1605,6 +1696,14 @@ export interface EmailsSelect<T extends boolean = true> {
   sentBy?: T;
   inReplyTo?: T;
   resendId?: T;
+  attachments?:
+    | T
+    | {
+        ref?: T;
+        name?: T;
+        size?: T;
+        id?: T;
+      };
   events?:
     | T
     | {

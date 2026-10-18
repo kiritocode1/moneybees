@@ -1,0 +1,183 @@
+<!doctype html><html><head><meta charset="utf-8"><title>Moving a deal to Invested</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#141414;--card:#171717;--line:rgba(255,255,255,.1);--row:rgba(66,66,66,.4);--fg:#fafafa;--muted:#a1a1a1;--chip:#262626;--sec:rgba(255,255,255,.25);--red:#f46a6a;--redbg:#2c1313;--amber:#f0c060;--amberbg:#2b2312;--green:#7fd3a6;--greenbg:#14301f;--blue:#7aa7ff}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--fg)}
+body{font:13px/20px Inter,"Inter Fallback",-apple-system,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+.sys{font-family:-apple-system,system-ui,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif}
+.page{padding:0 60px 60px;max-width:1440px}
+.top{height:56px;display:flex;align-items:center;gap:10px;color:var(--muted);font-size:13px;padding-left:0}
+.i{display:inline-block;vertical-align:-2px;flex:none}
+a{color:inherit}
+.back{display:inline-flex;align-items:center;gap:6px;color:var(--muted);font-size:12px;text-decoration:none;margin-top:8px}
+h1{font:600 28px/34px -apple-system,system-ui,sans-serif;letter-spacing:-.28px;margin:12px 0 0}
+.sub{color:var(--muted);margin-top:4px}
+.cap{font-size:12px;line-height:16px;color:var(--muted)}
+.muted{color:var(--muted)}
+.fg{color:var(--fg)}
+.red{color:var(--red)}.amber{color:var(--amber)}.green{color:var(--green)}
+.num{font-variant-numeric:tabular-nums}
+.grid{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:32px;align-items:start;margin-top:32px}
+.stack{display:grid;gap:40px;min-width:0}
+.aside{display:grid;gap:16px}
+.sec-h{display:flex;align-items:center;justify-content:space-between;gap:16px;border-bottom:1px solid var(--line);padding-bottom:8px;margin-bottom:12px}
+.sec-h h2{font:600 16px/22px -apple-system,system-ui,sans-serif;margin:0}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:9.75px;padding:13px}
+.panel>.pt{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.panel>.pt h2,.pt-h{font:500 12px/16px -apple-system,system-ui,sans-serif;color:var(--muted);margin:0}
+.card{background:var(--card);border:1px solid var(--line);border-radius:9.75px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;height:29.25px;padding:0 13px;border-radius:6.5px;border:0;font:13px/20px Inter,-apple-system,sans-serif;color:var(--fg);background:var(--sec);white-space:nowrap}
+.btn.pri{background:#fafafa;color:#080808}
+.btn.ghost{background:transparent;color:var(--muted)}
+.btn.sm{height:22.75px;padding:0 9.75px;font-size:12px;line-height:18px}
+.btn.icon{width:29.25px;padding:0}
+.btn.sm.icon{width:22.75px}
+.in{display:flex;align-items:center;gap:8px;height:29.25px;border:1px solid var(--line);border-radius:6.5px;padding:1px 9.75px;color:var(--fg);background:transparent;min-width:0}
+.in.sm{height:22.75px;font-size:12px;padding:0 8px}
+.in .ph{color:var(--muted)}
+.in .chev{margin-left:auto;color:var(--muted)}
+.ta{border:1px solid var(--line);border-radius:6.5px;padding:6.5px 9.75px;min-height:64px;white-space:pre-wrap}
+label.l,.l{display:block;font-size:12px;line-height:16px;color:var(--muted);margin:0 0 6px}
+.seg{display:flex;gap:4px}
+.seg span{height:22.75px;padding:0 8.125px;border-radius:4.875px;font-size:12px;line-height:22.75px;color:var(--muted)}
+.seg span.on{background:var(--chip);color:var(--fg)}
+.tabs{display:flex;gap:2px}
+.tabs span{height:29.25px;line-height:29.25px;padding:0 9.75px;border-radius:6.5px;color:var(--muted)}
+.tabs span.on{background:var(--chip);color:var(--fg)}
+.badge{display:inline-flex;align-items:center;gap:5px;height:19.5px;padding:0 8.125px;border-radius:6.5px;font-size:12px;line-height:16px;background:var(--chip);color:var(--fg);white-space:nowrap}
+.badge.c{height:17px;padding:0 6px;font-size:11px}
+.badge.red{background:var(--redbg);color:#ffb3b3}.badge.amber{background:var(--amberbg);color:#f3d28c}.badge.green{background:var(--greenbg);color:var(--green)}
+.badge.dot{background:transparent;border:1px solid var(--line)}
+.badge .d{width:6px;height:6px;border-radius:3px;background:var(--red)}
+.intro{display:flex;align-items:center;gap:10px;background:#1e1e1e;border-radius:9.75px;padding:10px 13px;max-width:900px;margin-top:14px}
+.intro .how{margin-left:auto;display:inline-flex;align-items:center;gap:5px;font-size:12px;background:#3a3a3a;border-radius:6.5px;padding:2px 8px}
+.chip{display:inline-flex;align-items:center;gap:8px;height:29.25px;padding:0 6px 0 9px;border:1px solid var(--line);border-radius:6.5px;background:#1b1b1b;max-width:100%}
+.chip .n{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.chip .s{color:var(--muted);font-size:12px}
+.chip .x{color:var(--muted);display:inline-flex}
+.tag{display:inline-flex;align-items:center;gap:5px;height:19.5px;padding:0 7px;border-radius:5px;background:#202020;color:var(--muted);font-size:12px;white-space:nowrap}
+.tl{list-style:none;margin:0;padding:0}
+.tl li{position:relative;display:grid;grid-template-columns:28px minmax(0,1fr);gap:12px;padding-bottom:20px}
+.tl li:not(:last-child)::before{content:"";position:absolute;top:28px;bottom:0;left:13.5px;width:1px;background:var(--line)}
+.tl .ic{width:28px;height:28px;border-radius:14px;border:1px solid var(--line);background:var(--card);display:flex;align-items:center;justify-content:center;color:var(--muted)}
+.tl .t{padding-top:4px;min-width:0}
+.tl .t .h{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 8px}
+.tl .t p{margin:4px 0 0;color:var(--muted)}
+dl.kv{display:grid;grid-template-columns:110px minmax(0,1fr);gap:6px 8px;margin:0}
+dl.kv dt{color:var(--muted)}dl.kv dd{margin:0}
+.box{width:16px;height:16px;border-radius:8px;border:1.5px solid #5a5a5a;flex:none;display:inline-flex;align-items:center;justify-content:center}
+.box.on{background:var(--green);border-color:var(--green);color:#0b1a12}
+.sq{width:15px;height:15px;border-radius:4px;border:1.5px solid #5a5a5a;flex:none;display:inline-flex;align-items:center;justify-content:center}
+.sq.on{background:#fafafa;border-color:#fafafa;color:#111}
+.trow{display:grid;grid-template-columns:16px minmax(0,1fr) auto;gap:10px;align-items:start;padding:8px 0;border-top:1px solid var(--line)}
+.trow:first-child{border-top:0;padding-top:0}
+.pop{position:absolute;background:#1c1c1c;border:1px solid rgba(255,255,255,.14);border-radius:9.75px;box-shadow:0 18px 48px rgba(0,0,0,.55);padding:6px}
+.pop .grp{font-size:12px;line-height:16px;color:var(--muted);padding:8px 8px 4px}
+.pop .it{display:grid;grid-template-columns:16px 18px minmax(0,1fr) auto;align-items:center;gap:8px;padding:6px 8px;border-radius:6.5px}
+.pop .it.hl{background:#2a2a2a}
+.pop .it.off{opacity:.45}
+.pop .opt{display:flex;justify-content:space-between;gap:16px;padding:6px 8px;border-radius:6.5px}
+.pop .opt.hl{background:#2a2a2a}
+table{width:100%;border-collapse:collapse}
+th{font-weight:500;text-align:left;padding:6.5px 9.75px;color:var(--fg)}
+td{padding:6.5px 9.75px;color:var(--muted);border-top:1px solid var(--row);vertical-align:middle}
+tr.sel td{background:#1f1f1f}
+.thumb{width:30px;height:38px;border-radius:4px;background:#f3f1ec;display:inline-flex;flex-direction:column;gap:3px;padding:6px 5px;vertical-align:middle}
+.thumb i{display:block;height:2px;background:#c9c6bf;border-radius:1px}
+.thumb.img{background:linear-gradient(135deg,#6b6052,#2f3a44);padding:0}
+.av{width:22px;height:22px;border-radius:11px;background:#2f2f2f;color:#d9d9d9;font-size:10px;line-height:22px;text-align:center;flex:none}
+.col{background:#171717;border:1px solid var(--line);border-radius:9.75px;padding:8px;display:grid;gap:8px;align-content:start;min-height:560px}
+.col .ch{display:flex;justify-content:space-between;align-items:baseline;padding:2px 4px 6px}
+.dcard{background:#1f1f1f;border:1px solid rgba(255,255,255,.08);border-radius:8px;padding:10px;display:grid;gap:6px}
+.dcard .r{display:flex;justify-content:space-between;gap:8px;align-items:baseline}
+.toast{position:fixed;left:60px;bottom:24px;background:#262626;border:1px solid var(--line);border-radius:9.75px;padding:9px 12px;display:flex;gap:14px;align-items:center;box-shadow:0 12px 32px rgba(0,0,0,.5)}
+.kbd{font-size:11px;color:var(--muted);border:1px solid var(--line);border-radius:4px;padding:0 4px;line-height:16px}
+body{width:1440px}</style></head><body><div class="page" style="position:relative"><div class="top"><span style="width:26px;height:26px;border:1px solid var(--line);border-radius:6px;display:inline-flex;align-items:center;justify-content:center"><svg class="i" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" ><path d="M3 12h.01"/><path d="M3 18h.01"/><path d="M3 6h.01"/><path d="M8 12h13"/><path d="M8 18h13"/><path d="M8 6h13"/></svg></span><span style="width:22px;height:22px;border-radius:11px;background:#fafafa;display:inline-block;margin-left:6px"></span><span>/</span><span class="fg">Deals</span></div>
+  <header style="margin-top:8px;display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap">
+    <div><h1 style="margin-top:0">Deals</h1><p class="sub num" style="margin:4px 0 0">Rs. 17.5 crore in 8 open PMS deals. 2 have no next step.</p>
+      <div class="intro"><svg class="i" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="color:var(--muted)"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M8 7v7"/><path d="M12 7v4"/><path d="M16 7v9"/></svg><span>Each prospective investment, from first contact to money in, and the stage it has reached.</span><span class="how"><svg class="i" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" ><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg> How to use this</span></div></div>
+    <div style="display:flex;gap:12px;align-items:center"><div class="tabs"><span class="on">PMS 8</span><span>Flyingbee AIF 3</span></div><div class="tabs"><span class="on"><svg class="i" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" ><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M8 7v7"/><path d="M12 7v4"/><path d="M16 7v9"/></svg></span><span><svg class="i" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" ><path d="M3 12h.01"/><path d="M3 18h.01"/><path d="M3 6h.01"/><path d="M8 12h13"/><path d="M8 18h13"/><path d="M8 6h13"/></svg></span></div><span class="in" style="width:130px"><span class="" style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">Everyone</span><span class="chev"><svg class="i" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" ><path d="m6 9 6 6 6-6"/></svg></span></span></div>
+  </header>
+  <div style="display:grid;grid-template-columns:repeat(6,minmax(0,1fr)) 64px;gap:10px;margin-top:24px">
+    <div class="col"><div class="ch"><span><span class="fg" style="font-weight:500">Enquiry</span> <span class="muted num">2</span></span><span class="cap num">Rs. 3 cr</span></div>
+  <div class="dcard">
+    <div class="r"><span class="fg" style="font-weight:500">Arjun Rao</span><span class="fg num">Rs. 1 cr</span></div>
+    
+    <span class="amber" style="font-size:12px;line-height:16px"><svg class="i" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" ><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/></svg> No next step</span>
+    <div class="r" style="align-items:center"><span class="cap num ">1 day</span><span class="av">VI</span></div>
+  </div>
+  <div class="dcard">
+    <div class="r"><span class="fg" style="font-weight:500">Meera Iyer</span><span class="fg num">Rs. 2 cr</span></div>
+    
+    <span class="muted" style="font-size:12px;line-height:16px"><svg class="i" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" ><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg> Call back, today 17:30</span>
+    <div class="r" style="align-items:center"><span class="cap num ">today</span><span class="av">AS</span></div>
+  </div></div>
+    <div class="col"><div class="ch"><span><span class="fg" style="font-weight:500">Contacted</span> <span class="muted num">2</span></span><span class="cap num">Rs. 3.5 cr</span></div>
+  <div class="dcard">
+    <div class="r"><span class="fg" style="font-weight:500">Kavita Shah</span><span class="fg num">Rs. 1.5 cr</span></div>
+    
+    <span class="red" style="font-size:12px;line-height:16px"><svg class="i" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" ><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg> Overdue: send the checklist</span>
+    <div class="r" style="align-items:center"><span class="cap num ">4 days</span><span class="av">VI</span></div>
+  </div>
+  <div class="dcard">
+    <div class="r"><span class="fg" style="font-weight:500">Vikram Desai</span><span class="fg num">Rs. 2 cr</span></div>
+    <span class="cap" style="margin-top:-4px">Desai Family Trust</span>
+    <span class="muted" style="font-size:12px;line-height:16px"><svg class="i" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" ><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg> Call, Mon 10:00</span>
+    <div class="r" style="align-items:center"><span class="cap num ">2 days</span><span class="av">AS</span></div>
+  </div></div>
+    <div class="col"><div class="ch"><span><span class="fg" style="font-weight:500">Meeting</span> <span class="muted num">2</span></span><span class="cap num">Rs. 7 cr</span></div>
+  <div class="dcard">
+    <div class="r"><span class="fg" style="font-weight:500">Rohan Mehta</span><span class="fg num">Rs. 5 cr</span></div>
+    <span class="cap" style="margin-top:-4px">Mehta Family HUF</span>
+    <span class="muted" style="font-size:12px;line-height:16px"><svg class="i" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" ><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg> Meeting, Tue 21 Oct 11:00</span>
+    <div class="r" style="align-items:center"><span class="cap num ">2 days</span><span class="av">VI</span></div>
+  </div>
+  <div class="dcard">
+    <div class="r"><span class="fg" style="font-weight:500">Nikhil Joshi</span><span class="fg num">Rs. 2 cr</span></div>
+    
+    <span class="amber" style="font-size:12px;line-height:16px"><svg class="i" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" ><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/></svg> No next step</span>
+    <div class="r" style="align-items:center"><span class="cap num amber">16 days here</span><span class="av">AS</span></div>
+  </div></div>
+    <div class="col"><div class="ch"><span><span class="fg" style="font-weight:500">Documents sent</span> <span class="muted num">1</span></span><span class="cap num">Rs. 3 cr</span></div>
+  <div class="dcard">
+    <div class="r"><span class="fg" style="font-weight:500">Ananya Bose</span><span class="fg num">Rs. 3 cr</span></div>
+    
+    <span class="muted" style="font-size:12px;line-height:16px"><svg class="i" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" ><path d="M20 6 9 17l-5-5"/></svg> Chase the signed agreement, Fri</span>
+    <div class="r" style="align-items:center"><span class="cap num ">3 days</span><span class="av">VI</span></div>
+  </div></div>
+    <div class="col"><div class="ch"><span><span class="fg" style="font-weight:500">Onboarding</span> <span class="muted num">1</span></span><span class="cap num">Rs. 1 cr</span></div>
+  <div class="dcard">
+    <div class="r"><span class="fg" style="font-weight:500">Sanjay Gupta</span><span class="fg num">Rs. 1 cr</span></div>
+    
+    <span class="red" style="font-size:12px;line-height:16px"><svg class="i" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" ><path d="M20 6 9 17l-5-5"/></svg> Overdue: check KYC with operations</span>
+    <div class="r" style="align-items:center"><span class="cap num ">6 days</span><span class="av">VI</span></div>
+  </div></div>
+    <div class="col"><div class="ch"><span><span class="fg" style="font-weight:500">Invested</span> <span class="muted num">2</span></span><span class="cap num">Rs. 4 cr</span></div>
+  <div class="dcard">
+    <div class="r"><span class="fg" style="font-weight:500">Rakesh Jain</span><span class="fg num">Rs. 2.5 cr</span></div>
+    
+    <span class="muted" style="font-size:12px;line-height:16px"><svg class="i" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" ><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg> Invested 9 Oct</span>
+    <div class="r" style="align-items:center"><span class="cap num ">this quarter</span><span class="av">AS</span></div>
+  </div>
+  <div class="dcard">
+    <div class="r"><span class="fg" style="font-weight:500">Farah Khan</span><span class="fg num">Rs. 1.5 cr</span></div>
+    
+    <span class="muted" style="font-size:12px;line-height:16px"><svg class="i" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" ><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg> Invested 2 Oct</span>
+    <div class="r" style="align-items:center"><span class="cap num ">this quarter</span><span class="av">VI</span></div>
+  </div></div>
+    <div class="col" style="min-height:560px;padding:8px 4px;justify-items:center"><span class="muted" style="writing-mode:vertical-rl;transform:rotate(180deg);padding-top:6px">Lost <span class="num">3</span></span></div>
+  </div>
+  <div style="position:absolute;inset:0;background:rgba(0,0,0,.55)"></div>
+  <div class="pop" style="left:50%;top:230px;transform:translateX(-50%);width:440px;padding:20px">
+    <div class="sys" style="font-weight:600;font-size:16px;line-height:22px">Sanjay Gupta to Invested</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px">
+      <div><span class="l">Amount invested (Rs. crore)</span><span class="in num">1.00</span></div>
+      <div><span class="l">Invested on</span><span class="in" style=""><span class="" style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">16 Oct 2026</span><span class="chev"><svg class="i" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" ><path d="m6 9 6 6 6-6"/></svg></span></span></div>
+    </div>
+    <div style="display:grid;gap:10px;margin-top:16px">
+      <span style="display:flex;gap:8px;align-items:center"><span class="sq on"><svg class="i" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" ><path d="M20 6 9 17l-5-5"/></svg></span>Invite Sanjay Gupta to the client portal</span>
+      <span style="display:flex;gap:8px;align-items:center"><span class="sq on"><svg class="i" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" ><path d="M20 6 9 17l-5-5"/></svg></span>Then write the Welcome letter</span>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:20px;justify-content:flex-end"><span class="btn ghost">Cancel</span><span class="btn pri">Move to Invested</span></div>
+  </div></div></body></html>

@@ -4,7 +4,10 @@ import { AdminView } from "@/components/admin/admin-view";
 import { EmailBanner } from "@/components/admin/email-banner";
 import { SeverityBadge } from "@/components/admin/severity-badge";
 import { CRM_ROLES, hasRole, ROLES } from "@/lib/backend/roles";
+import { TaskList } from "@/components/admin/tasks/task-list";
+import { istAt } from "@/lib/crm/due";
 import { istDateTime, relative } from "@/lib/crm/format";
+import { taskRows } from "@/lib/crm/task-desk";
 import { inboxRows } from "@/lib/crm/inbox";
 import { emailConnected } from "@/lib/crm/mail";
 import { upcomingInterviews } from "@/lib/hiring/desk";
@@ -28,12 +31,14 @@ async function load(props: AdminViewServerProps, user: User) {
   const [urgent, mine, tasks, toApprove, applications, interviews] = await Promise.all([
     crm ? inboxRows(payload, user, "waiting", now) : null,
     crm ? payload.count({ collection: "enquiries", where: { assignee: { equals: user.id }, status: { in: ["new", "open"] } }, user, overrideAccess: false }) : null,
-    crm ? payload.find({ collection: "tasks", where: { owner: { equals: user.id }, doneAt: { exists: false } }, sort: "dueAt", limit: 8, depth: 1, user, overrideAccess: false }) : null,
+    crm ? taskRows(payload, user, "mine", now) : null,
     hasRole(user, "compliance") ? payload.count({ collection: "fact-sheets", where: { status: { equals: "in_review" } }, user, overrideAccess: false }) : null,
     hr ? payload.count({ collection: "applications", where: { stage: { equals: "new" } }, user, overrideAccess: false }) : null,
     hr ? upcomingInterviews(payload, user, now) : null,
   ]);
-  return { now, urgent, mine: mine?.totalDocs ?? null, tasks: tasks?.docs ?? null, toApprove: toApprove?.totalDocs ?? null, applications: applications?.totalDocs ?? null, interviews };
+  // Today lists your tasks overdue or due today; the Tasks desk has the rest.
+  const endOfToday = istAt(now, 1, 0);
+  return { now, urgent, mine: mine?.totalDocs ?? null, tasks: tasks?.filter((task) => new Date(task.dueAt) < endOfToday) ?? null, toApprove: toApprove?.totalDocs ?? null, applications: applications?.totalDocs ?? null, interviews };
 }
 
 function Stat({ label, value, href, tone }: { label: string; value: number; href: string; tone?: "alert" }) {
@@ -67,6 +72,7 @@ export async function TodayView(props: AdminViewServerProps) {
               {data.urgent ? <Stat label="Enquiries waiting on us" value={data.urgent.length} href="/admin/inbox" /> : null}
               {data.urgent ? <Stat label="Past their reply time" value={data.urgent.filter((row) => row.overdue).length} href="/admin/inbox" tone="alert" /> : null}
               {data.mine !== null ? <Stat label="Taken by you" value={data.mine} href="/admin/inbox?tab=mine" /> : null}
+              {data.tasks ? <Stat label="Your tasks overdue" value={data.tasks.filter((task) => task.overdue).length} href="/admin/tasks" tone="alert" /> : null}
               {data.toApprove !== null ? <Stat label="Fact sheets to approve" value={data.toApprove} href="/admin/collections/fact-sheets?where[status][equals]=in_review" /> : null}
               {data.applications !== null ? <Stat label="New applications" value={data.applications} href="/admin/hiring" /> : null}
               {data.interviews ? <Stat label="Interviews in the next 7 days" value={data.interviews.length} href="/admin/hiring?tab=interview" /> : null}
@@ -125,17 +131,15 @@ export async function TodayView(props: AdminViewServerProps) {
               </section>
             ) : null}
 
-            {data.tasks && data.tasks.length > 0 ? (
+            {data.tasks ? (
               <section className="mt-10">
-                <h2 className="mb-3 border-b pb-2 text-title font-semibold text-foreground">Your follow-ups</h2>
-                <ul className="m-0 grid list-none gap-1 p-0">
-                  {data.tasks.map((task) => (
-                    <li key={task.id} className="flex items-baseline justify-between gap-3 px-2 py-1.5 text-body">
-                      <span className="text-foreground">{task.title}</span>
-                      <span className={`text-caption tabular-nums ${new Date(task.dueAt) < data.now ? "text-destructive" : "text-muted-foreground"}`}>{istDateTime(task.dueAt)}</span>
-                    </li>
-                  ))}
-                </ul>
+                <div className="mb-3 flex items-center justify-between border-b pb-2">
+                  <h2 className="text-title font-semibold text-foreground">Your tasks today</h2>
+                  <Link href="/admin/tasks" className="text-caption text-muted-foreground hover:text-foreground">
+                    All tasks
+                  </Link>
+                </div>
+                <TaskList rows={data.tasks} now={data.now} empty="Nothing overdue or due today." />
               </section>
             ) : null}
           </>

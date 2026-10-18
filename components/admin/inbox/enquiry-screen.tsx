@@ -1,10 +1,11 @@
 "use client";
 
-import { ArrowLeft, FileText, Globe, Mail, MailOpen, MessageSquare, Phone, Repeat, Settings2, StickyNote, Users } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { TextArea } from "@/components/admin/fields";
 import { SeverityBadge } from "@/components/admin/severity-badge";
+import { TimelineList } from "@/components/admin/timeline";
 import { useAction } from "@/components/admin/use-action";
 import { Badge } from "@/components/fluid/badge";
 import { Button } from "@/components/fluid/button";
@@ -12,7 +13,6 @@ import { addEnquiryNote } from "@/lib/crm/admin-actions";
 import type { EnquiryDetail, TimelineItem } from "@/lib/crm/enquiry-detail";
 import { istDateTime, relative } from "@/lib/crm/format";
 import { SEVERITY_LABELS } from "@/lib/crm/severity";
-import type { ActivityType } from "@/lib/crm/vocabulary";
 import { DealPanel, DeadlinePanel, OwnerPanel, PersonPanel, StatusPanel } from "./enquiry-panels";
 import { ReplyComposer } from "./reply-composer";
 
@@ -127,20 +127,6 @@ function Sent({ enquiry }: { enquiry: EnquiryDetail }) {
   );
 }
 
-const ICONS: Record<ActivityType, typeof Mail> = {
-  form: FileText,
-  email_out: Mail,
-  email_in: MailOpen,
-  email_event: MailOpen,
-  call: Phone,
-  meeting: Users,
-  note: StickyNote,
-  page_view: Globe,
-  stage: Repeat,
-  task: MessageSquare,
-  system: Settings2,
-};
-
 const NOTE_KINDS = [
   { value: "note", label: "Note" },
   { value: "call", label: "Call" },
@@ -184,32 +170,7 @@ function Timeline({ enquiryId, items, now }: { enquiryId: number; items: Timelin
         </div>
       </form>
 
-      <ol className="m-0 grid list-none gap-0 p-0">
-        {items.map((item) => {
-          const Icon = ICONS[item.type] ?? Settings2;
-          return (
-            <li key={item.id} className="relative grid grid-cols-[28px_minmax(0,1fr)] gap-3 pb-5 before:absolute before:top-7 before:bottom-0 before:left-[13.5px] before:w-px before:bg-border last:before:hidden">
-              <span className="flex h-7 w-7 items-center justify-center rounded-full border bg-card text-muted-foreground">
-                <Icon size={13} aria-hidden="true" />
-              </span>
-              <div className="min-w-0 pt-1">
-                <div className="flex flex-wrap items-baseline gap-x-2">
-                  <span className="text-body text-foreground">{item.summary}</span>
-                  {item.emailStatus ? (
-                    <Badge size="compact" color={item.emailOk ? "gray" : "amber"}>
-                      {item.emailStatus}
-                    </Badge>
-                  ) : null}
-                  <span className="text-caption text-muted-foreground tabular-nums" title={istDateTime(item.at)}>
-                    {relative(item.at, now)}
-                  </span>
-                </div>
-                {item.body ? <p className="mt-1 line-clamp-4 text-body whitespace-pre-wrap text-muted-foreground">{item.body}</p> : null}
-              </div>
-            </li>
-          );
-        })}
-      </ol>
+      <TimelineList items={items} now={now} />
     </Section>
   );
 }

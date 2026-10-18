@@ -4,9 +4,13 @@ import Link from "next/link";
 import { type ReactNode, useState } from "react";
 import { TextArea, TextInput } from "@/components/admin/fields";
 import { useAction } from "@/components/admin/use-action";
+import { EntityOffer } from "@/components/admin/people/invests-as";
 import { Button } from "@/components/fluid/button";
 import { Select, SelectContent, SelectItem, SelectTrigger } from "@/components/fluid/select";
+import { Check } from "lucide-react";
 import { assignEnquiry, convertToDeal, setEnquiryStatus, takeEnquiry } from "@/lib/crm/admin-actions";
+import { dueLabel } from "@/lib/crm/due";
+import { completeTask, reopenTask } from "@/lib/crm/person-actions";
 import type { EnquiryDetail } from "@/lib/crm/enquiry-detail";
 import { istDateTime, relative, span } from "@/lib/crm/format";
 
@@ -50,18 +54,85 @@ export function DeadlinePanel({ enquiry, now }: { enquiry: EnquiryDetail; now: D
         <div className="mt-4 border-t pt-3">
           <p className="text-body font-medium text-foreground">{playbook.name}</p>
           {playbook.handlers.length ? <p className="mt-0.5 text-caption text-muted-foreground">Best taken by {playbook.handlers.map((role) => ROLE_LABELS[role] ?? role).join(", ")}</p> : null}
-          {playbook.steps.length ? (
-            <ol className="mt-3 mb-0 grid list-decimal gap-1.5 pl-5 text-body text-foreground marker:text-muted-foreground">
-              {playbook.steps.map((step, index) => (
-                <li key={index}>{step}</li>
-              ))}
-            </ol>
+          <PlaybookSteps steps={playbook.steps.filter((step) => !step.rule)} now={now} />
+          {playbook.steps.some((step) => step.rule) ? (
+            <>
+              <p className="mt-3 mb-1 text-caption text-muted-foreground">Keep in mind</p>
+              {playbook.steps
+                .filter((step) => step.rule)
+                .map((step) => (
+                  <p key={step.id} className="m-0 text-body text-foreground">
+                    {step.text}
+                  </p>
+                ))}
+            </>
           ) : null}
         </div>
       ) : (
         <p className="mt-3 border-t pt-3 text-caption text-muted-foreground">No playbook matches this kind and severity yet. Compliance can add one under CRM settings.</p>
       )}
     </Panel>
+  );
+}
+
+type Step = EnquiryDetail["playbook"] extends infer P ? (P extends { steps: (infer S)[] } ? S : never) : never;
+
+/**
+ * The playbook's steps as the tasks they became when someone took the
+ * enquiry: tick one off here, or it ticks itself when its event happens.
+ * Before anyone takes it, the steps are a numbered list of what to do.
+ */
+function PlaybookSteps({ steps, now }: { steps: Step[]; now: Date }) {
+  const { error, run } = useAction();
+  if (!steps.length) return null;
+  if (!steps.some((step) => step.task)) {
+    return (
+      <>
+        <ol className="mt-3 mb-0 grid list-decimal gap-1.5 pl-5 text-body text-foreground marker:text-muted-foreground">
+          {steps.map((step) => (
+            <li key={step.id}>{step.text}</li>
+          ))}
+        </ol>
+        <p className="mt-2 text-caption text-muted-foreground">Each becomes a task for whoever takes it.</p>
+      </>
+    );
+  }
+  return (
+    <ul className="mt-3 mb-0 grid list-none gap-2 p-0">
+      {steps.map((step) => {
+        const task = step.task;
+        const done = Boolean(task?.doneAt);
+        return (
+          <li key={step.id} className="grid grid-cols-[18px_minmax(0,1fr)] gap-2">
+            {task ? (
+              <button
+                type="button"
+                aria-label={done ? `Not done: ${step.text}` : `Done: ${step.text}`}
+                onClick={() => run(() => (done ? reopenTask(task.id) : completeTask(task.id)))}
+                className={`mt-0.5 flex h-4 w-4 cursor-pointer items-center justify-center rounded-full p-0 ${done ? "border-0 bg-[#7fd3a6] text-[#0b1a12]" : "border-[1.5px] border-foreground/35 bg-transparent hover:border-foreground"}`}
+              >
+                {done ? <Check size={10} aria-hidden="true" /> : null}
+              </button>
+            ) : (
+              <span className="mt-0.5 h-4 w-4 rounded-full border-[1.5px] border-dashed border-foreground/25" />
+            )}
+            <span>
+              <span className={`block text-body ${done ? "text-muted-foreground" : "text-foreground"}`}>{step.text}</span>
+              <span className={`block text-caption tabular-nums ${task?.overdue ? "text-destructive" : "text-muted-foreground"}`}>
+                {!task
+                  ? `${step.when}, added after it was taken`
+                  : done
+                    ? task.outcome?.startsWith("Ticked when")
+                      ? task.outcome.replace(/\.$/, "")
+                      : `Done${task.doneBy ? ` by ${task.doneBy}` : ""}, ${dueLabel(new Date(task.doneAt as string), now)}`
+                    : `${task.owner?.name ?? "Nobody"} · ${task.overdue ? "was due" : "due"} ${dueLabel(new Date(task.dueAt), now)}`}
+              </span>
+            </span>
+          </li>
+        );
+      })}
+      {error ? <li className="text-caption text-destructive">{error}</li> : null}
+    </ul>
   );
 }
 
@@ -155,6 +226,7 @@ export function PersonPanel({ enquiry }: { enquiry: EnquiryDetail }) {
     ["Email", contact.email ? <a href={`mailto:${contact.email}`} className="text-foreground">{contact.email}</a> : null],
     ["Phone", contact.phone ? <a href={`tel:${contact.phone}`} className="text-foreground tabular-nums">{contact.phone}</a> : null],
     ["City", contact.city],
+    ["Invests as", contact.entity ? `${contact.entity.name} (${contact.entity.typeLabel})` : enquiry.suggestedEntity ? null : "Themselves"],
     ["Earlier enquiries", contact.earlierEnquiries ? String(contact.earlierEnquiries) : "None"],
   ] as const;
   return (
@@ -174,8 +246,9 @@ export function PersonPanel({ enquiry }: { enquiry: EnquiryDetail }) {
           ) : null,
         )}
       </dl>
-      <Link href={`/admin/collections/contacts/${contact.id}`} className="mt-3 inline-block text-caption text-muted-foreground hover:text-foreground">
-        Open their record
+      {enquiry.suggestedEntity ? <EntityOffer personId={contact.id} personName={contact.name} suggested={enquiry.suggestedEntity} /> : null}
+      <Link href={enquiry.personHref ?? `/admin/people/${contact.id}`} className="mt-3 inline-block text-caption text-muted-foreground hover:text-foreground">
+        Open their page
       </Link>
     </Panel>
   );
@@ -190,8 +263,10 @@ export function DealPanel({ enquiry }: { enquiry: EnquiryDetail }) {
   if (enquiry.deal) {
     return (
       <Panel title="Deal">
-        <Link href={`/admin/collections/deals/${enquiry.deal.id}`} className="text-body text-foreground">
-          {enquiry.deal.title}
+        <p className="text-body text-foreground">{enquiry.deal.title}</p>
+        <p className="text-caption text-muted-foreground">{enquiry.deal.stageLabel}</p>
+        <Link href={`/admin/deals${enquiry.kind === "aif" ? "?kind=aif" : ""}`} className="mt-2 inline-block text-caption text-muted-foreground hover:text-foreground">
+          On the deals board
         </Link>
       </Panel>
     );

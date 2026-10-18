@@ -317,6 +317,10 @@ export const CATALOGUE: CatalogueEntry[] = [
     draw: ({ name, site }) => <security.SetPassword name={name} date={DATE} site={site} who="investor" href="/portal/reset?token=sample" validFor="30 minutes" requestedAt="16 Oct 2026, 10:42 am" browser="Chrome on macOS" near="Pune, India" />,
   },
   {
+    id: "portal-invitation", group: "Account security", name: "Portal invitation", to: "A client", when: "When the desk invites them to the portal from their page", channel: "system", subject: () => security.portalInvitationSubject(),
+    draw: ({ name, site }) => <security.PortalInvitation name={name} date={DATE} site={site} href="/portal/reset?token=sample" validUntil="23 October 2026, 11:42 am" account="r…@gmail.com" invitedBy="Aditi Sharma, Moneybee" loginHref="/portal/login" clientCodes={["MB01234"]} />,
+  },
+  {
     id: "password-changed", group: "Account security", name: "Password changed", to: "An investor", when: "When their password changes", channel: "system", needs: "A hook on the investor password change", subject: () => security.passwordChangedSubject(),
     draw: ({ name, site }) => <security.PasswordChanged name={name} date={DATE} site={site} at="16 Oct 2026, 10:42 am" browser="Chrome on macOS" resetHref="/portal/forgot" phone="022-4030 2080" />,
   },
@@ -363,6 +367,23 @@ export const CATALOGUE: CatalogueEntry[] = [
   {
     id: "mailing-waiting", group: "Staff", name: "Mailing waiting", to: "Compliance", when: "When a mailing is ready to send", channel: "system", needs: "The mailing desk", subject: () => staff.mailingWaitingSubject({ title: "Moneybee PMS: update for July 2026" }),
     draw: () => <staff.MailingWaiting date={DATE} title="Moneybee PMS: update for July 2026" audience="PMS clients who receive the monthly update" recipients={214} writtenBy="The investment team" sendOn="8 August 2026" href="/admin" roleLabel="Compliance" />,
+  },
+  {
+    id: "task-assigned", group: "Staff", name: "A task for you", to: "A staff member", when: "When someone else gives them a task, or an enquiry's playbook steps", channel: "system", subject: () => staff.taskAssignedSubject({ assignedBy: "Vikram Iyer", tasks: [{ title: "Call Rohan Mehta about the meeting", due: "Mon 19 Oct, 10:00", person: "Rohan Mehta", href: "/admin/tasks" }] }),
+    draw: () => <staff.TaskAssigned date={DATE} assignedBy="Vikram Iyer" tasks={[{ title: "Call Rohan Mehta about the meeting", due: "Mon 19 Oct, 10:00", person: "Rohan Mehta", href: "/admin/people/1" }]} href="/admin/tasks" roleLabel="Sales" />,
+  },
+  {
+    id: "tasks-today", group: "Staff", name: "Your tasks today", to: "Each staff member with tasks due", when: "Each working day at 9:00, only when something is overdue or due", channel: "system", subject: () => staff.tasksTodaySubject({ overdue: [{ title: "", due: "", person: "", href: "" }], today: [{ title: "", due: "", person: "", href: "" }, { title: "", due: "", person: "", href: "" }] }),
+    draw: () => (
+      <staff.TasksToday
+        date={DATE}
+        name="Aditi Sharma"
+        overdue={[{ title: "Send the PMS account opening checklist", due: "Thu 15 Oct", overdue: true, person: "Kavita Shah", href: "/admin/people/4" }]}
+        today={[{ title: "Call again", due: "10:00", person: "Rohan Mehta", href: "/admin/people/1" }, { title: "Meeting with the fund manager", due: "15:00", person: "Arjun Desai", href: "/admin/people/3" }]}
+        href="/admin/tasks"
+        roleLabel="Sales"
+      />
+    ),
   },
   {
     id: "staff-password-reset", group: "Staff", name: "Staff password reset", to: "A staff member", when: "When they ask for a new /admin password", channel: "system", subject: () => security.setPasswordSubject({ who: "staff" }),

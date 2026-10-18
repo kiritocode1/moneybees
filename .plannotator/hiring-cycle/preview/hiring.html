@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hiring preview</title>
+<!-- PROPOSED PREVIEW, not the build. Layout copied from components/admin/inbox/enquiry-screen.tsx and inbox-screen.tsx; colours read from the live admin (dark). -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root { --bg: #141414; --card: #171717; --border: rgba(255,255,255,.1); --line: #2E2E2E; --fg: #FAFAFA; --muted: #A1A1A1; --accent: #262626; --red: #F87171; --amber: #F6A11A; --green: #4ADE80; --blue: #60A5FA; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--fg); font: 13px/1.5 Inter, sans-serif; -webkit-font-smoothing: antialiased; }
+  .top { display: block; width: 100%; }
+  .gutter { padding: 0 60px 64px; }
+  .view { display: none; } .view.on { display: block; }
+  h1 { font-size: 28px; font-weight: 600; letter-spacing: -.01em; margin: 12px 0 0; }
+  h2 { font-size: 16px; font-weight: 600; margin: 0; }
+  .muted { color: var(--muted); }
+  .back { display: inline-flex; gap: 6px; align-items: center; color: var(--muted); margin-top: 24px; text-decoration: none; font-size: 12px; }
+  .badge { display: inline-flex; align-items: center; gap: 6px; height: 22px; padding: 0 8px; border-radius: 6px; border: 1px solid var(--border); font-size: 12px; background: var(--accent); }
+  .badge .dot { width: 6px; height: 6px; border-radius: 99px; background: var(--blue); }
+  .badge.green { color: var(--green); } .badge.amber { color: var(--amber); }
+  .banner { margin-top: 20px; border: 1px solid rgba(246,161,26,.35); background: rgba(246,161,26,.08); color: #F8C46B; border-radius: 10px; padding: 10px 14px; display: flex; gap: 10px; align-items: center; }
+  .head { display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; margin: 28px 0 20px; flex-wrap: wrap; }
+  .tabs { display: flex; gap: 2px; }
+  .tabs a { padding: 5px 10px; border-radius: 8px; color: var(--muted); text-decoration: none; }
+  .tabs a.on { background: var(--accent); color: var(--fg); }
+  .filters { display: flex; gap: 8px; margin-bottom: 12px; }
+  .select { height: 30px; border: 1px solid var(--border); background: var(--card); color: var(--fg); border-radius: 8px; padding: 0 10px; font: inherit; }
+  table { width: 100%; border-collapse: collapse; }
+  th { text-align: left; font-weight: 500; color: var(--muted); padding: 8px 10px; border-bottom: 1px solid var(--border); }
+  td { padding: 11px 10px; border-bottom: 1px solid var(--border); }
+  tr.row { cursor: pointer; } tr.row:hover td { background: rgba(255,255,255,.03); }
+  .ref { color: var(--muted); font-size: 12px; margin-left: 8px; font-variant-numeric: tabular-nums; }
+  .grid { display: grid; grid-template-columns: minmax(0,1fr) 320px; gap: 32px; align-items: start; margin-top: 8px; }
+  .main { display: grid; gap: 40px; min-width: 0; }
+  .sect-h { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 8px; margin-bottom: 12px; }
+  .panel { border: 1px solid var(--line); background: var(--card); border-radius: 12px; padding: 14px; }
+  .panel + .panel { margin-top: 16px; }
+  .panel .label { color: var(--muted); font-size: 12px; margin-bottom: 8px; display: block; }
+  .big { font-size: 17px; font-weight: 600; }
+  .btn { display: flex; width: 100%; height: 30px; align-items: center; justify-content: center; border-radius: 8px; border: 0; font: inherit; font-weight: 500; cursor: pointer; }
+  .btn.primary { background: #FAFAFA; color: #111; }
+  .btn.ghost { background: transparent; color: var(--muted); border: 1px solid var(--border); margin-top: 8px; }
+  .btn.danger { background: transparent; color: var(--red); border: 1px solid rgba(248,113,113,.35); margin-top: 8px; }
+  .kv { display: grid; grid-template-columns: 100px 1fr; gap: 6px 12px; }
+  .kv dt { color: var(--muted); } .kv dd { margin: 0; } .kv a { color: var(--fg); }
+  .must { display: grid; gap: 0; }
+  .must div { display: flex; justify-content: space-between; padding: 9px 0; border-bottom: 1px solid var(--border); }
+  .yes { color: var(--green); } .no { color: var(--red); }
+  .pdf { height: 420px; border-radius: 10px; border: 1px solid var(--border); background: #fff; color: #111; padding: 36px 44px; font: 11px/1.6 Georgia, serif; overflow: hidden; }
+  .pdf h3 { font: 600 18px Georgia, serif; margin: 0; } .pdf .rule { height: 1px; background: #ddd; margin: 12px 0; }
+  .note { background: var(--accent); border-radius: 10px; padding: 12px 14px; }
+  .steps { display: flex; gap: 4px; margin: 4px 0 12px; }
+  .steps i { flex: 1; height: 3px; border-radius: 3px; background: var(--accent); }
+  .steps i.done { background: var(--fg); } .steps i.now { background: var(--amber); }
+  .timeline { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+  .timeline li { display: grid; grid-template-columns: 18px 1fr auto; gap: 10px; }
+  .timeline .dot { width: 8px; height: 8px; margin: 5px; border-radius: 99px; background: var(--muted); }
+  .scrim { position: fixed; inset: 0; background: rgba(0,0,0,.6); display: none; align-items: center; justify-content: center; }
+  .scrim.on { display: flex; }
+  .dialog { width: 560px; background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 22px; }
+  .mail { background: var(--accent); border-radius: 10px; padding: 14px; margin: 14px 0; white-space: pre-wrap; }
+  .actions { display: flex; gap: 8px; justify-content: flex-end; }
+  .actions .btn { width: auto; padding: 0 14px; margin: 0; }
+  .preview-tag { position: fixed; right: 12px; bottom: 12px; font: 500 11px ui-monospace, monospace; background: #fff; color: #000; padding: 6px 10px; border-radius: 6px; }
+  .check { display: flex; gap: 8px; align-items: center; padding: 6px 0; }
+</style>
+</head>
+<body>
+<img class="top" src="admin-top.png" alt="">
+<div class="gutter">
+
+<!-- /admin/hiring -->
+<section class="view" id="list">
+  <div class="banner">Email is not connected. Confirmations and replies are saved here, but nobody receives them.</div>
+  <div class="head">
+    <div>
+      <h1 style="margin:0">Hiring</h1>
+      <p class="muted" style="margin:4px 0 0">2 new applications. 1 interview this week.</p>
+    </div>
+    <nav class="tabs"><a class="on" href="#list">New 2</a><a href="#list">Shortlisted 1</a><a href="#list">Interview 1</a><a href="#list">Offer</a><a href="#list">Hired</a><a href="#list">Closed 3</a></nav>
+  </div>
+  <div class="filters">
+    <select class="select"><option>All roles</option><option>Equity Research Analyst (3)</option><option>Open applications (1)</option></select>
+  </div>
+  <table>
+    <thead><tr><th>Applicant</th><th>Role</th><th style="width:120px">Must-haves</th><th style="width:120px">Notice</th><th style="width:120px">Applied</th><th style="width:150px">With</th></tr></thead>
+    <tbody>
+      <tr class="row" onclick="location.hash='applicant'"><td>Priya Shah<span class="ref">APP-00012</span></td><td>Equity Research Analyst</td><td class="yes">3 of 3</td><td>30 days</td><td>2h ago</td><td class="muted">Nobody yet</td></tr>
+      <tr class="row" onclick="location.hash='applicant'"><td>Ananya Rao<span class="ref">APP-00011</span></td><td>Open application<span class="muted">, Investment research</span></td><td class="muted">None asked</td><td>Can start now</td><td>1d ago</td><td class="muted">Nobody yet</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- /admin/hiring/:id -->
+<section class="view" id="applicant">
+  <a class="back" href="#list">&larr; Hiring</a>
+  <div style="margin-top:14px;display:flex;gap:8px"><span class="badge"><span class="dot"></span>New</span><span class="badge green">3 of 3 must-haves</span></div>
+  <h1>Priya Shah</h1>
+  <p class="muted" style="margin:4px 0 24px">Equity Research Analyst · APP-00012 · applied 14 Oct, 4:32 pm (2h ago) · from /careers</p>
+  <div class="grid">
+    <div class="main">
+      <section>
+        <div class="sect-h"><h2>Must-haves</h2><span class="muted">From the opening</span></div>
+        <div class="must">
+          <div><span>Two or more years of equity research</span><span class="yes">Yes</span></div>
+          <div><span>CFA Level II or above</span><span class="yes">Yes</span></div>
+          <div><span>Builds company models in Excel</span><span class="yes">Yes</span></div>
+        </div>
+      </section>
+      <section>
+        <div class="sect-h"><h2>Resume</h2><a class="muted" href="#applicant">Download</a></div>
+        <div class="pdf"><h3>Priya Shah</h3><p>Mumbai · priya.shah@example.com · +91 98200 12345</p><div class="rule"></div><b>Experience</b><p>Equity Research Associate, mid-cap chemicals, 2023 to now. Initiated coverage on six companies; built three-statement models and sum-of-the-parts valuations.</p><b>Education</b><p>B.Com, Narsee Monjee College. CFA Level II candidate.</p></div>
+      </section>
+      <section>
+        <div class="sect-h"><h2>What they wrote</h2></div>
+        <p class="muted" style="margin:0 0 4px">Why this role</p>
+        <div class="note">I have covered mid-cap chemicals for three years at a sell-side desk and want to work on longer-horizon ideas.</div>
+      </section>
+      <section>
+        <div class="sect-h"><h2>Interviews</h2><a class="muted" href="#applicant">Add an interview</a></div>
+        <p class="muted" style="margin:0">None yet.</p>
+      </section>
+      <section>
+        <div class="sect-h"><h2>Timeline</h2></div>
+        <ul class="timeline">
+          <li><span class="dot"></span><span>Confirmation saved, not sent<br><span class="muted">Email is not connected</span></span><span class="muted">2h ago</span></li>
+          <li><span class="dot"></span><span>Applied for Equity Research Analyst</span><span class="muted">2h ago</span></li>
+        </ul>
+      </section>
+    </div>
+    <aside>
+      <div class="panel">
+        <span class="label">Stage</span>
+        <div class="steps"><i class="now"></i><i></i><i></i><i></i><i></i></div>
+        <div class="big">New</div>
+        <p class="muted" style="margin:2px 0 12px">Next: shortlist, or tell them it is not going ahead.</p>
+        <button class="btn primary">Shortlist</button>
+        <button class="btn danger" onclick="location.hash='reject'">Not taken forward</button>
+      </div>
+      <div class="panel">
+        <span class="label">With</span>
+        <div style="margin-bottom:10px">Nobody yet</div>
+        <button class="btn primary">Take it</button>
+        <button class="btn ghost">Give it to someone</button>
+      </div>
+      <div class="panel">
+        <span class="label">Applicant</span>
+        <dl class="kv" style="margin:0">
+          <dt>Email</dt><dd><a href="#applicant">priya.shah@example.com</a></dd>
+          <dt>Phone</dt><dd>+91 98200 12345</dd>
+          <dt>City</dt><dd>Mumbai</dd>
+          <dt>Notice</dt><dd>30 days</dd>
+          <dt>Applied before</dt><dd>No</dd>
+        </dl>
+      </div>
+      <div class="panel">
+        <span class="label">Kept until</span>
+        <div>14 Oct 2027</div>
+        <p class="muted" style="margin:2px 0 10px">Deleted automatically on that day, resume included.</p>
+        <button class="btn ghost" style="margin:0">Delete now</button>
+      </div>
+    </aside>
+  </div>
+</section>
+
+<!-- Hired, with the role still open and others waiting -->
+<section class="view" id="hired">
+  <a class="back" href="#list">&larr; Hiring</a>
+  <div style="margin-top:14px;display:flex;gap:8px"><span class="badge green">Hired</span></div>
+  <h1>Priya Shah</h1>
+  <p class="muted" style="margin:4px 0 24px">Equity Research Analyst · APP-00012 · hired 2 Nov</p>
+  <div class="grid">
+    <div class="main"><section><div class="sect-h"><h2>Timeline</h2></div>
+      <ul class="timeline">
+        <li><span class="dot"></span><span>QA Admin marked Priya hired</span><span class="muted">just now</span></li>
+        <li><span class="dot"></span><span>Offer sent<br><span class="muted">Template: Offer</span></span><span class="muted">28 Oct</span></li>
+        <li><span class="dot"></span><span>Interview at the office, with QA Admin<br><span class="muted">"Strong on chemicals; asked good questions about holding periods."</span></span><span class="muted">22 Oct</span></li>
+        <li><span class="dot"></span><span>Shortlisted by QA Admin</span><span class="muted">15 Oct</span></li>
+      </ul></section></div>
+    <aside>
+      <div class="panel">
+        <span class="label">Stage</span>
+        <div class="steps"><i class="done"></i><i class="done"></i><i class="done"></i><i class="done"></i><i class="done"></i></div>
+        <div class="big">Hired</div>
+      </div>
+      <div class="panel">
+        <span class="label">The role</span>
+        <p style="margin:0 0 10px">Equity Research Analyst is still open on the website.</p>
+        <button class="btn primary">Close the role</button>
+        <p style="margin:14px 0 10px">2 other people are still being considered for it.</p>
+        <button class="btn ghost" style="margin:0" onclick="location.hash='tell'">Tell them it is filled</button>
+      </div>
+    </aside>
+  </div>
+</section>
+
+</div>
+
+<div class="scrim" id="reject"><div class="dialog">
+  <h2>Tell Priya it is not going ahead?</h2>
+  <p class="muted" style="margin:4px 0 0">This email goes to priya.shah@example.com. Edit it if you want.</p>
+  <div class="mail">Subject: Your application for Equity Research Analyst
+
+Hello Priya,
+
+Thank you for applying to Moneybee. We have decided not to take your application forward for this role.
+
+We will keep your details until 14 Oct 2027 in case a similar role opens, unless you ask us to delete them.
+
+Moneybee</div>
+  <div class="actions"><button class="btn ghost" onclick="location.hash='applicant'">Cancel</button><button class="btn ghost" onclick="location.hash='applicant'">Close without emailing</button><button class="btn primary" onclick="location.hash='applicant'">Send and close</button></div>
+</div></div>
+
+<div class="scrim" id="tell"><div class="dialog">
+  <h2>Tell the others the role is filled</h2>
+  <p class="muted" style="margin:4px 0 8px">Each gets the "Not taken forward" email and moves to Closed.</p>
+  <label class="check"><input type="checkbox" checked> Rahul Mehta <span class="muted">· Shortlisted</span></label>
+  <label class="check"><input type="checkbox" checked> Kunal Desai <span class="muted">· New</span></label>
+  <div class="actions" style="margin-top:14px"><button class="btn ghost" onclick="location.hash='hired'">Cancel</button><button class="btn primary" onclick="location.hash='hired'">Send 2 emails</button></div>
+</div></div>
+
+<span class="preview-tag">PROPOSED PREVIEW</span>
+<script>
+  function show() {
+    const h = location.hash.slice(1) || "list";
+    const base = h === "reject" ? "applicant" : h === "tell" ? "hired" : h;
+    document.querySelectorAll(".view").forEach((v) => v.classList.toggle("on", v.id === base));
+    document.querySelectorAll(".scrim").forEach((s) => s.classList.toggle("on", s.id === h));
+  }
+  window.addEventListener("hashchange", show); show();
+</script>
+</body>
+</html>

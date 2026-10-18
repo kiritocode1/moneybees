@@ -1,0 +1,18 @@
+{
+  "dataset": 103,
+  "first": {
+    "count": 5,
+    "status": "1\u20135 of 103 roles",
+    "height": 812.296875
+  },
+  "last": {
+    "count": 3,
+    "status": "101\u2013103 of 103 roles",
+    "height": 642.296875
+  },
+  "searchFromLastPage": {
+    "count": 1,
+    "status": "1\u20131 of 1 roles",
+    "height": 472.296875
+  }
+}

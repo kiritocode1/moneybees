@@ -1,0 +1,89 @@
+<!doctype html><html><head><meta charset="utf-8"><title>Guide preview</title>
+<script src="https://cdn.tailwindcss.com/3.4.17"></script>
+<style>
+body{margin:0;background:#141414;color:#ededed;font-family:-apple-system,Inter,system-ui,sans-serif}
+.muted{color:#a3a3a3}.line{border-color:rgba(255,255,255,.12)}
+.m{display:grid;place-items:center;width:24px;height:24px;border-radius:99px;background:#F6A11A;color:#000;font-size:12px;font-weight:700;box-shadow:0 0 0 3px #141414}
+.fig{position:relative;border-radius:12px;overflow:hidden;border:1px solid rgba(255,255,255,.12)}
+.fig img{display:block;width:100%}
+.pin{position:absolute;transform:translate(-50%,-50%)}
+.ring{position:absolute;border:2px solid #F6A11A;border-radius:8px}
+.toc a{display:block;padding:8px 12px;border-radius:8px;color:#ededed;text-decoration:none}
+.toc a.on{background:#262626}
+.toc small{display:block;color:#a3a3a3;font-size:12px;line-height:16px;margin-top:2px}
+.btn{display:inline-flex;align-items:center;gap:6px;height:28px;padding:0 10px;border-radius:7px;background:#2a2a2a;font-size:12px;font-weight:500}
+</style></head><body>
+<div style="width:1440px" class="flex">
+<aside class="toc w-[300px] shrink-0 border-r line px-5 pt-[60px] min-h-[1900px]">
+  <p class="text-[12px] uppercase tracking-[.08em] muted px-3">Guide</p>
+  <a class="on mt-2"><b>Start here</b><small>What the sidebar holds and where each part leads</small></a>
+  <a><b>What changes what</b><small>Each page of the site, part by part, with where to change it</small></a>
+  <a><b>Every screen</b><small>What each screen is for and how to use it well</small></a>
+  <a><b>How to</b><small>The jobs people do most, step by step</small></a>
+  <a><b>Fact sheets, explained</b><small>Why a new one every month, and what happens to it</small></a>
+  <a><b>The rules</b><small>What must never happen, and why</small></a>
+  <a><b>Where things come from</b><small>Which screen feeds which part of the site</small></a>
+</aside>
+<main class="flex-1 px-[56px] pt-[60px] pb-20">
+  <h1 class="text-[34px] font-semibold tracking-[-.01em]">Start here</h1>
+  <p class="mt-2 text-[15px] leading-[24px] muted max-w-[68ch]">Everything in the admin hangs off the sidebar on the left. It has four groups. Each does one kind of work, and each screen in it leads to the part of the site or the desk it changes.</p>
+  <div class="mt-8 grid grid-cols-[300px_1fr] gap-10 items-start">
+    <div class="fig" style="width:300px">
+      <img src="shots/sidebar-crop.png" style="width:275px;margin:0 auto">
+      <span class="pin" style="left:16px;top:26px"><span class="m">1</span></span>
+      <span class="pin" style="left:16px;top:161px"><span class="m">2</span></span>
+      <span class="pin" style="left:16px;top:371px"><span class="m">3</span></span>
+      <span class="pin" style="left:16px;top:481px"><span class="m">4</span></span>
+    </div>
+    <ol class="grid gap-7 list-none p-0 m-0 text-[15px] leading-[23px]">
+      <li class="grid grid-cols-[28px_1fr] gap-4"><span class="m">1</span><div><b class="text-[17px]">Desk: the daily work with people</b>
+        <ul class="mt-2 grid gap-1.5 muted list-none p-0">
+          <li><b class="text-[#ededed]">Today</b> leads to what needs you now: enquiries waiting, overdue replies, fact sheets to approve.</li>
+          <li><b class="text-[#ededed]">Enquiries</b> leads to every message from the Contact page, each with its reply clock.</li>
+          <li><b class="text-[#ededed]">People</b> leads to everyone who has written in or invests, with their history.</li>
+          <li><b class="text-[#ededed]">Deals</b> leads to each prospective investment and the stage it has reached.</li></ul></div></li>
+      <li class="grid grid-cols-[28px_1fr] gap-4"><span class="m">2</span><div><b class="text-[17px]">Website: what visitors see on moneybee.in</b>
+        <ul class="mt-2 grid gap-1.5 muted list-none p-0">
+          <li><b class="text-[#ededed]">Pages</b> leads to all eleven pages; Edit opens one beside the live page.</li>
+          <li><b class="text-[#ededed]">Team, Documents, Case studies, Openings</b> lead to lists that several pages show.</li>
+          <li><b class="text-[#ededed]">Office details</b> leads to the phone, email, address and map every page uses.</li>
+          <li><b class="text-[#ededed]">Guide</b> is this page.</li></ul></div></li>
+      <li class="grid grid-cols-[28px_1fr] gap-4"><span class="m">3</span><div><b class="text-[17px]">Publishing: the numbers and files behind the site</b>
+        <ul class="mt-2 grid gap-1.5 muted list-none p-0">
+          <li><b class="text-[#ededed]">Fact Sheets</b> leads to each month's returns; compliance approves them before the site changes.</li>
+          <li><b class="text-[#ededed]">Products</b> leads to the PMS and the AIF, their benchmark and whether returns may be shown.</li>
+          <li><b class="text-[#ededed]">Files</b> leads to every PDF and picture uploaded.</li></ul></div></li>
+      <li class="grid grid-cols-[28px_1fr] gap-4"><span class="m">4</span><div><b class="text-[17px]">Settings: how the desk runs and who may do what</b>
+        <ul class="mt-2 grid gap-1.5 muted list-none p-0">
+          <li><b class="text-[#ededed]">Playbooks, Email templates, Enquiry settings</b> lead to how enquiries are answered.</li>
+          <li><b class="text-[#ededed]">Client accounts, Staff</b> lead to who can sign in, to the portal and to this admin.</li>
+          <li><b class="text-[#ededed]">Audit log</b> leads to every change and who made it.</li></ul></div></li>
+    </ol>
+  </div>
+
+  <h1 class="mt-16 text-[28px] font-semibold border-t line pt-10">Every screen</h1>
+  <p class="mt-2 text-[15px] leading-[24px] muted max-w-[68ch]">One entry per screen: a picture of it with its controls numbered, what it is for, and how to use it well. A screen's How to use this button lands on its entry.</p>
+  <article class="mt-8">
+    <div class="flex items-center gap-3"><h2 class="text-[22px] font-semibold">Documents</h2><span class="muted text-[14px]">Website › Documents</span><span class="btn ml-auto">Open Documents</span></div>
+    <p class="mt-2 text-[15px] leading-[24px] max-w-[72ch]">The cards on the Investor Centre page. A card with a PDF or web address links to it; one without says Available on request.</p>
+    <div class="mt-5 grid grid-cols-[minmax(0,1.9fr)_minmax(0,1fr)] gap-8 items-start">
+      <div class="fig">
+        <img src="shots/documents-crop.png">
+<span class="ring" style="left:calc(85.43% - 4px);top:calc(15.18% - 4px);width:calc(13.15% + 8px);height:calc(4.11% + 8px)"></span>
+<span class="pin" style="left:83.26%;top:17.14%"><span class="m">1</span></span>
+<span class="ring" style="left:calc(20.98% - 4px);top:calc(2.50% - 4px);width:calc(9.67% + 8px);height:calc(4.29% + 8px)"></span>
+<span class="pin" style="left:32.83%;top:4.64%"><span class="m">2</span></span>
+<span class="ring" style="left:calc(4.13% - 4px);top:calc(51.79% - 4px);width:calc(1.74% + 8px);height:calc(3.21% + 8px)"></span>
+<span class="pin" style="left:1.74%;top:53.39%"><span class="m">3</span></span>
+<span class="ring" style="left:calc(49.89% - 4px);top:calc(51.43% - 4px);width:calc(7.61% + 8px);height:calc(3.57% + 8px)"></span>
+<span class="pin" style="left:59.67%;top:53.21%"><span class="m">4</span></span>
+      </div>
+      <ol class="grid gap-5 list-none p-0 m-0 text-[15px] leading-[23px]">
+        <li class="grid grid-cols-[28px_1fr] gap-3"><span class="m">1</span><div><b>How to use this</b><p class="muted mt-0.5">Opens this entry in the Guide from the screen itself.</p></div></li>
+        <li class="grid grid-cols-[28px_1fr] gap-3"><span class="m">2</span><div><b>Create New</b><p class="muted mt-0.5">Adds a card. Pick its group: the four groups are fixed, because the menu and footer link to them.</p></div></li>
+        <li class="grid grid-cols-[28px_1fr] gap-3"><span class="m">3</span><div><b>Drag to reorder</b><p class="muted mt-0.5">The order here is the order on the page, within each group.</p></div></li>
+        <li class="grid grid-cols-[28px_1fr] gap-3"><span class="m">4</span><div><b>File</b><p class="muted mt-0.5">Amber No file means the card says Available on request. Open the card, drop in the approved PDF, set its date and Save: it is live straight away.</p></div></li>
+      </ol>
+    </div>
+  </article>
+</main></div></body></html>

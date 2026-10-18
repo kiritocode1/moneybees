@@ -1,0 +1,27 @@
+{
+  "company": "Sample: an optical networking maker",
+  "input": "Designs and makes optical and wireless networking equipment that telecom operators use to carry data.",
+  "parts": [
+    { "type": "path", "role": "construction", "d": "M6 126 H234" },
+    { "type": "rect", "role": "solid", "x": 18, "y": 62, "w": 44, "h": 64 },
+    { "type": "path", "role": "line", "d": "M24 72 H56 M24 82 H56 M24 92 H56 M24 102 H56 M24 112 H56" },
+    { "type": "circle", "role": "accent", "cx": 52, "cy": 72, "r": 1.6 },
+    { "type": "label", "x": 40, "y": 140, "text": "EQUIPMENT" },
+    { "type": "path", "role": "construction", "d": "M62 82 C 96 82, 104 40, 150 40 M62 92 H150 M62 102 C 96 102, 104 118, 150 118" },
+    { "type": "path", "role": "line", "weight": "bold", "d": "M62 82 C 96 82, 104 40, 150 40" },
+    { "type": "path", "role": "line", "weight": "bold", "d": "M62 92 H150" },
+    { "type": "path", "role": "line", "weight": "bold", "d": "M62 102 C 96 102, 104 118, 150 118" },
+    { "type": "label", "x": 108, "y": 86, "text": "FIBRE" },
+    { "type": "path", "role": "line", "d": "M168 64 L174 20 L180 64 M170 50 H178 M171 36 H177" },
+    { "type": "path", "role": "construction", "d": "M180 26 a10 10 0 0 1 0 14 M184 22 a16 16 0 0 1 0 22" },
+    { "type": "label", "x": 174, "y": 76, "text": "TOWER" },
+    { "type": "path", "role": "solid", "d": "M196 126 V104 l10 -10 10 10 V126 Z" },
+    { "type": "path", "role": "solid", "d": "M218 126 V108 l8 -8 8 8 V126 Z" },
+    { "type": "label", "x": 214, "y": 140, "text": "HOMES" },
+    { "type": "path", "role": "line", "d": "M150 118 H196" },
+    { "type": "path", "role": "line", "d": "M150 40 H168" },
+    { "type": "path", "role": "flow", "d": "M62 82 C 96 82, 104 40, 150 40 H168" },
+    { "type": "path", "role": "flow", "d": "M62 102 C 96 102, 104 118, 150 118 H196" },
+    { "type": "rect", "role": "accent", "x": 147, "y": 89, "w": 6, "h": 6 }
+  ]
+}

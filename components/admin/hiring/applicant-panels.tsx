@@ -118,7 +118,7 @@ function RejectDialog({ applicant, onClose }: { applicant: ApplicantDetail; onCl
         <Button variant="secondary" loading={pending} onClick={() => run(() => notTakenForward(applicant.id, {}), onClose)}>
           Close without emailing
         </Button>
-        <Button loading={pending} onClick={() => run(() => notTakenForward(applicant.id, { email: draft.draft }), onClose)}>
+        <Button loading={pending} onClick={() => run(() => notTakenForward(applicant.id, { email: draft.email }), onClose)}>
           {applicant.emailConnected ? "Send and close" : "Save the email and close"}
         </Button>
       </DialogFooter>
@@ -140,7 +140,7 @@ function OfferDialog({ applicant, onClose }: { applicant: ApplicantDetail; onClo
         <Button variant="secondary" loading={pending} onClick={() => run(() => makeOffer(applicant.id, {}), onClose)}>
           Move without emailing
         </Button>
-        <Button loading={pending} onClick={() => run(() => makeOffer(applicant.id, { email: draft.draft }), onClose)}>
+        <Button loading={pending} onClick={() => run(() => makeOffer(applicant.id, { email: draft.email }), onClose)}>
           {applicant.emailConnected ? "Send the offer" : "Save the offer"}
         </Button>
       </DialogFooter>
@@ -205,7 +205,7 @@ function TellDialog({ applicant, onClose }: { applicant: ApplicantDetail; onClos
         <Button variant="ghost" onClick={onClose}>
           Cancel
         </Button>
-        <Button loading={pending} disabled={chosen.size === 0} onClick={() => run(() => tellOthers(applicant.opening?.id ?? 0, { ids: [...chosen], email: draft.draft }), onClose)}>
+        <Button loading={pending} disabled={chosen.size === 0} onClick={() => run(() => tellOthers(applicant.opening?.id ?? 0, { ids: [...chosen], email: draft.email }), onClose)}>
           {applicant.emailConnected ? `Send ${chosen.size} ${chosen.size === 1 ? "email" : "emails"}` : `Save ${chosen.size} ${chosen.size === 1 ? "email" : "emails"} and close them`}
         </Button>
       </DialogFooter>

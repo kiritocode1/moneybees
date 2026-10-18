@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Monthly numbers</title>
+<style>
+  :root {
+    --bg: #141414; --card: #1b1b1b; --field: #222; --border: #2c2c2c; --text: #ededed; --muted: #9a9a9a;
+    --orange: #F6A11A; --amber: #f2b441; --red: #f06a5f; --grey: #8b8b8b;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font: 14px/1.45 Inter, ui-sans-serif, system-ui, -apple-system, sans-serif; }
+  .note { background: #2a2210; color: var(--amber); padding: 8px 60px; font-size: 13px; }
+  .page { padding: 28px 60px 120px; }
+  .crumb { color: var(--muted); font-size: 13px; }
+  h1 { margin: 10px 0 2px; font-size: 30px; font-weight: 600; letter-spacing: -.01em; }
+  .sub { color: var(--muted); margin: 0; }
+  .step { display: flex; align-items: center; gap: 10px; font-weight: 600; margin: 0 0 12px; }
+  .num { display: inline-flex; width: 22px; height: 22px; border-radius: 50%; background: var(--orange); color: #000; font-size: 12px; align-items: center; justify-content: center; font-weight: 700; }
+  .pick { display: grid; grid-template-columns: 1fr 1fr 300px; gap: 12px; margin: 26px 0 28px; }
+  .product { border: 1px solid var(--border); background: var(--card); border-radius: 12px; padding: 14px 16px; cursor: pointer; }
+  .product b { display: block; font-size: 15px; }
+  .product span { color: var(--muted); font-size: 13px; }
+  .product.on { border-color: var(--orange); box-shadow: 0 0 0 1px var(--orange) inset; }
+  .month { border: 1px solid var(--border); background: var(--card); border-radius: 12px; display: flex; align-items: center; justify-content: space-between; padding: 0 8px; }
+  .month b { font-size: 18px; }
+  .month small { display: block; color: var(--muted); font-size: 12px; font-weight: 400; text-align: center; }
+  .month button { background: none; border: 0; color: var(--text); font-size: 18px; width: 36px; height: 36px; border-radius: 8px; cursor: pointer; }
+  .month button:hover { background: #262626; }
+  .grid { display: grid; grid-template-columns: 330px 440px 1fr; gap: 20px; align-items: start; }
+  .card { border: 1px solid var(--border); background: var(--card); border-radius: 12px; padding: 16px; }
+  .pdf { height: 560px; display: flex; flex-direction: column; }
+  .pdfpage { flex: 1; margin-top: 10px; border-radius: 8px; background: #f4f4f2; color: #333; padding: 18px; font-size: 10px; line-height: 1.6; overflow: hidden; }
+  .pdfpage h4 { margin: 0 0 6px; font-size: 12px; color: #111; }
+  .pdfpage .bar { height: 6px; background: #ddd; margin: 6px 0; border-radius: 3px; }
+  .pdfpage table { width: 100%; border-collapse: collapse; margin-top: 8px; }
+  .pdfpage td { border-top: 1px solid #ddd; padding: 3px 0; }
+  .file { display: flex; justify-content: space-between; align-items: center; color: var(--muted); font-size: 13px; }
+  .file a { color: var(--text); }
+  table.nums { width: 100%; border-collapse: collapse; }
+  .nums th { text-align: right; color: var(--muted); font-weight: 400; font-size: 12px; padding: 0 0 8px; }
+  .nums th:first-child { text-align: left; }
+  .nums td { padding: 5px 0; border-top: 1px solid var(--border); vertical-align: top; }
+  .nums td:first-child { color: var(--muted); padding-top: 12px; }
+  .cell { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; }
+  .cell label { position: relative; }
+  .cell input { width: 120px; height: 36px; background: var(--field); border: 1px solid var(--border); color: var(--text); border-radius: 8px; padding: 0 26px 0 10px; text-align: right; font: inherit; font-variant-numeric: tabular-nums; }
+  .cell input:focus { outline: none; border-color: var(--orange); }
+  .cell input.warn { border-color: var(--amber); }
+  .cell label::after { content: "%"; position: absolute; right: 10px; top: 8px; color: var(--muted); }
+  .cell.mn label::after { content: "Mn"; right: 8px; }
+  .cell.mn input { padding-right: 34px; }
+  .was { color: #6f6f6f; font-size: 11px; font-variant-numeric: tabular-nums; }
+  .check { margin-top: 10px; border-radius: 8px; background: #2a2210; color: var(--amber); padding: 8px 10px; font-size: 13px; }
+  .hint { color: var(--muted); font-size: 12px; margin: 10px 0 0; }
+  .more { margin-top: 14px; color: var(--muted); font-size: 13px; border-top: 1px solid var(--border); padding-top: 12px; }
+  .site { background: #fff; color: #000; border-radius: 10px; padding: 22px 22px 18px; }
+  .site .eyebrow { font: 10px/1 ui-monospace, monospace; letter-spacing: .1em; color: #777; text-transform: uppercase; }
+  .row { display: grid; grid-template-columns: 90px 1fr 64px; gap: 10px; align-items: center; padding: 9px 0; border-top: 1px solid #eee; }
+  .row .p { font: 10px ui-monospace, monospace; color: #666; text-transform: uppercase; }
+  .bars { display: grid; gap: 4px; }
+  .b { height: 10px; border-radius: 6px; transition: width .35s cubic-bezier(.23,1,.32,1); }
+  .b.o { background: linear-gradient(90deg, #fde8c4, var(--orange)); }
+  .b.g { height: 4px; background: #cfcfcf; }
+  .row .v { text-align: right; font-variant-numeric: tabular-nums; font-size: 14px; }
+  .stacks { display: flex; gap: 44px; align-items: flex-end; justify-content: center; height: 170px; margin-top: 14px; }
+  .stack { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+  .stack i { display: block; width: 58px; border-radius: 50% / 9px; transition: height .35s cubic-bezier(.23,1,.32,1); }
+  .stack b { font-size: 15px; font-weight: 500; }
+  .stack span { font: 9px ui-monospace, monospace; color: #777; text-transform: uppercase; }
+  .footer { position: fixed; left: 0; right: 0; bottom: 0; background: #181818; border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 14px 60px; }
+  .footer p { margin: 0; color: var(--muted); }
+  .footer p b { color: var(--text); font-weight: 500; }
+  .btn { height: 38px; border-radius: 10px; padding: 0 16px; font: inherit; font-weight: 500; border: 0; cursor: pointer; }
+  .btn.primary { background: var(--text); color: #111; }
+  .btn.secondary { background: #262626; color: var(--text); margin-right: 8px; }
+</style>
+</head>
+<body>
+<div class="note">Proposed preview. The August numbers are made up to show the screen working; the July numbers are the real ones.</div>
+<div class="page">
+  <div class="crumb">Publishing › Fact sheets</div>
+  <h1>Add a month's numbers</h1>
+  <p class="sub">Pick the fund and the month, drop in the fact sheet, copy its numbers into the grid. Compliance checks them against the PDF before they go on the site.</p>
+
+  <div class="pick">
+    <div class="product on"><b>Moneybee PMS</b><span>Compared with the S&amp;P BSE 500 TRI</span></div>
+    <div class="product"><b>Flyingbee Investment Fund</b><span>Category III AIF</span></div>
+    <div class="month"><button aria-label="Earlier month">‹</button><b>August 2026<small>Figures as of 31 Aug</small></b><button aria-label="Later month">›</button></div>
+  </div>
+
+  <div class="grid">
+    <section class="card pdf">
+      <p class="step"><span class="num">1</span>The fact sheet PDF</p>
+      <div class="file"><span>Moneybee_PMS_Aug_2026.pdf</span><a href="#">Change</a></div>
+      <div class="pdfpage">
+        <h4>Moneybee PMS · Fact sheet · August 2026</h4>
+        <div class="bar" style="width:70%"></div><div class="bar" style="width:55%"></div>
+        <table>
+          <tr><td>Period</td><td>Strategy</td><td>Benchmark</td></tr>
+          <tr><td>1 Month</td><td>1.20%</td><td>0.85%</td></tr>
+          <tr><td>3 Months</td><td>7.10%</td><td>2.40%</td></tr>
+          <tr><td>6 Months</td><td>12.90%</td><td>1.60%</td></tr>
+          <tr><td>1 Year</td><td>-5.80%</td><td>2.30%</td></tr>
+          <tr><td>3 Years</td><td>14.20%</td><td>10.40%</td></tr>
+          <tr><td>5 Years</td><td>19.60%</td><td>10.90%</td></tr>
+          <tr><td>Since Inception</td><td>19.40%</td><td>9.88%</td></tr>
+        </table>
+        <div class="bar" style="width:80%;margin-top:14px"></div><div class="bar" style="width:62%"></div><div class="bar" style="width:74%"></div>
+      </div>
+    </section>
+
+    <section class="card">
+      <p class="step"><span class="num">2</span>The numbers</p>
+      <table class="nums">
+        <thead><tr><th></th><th>Moneybee PMS</th><th>S&amp;P BSE 500 TRI</th></tr></thead>
+        <tbody id="rows"></tbody>
+      </table>
+      <div class="check" id="check">3 Years moved 12.5 points since July. Check it against the PDF.</div>
+      <p class="hint">Leave a box empty when the period has not run; the site prints N/A. You can paste a whole column from the PDF or a spreadsheet.</p>
+      <table class="nums" style="margin-top:6px">
+        <tbody>
+          <tr><td>Rs. 1 Mn grew to</td>
+            <td><div class="cell mn"><label><input id="wo" value="28.40" inputmode="decimal"></label><span class="was">July 28.85</span></div></td>
+            <td><div class="cell mn"><label><input id="wb" value="6.02" inputmode="decimal"></label><span class="was">July 5.97</span></div></td></tr>
+        </tbody>
+      </table>
+      <div class="more">Top sectors (optional) ›</div>
+    </section>
+
+    <section class="card">
+      <p class="step"><span class="num">3</span>How the site will look</p>
+      <div class="site">
+        <div class="eyebrow">Performance · Home and PMS pages</div>
+        <div id="lit" style="margin-top:10px"></div>
+        <div class="stacks">
+          <div class="stack"><b id="sbv">Rs. 6.02 Mn</b><span>S&amp;P BSE 500 TRI</span><i id="sb" style="background:#e4e2dd"></i></div>
+          <div class="stack"><b id="sov">Rs. 28.4 Mn</b><span>Moneybee PMS</span><i id="so" style="background:var(--orange)"></i></div>
+        </div>
+      </div>
+      <p class="hint">The real graphs, drawn from the boxes as you type.</p>
+    </section>
+  </div>
+</div>
+<div class="footer">
+  <p><b id="filled"></b> · <span id="warns">1 to check</span> · last saved a few seconds ago</p>
+  <div><button class="btn secondary">Save and finish later</button><button class="btn primary">Send to compliance</button></div>
+</div>
+<script>
+  // July 2026 (published) and example August numbers: period, July ours, July benchmark, Aug ours, Aug benchmark.
+  const ROWS = [
+    ["1 Month", 2.08, 2.02, "1.20", "0.85"], ["3 Months", 8.44, 3.29, "7.10", "2.40"], ["6 Months", 13.63, 1.38, "12.90", "1.60"],
+    ["1 Year", -7.45, 1.95, "-5.80", "2.30"], ["2 Years", null, null, "", ""], ["3 Years", 13.96, 10.67, "1.42", "10.40"],
+    ["5 Years", 19.79, 11.01, "19.60", "10.90"], ["Since Inception", 19.44, 9.9, "19.40", "9.88"],
+  ];
+  const fmt = (v) => (v === null ? "none" : v.toFixed(2));
+  document.getElementById("rows").innerHTML = ROWS.map(([p, jo, jb, ao, ab], i) => `
+    <tr><td>${p}</td>
+      <td><div class="cell"><label><input data-i="${i}" data-k="o" value="${ao}" inputmode="decimal"></label><span class="was">July ${fmt(jo)}</span></div></td>
+      <td><div class="cell"><label><input data-i="${i}" data-k="b" value="${ab}" inputmode="decimal"></label><span class="was">July ${fmt(jb)}</span></div></td></tr>`).join("");
+  const num = (el) => (el.value.trim() === "" ? null : Number(el.value));
+  function draw() {
+    const inputs = [...document.querySelectorAll("#rows input")];
+    const val = (i, k) => num(inputs.find((x) => x.dataset.i == i && x.dataset.k == k));
+    const shown = [3, 5, 6, 7];
+    const max = Math.max(...shown.flatMap((i) => [Math.abs(val(i, "o") ?? 0), Math.abs(val(i, "b") ?? 0)]), 1);
+    document.getElementById("lit").innerHTML = shown.map((i) => {
+      const o = val(i, "o"), b = val(i, "b");
+      return `<div class="row"><span class="p">${ROWS[i][0]}</span><div class="bars"><i class="b g" style="width:${Math.abs(b ?? 0) / max * 100}%"></i><i class="b o" style="width:${Math.max(3, Math.abs(o ?? 0) / max * 100)}%"></i></div><span class="v">${o === null ? "N/A" : (o > 0 ? "+" : "") + o.toFixed(2) + "%"}</span></div>`;
+    }).join("");
+    const wo = num(document.getElementById("wo")) ?? 0, wb = num(document.getElementById("wb")) ?? 0, top = Math.max(wo, wb, 1);
+    document.getElementById("so").style.height = (wo / top * 120) + "px";
+    document.getElementById("sb").style.height = (wb / top * 120) + "px";
+    document.getElementById("sov").textContent = `Rs. ${wo} Mn`;
+    document.getElementById("sbv").textContent = `Rs. ${wb} Mn`;
+    let warns = 0;
+    inputs.forEach((x) => {
+      const before = ROWS[x.dataset.i][x.dataset.k === "o" ? 1 : 2];
+      const now = num(x);
+      const far = before !== null && now !== null && Math.abs(now - before) > 8;
+      x.classList.toggle("warn", far);
+      if (far) warns++;
+    });
+    document.getElementById("warns").textContent = warns ? `${warns} to check` : "nothing to check";
+    document.getElementById("check").style.display = warns ? "block" : "none";
+    const empty = inputs.filter((x) => x.value.trim() === "").length;
+    document.getElementById("filled").textContent = empty ? `${empty} boxes left empty, shown as N/A` : "Every box filled";
+  }
+  document.addEventListener("input", draw);
+  draw();
+</script>
+</body>
+</html>

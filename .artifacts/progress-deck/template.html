@@ -1,0 +1,749 @@
+<!doctype html>
+<html lang="en-IN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<title>Moneybee · Website progress update · 08 October 2026</title>
+<style>
+  :root {
+    --paper: #f4f1e9;
+    --ink: #171714;
+    --muted: #79766e;
+    --muted-2: #a7a298;
+    --line: #d6d0c3;
+    --line-dark: #3a3933;
+    --honey: #f6a11a;
+    --white: #fffdf8;
+    --tile: rgba(255,255,255,.62);
+    --tile-line: rgba(23,23,20,.07);
+    --ease-out: cubic-bezier(.23, 1, .32, 1);
+    --stage-w: min(100vw, calc(100dvh * 16 / 9));
+    --stage-h: min(100dvh, calc(100vw * 9 / 16));
+  }
+
+  * { box-sizing: border-box; }
+  html { background: #0c0c0b; }
+  body {
+    margin: 0;
+    min-height: 100dvh;
+    overflow: hidden;
+    background: #0c0c0b;
+    color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  h1, h2, h3, p, ul, ol, dl, dd, figure { margin: 0; }
+  ul { padding: 0; list-style: none; }
+  button { font: inherit; color: inherit; }
+  button:focus-visible { outline: 3px solid var(--honey); outline-offset: 4px; }
+  a { color: inherit; }
+
+  .deck-shell { position: fixed; inset: 0; display: grid; place-items: center; background: #0c0c0b; }
+  .deck {
+    position: relative;
+    width: var(--stage-w);
+    height: var(--stage-h);
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    container-type: size;
+    background: var(--paper);
+    box-shadow: 0 0 0 1px rgba(255,255,255,.08), 0 24px 80px rgba(0,0,0,.42);
+  }
+
+  .slide {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    gap: 2.2cqh;
+    padding: 5.6cqh 4.6cqw 4.4cqh;
+    overflow: hidden;
+    background: var(--paper);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 140ms var(--ease-out), visibility 0s linear 140ms;
+  }
+  .slide.is-active { z-index: 2; opacity: 1; visibility: visible; transition: opacity 140ms var(--ease-out), visibility 0s; }
+  .slide.dark { background: var(--ink); color: var(--paper); --tile: rgba(255,255,255,.055); --tile-line: rgba(255,255,255,.09); --muted: #9a968c; }
+  .slide.orange { background: var(--honey); color: var(--ink); --tile: rgba(255,253,248,.34); --tile-line: rgba(23,23,20,.14); --muted: #5e3f0c; }
+
+  .slide-title { font-size: clamp(3.2rem, 5.2cqw, 5.8rem); line-height: .94; letter-spacing: -.045em; font-weight: 600; }
+  .kicker { display: block; margin-bottom: 1.4cqh; font-size: .86cqw; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+
+  .bento { min-height: 0; display: grid; grid-template-columns: repeat(12, 1fr); grid-auto-rows: minmax(0, 1fr); gap: 1.1cqw; }
+  .tile {
+    min-width: 0;
+    min-height: 0;
+    display: grid;
+    align-content: center;
+    gap: .9cqh;
+    padding: 2.4cqh 1.6cqw;
+    border-radius: 1.15cqw;
+    background: var(--tile);
+    box-shadow: inset 0 0 0 1px var(--tile-line);
+  }
+  .tile--top { align-content: start; }
+  .tile--fill { align-content: stretch; grid-template-rows: minmax(0, 1fr); }
+  .tile--split { align-content: space-between; }
+  .tile--ink { background: var(--ink); color: var(--paper); box-shadow: none; --muted: #a39f95; }
+  .tile--plain { background: none; box-shadow: none; padding: 2.4cqh 0; }
+  .c2{grid-column:span 2}.c3{grid-column:span 3}.c4{grid-column:span 4}.c5{grid-column:span 5}.c6{grid-column:span 6}
+  .c7{grid-column:span 7}.c8{grid-column:span 8}.c9{grid-column:span 9}.c12{grid-column:span 12}
+  .r2{grid-row:span 2}.r3{grid-row:span 3}.r4{grid-row:span 4}
+
+  .tile__value { font-size: 3.4cqw; line-height: .9; letter-spacing: -.048em; font-weight: 600; font-variant-numeric: tabular-nums; }
+  .tile__value--xl { font-size: 7.4cqw; letter-spacing: -.06em; }
+  .tile__value--sm { font-size: 2.2cqw; }
+  .tile__name { font-size: 1.7cqw; line-height: 1.12; letter-spacing: -.028em; font-weight: 600; }
+  .tile__label { font-size: 1.06cqw; line-height: 1.4; letter-spacing: 0; color: var(--muted); }
+  .tile__list { display: grid; gap: 1.1cqh; font-size: 1.06cqw; line-height: 1.3; }
+  .tile__list li { color: var(--muted); }
+  .tile__list b { color: var(--ink); font-weight: 600; }
+  .dark .tile__list b { color: var(--paper); }
+  .honey { color: var(--honey); }
+  .orange .honey { color: var(--ink); }
+
+  .foot { font-size: .92cqw; line-height: 1.4; color: var(--muted); letter-spacing: 0; }
+  .slide-index { position: absolute; right: 4.6cqw; bottom: 2.4cqh; font-size: .76cqw; font-variant-numeric: tabular-nums; color: var(--muted-2); }
+  .dark .slide-index { color: rgba(244,241,233,.32); }
+  .orange .slide-index { color: rgba(23,23,20,.42); }
+
+  /* Motion: the slide swap stays near-imperceptible; the tile build is the explanatory beat. */
+  .tile, .build {
+    opacity: 0;
+    transform: translateY(1.1cqh) scale(.985);
+    transition: opacity 260ms var(--ease-out), transform 260ms var(--ease-out);
+    transition-delay: calc(var(--i, 0) * 55ms);
+  }
+  .is-active .tile, .is-active .build { opacity: 1; transform: none; }
+  .pop { opacity: 0; transition: opacity 300ms var(--ease-out); transition-delay: calc(var(--i, 0) * 45ms + 160ms); }
+  .is-active .pop { opacity: 1; }
+  .grow { transform: scaleX(0); transform-origin: left center; transition: transform 700ms var(--ease-out) 180ms; }
+  .is-active .grow { transform: none; }
+
+  /* Cover: the site's own look. Logo, serif title, and the real pages fanned on the right */
+  .cover { grid-template-rows: auto 1fr auto; gap: 0; background: var(--paper); }
+  .cv-top { display: flex; align-items: center; justify-content: space-between; }
+  .cv-logo { display: block; height: 8.6cqh; width: auto; margin-left: -.4cqw; }
+  .cv-date { font: 500 .8cqw/1 ui-monospace, "SF Mono", Menlo, monospace; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+  .cv-main { min-height: 0; display: grid; grid-template-columns: 38cqw 1fr; align-items: center; }
+  .cv-copy { display: grid; gap: 3cqh; }
+  .cover .slide-title { font-family: "Instrument Serif", Georgia, serif; font-weight: 400; font-size: 6.6cqw; line-height: .92; letter-spacing: -.02em; }
+  .cover .slide-title em { color: var(--honey); }
+  .cv-lede { font-size: 1.5cqw; line-height: 1.32; letter-spacing: -.015em; color: #4a4842; max-width: 31cqw; }
+  .cv-status { display: grid; gap: 1.2cqh; max-width: 31cqw; }
+  .cv-status-row { display: flex; justify-content: space-between; font: 500 .78cqw/1 ui-monospace, "SF Mono", Menlo, monospace; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+  .cv-status-row b { color: var(--ink); font-weight: 600; }
+  .cv-bar { position: relative; height: .9cqh; border-radius: 99px; background: rgba(23,23,20,.09); overflow: hidden; }
+  .cv-bar i { position: absolute; inset: 0 20% 0 0; border-radius: 99px; background: var(--honey); }
+  .cv-stack { position: relative; height: 100%; }
+  .cv-frame { position: absolute; margin: 0; border-radius: .7cqw; overflow: hidden; background: #fff; box-shadow: 0 0 0 1px rgba(23,23,20,.08), 0 2.4cqh 5cqh -2cqh rgba(23,23,20,.32); }
+  .cv-frame figcaption { display: flex; align-items: center; gap: .35cqw; height: 2.6cqh; padding: 0 .8cqw; border-bottom: 1px solid rgba(23,23,20,.07); background: #f7f6f2; font: 500 .62cqw/1 ui-monospace, "SF Mono", Menlo, monospace; color: var(--muted); }
+  .cv-frame figcaption i { width: .45cqw; height: .45cqw; border-radius: 50%; background: rgba(23,23,20,.14); }
+  .cv-frame figcaption span { margin-left: .6cqw; }
+  .cv-frame img { display: block; width: 100%; aspect-ratio: 16 / 10; object-fit: cover; object-position: top; }
+  .cv-frame.f1 { z-index: 3; width: 33cqw; left: 3cqw; bottom: 4cqh; }
+  .cv-frame.f2 { z-index: 2; width: 30cqw; left: 16cqw; top: 7.5cqh; }
+  .cv-frame.f3 { z-index: 1; width: 27cqw; right: 0; top: 0; }
+  .cv-foot { display: flex; justify-content: space-between; align-items: end; padding-top: 2cqh; border-top: 1px solid var(--line); font-size: .9cqw; line-height: 1.4; color: var(--muted); }
+  .cv-foot b { color: var(--ink); font-weight: 600; }
+
+  /* Progress bar on the status slide */
+  .meter { position: relative; height: 1.3cqh; border-radius: 99px; background: rgba(23,23,20,.08); overflow: hidden; }
+  .meter i { position: absolute; inset: 0 20% 0 0; border-radius: 99px; background: var(--honey); }
+
+  /* Timeline: dates to scale from the working session to today, then the steps still ahead */
+  .tl { position: relative; height: 56cqh; --y: 36cqh; }
+  .tl-phases { position: absolute; left: 0; right: 0; top: 0; height: 3.6cqh; }
+  .tl-phase { position: absolute; top: 0; bottom: 0; display: flex; align-items: center; padding: 0 .7cqw; border-radius: .4cqw; font-size: .8cqw; font-weight: 600; letter-spacing: .02em; white-space: nowrap; overflow: hidden; }
+  .tl-phase.soft { background: rgba(23,23,20,.07); }
+  .tl-phase.ink { background: var(--ink); color: var(--paper); }
+  .tl-phase.ahead { outline: 1px dashed var(--honey); outline-offset: -1px; color: #8a5600; }
+  .tl-track { position: absolute; left: 2%; right: 0; top: var(--y); height: 2px; margin-top: -1px; background: repeating-linear-gradient(90deg, var(--muted-2) 0 .5cqw, transparent .5cqw .9cqw); }
+  .tl-track.done { right: 32%; background: var(--ink); }
+  .tl-node { position: absolute; top: var(--y); width: .9cqw; height: .9cqw; margin: -.45cqw 0 0 -.45cqw; border-radius: 50%; background: var(--paper); box-shadow: inset 0 0 0 2px var(--ink); }
+  .tl-node.ahead { box-shadow: inset 0 0 0 1.5px var(--muted-2); }
+  .tl-node.today { width: 1.6cqw; height: 1.6cqw; margin: -.8cqw 0 0 -.8cqw; background: var(--honey); box-shadow: 0 0 0 .5cqw rgba(246,161,26,.25); }
+  .tl-label { position: absolute; width: 12cqw; padding-left: .6cqw; font-size: .92cqw; line-height: 1.3; color: var(--muted); }
+  .tl-label b { display: block; margin-bottom: .3cqh; font-size: .8cqw; font-weight: 600; letter-spacing: .04em; color: var(--ink); text-transform: uppercase; }
+  .tl-label.ahead b { color: var(--muted); }
+  .tl-label.right { padding-left: 0; padding-right: .6cqw; text-align: right; transform: translateX(-100%); }
+  .tl-label::before { content: ""; position: absolute; left: 0; width: 1px; background: var(--line); }
+  .tl-label.right::before { left: auto; right: 0; }
+  .tl-label.t1, .tl-label.t2 { bottom: calc(100% - var(--y) + .8cqh); }
+  .tl-label.b1, .tl-label.b2 { top: calc(var(--y) + .8cqh); }
+  .tl-label.t1 { padding-bottom: 1.2cqh; }
+  .tl-label.t2 { padding-bottom: 9.5cqh; }
+  .tl-label.b1 { padding-top: 1.2cqh; }
+  .tl-label.b2 { padding-top: 9.5cqh; }
+  .tl-label.t1::before, .tl-label.t2::before { bottom: 0; height: calc(100% - 4cqh); }
+  .tl-label.b1::before, .tl-label.b2::before { top: 0; height: calc(100% - 4.6cqh); }
+  .tl-here { position: absolute; bottom: calc(100% - var(--y) + .8cqh); width: 17cqw; padding: 0 0 18cqh .9cqw; }
+  .tl-here::before { content: ""; position: absolute; left: 0; bottom: 0; top: .4cqh; width: 2px; margin-left: -1px; background: var(--honey); }
+  .tl-here .kicker { margin: 0 0 .6cqh; color: #b06e00; }
+  .tl-here p { font-size: 1.02cqw; line-height: 1.35; color: var(--ink); }
+  .tl-here p.tl-here__date { font-size: 2.4cqw; line-height: 1; letter-spacing: -.045em; font-weight: 600; margin-bottom: .8cqh; }
+
+  /* What's built */
+  .shot { display: grid; gap: 1.2cqh; align-content: start; padding: 1.4cqh 1cqw; }
+  .shot img { display: block; width: 100%; aspect-ratio: 16/9; object-fit: cover; object-position: top; border-radius: .6cqw; box-shadow: 0 0 0 1px var(--tile-line), 0 1.2cqh 3cqh -1.6cqh rgba(0,0,0,.35); background: #fff; }
+  .shot p { font-size: 1.06cqw; padding: 0 .3cqw; font-weight: 600; letter-spacing: -.01em; }
+  .chips { display: grid; grid-template-columns: 1fr 1fr; gap: .9cqh .5cqw; }
+  .chip { display: inline-flex; align-items: center; gap: .55cqw; padding: .9cqh .9cqw; border-radius: 99px; font-size: 1cqw; font-weight: 500; background: var(--white); box-shadow: inset 0 0 0 1px var(--tile-line); }
+  .chip::before { content: ""; width: .55cqw; height: .55cqw; border-radius: 50%; background: var(--ink); }
+  .chip.wait::before { background: none; box-shadow: inset 0 0 0 1.5px var(--honey); }
+
+  /* Backend flow */
+  .flow { display: grid; grid-template-columns: 1fr 3cqw 1.15fr 3cqw 1fr; align-items: stretch; height: 52cqh; }
+  .flow-box { display: grid; align-content: start; gap: 2.4cqh; padding: 4cqh 2cqw; border-radius: .9cqw; background: var(--white); box-shadow: inset 0 0 0 1px var(--tile-line); }
+  .flow-box.core { background: var(--ink); color: var(--paper); --muted: #a39f95; }
+  .flow-box h3 { font-size: 2cqw; line-height: 1.15; letter-spacing: -.025em; font-weight: 600; }
+  .flow-box ul { display: grid; gap: 1.8cqh; font-size: 1.14cqw; line-height: 1.3; color: var(--muted); }
+  .flow-box ul li { position: relative; padding-left: 1.1cqw; }
+  .flow-box ul li::before { content: ""; position: absolute; left: 0; top: .55em; width: .45cqw; height: .45cqw; border-radius: 50%; background: var(--honey); }
+  .flow-box .kicker { margin: 0 0 4cqh; }
+  .flow-arrow { display: grid; place-items: center; }
+  .flow-arrow svg { width: 2.2cqw; height: 2.2cqw; }
+
+  /* Step rail */
+  .steps { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1cqw; position: relative; }
+  .step { display: grid; gap: 1cqh; align-content: start; }
+  .step-dot { position: relative; display: flex; align-items: center; gap: .6cqw; }
+  .step-dot i { width: 2.4cqw; height: 2.4cqw; display: grid; place-items: center; border-radius: 50%; font-style: normal; font-size: .9cqw; font-weight: 600; background: var(--white); box-shadow: inset 0 0 0 1.5px var(--ink); }
+  .step-dot.on i { background: var(--honey); box-shadow: none; }
+  .step-dot span { flex: 1; height: 1px; background: var(--line); }
+  .step:last-child .step-dot span { display: none; }
+  .step h3 { font-size: 1.6cqw; line-height: 1.15; letter-spacing: -.02em; font-weight: 600; }
+  .step p { font-size: 1.06cqw; line-height: 1.4; color: var(--muted); }
+  .step .badge { justify-self: start; padding: .5cqh .7cqw; border-radius: 99px; font-size: .84cqw; font-weight: 600; background: rgba(246,161,26,.18); color: #7a4c00; }
+
+  /* Sources */
+  .source { display: grid; gap: 1cqh; }
+  .source .doc { width: 4.4cqw; height: 5.5cqw; border-radius: .3cqw; background: var(--white); box-shadow: inset 0 0 0 1px var(--tile-line), .3cqw .3cqw 0 -.05cqw rgba(23,23,20,.06); position: relative; }
+  .source .doc::after { content: ""; position: absolute; left: 22%; right: 22%; top: 30%; height: 38%; background: repeating-linear-gradient(to bottom, var(--line) 0 1px, transparent 1px 22%); }
+  .source .doc.hon::before { content: ""; position: absolute; left: 22%; top: 16%; width: 30%; height: 7%; background: var(--honey); }
+
+  /* Question bars */
+  .bars { display: grid; gap: 2.2cqh; align-content: center; }
+  .bar-row { display: grid; grid-template-columns: 10.5cqw 1fr 3cqw; align-items: center; gap: 1cqw; font-size: 1.14cqw; }
+  .bar-row b { font-weight: 600; }
+  .bar-track { position: relative; height: 4.2cqh; }
+  .bar-fill { position: absolute; left: 0; top: 0; bottom: 0; border-radius: .3cqw; background: var(--honey); }
+  .bar-fill.hr { background: var(--ink); }
+  .bar-row span:last-child { text-align: right; font-variant-numeric: tabular-nums; font-weight: 600; }
+  .legend { display: flex; gap: 1.6cqw; margin-top: 1cqh; font-size: .98cqw; color: var(--muted); }
+  .legend i { display: inline-block; width: .8cqw; height: .8cqw; margin-right: .4cqw; border-radius: .15cqw; vertical-align: -.1cqw; background: var(--honey); }
+  .legend i.hr { background: var(--ink); }
+
+  /* Shot list */
+  .frames { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.8cqh .7cqw; align-items: start; }
+  .frame { display: grid; gap: .6cqh; }
+  .frame div { border-radius: .35cqw; border: 1px dashed var(--muted-2); background: repeating-linear-gradient(135deg, transparent 0 .6cqw, rgba(23,23,20,.035) .6cqw 1.2cqw); }
+  .frame .p45 { aspect-ratio: 4/5; }
+  .frame .p169 { aspect-ratio: 16/9; }
+  .frame .p32 { aspect-ratio: 3/2; }
+  .frame span { font-size: .84cqw; line-height: 1.25; color: var(--muted); }
+  .frames.three { grid-template-columns: repeat(3, 1fr); }
+
+  /* What we need: sample questions, grouped by who answers them */
+  .q-id { font: 600 .82cqw/1.4 ui-monospace, "SF Mono", Menlo, monospace; letter-spacing: .02em; color: #b06e00; }
+  .who { display: grid; align-content: start; }
+  .who-row { display: grid; gap: 1.5cqh; padding: 2.6cqh 0; border-top: 1px solid var(--line); }
+  .who-row:last-child { border-bottom: 1px solid var(--line); }
+  .who-head { display: flex; justify-content: space-between; align-items: baseline; gap: 1cqw; }
+  .who-head p { font-size: 1.8cqw; letter-spacing: -.025em; font-weight: 600; }
+  .who-head span { font: 500 .86cqw/1 ui-monospace, "SF Mono", Menlo, monospace; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); white-space: nowrap; }
+  .who-q { display: grid; grid-template-columns: 4cqw 1fr; gap: .6cqw; font-size: 1.3cqw; line-height: 1.35; color: #4a4842; }
+  .who-q .q-id { font-size: .92cqw; line-height: 1.9; }
+  .who-cols { column-gap: 4cqw; }
+
+  /* The answer chain on Who we need */
+  .chain { display: flex; align-items: center; gap: .5cqw; margin: 1.4cqh 0; }
+  .chain span { padding: 1.1cqh 1cqw; border-radius: 99px; font-size: 1cqw; font-weight: 600; white-space: nowrap; background: var(--white); box-shadow: inset 0 0 0 1px var(--tile-line); }
+  .chain span.on { background: var(--honey); box-shadow: none; }
+  .chain i { flex: 1; min-width: .6cqw; height: 1px; background: var(--muted-2); }
+
+  /* Controls */
+  .deck-controls {
+    position: fixed; z-index: 20; inset: auto 2rem 1.6rem auto;
+    display: flex; align-items: center; gap: .35rem;
+    opacity: 0; color: rgba(244,241,233,.78);
+    transition: opacity 120ms var(--ease-out);
+  }
+  .deck-shell:hover .deck-controls, .deck-controls:focus-within { opacity: 1; }
+  .deck-controls button {
+    width: 2.1rem; height: 2.1rem; display: grid; place-items: center;
+    border: 0; border-radius: 50%; background: rgba(255,255,255,.09); cursor: pointer;
+    transition: transform 120ms var(--ease-out), background 120ms var(--ease-out);
+  }
+  .deck-controls button:hover { background: rgba(255,255,255,.17); }
+  .deck-controls button:active { transform: scale(.97); }
+  .deck-controls button:disabled { opacity: .3; cursor: default; }
+  .counter { min-width: 3.6rem; text-align: center; font-size: .72rem; font-variant-numeric: tabular-nums; }
+  @media (hover: none) { .deck-controls { opacity: 1; } }
+
+  .outline { position: fixed; z-index: 30; inset: 0; display: none; place-items: center; padding: 4vh 4vw; background: rgba(8,8,7,.95); color: var(--paper); }
+  .outline.is-open { display: grid; }
+  .outline-panel { width: min(940px, 92vw); max-height: 84vh; overflow: auto; }
+  .outline-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.6rem; }
+  .outline-head h2 { font-size: clamp(2rem, 5vw, 3.6rem); letter-spacing: -.04em; font-weight: 600; }
+  .outline-head button { width: 2.6rem; height: 2.6rem; border: 1px solid rgba(255,255,255,.35); border-radius: 50%; background: transparent; cursor: pointer; }
+  .outline-list { display: grid; grid-template-columns: 1fr 1fr; gap: .4rem 2rem; }
+  .outline-list button { display: grid; grid-template-columns: 2.4rem 1fr; gap: .8rem; padding: .7rem 0; border: 0; border-bottom: 1px solid rgba(255,255,255,.13); background: transparent; text-align: left; cursor: pointer; }
+  .outline-list button span:first-child { color: var(--honey); font-variant-numeric: tabular-nums; }
+  .outline-list button:hover span:last-child { color: var(--honey); }
+
+  /* Reduced motion: gentler, not zero. Opacity stays, movement goes. */
+  @media (prefers-reduced-motion: reduce) {
+    .tile, .build { transform: none; transition: opacity 160ms ease; transition-delay: 0s; }
+    .pop { transition: opacity 160ms ease; transition-delay: 0s; }
+    .grow { transform: none; transition: none; }
+    .deck-controls, .deck-controls button { transition: none; }
+  }
+
+  @media print {
+    @page { size: 13.333in 7.5in; margin: 0; }
+    html, body { width: 13.333in; height: auto; overflow: visible; background: #fff; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .deck-shell { position: static; display: block; background: #fff; }
+    /* container-type: size needs a definite height or every cqh unit resolves to zero. */
+    .deck { width: 13.333in; height: 7.5in; aspect-ratio: auto; overflow: visible; box-shadow: none; container-type: size; }
+    .slide { position: relative; display: grid; width: 13.333in; height: 7.5in; opacity: 1; visibility: visible; break-after: page; page-break-after: always; }
+    .slide:last-child { break-after: auto; page-break-after: auto; }
+    .tile, .build, .pop { opacity: 1; transform: none; transition: none; }
+    .grow { transform: none; transition: none; }
+    .deck-controls, .outline { display: none !important; }
+  }
+</style>
+</head>
+<body>
+<div class="deck-shell">
+  <main class="deck" aria-label="Moneybee website progress update">
+
+    <section class="slide cover" id="slide-1" data-title="Moneybee">
+      <div class="cv-top build"><img class="cv-logo" src="{{LOGO}}" alt="Moneybee"><span class="cv-date">08 October 2026</span></div>
+      <div class="cv-main">
+        <div class="cv-copy build">
+          <h1 class="slide-title">Website <em>progress</em> update</h1>
+          <div class="cv-status">
+            <div class="cv-status-row"><span>Design</span><b>80%</b></div>
+            <div class="cv-bar" role="img" aria-label="Design 80 percent complete"><i class="grow"></i></div>
+          </div>
+        </div>
+        <div class="cv-stack" aria-hidden="true">
+          <figure class="cv-frame f3"><figcaption><i></i><i></i><i></i><span>moneybee.in/about</span></figcaption><img src="{{COVER_ABOUT}}" alt="About page"></figure>
+          <figure class="cv-frame f2"><figcaption><i></i><i></i><i></i><span>moneybee.in/pms</span></figcaption><img src="{{COVER_PMS}}" alt="PMS page"></figure>
+          <figure class="cv-frame f1"><figcaption><i></i><i></i><i></i><span>moneybee.in</span></figcaption><img src="{{COVER_HOME}}" alt="Homepage"></figure>
+        </div>
+      </div>
+      <div class="cv-foot build"><p><b>For Shreyam Shah and the Moneybee team</b></p><p>Prepared by Aryan Kathawale</p></div>
+      <span class="slide-index" aria-hidden="true"></span>
+    </section>
+
+    <section class="slide" id="slide-2" data-title="Where we are">
+      <h2 class="slide-title">Where we are</h2>
+      <div class="bento">
+        <div class="tile c7 r2">
+          <p class="tile__value tile__value--xl">80%</p>
+          <p class="tile__name">of the website design is done</p>
+          <div class="meter" role="img" aria-label="80 percent complete"><i class="grow"></i></div>
+          <p class="tile__label">All eleven pages are designed and built from your decks and the Content &amp; Visual Plan. The last 20% is your final copy, the photographs and a few documents, all listed in this deck.</p>
+        </div>
+        <div class="tile c5">
+          <p class="tile__value tile__value--sm">On schedule</p>
+          <p class="tile__label">Design and build have kept to the plan we agreed. The backend started this week, alongside the remaining content.</p>
+        </div>
+        <div class="tile c5">
+          <p class="tile__value tile__value--sm">Live preview</p>
+          <p class="tile__label">The whole site is online for your team to review: <b>moneybee-virid.vercel.app</b>. It is not indexed by search engines.</p>
+        </div>
+        <div class="tile c3"><p class="tile__value">11</p><p class="tile__label">Pages designed and built</p></div>
+        <div class="tile c3"><p class="tile__value">58</p><p class="tile__label">Content questions ready for your team</p></div>
+        <div class="tile c3"><p class="tile__value">1</p><p class="tile__label">Client login, working on the preview</p></div>
+        <div class="tile c3"><p class="tile__value">31 Jul</p><p class="tile__label">Date of the returns on the site, from your latest deck</p></div>
+      </div>
+      <span class="slide-index" aria-hidden="true"></span>
+    </section>
+
+    <section class="slide" id="slide-3" data-title="Progress">
+      <h2 class="slide-title">Progress</h2>
+      <div class="bento">
+        <div class="tile c12 r4 tile--plain">
+          <div class="tl" aria-label="Timeline from the working session on 05 September to today, then the steps ahead">
+            <div class="tl-phases">
+              <span class="tl-phase soft build" style="left:2%;width:33.5%">Kick-off and content</span>
+              <span class="tl-phase ink build" style="left:36%;width:31.5%">Design and build</span>
+              <span class="tl-phase ahead build" style="left:68%;width:32%">Backend, copy and launch</span>
+            </div>
+            <div class="tl-track"></div>
+            <div class="tl-track done grow"></div>
+
+            <i class="tl-node pop" style="left:2%;--i:0"></i>
+            <i class="tl-node pop" style="left:18%;--i:1"></i>
+            <i class="tl-node pop" style="left:42%;--i:2"></i>
+            <i class="tl-node pop" style="left:50%;--i:3"></i>
+            <i class="tl-node pop" style="left:54%;--i:4"></i>
+            <i class="tl-node pop" style="left:66%;--i:5"></i>
+            <i class="tl-node today pop" style="left:68%;--i:6"></i>
+            <i class="tl-node ahead pop" style="left:75%;--i:7"></i>
+            <i class="tl-node ahead pop" style="left:82%;--i:7"></i>
+            <i class="tl-node ahead pop" style="left:90%;--i:7"></i>
+            <i class="tl-node ahead pop" style="left:98%;--i:7"></i>
+
+            <p class="tl-label t1 pop" style="left:2%;--i:0"><b>05 Sep</b>Working session with your team</p>
+            <p class="tl-label b1 pop" style="left:18%;--i:1"><b>13 Sep</b>Every fact in the decks sorted into fact sheets</p>
+            <p class="tl-label t1 pop" style="left:42%;--i:2"><b>25 Sep</b>New homepage live on the preview</p>
+            <p class="tl-label b2 pop" style="left:50%;--i:3"><b>29 Sep</b>Content &amp; Visual Plan received</p>
+            <p class="tl-label b1 pop" style="left:54%;--i:4"><b>01 Oct</b>All eleven pages built</p>
+            <p class="tl-label t2 right pop" style="left:66%;--i:5"><b>07 Oct</b>Copy questions sent to Siddhi</p>
+
+            <div class="tl-here pop" style="left:68%;--i:6">
+              <span class="kicker">We are here</span>
+              <p class="tl-here__date">08 Oct</p>
+              <p>Design 80% done. Backend started, client login working.</p>
+            </div>
+
+            <p class="tl-label t1 ahead pop" style="left:75%;--i:7"><b>Next</b>Fact sheets and CRM in the backend</p>
+            <p class="tl-label b1 ahead pop" style="left:82%;--i:7"><b>Then</b>Your answers and photos go in</p>
+            <p class="tl-label t2 right ahead pop" style="left:90%;--i:7"><b>Then</b>Compliance approval</p>
+            <p class="tl-label b2 right ahead pop" style="left:98%;--i:7"><b>Last</b>Go live</p>
+          </div>
+        </div>
+      </div>
+      <span class="slide-index" aria-hidden="true"></span>
+    </section>
+
+    <section class="slide" id="slide-4" data-title="What's built">
+      <h2 class="slide-title">What's built</h2>
+      <div class="bento">
+        <div class="tile c4 tile--top shot"><img src="{{HOME}}" alt="Homepage: Know Venture. Know Gain. with the key figures underneath"><p>Home</p></div>
+        <div class="tile c4 tile--top shot"><img src="{{PMS}}" alt="PMS page hero"><p>PMS</p></div>
+        <div class="tile c4 tile--top">
+          <p class="tile__name">Ready</p>
+          <div class="chips"><span class="chip">Home</span><span class="chip">About</span><span class="chip">PMS vs AIF</span><span class="chip">Contact</span><span class="chip">Investor Centre</span><span class="chip">Client Login</span></div>
+        </div>
+        <div class="tile c4 tile--top shot"><img src="{{INVESTOR}}" alt="Investor Centre: Client Login and Distributor Login cards"><p>Investor Centre</p></div>
+        <div class="tile c4 tile--top shot"><img src="{{CONTACT}}" alt="Contact: the enquiry form in a card"><p>Contact</p></div>
+        <div class="tile c4 tile--top">
+          <p class="tile__name">Built, waiting for your copy</p>
+          <div class="chips"><span class="chip wait">PMS</span><span class="chip wait">AIF</span><span class="chip wait">Our Approach</span><span class="chip wait">Performance</span><span class="chip wait">Case Studies</span><span class="chip wait">Careers</span></div>
+        </div>
+      </div>
+      <span class="slide-index" aria-hidden="true"></span>
+    </section>
+
+    <section class="slide" id="slide-5" data-title="Next: the backend">
+      <h2 class="slide-title">Building the backend</h2>
+      <div class="bento">
+        <div class="tile c12 r3 tile--plain">
+          <div class="flow">
+            <div class="flow-box build">
+              <h3>Your team</h3>
+              <ul>
+                <li>Enter each month's fact sheet</li>
+                <li>Add roles, team members, documents</li>
+                <li>Follow up every enquiry</li>
+                <li>Review and rate applicants</li>
+              </ul>
+            </div>
+            <div class="flow-arrow build" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 12h15M14 6l6 6-6 6"/></svg></div>
+            <div class="flow-box core build">
+              <h3>One backend</h3>
+              <ul>
+                <li>Compliance approves numbers before they go live</li>
+                <li>One CRM for website and offline leads</li>
+                <li>Every change recorded: who, what, when</li>
+                <li>Moves to Mumbai before client data goes in</li>
+              </ul>
+            </div>
+            <div class="flow-arrow build" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 12h15M14 6l6 6-6 6"/></svg></div>
+            <div class="flow-box build">
+              <h3>Website and client portal</h3>
+              <ul>
+                <li>Returns and charts update from the approved fact sheet</li>
+                <li>Investors sign in to their statements</li>
+                <li>Careers form with your own questions</li>
+                <li>Visits and clicks tracked on PMS, AIF, Careers</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+      <span class="slide-index" aria-hidden="true"></span>
+    </section>
+
+    <section class="slide" id="slide-6" data-title="Backend build order">
+      <h2 class="slide-title">Backend build order</h2>
+      <div class="bento">
+        <div class="tile c12 r2">
+          <div class="steps">
+            <div class="step build"><div class="step-dot on"><i>1</i><span></span></div><h3>Fact sheets</h3><p>Monthly figures with maker and checker, staff roles, change history.</p><span class="badge">Started</span></div>
+            <div class="step build"><div class="step-dot"><i>2</i><span></span></div><h3>CRM and API</h3><p>Every form is stored in one place, with an API for your own systems.</p></div>
+            <div class="step build"><div class="step-dot"><i>3</i><span></span></div><h3>Careers portal</h3><p>Editable roles and questions, applications stored, rated and filtered.</p></div>
+            <div class="step build"><div class="step-dot"><i>4</i><span></span></div><h3>Client portal</h3><p>Statements uploaded each month, investors notified by email.</p><span class="badge">Login live</span></div>
+            <div class="step build"><div class="step-dot"><i>5</i><span></span></div><h3>The rest</h3><p>Team, case studies, documents, tracking and the blog structure.</p></div>
+          </div>
+        </div>
+        <div class="tile c6">
+          <p class="tile__name">Data stays in India</p>
+          <p class="tile__label">SEBI's cybersecurity framework (August 2024) asks portfolio managers and AIFs to store and process data in India. We build on a test setup, then move everything to Mumbai on your AWS before any client data goes in.</p>
+        </div>
+        <div class="tile c6">
+          <p class="tile__name">Compliance approval</p>
+          <p class="tile__label">A figure only goes live after a second person approves it. Disclaimers and the as-of date appear with every return, automatically.</p>
+        </div>
+      </div>
+      <span class="slide-index" aria-hidden="true"></span>
+    </section>
+
+    <section class="slide" id="slide-7" data-title="What we used">
+      <h2 class="slide-title">What we used</h2>
+      <div class="bento">
+        <div class="tile c3 tile--split source"><span class="doc hon" aria-hidden="true"></span><div><p class="tile__name">Group profile</p><p class="tile__label">April 2026. Strategy, portfolio construction, risk, team, case studies.</p></div></div>
+        <div class="tile c3 tile--split source"><span class="doc hon" aria-hidden="true"></span><div><p class="tile__name">AIF presentation</p><p class="tile__label">August 2026. Flyingbee's structure, terms and returns to 31 July.</p></div></div>
+        <div class="tile c3 tile--split source"><span class="doc" aria-hidden="true"></span><div><p class="tile__name">Content &amp; Visual Plan</p><p class="tile__label">Navigation, the pages, colours and tone, applied page by page.</p></div></div>
+        <div class="tile c3 tile--split source"><span class="doc" aria-hidden="true"></span><div><p class="tile__name">Your notes and emails</p><p class="tile__label">Scope, priorities, compliance points and the founder's investment view.</p></div></div>
+        <div class="tile c12 tile--ink">
+          <p class="tile__value">Everything you shared is on the site.</p>
+          <p class="tile__label">Every number, name and sentence comes from these four sources. Where they did not cover a section, we left a placeholder instead of guessing. Those placeholders are the gaps on the next slide.</p>
+        </div>
+      </div>
+      <span class="slide-index" aria-hidden="true"></span>
+    </section>
+
+    <section class="slide" id="slide-8" data-title="The gaps">
+      <h2 class="slide-title">The gaps</h2>
+      <div class="bento">
+        <div class="tile c8 r3">
+          <div class="bars" aria-label="Questions by page">
+            <div class="bar-row build"><b>PMS</b><div class="bar-track"><i class="bar-fill grow" style="width:68%"></i></div><span>15</span></div>
+            <div class="bar-row build"><b>AIF</b><div class="bar-track"><i class="bar-fill grow" style="width:32%"></i></div><span>7</span></div>
+            <div class="bar-row build"><b>Our Approach</b><div class="bar-track"><i class="bar-fill grow" style="width:27%"></i></div><span>6</span></div>
+            <div class="bar-row build"><b>Performance</b><div class="bar-track"><i class="bar-fill grow" style="width:23%"></i></div><span>5</span></div>
+            <div class="bar-row build"><b>Case Studies</b><div class="bar-track"><i class="bar-fill grow" style="width:14%"></i></div><span>3</span></div>
+            <div class="bar-row build"><b>Careers</b><div class="bar-track"><i class="bar-fill hr grow" style="width:100%"></i></div><span>22</span></div>
+            <p class="legend build"><span><i></i>Investment process: 36</span><span><i class="hr"></i>Hiring: 22</span></p>
+          </div>
+        </div>
+        <div class="tile c4">
+          <p class="tile__value">58</p>
+          <p class="tile__label">Questions, already written, each with a screenshot of where the answer goes.</p>
+        </div>
+        <div class="tile c4">
+          <p class="tile__name">Also pending</p>
+          <ul class="tile__list">
+            <li><b>11</b> investor documents and their dates</li>
+            <li><b>3</b> company logos for the case studies</li>
+            <li>Confirm the enquiry form choices</li>
+          </ul>
+        </div>
+        <div class="tile c4">
+          <p class="tile__name">What the questions ask</p>
+          <p class="tile__label">How you research a company, how you size and exit positions, how you manage each risk, and what each performance chart should say.</p>
+        </div>
+      </div>
+      <span class="slide-index" aria-hidden="true"></span>
+    </section>
+
+    <section class="slide" id="slide-9" data-title="Who we need">
+      <h2 class="slide-title">Who we need</h2>
+      <div class="bento">
+        <div class="tile c8 r2 tile--split">
+          <div><p class="tile__value tile__value--sm">One person from your investment team</p>
+          <p class="tile__label" style="margin-top:1.4cqh">Someone who knows the investment process day to day, to work through the 36 investment questions with Siddhi. The questions are ready in a shared answer sheet.</p></div>
+          <div class="chain build" aria-label="How an answer reaches the site">
+            <span class="on">Investment lead</span><i></i><span>Siddhi</span><i></i><span>We write the copy</span><i></i><span>Compliance approves</span><i></i><span>Live</span>
+          </div>
+          <ul class="tile__list">
+            <li>Answer in the shared sheet, or on two short calls with Siddhi, who writes the answers up.</li>
+            <li>A few hours over one week.</li>
+            <li>Rough notes are enough. We write the final copy and send it back for approval.</li>
+          </ul>
+        </div>
+        <div class="tile c4">
+          <p class="tile__name">Compliance</p>
+          <p class="tile__label">Pournima and Suprit, named in the September plan, approve investment and performance wording before it goes live.</p>
+        </div>
+        <div class="tile c4">
+          <p class="tile__name">HR</p>
+          <p class="tile__label">Open roles, the application steps and 22 careers answers, plus who approves hiring copy.</p>
+        </div>
+      </div>
+      <span class="slide-index" aria-hidden="true"></span>
+    </section>
+
+    <section class="slide" id="slide-10" data-title="Photography">
+      <h2 class="slide-title">Photography</h2>
+      <div class="bento">
+        <div class="tile c5 r2 tile--top">
+          <p class="tile__name">Team portraits</p>
+          <div class="frames">
+            <div class="frame build"><div class="p45"></div><span>Dhiren Shah</span></div>
+            <div class="frame build"><div class="p45"></div><span>Shreyam Shah</span></div>
+            <div class="frame build"><div class="p45"></div><span>Suprit Shah</span></div>
+            <div class="frame build"><div class="p45"></div><span>Ritesh Mistry</span></div>
+            <div class="frame build"><div class="p45"></div><span>Anurag Roonwal</span></div>
+            <div class="frame build"><div class="p45"></div><span>Manan Shah</span></div>
+            <div class="frame build"><div class="p45"></div><span>Chinmayi Upadhyay</span></div>
+          </div>
+        </div>
+        <div class="tile c4 r2 tile--top">
+          <p class="tile__name">Office and marketing</p>
+          <div class="frames three">
+            <div class="frame build"><div class="p32"></div><span>Whole team, together</span></div>
+            <div class="frame build"><div class="p32"></div><span>Reception and entrance</span></div>
+            <div class="frame build"><div class="p32"></div><span>Boardroom</span></div>
+            <div class="frame build"><div class="p32"></div><span>Research desks at work</span></div>
+            <div class="frame build"><div class="p32"></div><span>A team discussion</span></div>
+            <div class="frame build"><div class="p32"></div><span>Founder at work</span></div>
+            <div class="frame build"><div class="p32"></div><span>The building, outside</span></div>
+            <div class="frame build"><div class="p32"></div><span>Notes, screens, documents</span></div>
+            <div class="frame build"><div class="p32"></div><span>Logo wall or signage</span></div>
+          </div>
+        </div>
+        <div class="tile c3">
+          <p class="tile__name">Why now</p>
+          <p class="tile__label">The portraits on the site today come from the decks, about 270 by 350 pixels. Large screens need around 2000 pixels on the long side.</p>
+        </div>
+        <div class="tile c3">
+          <p class="tile__name">What works best</p>
+          <ul class="tile__list">
+            <li>One photographer, one session, the same light for everyone</li>
+            <li>Original files, not WhatsApp copies</li>
+            <li>Consent to publish from everyone shown</li>
+          </ul>
+        </div>
+      </div>
+      <span class="slide-index" aria-hidden="true"></span>
+    </section>
+
+    <section class="slide" id="slide-11" data-title="What we need">
+      <h2 class="slide-title">What we need from you</h2>
+      <div class="bento who-cols">
+        <div class="tile c6 r2 tile--plain who">
+          <div class="who-row build">
+            <div class="who-head"><p>Investment team, with Siddhi</p><span>36 questions</span></div>
+            <p class="who-q"><span class="q-id">1A.1</span><span>How do we research a company before investing?</span></p><p class="who-q"><span class="q-id">1A.3</span><span>How do we decide the number and size of holdings?</span></p><p class="who-q"><span class="q-id">1A.7</span><span>What makes an opportunity overlooked, and how do we identify it?</span></p><p class="who-q"><span class="q-id">1B.1</span><span>How do we assess liquidity and manage the ability to exit?</span></p><p class="who-q"><span class="q-id">1B.2</span><span>How do valuations affect buying, position sizing and selling?</span></p><p class="who-q"><span class="q-id">3A.2</span><span>Undiscovered companies: what does this mean in practice, and how do we find them?</span></p><p class="who-q"><span class="q-id">4A.2</span><span>What starting investment, period and comparison does the wealth growth chart represent?</span></p><p class="who-q"><span class="q-id">5A.2</span><span>Do the case study dates show investment history, company profit history, or something else?</span></p>
+          </div>
+        </div>
+        <div class="tile c6 r2 tile--plain who">
+          <div class="who-row build">
+            <div class="who-head"><p>HR</p><span>22 questions</span></div>
+            <p class="who-q"><span class="q-id">6A.2</span><span>Investment research: the actual role title and description, or no current opening.</span></p><p class="who-q"><span class="q-id">6A.7</span><span>Do we accept general applications, and what should candidates send?</span></p><p class="who-q"><span class="q-id">6B.1</span><span>What is everyday work at Moneybee actually like?</span></p><p class="who-q"><span class="q-id">6D.3</span><span>Which email address or form should applications go to?</span></p>
+          </div>
+          <div class="who-row build">
+            <div class="who-head"><p>Files and photos</p><span>Assets</span></div>
+            <p class="who-q"><span class="q-id">9.3</span><span>11 investor documents, each with its effective date</span></p><p class="who-q"><span class="q-id">9.4</span><span>Logos for KPI Green Energy, Uni Abex and Pitti Engineering</span></p>
+          </div>
+        </div>
+      </div>
+      <span class="slide-index" aria-hidden="true"></span>
+    </section>
+
+  </main>
+
+  <nav class="deck-controls" aria-label="Slide controls">
+    <button id="outline-button" type="button" title="Open outline (O)" aria-label="Open slide outline">☰</button>
+    <button id="previous-button" type="button" title="Previous slide" aria-label="Previous slide">←</button>
+    <span class="counter" id="slide-counter" aria-live="polite">01 / 11</span>
+    <button id="next-button" type="button" title="Next slide" aria-label="Next slide">→</button>
+    <button id="print-button" type="button" title="Print presentation (P)" aria-label="Print presentation">⌘</button>
+  </nav>
+</div>
+
+<div class="outline" id="outline" role="dialog" aria-modal="true" aria-labelledby="outline-title">
+  <div class="outline-panel">
+    <div class="outline-head"><h2 id="outline-title">Slides</h2><button id="outline-close" type="button" aria-label="Close outline">×</button></div>
+    <div class="outline-list" id="outline-list"></div>
+  </div>
+</div>
+<script>
+(() => {
+  const slides = [...document.querySelectorAll('.slide')];
+  const prev = document.getElementById('previous-button');
+  const next = document.getElementById('next-button');
+  const counter = document.getElementById('slide-counter');
+  const outline = document.getElementById('outline');
+  const outlineButton = document.getElementById('outline-button');
+  const outlineClose = document.getElementById('outline-close');
+  const outlineList = document.getElementById('outline-list');
+  const total = String(slides.length).padStart(2, '0');
+
+  // DOM order is the only source of truth for numbering; the build stagger caps at six tiles.
+  slides.forEach((slide, i) => {
+    const label = slide.querySelector('.slide-index');
+    if (label) label.textContent = `${String(i + 1).padStart(2, '0')} / ${total}`;
+    [...slide.querySelectorAll('.tile, .build')].forEach((tile, t) => tile.style.setProperty('--i', Math.min(t, 5)));
+  });
+
+  const hashIndex = () => {
+    const m = location.hash.match(/^#slide-(\d+)$/);
+    return m ? Number(m[1]) - 1 : null;
+  };
+  // Resume is a convenience; a file:// origin that denies storage must not take the deck down.
+  const readResume = () => { try { return Number(localStorage.getItem('moneybee-progress-slide')); } catch { return NaN; } };
+  const writeResume = v => { try { localStorage.setItem('moneybee-progress-slide', String(v)); } catch { /* unavailable */ } };
+
+  const requested = hashIndex();
+  const stored = readResume();
+  let index = Math.max(0, Math.min(slides.length - 1, requested ?? (Number.isFinite(stored) ? stored : 0)));
+
+  slides.forEach((slide, i) => {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.innerHTML = `<span>${String(i+1).padStart(2,'0')}</span><span>${slide.dataset.title}</span>`;
+    b.addEventListener('click', () => { show(i); closeOutline(); });
+    outlineList.appendChild(b);
+  });
+
+  function show(n, updateHash = true) {
+    index = Math.max(0, Math.min(slides.length - 1, n));
+    slides.forEach((slide, i) => {
+      const active = i === index;
+      slide.classList.toggle('is-active', active);
+      slide.setAttribute('aria-hidden', active ? 'false' : 'true');
+      if ('inert' in slide) slide.inert = !active;
+    });
+    prev.disabled = index === 0;
+    next.disabled = index === slides.length - 1;
+    counter.textContent = `${String(index+1).padStart(2,'0')} / ${total}`;
+    writeResume(index);
+    document.title = `${String(index+1).padStart(2,'0')} · ${slides[index].dataset.title} · Moneybee`;
+    if (updateHash) history.replaceState(null, '', `#slide-${index+1}`);
+  }
+  function openOutline() { outline.classList.add('is-open'); outlineClose.focus(); }
+  function closeOutline() { outline.classList.remove('is-open'); outlineButton.focus(); }
+
+  prev.addEventListener('click', () => show(index-1));
+  next.addEventListener('click', () => show(index+1));
+  outlineButton.addEventListener('click', openOutline);
+  outlineClose.addEventListener('click', closeOutline);
+  document.getElementById('print-button').addEventListener('click', () => window.print());
+  outline.addEventListener('click', e => { if (e.target === outline) closeOutline(); });
+
+  window.addEventListener('keydown', e => {
+    if (outline.classList.contains('is-open')) { if (e.key === 'Escape') closeOutline(); return; }
+    if (['ArrowRight','ArrowDown','PageDown',' '].includes(e.key)) { e.preventDefault(); show(index+1); }
+    if (['ArrowLeft','ArrowUp','PageUp'].includes(e.key)) { e.preventDefault(); show(index-1); }
+    if (e.key === 'Home') { e.preventDefault(); show(0); }
+    if (e.key === 'End') { e.preventDefault(); show(slides.length-1); }
+    if (e.key.toLowerCase() === 'o') openOutline();
+    if (e.key.toLowerCase() === 'p') window.print();
+  });
+  window.addEventListener('hashchange', () => { const h = hashIndex(); if (h !== null) show(h, false); });
+
+  // For checks: slide count, titles and any slide whose content overflows its frame.
+  window.__moneybeeDeckReport = () => ({
+    slideCount: slides.length,
+    titles: slides.map(s => s.querySelector('.slide-title').textContent.trim()),
+    overflow: slides.map((s, i) => ({ slide: i + 1, x: s.scrollWidth > s.clientWidth + 1, y: s.scrollHeight > s.clientHeight + 1 })).filter(o => o.x || o.y)
+  });
+
+  show(index, !location.hash);
+})();
+</script>
+</body>
+</html>

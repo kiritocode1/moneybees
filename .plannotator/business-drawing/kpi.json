@@ -1,0 +1,27 @@
+{
+  "company": "KPI Green Energy",
+  "input": "Renewable power generation through IPP and CPP operations.",
+  "parts": [
+    { "type": "path", "role": "construction", "d": "M6 126 H234" },
+    { "type": "circle", "role": "solid", "cx": 30, "cy": 26, "r": 8 },
+    { "type": "path", "role": "construction", "d": "M41.5 26 H46 M18.5 26 H14 M30 14.5 V10 M30 37.5 V42 M38 18 L41.3 14.7 M22 34 L18.7 37.3 M38 34 L41.3 37.3 M22 18 L18.7 14.7" },
+    { "type": "path", "role": "construction", "d": "M36 38 L44 70 M28 40 L26 70 M42 34 L62 70" },
+    { "type": "path", "role": "solid", "d": "M12 96 l8 -22 h14 l-8 22 Z" },
+    { "type": "path", "role": "solid", "d": "M30 96 l8 -22 h14 l-8 22 Z" },
+    { "type": "path", "role": "solid", "d": "M48 96 l8 -22 h14 l-8 22 Z" },
+    { "type": "path", "role": "construction", "d": "M20 96 V126 M38 96 V126 M56 96 V126" },
+    { "type": "label", "x": 36, "y": 140, "text": "PLANT" },
+    { "type": "path", "role": "line", "d": "M112 126 L120 62 L128 126 M114 110 H126 M116 94 H124 M110 70 H130" },
+    { "type": "path", "role": "line", "weight": "bold", "d": "M66 86 H120" },
+    { "type": "path", "role": "line", "weight": "bold", "d": "M120 86 C 150 86, 158 52, 194 52" },
+    { "type": "path", "role": "line", "weight": "bold", "d": "M120 86 C 150 86, 158 118, 194 118" },
+    { "type": "path", "role": "line", "d": "M204 66 L210 36 L216 66 M200 42 H220 M203 52 H217" },
+    { "type": "label", "x": 234, "y": 28, "text": "IPP · GRID", "anchor": "end" },
+    { "type": "path", "role": "solid", "d": "M198 132 V108 l8 6 v-6 l8 6 v-6 l8 6 V132 Z" },
+    { "type": "label", "x": 234, "y": 144, "text": "CPP · FACTORY", "anchor": "end" },
+    { "type": "path", "role": "flow", "d": "M66 86 H120 C 150 86, 158 52, 194 52" },
+    { "type": "path", "role": "flow", "d": "M120 86 C 150 86, 158 118, 194 118" },
+    { "type": "rect", "role": "accent", "x": 191, "y": 49, "w": 6, "h": 6 },
+    { "type": "rect", "role": "accent", "x": 191, "y": 115, "w": 6, "h": 6 }
+  ]
+}

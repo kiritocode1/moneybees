@@ -10,6 +10,8 @@ import { TEMPLATE_PURPOSES } from "@/lib/crm/vocabulary";
  * around these words. Merge fields in double braces are filled in at send
  * time; each email lists the ones it fills. `design` and `html` hold words
  * made in the earlier block editor; saving on the Emails page clears them.
+ * `goesWith` lists the files attached whenever the letter is picked
+ * (lib/files/library.ts refs), set by compliance on the Emails page.
  */
 export const EmailTemplates: CollectionConfig = {
   slug: "email-templates",
@@ -25,5 +27,6 @@ export const EmailTemplates: CollectionConfig = {
     { name: "body", type: "textarea", label: "Words" },
     { name: "design", type: "json", admin: { hidden: true } },
     { name: "html", type: "textarea", admin: { hidden: true } },
+    { name: "goesWith", type: "text", hasMany: true, admin: { hidden: true } },
   ],
 };

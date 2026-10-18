@@ -1,0 +1,28 @@
+To: ["meera.hr@moneybee.local","qa.admin@moneybee.local"]
+Subject: New application: Check Applicant, Open application, Investment research
+
+16 October 2026
+Ref. APP-00008
+
+New application
+
+Check Applicant, Open application, Investment research
+
+Reference
+APP-00008
+
+Received
+16 Oct 2026, 1:15 pm
+
+Notice period
+30 days
+
+City
+Mumbai
+
+Resume
+None; experience written in
+
+Open in the Hiring desk https://moneybees.localhost:1355/admin/hiring/8
+
+You receive these alerts because you hold the HR role in Moneybee's admin.

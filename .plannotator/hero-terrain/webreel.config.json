@@ -1,0 +1,51 @@
+{
+  "$schema": "https://webreel.dev/schema/v1.json",
+  "outDir": ".",
+  "baseUrl": "https://terrain.moneybees.localhost:1355",
+  "viewport": {
+    "width": 1440,
+    "height": 900
+  },
+  "videos": {
+    "terrain-hover": {
+      "url": "/",
+      "output": "proposed-bee-hover.mp4",
+      "fps": 60,
+      "waitFor": "[data-bee-wing]",
+      "steps": [
+        {
+          "action": "moveTo",
+          "selector": "h1"
+        },
+        {
+          "action": "pause",
+          "ms": 2400
+        },
+        {
+          "action": "moveTo",
+          "selector": "[data-hairline=\"terrain\"]"
+        },
+        {
+          "action": "pause",
+          "ms": 1800
+        },
+        {
+          "action": "moveTo",
+          "selector": "[data-hairline=\"terrain\"] > svg > g > g:nth-child(65)"
+        },
+        {
+          "action": "pause",
+          "ms": 1800
+        },
+        {
+          "action": "moveTo",
+          "selector": "h1"
+        },
+        {
+          "action": "pause",
+          "ms": 2400
+        }
+      ]
+    }
+  }
+}

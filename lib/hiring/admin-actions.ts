@@ -10,7 +10,8 @@ import { Letter } from "@/emails/prospects";
 import { renderEmail } from "@/emails/render";
 import { siteDetails } from "@/lib/site/load-details";
 import { hasRole } from "@/lib/backend/roles";
-import { sendCrmEmail } from "@/lib/crm/mail";
+import { type EmailAttachment, sendCrmEmail } from "@/lib/crm/mail";
+import { resolveAttachments } from "@/lib/files/library";
 import { fillTemplate } from "@/lib/crm/template";
 import { addHistory, applicantValues } from "@/lib/hiring/apply";
 import { deleteResume } from "@/lib/hiring/resume-store";
@@ -36,18 +37,25 @@ type Ctx = Awaited<ReturnType<typeof hr>>;
 
 const load = ({ payload, user }: Ctx, id: number) => payload.findByID({ collection: "applications", id, depth: 0, user, overrideAccess: false });
 
-const Email = type({ subject: "1 <= string <= 200", body: "1 <= string <= 20000" });
+const Email = type({ subject: "1 <= string <= 200", body: "1 <= string <= 20000", "attachments?": "string[] <= 10" });
 type EmailInput = typeof Email.infer;
+
+const originOf = async () => {
+  const head = await headers();
+  return `${head.get("x-forwarded-proto") ?? "https"}://${head.get("x-forwarded-host") ?? head.get("host")}`;
+};
+
+/** The files an email to an applicant carries, checked before anything is written so a refused file leaves the application as it was. */
+const filesFor = async (ctx: Ctx, email: EmailInput | undefined) => (email?.attachments?.length ? resolveAttachments(ctx.payload, ctx.user, email.attachments, await originOf()) : ({ ok: true as const, attachments: [] as EmailAttachment[] }));
 
 /** Which email the words go into: an interview, an offer, a rejection, or a plain letter. */
 type Kind = { kind: "interview"; when: string; where: string; with: string } | { kind: "offer" } | { kind: "rejection" } | { kind: "letter" };
 
 /** Emails the applicant from the signed-in person; merge fields are filled for this applicant. */
-async function emailApplicant(ctx: Ctx, application: Application, input: EmailInput, summary: string, letter: Kind = { kind: "letter" }) {
+async function emailApplicant(ctx: Ctx, application: Application, input: EmailInput, summary: string, letter: Kind = { kind: "letter" }, attachments: EmailAttachment[] = []) {
   const extra = letter.kind === "interview" ? { interviewAt: letter.when, interviewPlace: letter.where, interviewWith: letter.with } : {};
   const values = applicantValues(application, { senderName: ctx.user.name, ...extra });
-  const head = await headers();
-  const origin = `${head.get("x-forwarded-proto") ?? "https"}://${head.get("x-forwarded-host") ?? head.get("host")}`;
+  const origin = await originOf();
   const base = { name: application.name, reference: values.reference, role: values.role, words: { text: fillTemplate(input.body, values) }, site: await siteDetails() };
   const sender = { name: ctx.user.name, role: "Hiring Team", email: ctx.user.email };
   const element =
@@ -59,7 +67,7 @@ async function emailApplicant(ctx: Ctx, application: Application, input: EmailIn
           ? createElement(NotTakenForward, { ...base, keptUntil: values.keptUntil, sender })
           : createElement(Letter, { ...base, eyebrow: "Careers", title: fillTemplate(input.subject, values), sender, audience: "applicant", reason: "You are receiving this email because you applied for a role at Moneybee." });
   const email = await renderEmail(element, origin);
-  const sent = await sendCrmEmail(ctx.payload, { to: application.email, subject: fillTemplate(input.subject, values), ...email, words: base.words.text, application: application.id, sentBy: ctx.user, summary });
+  const sent = await sendCrmEmail(ctx.payload, { to: application.email, subject: fillTemplate(input.subject, values), ...email, words: base.words.text, application: application.id, sentBy: ctx.user, summary, attachments });
   await addHistory(ctx.payload, application.id, { kind: "email", summary, actor: ctx.user.id, email: sent.id });
 }
 
@@ -107,10 +115,12 @@ export async function addInterview(id: number, input: { at: string; with: string
   const ctx = await hr();
   const application = await load(ctx, id);
   if (!["shortlisted", "interview"].includes(application.stage)) return { ok: false, error: "Shortlist the application before adding an interview." };
+  const files = await filesFor(ctx, parsed.email);
+  if (!files.ok) return files;
   const interviews = [...(application.interviews ?? []), { at: new Date(parsed.at).toISOString(), with: parsed.with, place: parsed.place, note: parsed.note }];
   await ctx.payload.update({ collection: "applications", id, user: ctx.user, overrideAccess: false, data: { interviews } });
   await addHistory(ctx.payload, id, { kind: "interview", summary: `Interview ${interviewTime(parsed.at)}, with ${parsed.with}`, body: parsed.place, actor: ctx.user.id });
-  if (parsed.email) await emailApplicant(ctx, application, parsed.email, "Interview invitation", { kind: "interview", when: interviewTime(parsed.at), where: parsed.place, with: parsed.with });
+  if (parsed.email) await emailApplicant(ctx, application, parsed.email, "Interview invitation", { kind: "interview", when: interviewTime(parsed.at), where: parsed.place, with: parsed.with }, files.attachments);
   if (application.stage === "shortlisted") await moveTo(ctx, application, "interview");
   return { ok: true };
 }
@@ -124,7 +134,9 @@ export async function makeOffer(id: number, input: { email?: EmailInput }): Prom
     const email = Email(input.email);
     if (email instanceof type.errors) return { ok: false, error: "Write a subject and a message, or untick the email." };
     if (/\[Write the terms here/.test(email.body)) return { ok: false, error: "Write the terms where the brackets are before sending." };
-    await emailApplicant(ctx, application, email, "Offer", { kind: "offer" });
+    const files = await filesFor(ctx, email);
+    if (!files.ok) return files;
+    await emailApplicant(ctx, application, email, "Offer", { kind: "offer" }, files.attachments);
   }
   await moveTo(ctx, application, "offer");
   return { ok: true };
@@ -138,7 +150,9 @@ export async function notTakenForward(id: number, input: { email?: EmailInput })
   if (input.email) {
     const email = Email(input.email);
     if (email instanceof type.errors) return { ok: false, error: "Write a subject and a message, or close without emailing." };
-    await emailApplicant(ctx, application, email, "Not taken forward", { kind: "rejection" });
+    const files = await filesFor(ctx, email);
+    if (!files.ok) return files;
+    await emailApplicant(ctx, application, email, "Not taken forward", { kind: "rejection" }, files.attachments);
   }
   await moveTo(ctx, application, "closed", { closeReason: "not_taken_forward" });
   return { ok: true };
@@ -160,7 +174,9 @@ export async function sendApplicantEmail(id: number, input: EmailInput): Promise
   const email = Email(input);
   if (email instanceof type.errors) return { ok: false, error: "Write a subject and a message." };
   const ctx = await hr();
-  await emailApplicant(ctx, await load(ctx, id), email, email.subject);
+  const files = await filesFor(ctx, email);
+  if (!files.ok) return files;
+  await emailApplicant(ctx, await load(ctx, id), email, email.subject, { kind: "letter" }, files.attachments);
   return { ok: true };
 }
 
@@ -202,11 +218,13 @@ export async function tellOthers(openingId: number, input: { ids: number[]; emai
   const parsed = TellInput(input);
   if (parsed instanceof type.errors) return { ok: false, error: "Choose at least one person, and write the email." };
   const ctx = await hr();
+  const files = await filesFor(ctx, parsed.email);
+  if (!files.ok) return files;
   for (const id of parsed.ids) {
     const application = await load(ctx, id);
     const opening = typeof application.opening === "object" ? application.opening?.id : application.opening;
     if (opening !== openingId || !isOpenStage(application.stage)) continue;
-    await emailApplicant(ctx, application, parsed.email, "Not taken forward, role filled", { kind: "rejection" });
+    await emailApplicant(ctx, application, parsed.email, "Not taken forward, role filled", { kind: "rejection" }, files.attachments);
     await moveTo(ctx, application, "closed", { closeReason: "role_filled" });
   }
   return { ok: true };

@@ -30,7 +30,7 @@ export const Contacts: CollectionConfig = {
   access: { read: allow(...CRM_ROLES), create: allow(...CRM_ROLES, "integration"), update: allow(...CRM_ROLES, "integration"), delete: allow() },
   hooks: { beforeChange: [normalise], afterChange: [auditChange("contacts")] },
   fields: [
-    { name: "name", type: "text", required: true },
+    { name: "name", type: "text", required: true, admin: { components: { Cell: "/components/admin/cells/cells#ContactNameCell" } } },
     { type: "row", fields: [
       { name: "email", type: "email", unique: true, index: true },
       { name: "phone", type: "text", index: true },

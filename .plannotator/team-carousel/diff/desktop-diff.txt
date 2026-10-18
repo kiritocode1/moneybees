@@ -1,0 +1,16 @@
+desktop 1024: 58 of 61 equal (boxes within 1px)
+  name.lineHeight            ref=normal  ours=28.56px
+  role.lineHeight            ref=normal  ours=16.66px
+  arrows.backgroundColor     ref=oklch(0.928 0.006 264.531)  ours=lab(91.6229 -0.159115 -2.26791)
+desktop 1440: 58 of 61 equal (boxes within 1px)
+  name.lineHeight            ref=normal  ours=28.56px
+  role.lineHeight            ref=normal  ours=16.66px
+  arrows.backgroundColor     ref=oklch(0.928 0.006 264.531)  ours=lab(91.6229 -0.159115 -2.26791)
+desktop 1920: 58 of 61 equal (boxes within 1px)
+  name.lineHeight            ref=normal  ours=32.368px
+  role.lineHeight            ref=normal  ours=18.8813px
+  arrows.backgroundColor     ref=oklch(0.928 0.006 264.531)  ours=lab(91.6229 -0.159115 -2.26791)
+desktop 2560: 58 of 61 equal (boxes within 1px)
+  name.lineHeight            ref=normal  ours=37.4453px
+  role.lineHeight            ref=normal  ours=21.8431px
+  arrows.backgroundColor     ref=oklch(0.928 0.006 264.531)  ours=lab(91.6229 -0.159115 -2.26791)

@@ -2,14 +2,18 @@
 
 import { Link, NavGroup, useAuth } from "@payloadcms/ui";
 import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
 import { CRM_ROLES, hasRole } from "@/lib/backend/roles";
+import { myDueCount } from "@/lib/crm/task-actions";
 import type { User } from "@/payload-types";
 
 /*
  * The Desk group: the screens staff work in every day, drawn with Payload's
  * own nav__link markup above its groups. Hiring is for HR; the rest of the
- * desk for the CRM roles; Emails, every email Moneybee sends, for all staff.
- * People and Deals are Payload lists;
+ * desk for the CRM roles; Emails, every email Moneybee sends, and Files,
+ * every file it keeps, for all staff.
+ * People is a Payload list, and a person opens on their own screen
+ * (/admin/people/:id); Deals is a board (/admin/deals);
  * their collections are kept out of the sidebar (group: false) so they appear
  * once, here. The CRM's internal records (activities, emails, tasks, entities)
  * are reached from a person or an enquiry, never browsed. The Website group
@@ -18,10 +22,12 @@ import type { User } from "@/payload-types";
 const LINKS = [
   { href: "/admin", label: "Today", exact: true, desk: null },
   { href: "/admin/inbox", label: "Enquiries", exact: false, desk: "crm" },
-  { href: "/admin/collections/contacts", label: "People", exact: false, desk: "crm" },
-  { href: "/admin/collections/deals", label: "Deals", exact: false, desk: "crm" },
+  { href: "/admin/tasks", label: "Tasks", exact: true, desk: "crm" },
+  { href: "/admin/collections/contacts", label: "People", exact: false, desk: "crm", also: /^\/admin\/people\// },
+  { href: "/admin/deals", label: "Deals", exact: true, desk: "crm", also: /^\/admin\/collections\/deals(\/|$)/ },
   { href: "/admin/hiring", label: "Hiring", exact: false, desk: "hr" },
   { href: "/admin/emails", label: "Emails", exact: true, desk: "staff" },
+  { href: "/admin/files", label: "Files", exact: true, desk: "staff" },
 ] as const;
 
 /** The Website group: the pages behind one screen (components/admin/website), then the lists they share. */
@@ -38,13 +44,19 @@ const PAGES = [
 /** One sidebar link. `also` keeps it lit on screens it leads to, such as Pages while a page is open. */
 type NavLink = { href: string; label: string; exact: boolean; also?: RegExp };
 
-function Links({ links, pathname }: { links: readonly NavLink[]; pathname: string }) {
+/** A number beside a link, such as your tasks overdue or due today beside Tasks. */
+type Counts = Partial<Record<string, number>>;
+
+function Links({ links, pathname, counts = {} }: { links: readonly NavLink[]; pathname: string; counts?: Counts }) {
   return links.map(({ href, label, exact, also }) => {
     const active = (exact ? pathname === href : pathname === href || pathname.startsWith(`${href}/`)) || Boolean(also?.test(pathname));
     return (
       <Link key={href} href={href} className="nav__link" prefetch={false}>
         {active ? <div className="nav__link-indicator" /> : null}
-        <span className="nav__link-label">{label}</span>
+        <span className="nav__link-label">
+          {label}
+          {counts[href] ? <span className="ml-1.5 text-[var(--theme-error-500,#f46a6a)] tabular-nums">{counts[href]}</span> : null}
+        </span>
       </Link>
     );
   });
@@ -56,10 +68,20 @@ export function NavLinks() {
   // Only links the signed-in person's role can open.
   const staff = user ? { ...user, collection: "users" as const } : null;
   const desks = { crm: hasRole(staff, ...CRM_ROLES), hr: hasRole(staff, "hr"), staff: hasRole(staff, ...CRM_ROLES, "hr", "editor") };
+  // Your tasks overdue or due today, read again on every screen change.
+  const [due, setDue] = useState<number | null>(null);
+  useEffect(() => {
+    if (!desks.crm) return;
+    let live = true;
+    void myDueCount().then((count) => live && setDue(count));
+    return () => {
+      live = false;
+    };
+  }, [pathname, desks.crm]);
   return (
     <>
       <NavGroup label="Desk">
-        <Links links={LINKS.filter((link) => !link.desk || desks[link.desk])} pathname={pathname} />
+        <Links links={LINKS.filter((link) => !link.desk || desks[link.desk])} pathname={pathname} counts={{ "/admin/tasks": due ?? 0 }} />
       </NavGroup>
       {hasRole(staff, "editor", "compliance", "hr") ? (
         <NavGroup label="Website">

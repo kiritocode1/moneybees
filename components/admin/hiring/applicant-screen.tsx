@@ -220,7 +220,7 @@ function Interviews({ applicant, open, setOpen, sectionRef, now }: { applicant: 
           className="grid gap-3 rounded-xl border p-4"
           onSubmit={(event) => {
             event.preventDefault();
-            run(() => addInterview(applicant.id, { at: new Date(at).toISOString(), with: who, place, note: note || undefined, email: invite ? draft.draft : undefined }), () => setOpen(false));
+            run(() => addInterview(applicant.id, { at: new Date(at).toISOString(), with: who, place, note: note || undefined, email: invite ? draft.email : undefined }), () => setOpen(false));
           }}
         >
           <div className="grid items-start gap-3 sm:grid-cols-3">
@@ -258,7 +258,10 @@ function Composer({ applicant }: { applicant: ApplicantDetail }) {
         className="grid gap-3"
         onSubmit={(event) => {
           event.preventDefault();
-          run(() => sendApplicantEmail(applicant.id, draft.draft), () => draft.setDraft({ subject: "", body: "" }));
+          run(() => sendApplicantEmail(applicant.id, draft.email), () => {
+            draft.setDraft({ subject: "", body: "" });
+            draft.attach.setFiles([]);
+          });
         }}
       >
         <EmailDraft applicant={applicant} state={draft} />

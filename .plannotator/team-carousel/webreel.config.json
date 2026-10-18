@@ -1,0 +1,26 @@
+{
+  "$schema": "https://webreel.dev/schema/v1.json",
+  "outDir": ".",
+  "baseUrl": "https://moneybees.localhost:1355",
+  "viewport": { "width": 1440, "height": 900 },
+  "videos": {
+    "team-step": {
+      "url": "/preview/team-carousel",
+      "output": "proposed-v2/team-step.mp4",
+      "fps": 60,
+      "waitFor": "[role=region]",
+      "steps": [
+        { "action": "scroll", "y": 110 },
+        { "action": "pause", "ms": 1200 },
+        { "action": "click", "selector": "[role=region] button[aria-label=\"Next team member\"]" },
+        { "action": "pause", "ms": 1600 },
+        { "action": "click", "selector": "[role=region] button[aria-label=\"Next team member\"]" },
+        { "action": "pause", "ms": 1600 },
+        { "action": "click", "selector": "[role=region] button[aria-label=\"Previous team member\"]" },
+        { "action": "pause", "ms": 1600 },
+        { "action": "click", "selector": "[role=region] > div:first-child > div:last-child > button:first-child" },
+        { "action": "pause", "ms": 2400 }
+      ]
+    }
+  }
+}

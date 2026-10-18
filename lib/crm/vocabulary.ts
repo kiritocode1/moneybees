@@ -64,6 +64,54 @@ export const DEAL_STAGES = [
 ] as const;
 export type DealStage = ValueOf<typeof DEAL_STAGES>;
 
+/** Why a deal was lost, picked when it moves to Lost; a line of detail goes with it. */
+export const LOST_REASONS = [
+  { value: "elsewhere", label: "Went with another manager" },
+  { value: "minimum", label: "Below the minimum" },
+  { value: "not_eligible", label: "Not eligible" },
+  { value: "not_now", label: "Not now" },
+  { value: "stopped_replying", label: "Stopped replying" },
+  { value: "other", label: "Other" },
+] as const;
+export type LostReason = ValueOf<typeof LOST_REASONS>;
+
+export const TASK_KINDS = [
+  { value: "call", label: "Call" },
+  { value: "email", label: "Email" },
+  { value: "meeting", label: "Meeting" },
+  { value: "todo", label: "To do" },
+] as const;
+export type TaskKind = ValueOf<typeof TASK_KINDS>;
+
+/** Where a task came from. Most are made by the work, not typed in. */
+export const TASK_SOURCES = [
+  { value: "manual", label: "Added by hand" },
+  { value: "call", label: "A call" },
+  { value: "meeting", label: "A meeting" },
+  { value: "note", label: "A note" },
+  { value: "follow_up", label: "A task done" },
+  { value: "playbook", label: "A playbook" },
+  { value: "deal", label: "A deal moving" },
+] as const;
+
+/** When a playbook step is due once someone takes the enquiry, or "rule": not a task, a line to keep in mind. */
+export const STEP_WHEN = [
+  { value: "reply", label: "With the reply" },
+  { value: "next_day", label: "Next working day" },
+  { value: "three_days", label: "In three working days" },
+  { value: "week", label: "In a week" },
+  { value: "rule", label: "Not a task: a rule to keep in mind" },
+] as const;
+export type StepWhen = ValueOf<typeof STEP_WHEN>;
+
+/** What ticks a playbook step off by itself. */
+export const STEP_TICKS = [
+  { value: "reply", label: "A reply is sent" },
+  { value: "call", label: "A call is logged" },
+  { value: "deal", label: "A deal is opened" },
+] as const;
+export type StepTick = ValueOf<typeof STEP_TICKS>;
+
 export const ACTIVITY_TYPES = [
   { value: "form", label: "Website form" },
   { value: "email_out", label: "Email sent" },

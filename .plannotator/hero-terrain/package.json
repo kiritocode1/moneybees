@@ -1,0 +1,6 @@
+{
+  "name": "hero-terrain-preview",
+  "private": true,
+  "portless": "terrain.moneybees",
+  "scripts": { "dev": "node server.mjs" }
+}

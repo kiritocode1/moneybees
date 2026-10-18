@@ -1,0 +1,52 @@
+.figure {
+  position: relative;
+  width: 100%;
+}
+
+.definitions {
+  position: absolute;
+  pointer-events: none;
+}
+
+.terrain {
+  --hairline-plate: #fff;
+  --hairline-hi: #232327;
+}
+
+.terrain svg {
+  overflow: visible;
+}
+
+/* Hairline marks silhouettes above half height with .hi. Keep the plinth neutral. */
+.terrain[data-active="true"] :global(g:has(> path.sil.hi)) {
+  filter: drop-shadow(0 0 9px rgb(246 161 26 / 45%));
+}
+
+.terrain[data-active="true"] :global(path.sil.hi) {
+  fill: var(--terrain-fill);
+  stroke: #bc790e;
+}
+
+.terrain[data-active="true"] :global(g:has(> path.sil.hi) > path.nf) {
+  stroke: #d69938;
+}
+
+.terrain[data-active="true"] :global(.dot) {
+  fill: #9a6208;
+}
+
+.terrain[data-flight="idle"] :global(g:has(> path.sil.hi)) {
+  filter: drop-shadow(0 0 9px rgb(246 161 26 / 18%));
+}
+
+.terrain[data-flight="idle"] :global(path.sil.hi) {
+  fill: var(--terrain-idle-fill);
+  stroke: #c09c65;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .terrain :global(path),
+  .terrain :global(ellipse) {
+    transition: none;
+  }
+}

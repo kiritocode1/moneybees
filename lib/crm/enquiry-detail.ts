@@ -1,11 +1,14 @@
 import type { Payload } from "payload";
 import { answersFor, enquiryReference } from "@/lib/crm/enquiries";
+import { suggestedEntity } from "@/lib/crm/entities";
 import { emailConnected } from "@/lib/crm/mail";
 import { effectiveSeverity, type EnquiryKind, type Reason, type Severity } from "@/lib/crm/severity";
 import type { TriageAnswers } from "@/lib/crm/triage";
-import { ACTIVITY_TYPES, type ActivityType, CONTACT_KINDS, EMAIL_STATUSES, ENQUIRY_KIND_LABELS, ENQUIRY_STATUSES, labelOf } from "@/lib/crm/vocabulary";
+import { taskRow } from "@/lib/crm/task-desk";
+import { timelineItem } from "@/lib/crm/timeline";
+import { CONTACT_KINDS, DEAL_STAGES, ENQUIRY_KIND_LABELS, ENQUIRY_STATUSES, ENTITY_TYPES, labelOf, STEP_WHEN } from "@/lib/crm/vocabulary";
 import { DEFAULT_DETAILS } from "@/lib/site/details";
-import type { Contact, Email, Playbook, User } from "@/payload-types";
+import type { Contact, Deal, Playbook, User } from "@/payload-types";
 
 /*
  * Everything /admin/inbox/:id shows, read in one pass with the staff
@@ -13,7 +16,7 @@ import type { Contact, Email, Playbook, User } from "@/payload-types";
  */
 
 /** The templates a reply can start from; each purpose draws its own email (lib/crm/reply.ts). */
-const REPLY_PURPOSES = ["enquiry_reply", "pms_introduction", "aif_introduction", "meeting_confirmation", "follow_up", "pms_checklist", "aif_checklist"] as const;
+export const REPLY_PURPOSES = ["enquiry_reply", "pms_introduction", "aif_introduction", "meeting_confirmation", "follow_up", "pms_checklist", "aif_checklist"] as const;
 
 async function officeLine(payload: Payload) {
   const saved = await payload.findGlobal({ slug: "site-details", depth: 0, overrideAccess: true });
@@ -23,7 +26,7 @@ async function officeLine(payload: Payload) {
 
 const asDoc = <T extends { id: number }>(value: number | T | null | undefined): T | null => (value && typeof value === "object" ? value : null);
 
-export type TimelineItem = { id: number; type: ActivityType; typeLabel: string; summary: string; body: string | null; at: string; actor: string | null; emailStatus: string | null; emailOk: boolean | null };
+export type { TimelineItem } from "@/lib/crm/timeline";
 
 export async function enquiryDetail(payload: Payload, user: User, id: number, now = new Date()) {
   const enquiry = await payload.findByID({ collection: "enquiries", id, depth: 1, user, overrideAccess: false, disableErrors: true });
@@ -31,14 +34,18 @@ export async function enquiryDetail(payload: Payload, user: User, id: number, no
   const contact = asDoc<Contact>(enquiry.contact);
   const playbookRef = asDoc<Playbook>(enquiry.playbook);
 
-  const [playbook, timeline, earlier, staff, products, templates] = await Promise.all([
+  const entityId = (contact && (typeof contact.entity === "object" ? contact.entity?.id : contact.entity)) ?? null;
+  const [playbook, timeline, earlier, staff, products, templates, stepTasks, entity] = await Promise.all([
     playbookRef ? payload.findByID({ collection: "playbooks", id: playbookRef.id, depth: 1, user, overrideAccess: false }) : null,
     contact ? payload.find({ collection: "activities", where: { contact: { equals: contact.id } }, sort: "-at", limit: 80, depth: 1, user, overrideAccess: false }) : null,
     contact ? payload.count({ collection: "enquiries", where: { contact: { equals: contact.id }, id: { not_equals: id } }, user, overrideAccess: false }) : null,
     payload.find({ collection: "users", where: { roles: { in: ["sales", "operations", "compliance", "admin"] } }, sort: "name", limit: 100, depth: 0, user, overrideAccess: false }),
     payload.find({ collection: "products", sort: "name", limit: 50, depth: 0, user, overrideAccess: false }),
     payload.find({ collection: "email-templates", where: { purpose: { in: [...REPLY_PURPOSES] } }, sort: "name", limit: 50, depth: 0, user, overrideAccess: false }),
+    payload.find({ collection: "tasks", where: { enquiry: { equals: id }, step: { exists: true } }, limit: 50, depth: 1, user, overrideAccess: false }),
+    entityId ? payload.findByID({ collection: "entities", id: entityId, depth: 0, user, overrideAccess: false, disableErrors: true }) : null,
   ]);
+  const taskForStep = new Map(stepTasks.docs.map((task) => [task.step, taskRow(task, now)]));
 
   const triage = (enquiry.triage ?? {}) as { rules?: Reason[]; ai?: TriageAnswers; existingInvestor?: boolean };
   const shown = effectiveSeverity(enquiry.severity as Severity, enquiry.dueAt, enquiry.status, now);
@@ -72,13 +79,16 @@ export async function enquiryDetail(payload: Payload, user: User, id: number, no
     firstResponseAt: enquiry.firstResponseAt ?? null,
     closingNote: enquiry.closingNote ?? null,
     assignee: assignee ? { id: assignee.id, name: assignee.name } : null,
-    deal: asDoc(enquiry.deal) ? { id: (enquiry.deal as { id: number }).id, title: (enquiry.deal as { title: string }).title } : null,
+    deal: asDoc<Deal>(enquiry.deal) ? { id: (enquiry.deal as Deal).id, title: (enquiry.deal as Deal).title, stageLabel: labelOf(DEAL_STAGES, (enquiry.deal as Deal).stage) } : null,
+    /** What this enquiry says they invest through, offered while the person has no entity. */
+    suggestedEntity: contact && !entity ? suggestedEntity([enquiry]) : null,
     playbook: playbook
       ? {
           name: playbook.name,
           responseHours: playbook.responseHours,
           handlers: playbook.handlerRoles ?? [],
-          steps: (playbook.steps ?? []).map((step) => step.step),
+          // Each step as the task it became once someone took the enquiry; a rule stays a line to keep in mind.
+          steps: (playbook.steps ?? []).map((step) => ({ id: step.id ?? step.step, text: step.step, rule: step.when === "rule", when: labelOf(STEP_WHEN, step.when), task: (step.id && taskForStep.get(step.id)) || null })),
           template: playbookTemplate ? { id: playbookTemplate.id, name: playbookTemplate.name, purpose: playbookTemplate.purpose, subject: playbookTemplate.subject, body: playbookTemplate.body } : null,
         }
       : null,
@@ -92,21 +102,10 @@ export async function enquiryDetail(payload: Payload, user: User, id: number, no
           city: contact.city ?? null,
           kindLabel: labelOf(CONTACT_KINDS, contact.kind),
           earlierEnquiries: earlier?.totalDocs ?? 0,
+          entity: entity ? { name: entity.name, typeLabel: labelOf(ENTITY_TYPES, entity.type) } : null,
         }
       : null,
-    timeline: (timeline?.docs ?? []).map(
-      (item): TimelineItem => ({
-        id: item.id,
-        type: item.type as ActivityType,
-        typeLabel: labelOf(ACTIVITY_TYPES, item.type),
-        summary: item.summary,
-        body: item.body ?? null,
-        at: item.at,
-        actor: asDoc<User>(item.actor)?.name ?? null,
-        emailStatus: asDoc<Email>(item.email) ? labelOf(EMAIL_STATUSES, (item.email as Email).status) : null,
-        emailOk: asDoc<Email>(item.email) ? !["logged", "failed", "bounced"].includes((item.email as Email).status) : null,
-      }),
-    ),
+    timeline: (timeline?.docs ?? []).map(timelineItem),
     staff: staff.docs.map((member) => ({ id: member.id, name: member.name })),
     products: products.docs.map((product) => ({ id: product.id, name: product.name, kind: product.kind })),
     templates: [...(playbookTemplate ? [playbookTemplate] : []), ...templates.docs.filter((template) => template.id !== playbookTemplate?.id)].map((template) => ({
@@ -116,6 +115,8 @@ export async function enquiryDetail(payload: Payload, user: User, id: number, no
       subject: template.subject,
       body: template.body,
     })),
+    /** The person screen, where everything about them is. */
+    personHref: contact ? `/admin/people/${contact.id}` : null,
     /** Where a meeting is held unless the composer says otherwise: the office in Office details. */
     office: await officeLine(payload),
   };

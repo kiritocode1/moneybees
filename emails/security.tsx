@@ -1,5 +1,5 @@
 import type { SiteDetails } from "@/lib/site/details";
-import { Action, Code, Facts, InlineLink, Notice, P, Salutation, Signature } from "./blocks";
+import { Action, Code, Facts, InlineLink, Notice, P, Salutation, Signature, Steps } from "./blocks";
 import { MoneybeeEmail } from "./frame";
 
 /*
@@ -86,6 +86,33 @@ export function NewBrowser({ name, at, browser, near, resetHref, phone, date, si
       <Notice>
         <strong>If this was not you,</strong> please <InlineLink href={resetHref}>set a new password</InlineLink> now{phone ? ` and call us on ${phone}` : ""}.
       </Notice>
+      <Signature name="Client Services" />
+    </MoneybeeEmail>
+  );
+}
+
+export type PortalInvitationProps = Base & { href: string; validUntil: string; account: string; invitedBy: string; loginHref: string; clientCodes: string[] };
+
+export const portalInvitationSubject = () => "Your Moneybee investor portal account";
+
+/** When Moneybee opens a client's portal account from their page in /admin (lib/crm/portal-invite.ts). They choose their own password; nobody at Moneybee knows it. */
+export function PortalInvitation({ name, href, validUntil, account, invitedBy, loginHref, clientCodes, date, site }: PortalInvitationProps) {
+  return (
+    <MoneybeeEmail audience="investor" site={site} date={date} preview={`Set your password by ${validUntil}. The link works once.`} eyebrow="Investor portal" title="Your investor portal account" reason="You are receiving this email because Moneybee has opened an investor portal account for you.">
+      <Salutation name={name} />
+      <P>We have opened an account for you on the Moneybee investor portal. Please set your own password using the button below; the link works once, until {validUntil}. Nobody at Moneybee will know your password or ask you for it.</P>
+      <Action href={href}>Set your password</Action>
+      <Facts rows={[[{ label: "Account", value: account }, { label: "Opened by", value: invitedBy }], ...(clientCodes.length ? [[{ label: clientCodes.length === 1 ? "Client code" : "Client codes", value: clientCodes.join(", "), mono: true }]] : [])]} />
+      <Steps
+        items={[
+          "Set your password with the button above.",
+          <>
+            Sign in at <InlineLink href={loginHref}>the investor portal</InlineLink> with this email address and your password.
+          </>,
+          "The first time you sign in on a browser, we email you a six-digit code to confirm it is you.",
+        ]}
+      />
+      <Notice>If you were not expecting this account, please write to us and we will close it.</Notice>
       <Signature name="Client Services" />
     </MoneybeeEmail>
   );

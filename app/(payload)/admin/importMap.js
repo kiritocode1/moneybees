@@ -5,6 +5,8 @@ import { FileCell as FileCell_be203baf76600e10d6ffd30b9fae3d01 } from '../../../
 import { DateCell as DateCell_be203baf76600e10d6ffd30b9fae3d01 } from '../../../components/admin/cells/cells'
 import { CompanyCell as CompanyCell_be203baf76600e10d6ffd30b9fae3d01 } from '../../../components/admin/cells/cells'
 import { KindCell as KindCell_be203baf76600e10d6ffd30b9fae3d01 } from '../../../components/admin/cells/cells'
+import { InvestorStatusCell as InvestorStatusCell_be203baf76600e10d6ffd30b9fae3d01 } from '../../../components/admin/cells/cells'
+import { ContactNameCell as ContactNameCell_be203baf76600e10d6ffd30b9fae3d01 } from '../../../components/admin/cells/cells'
 import { PreviewBridge as PreviewBridge_42d21390ffe440979752f7114bdd8b7a } from '../../../components/admin/site-editor/preview-bridge'
 import { SectionLabel as SectionLabel_7669d1767e9f58d7b9fb6fd7b0312c58 } from '../../../components/admin/site-editor/section-label'
 import { PerformanceSource as PerformanceSource_68876d0fa8202cff4fcaf5103cc0dd60 } from '../../../components/admin/site-editor/performance-source'
@@ -26,11 +28,15 @@ import { VercelBlobClientUploadHandler as VercelBlobClientUploadHandler_16c82c5e
 import { TodayView as TodayView_7e14692523b88ea4bef5978b9d7ecd98 } from '../../../components/admin/today/today-view'
 import { InboxView as InboxView_bf7eef67c04420058cdc723acba39c27 } from '../../../components/admin/inbox/inbox-view'
 import { EnquiryView as EnquiryView_8aac8230f745b4a5b6053a2c5617de52 } from '../../../components/admin/inbox/enquiry-view'
+import { PersonView as PersonView_cb2fc2dc8610b6fe46d0e7e4eb35eae2 } from '../../../components/admin/people/person-view'
+import { TasksView as TasksView_739e9e1dc87b22a6ecde61c0f87bf5e5 } from '../../../components/admin/tasks/tasks-view'
+import { DealsView as DealsView_7db0e0a0e12daca31b02fed29c6c0142 } from '../../../components/admin/deals/deals-view'
 import { HiringView as HiringView_0de470dda89a079f48bb7c3af714c007 } from '../../../components/admin/hiring/hiring-view'
 import { ApplicantView as ApplicantView_4c259d973d589073cadb45908d5249e3 } from '../../../components/admin/hiring/applicant-view'
 import { GuideView as GuideView_c998883bde77ad23f332b49fa8050c7a } from '../../../components/admin/guide/guide-view'
 import { WebsiteView as WebsiteView_93a548e37f325b47fe775b3396299818 } from '../../../components/admin/website/website-view'
 import { EmailsView as EmailsView_609a73cdc3108f525de09e2fb3c18651 } from '../../../components/admin/emails/emails-view'
+import { FilesView as FilesView_1f9ed7cb208836bb8fc4fb54355261c5 } from '../../../components/admin/files/files-view'
 import { CollectionCards as CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1 } from '@payloadcms/next/rsc'
 
 /** @type import('payload').ImportMap */
@@ -42,6 +48,8 @@ export const importMap = {
   "/components/admin/cells/cells#DateCell": DateCell_be203baf76600e10d6ffd30b9fae3d01,
   "/components/admin/cells/cells#CompanyCell": CompanyCell_be203baf76600e10d6ffd30b9fae3d01,
   "/components/admin/cells/cells#KindCell": KindCell_be203baf76600e10d6ffd30b9fae3d01,
+  "/components/admin/cells/cells#InvestorStatusCell": InvestorStatusCell_be203baf76600e10d6ffd30b9fae3d01,
+  "/components/admin/cells/cells#ContactNameCell": ContactNameCell_be203baf76600e10d6ffd30b9fae3d01,
   "/components/admin/site-editor/preview-bridge#PreviewBridge": PreviewBridge_42d21390ffe440979752f7114bdd8b7a,
   "/components/admin/site-editor/section-label#SectionLabel": SectionLabel_7669d1767e9f58d7b9fb6fd7b0312c58,
   "/components/admin/site-editor/performance-source#PerformanceSource": PerformanceSource_68876d0fa8202cff4fcaf5103cc0dd60,
@@ -63,10 +71,14 @@ export const importMap = {
   "/components/admin/today/today-view#TodayView": TodayView_7e14692523b88ea4bef5978b9d7ecd98,
   "/components/admin/inbox/inbox-view#InboxView": InboxView_bf7eef67c04420058cdc723acba39c27,
   "/components/admin/inbox/enquiry-view#EnquiryView": EnquiryView_8aac8230f745b4a5b6053a2c5617de52,
+  "/components/admin/people/person-view#PersonView": PersonView_cb2fc2dc8610b6fe46d0e7e4eb35eae2,
+  "/components/admin/tasks/tasks-view#TasksView": TasksView_739e9e1dc87b22a6ecde61c0f87bf5e5,
+  "/components/admin/deals/deals-view#DealsView": DealsView_7db0e0a0e12daca31b02fed29c6c0142,
   "/components/admin/hiring/hiring-view#HiringView": HiringView_0de470dda89a079f48bb7c3af714c007,
   "/components/admin/hiring/applicant-view#ApplicantView": ApplicantView_4c259d973d589073cadb45908d5249e3,
   "/components/admin/guide/guide-view#GuideView": GuideView_c998883bde77ad23f332b49fa8050c7a,
   "/components/admin/website/website-view#WebsiteView": WebsiteView_93a548e37f325b47fe775b3396299818,
   "/components/admin/emails/emails-view#EmailsView": EmailsView_609a73cdc3108f525de09e2fb3c18651,
+  "/components/admin/files/files-view#FilesView": FilesView_1f9ed7cb208836bb8fc4fb54355261c5,
   "@payloadcms/next/rsc#CollectionCards": CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1
 }

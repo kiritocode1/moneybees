@@ -1,0 +1,58 @@
+<!doctype html><html><head><meta charset="utf-8"><title>Screen intros preview</title>
+<script src="https://cdn.tailwindcss.com/3.4.17"></script>
+<script src="https://unpkg.com/lucide@0.469.0/dist/umd/lucide.min.js"></script>
+<style>
+body{margin:0;background:#141414;color:#f2f2f2;font-family:-apple-system,Inter,system-ui,sans-serif;font-size:13px}
+.panel{width:1440px;height:900px;position:relative;border-bottom:8px solid #000;overflow:hidden}
+.muted{color:#9b9b9b}.line{border-color:rgba(255,255,255,.12)}
+.btn{display:inline-flex;align-items:center;gap:6px;height:28px;padding:0 10px 0 8px;border-radius:7px;font-size:12px;font-weight:500;background:#2a2a2a;color:#f2f2f2}
+.btn svg{width:14px;height:14px}
+.label{position:absolute;top:12px;right:16px;background:#F6A11A;color:#000;font-weight:600;font-size:12px;padding:4px 10px;border-radius:99px}
+.num{width:22px;height:22px;border-radius:99px;background:#F6A11A;color:#000;display:grid;place-items:center;font-size:12px;font-weight:600}
+</style></head><body>
+<section class="panel" id="list">
+<span class="label">Proposed: every screen opens with this</span>
+<div class="px-[60px] pt-5 text-[14px] flex gap-2"><span>🐝</span><span class="muted">/</span><span>Products</span></div>
+<div class="px-[60px] mt-6 flex items-center gap-3"><h1 class="text-[34px] font-semibold">Products</h1><span class="btn" style="background:#3a3a3a">Create New</span></div>
+<div class="mx-[60px] mt-4 flex items-center gap-3 rounded-[10px] px-4 py-3" style="background:#222;max-width:900px">
+  <i data-lucide="package" class="w-4 h-4 muted shrink-0"></i>
+  <span class="flex-1">The PMS strategy and the Flyingbee AIF. Fact sheets belong to a product, and its benchmark and its public returns switch live here.</span>
+  <span class="btn"><i data-lucide="book-open"></i>How to use this</span>
+</div>
+<div class="mx-[60px] mt-6 h-[46px] rounded-md flex items-center px-4 muted" style="background:#1f1f1f">Search by Name</div>
+<div class="mx-[60px] mt-8 grid grid-cols-[1fr_1fr_1fr] px-4 py-2 muted" style="max-width:900px"><span>Name</span><span>Kind</span><span>Benchmark</span></div>
+<div class="mx-[60px] grid grid-cols-[1fr_1fr_1fr] px-4 h-[44px] items-center rounded" style="max-width:900px;background:#1f1f1f"><span class="underline">Moneybee PMS</span><span>PMS</span><span>S&amp;P BSE 500 TRI</span></div>
+<div class="mx-[60px] grid grid-cols-[1fr_1fr_1fr] px-4 h-[44px] items-center" style="max-width:900px"><span class="underline">Flyingbee Investment Fund</span><span>AIF</span><span>S&amp;P BSE 500 TRI</span></div>
+</section>
+<section class="panel" id="guide">
+<span class="label">Proposed: Guide › Every screen</span>
+<div class="px-[60px] pt-[60px] max-w-[1160px]">
+<h1 class="text-[34px] font-semibold">Guide</h1>
+<div class="mt-4 flex gap-2">
+<span class="rounded-full border line px-3 py-1 text-[12px]">What changes what</span><span class="rounded-full border line px-3 py-1 text-[12px]">How to</span><span class="rounded-full border line px-3 py-1 text-[12px]" style="border-color:#F6A11A">Every screen</span><span class="rounded-full border line px-3 py-1 text-[12px]">Fact sheets, explained</span><span class="rounded-full border line px-3 py-1 text-[12px]">The rules</span><span class="rounded-full border line px-3 py-1 text-[12px]">Where things come from</span>
+</div>
+<h2 class="mt-8 text-[16px] font-semibold">Every screen</h2>
+<p class="muted mt-1">What each screen in the sidebar is for, and how to use it well. Each screen's How to use this button lands here.</p>
+<h3 class="mt-6 text-[12px] uppercase tracking-[.1em] muted">Publishing</h3>
+<article class="mt-3 grid grid-cols-[260px_1fr] gap-8 border-t line pt-5" style="border-color:#F6A11A">
+  <div><div class="flex items-center gap-2"><span class="w-8 h-8 rounded-lg grid place-items-center" style="background:#262626"><i data-lucide="package" class="w-4 h-4"></i></span><span class="text-[15px] font-semibold">Products</span></div>
+  <p class="muted mt-2">The PMS strategy and the Flyingbee AIF. Fact sheets belong to a product, and its benchmark and its public returns switch live here.</p>
+  <span class="btn mt-3">Open Products</span></div>
+  <ol class="grid gap-3">
+   <li class="grid grid-cols-[22px_1fr] gap-3"><span class="num">1</span><span>Change a benchmark only when the fund's documents change it. Every graph of that fund compares against it.</span></li>
+   <li class="grid grid-cols-[22px_1fr] gap-3"><span class="num">2</span><span>Leave Show performance publicly off for the AIF until the benchmarking agency's report exists. SEBI bars AIF returns in marketing without it.</span></li>
+   <li class="grid grid-cols-[22px_1fr] gap-3"><span class="num">3</span><span>Never change a product's code name once it is live; links and fact sheets use it.</span></li>
+  </ol>
+</article>
+<article class="mt-5 grid grid-cols-[260px_1fr] gap-8 border-t line pt-5">
+  <div><div class="flex items-center gap-2"><span class="w-8 h-8 rounded-lg grid place-items-center" style="background:#262626"><i data-lucide="image" class="w-4 h-4"></i></span><span class="text-[15px] font-semibold">Files</span></div>
+  <p class="muted mt-2">Every PDF and picture uploaded for the site: document PDFs, portraits, fact sheets.</p>
+  <span class="btn mt-3">Open Files</span></div>
+  <ol class="grid gap-3">
+   <li class="grid grid-cols-[22px_1fr] gap-3"><span class="num">1</span><span>Upload from the place that uses the file, such as a document card or a portrait; it lands here by itself.</span></li>
+   <li class="grid grid-cols-[22px_1fr] gap-3"><span class="num">2</span><span>Use this list to find a file or replace it. Every file here is public.</span></li>
+   <li class="grid grid-cols-[22px_1fr] gap-3"><span class="num">3</span><span>Fill in Alt with what a picture shows, for people using screen readers.</span></li>
+  </ol>
+</article>
+</div></section>
+<script>lucide.createIcons()</script></body></html>

@@ -2,13 +2,14 @@
 
 import { useState, useTransition } from "react";
 import { TextArea, TextInput } from "@/components/admin/fields";
+import { FileDrop, FileRow, useAttachments } from "@/components/admin/files/file-row";
 import { useAction } from "@/components/admin/use-action";
 import { Button } from "@/components/fluid/button";
 import { Select, SelectContent, SelectItem, SelectTrigger } from "@/components/fluid/select";
 import { previewReply, replyToEnquiry } from "@/lib/crm/admin-actions";
 import type { EnquiryDetail } from "@/lib/crm/enquiry-detail";
 import type { ReplyDraft } from "@/lib/crm/reply";
-import { fillTemplate } from "@/lib/crm/template";
+import { fillTemplate, liveTags } from "@/lib/crm/template";
 
 /**
  * The reply, written here and sent from the signed-in person through Resend.
@@ -16,6 +17,7 @@ import { fillTemplate } from "@/lib/crm/template";
  * the email they go into (lib/crm/reply.ts): a letter, the PMS or Flyingbee
  * introduction with its facts and disclosures, a meeting confirmation or
  * follow-up, or an account checklist. Preview draws exactly what will go.
+ * The template's own files (its Goes with) are attached when it is picked.
  * Sending moves the enquiry to "waiting on them" and stops its reply clock.
  */
 export function ReplyComposer({ enquiry }: { enquiry: EnquiryDetail }) {
@@ -28,6 +30,7 @@ export function ReplyComposer({ enquiry }: { enquiry: EnquiryDetail }) {
   const [preview, setPreview] = useState<{ html?: string; error?: string } | null>(null);
   const [drawing, startDrawing] = useTransition();
   const { pending, error, run } = useAction();
+  const attach = useAttachments();
   const values = { firstName: enquiry.contact?.firstName, name: enquiry.contact?.name, reference: enquiry.reference, senderName: enquiry.sender };
 
   const applyTemplate = (id: string) => {
@@ -38,16 +41,22 @@ export function ReplyComposer({ enquiry }: { enquiry: EnquiryDetail }) {
     setPurpose(chosen.purpose);
     setSubject(fillTemplate(chosen.subject, values));
     setBody(fillTemplate(chosen.body ?? "", values));
+    void attach.preset({ templateId: chosen.id });
   };
 
   const draft = (): ReplyDraft => ({
     subject,
     body,
     purpose,
+    attachments: attach.refs,
     ...(purpose === "meeting_confirmation" ? { meeting: { when: meeting.when, where: meeting.where, with: meeting.with, ...(meeting.link ? { link: meeting.link } : {}) } } : {}),
     ...(purpose === "follow_up" ? { followUp } : {}),
   });
 
+  // The meeting's time and date show in the words as they are typed below; the server fills them again on send.
+  const tags = { meetingAt: meeting.when, meetingOn: followUp.meetingOn };
+  const liveSubject = liveTags(subject, tags);
+  const liveBody = liveTags(body, tags);
   const ready = Boolean(body.trim() && subject.trim()) && (purpose !== "meeting_confirmation" || Boolean(meeting.when.trim() && meeting.where.trim() && meeting.with.trim())) && (purpose !== "follow_up" || Boolean(followUp.meetingOn.trim()));
 
   const showPreview = () =>
@@ -75,6 +84,7 @@ export function ReplyComposer({ enquiry }: { enquiry: EnquiryDetail }) {
           </div>
         ) : null}
       </div>
+      <FileDrop attach={attach}>
       <form
         className="grid gap-3"
         onSubmit={(event) => {
@@ -84,11 +94,13 @@ export function ReplyComposer({ enquiry }: { enquiry: EnquiryDetail }) {
             setTemplate("");
             setPurpose("enquiry_reply");
             setPreview(null);
+            attach.setFiles([]);
           });
         }}
       >
-        <TextInput label="Subject" value={subject} onChange={(event) => setSubject(event.target.value)} />
-        <TextArea label="Message" value={body} onChange={(event) => setBody(event.target.value)} className="min-h-48" placeholder={`Your words. "Dear ${enquiry.contact?.name ?? ""}," and your signature are added for you.`} />
+        <TextInput label="Subject" value={liveSubject.shown} onChange={(event) => setSubject(liveSubject.back(event.target.value))} />
+        <TextArea label="Message" value={liveBody.shown} onChange={(event) => setBody(liveBody.back(event.target.value))} className="min-h-48" placeholder={`Your words. "Dear ${enquiry.contact?.name ?? ""}," and your signature are added for you.`} />
+        <FileRow attach={attach} letter={template ? { templateId: Number(template) } : null} />
 
         {purpose === "meeting_confirmation" ? (
           <div className="grid gap-3 rounded-xl border p-3 sm:grid-cols-2">
@@ -139,6 +151,7 @@ export function ReplyComposer({ enquiry }: { enquiry: EnquiryDetail }) {
           </div>
         ) : null}
       </form>
+      </FileDrop>
     </section>
   );
 }

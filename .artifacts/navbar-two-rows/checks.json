@@ -1,0 +1,389 @@
+[
+  {
+    "width": 1440,
+    "overflow": false,
+    "headerHeight": 113,
+    "links": [
+      {
+        "text": "Home",
+        "x": 915.078125,
+        "y": 24.75,
+        "bottom": 44.25
+      },
+      {
+        "text": "About Us",
+        "x": 1015.578125,
+        "y": 24.75,
+        "bottom": 44.25
+      },
+      {
+        "text": "PMS",
+        "x": 1172.828125,
+        "y": 24.75,
+        "bottom": 44.25
+      },
+      {
+        "text": "AIF",
+        "x": 1313.40625,
+        "y": 24.75,
+        "bottom": 44.25
+      },
+      {
+        "text": "Our Approach",
+        "x": 865.59375,
+        "y": 64.75,
+        "bottom": 84.25
+      },
+      {
+        "text": "Investor Centre",
+        "x": 978.796875,
+        "y": 64.75,
+        "bottom": 84.25
+      },
+      {
+        "text": "Client Login",
+        "x": 1099.171875,
+        "y": 64.09375,
+        "bottom": 84.890625
+      },
+      {
+        "text": "Get Started",
+        "x": 1226.625,
+        "y": 54.5,
+        "bottom": 94.5
+      }
+    ],
+    "logoRight": 208,
+    "linksLeft": 865.59375
+  },
+  {
+    "width": 1200,
+    "overflow": false,
+    "headerHeight": 113,
+    "links": [
+      {
+        "text": "Home",
+        "x": 675.078125,
+        "y": 24.75,
+        "bottom": 44.25
+      },
+      {
+        "text": "About Us",
+        "x": 775.578125,
+        "y": 24.75,
+        "bottom": 44.25
+      },
+      {
+        "text": "PMS",
+        "x": 932.828125,
+        "y": 24.75,
+        "bottom": 44.25
+      },
+      {
+        "text": "AIF",
+        "x": 1073.40625,
+        "y": 24.75,
+        "bottom": 44.25
+      },
+      {
+        "text": "Our Approach",
+        "x": 625.59375,
+        "y": 64.75,
+        "bottom": 84.25
+      },
+      {
+        "text": "Investor Centre",
+        "x": 738.796875,
+        "y": 64.75,
+        "bottom": 84.25
+      },
+      {
+        "text": "Client Login",
+        "x": 859.171875,
+        "y": 64.09375,
+        "bottom": 84.890625
+      },
+      {
+        "text": "Get Started",
+        "x": 986.625,
+        "y": 54.5,
+        "bottom": 94.5
+      }
+    ],
+    "logoRight": 208,
+    "linksLeft": 625.59375
+  },
+  {
+    "width": 1199,
+    "overflow": false,
+    "headerHeight": 113,
+    "links": [
+      {
+        "text": "Home",
+        "x": 710.859375,
+        "y": 24.75,
+        "bottom": 44.25
+      },
+      {
+        "text": "About Us",
+        "x": 774.578125,
+        "y": 24.75,
+        "bottom": 44.25
+      },
+      {
+        "text": "PMS",
+        "x": 931.828125,
+        "y": 24.75,
+        "bottom": 44.25
+      },
+      {
+        "text": "AIF",
+        "x": 1072.40625,
+        "y": 24.75,
+        "bottom": 44.25
+      },
+      {
+        "text": "Our Approach",
+        "x": 661.375,
+        "y": 64.75,
+        "bottom": 84.25
+      },
+      {
+        "text": "Client Login",
+        "x": 858.171875,
+        "y": 64.09375,
+        "bottom": 84.890625
+      },
+      {
+        "text": "Get Started",
+        "x": 985.625,
+        "y": 54.5,
+        "bottom": 94.5
+      }
+    ],
+    "logoRight": 208,
+    "linksLeft": 661.375
+  },
+  {
+    "width": 1024,
+    "overflow": false,
+    "headerHeight": 113,
+    "links": [
+      {
+        "text": "Home",
+        "x": 535.859375,
+        "y": 24.75,
+        "bottom": 44.25
+      },
+      {
+        "text": "About Us",
+        "x": 599.578125,
+        "y": 24.75,
+        "bottom": 44.25
+      },
+      {
+        "text": "PMS",
+        "x": 756.828125,
+        "y": 24.75,
+        "bottom": 44.25
+      },
+      {
+        "text": "AIF",
+        "x": 897.40625,
+        "y": 24.75,
+        "bottom": 44.25
+      },
+      {
+        "text": "Our Approach",
+        "x": 486.375,
+        "y": 64.75,
+        "bottom": 84.25
+      },
+      {
+        "text": "Client Login",
+        "x": 683.171875,
+        "y": 64.09375,
+        "bottom": 84.890625
+      },
+      {
+        "text": "Get Started",
+        "x": 810.625,
+        "y": 54.5,
+        "bottom": 94.5
+      }
+    ],
+    "logoRight": 208,
+    "linksLeft": 486.375
+  },
+  {
+    "width": 900,
+    "overflow": false,
+    "headerHeight": 113,
+    "links": [
+      {
+        "text": "Home",
+        "x": 419.859375,
+        "y": 24.75,
+        "bottom": 44.25
+      },
+      {
+        "text": "About Us",
+        "x": 483.578125,
+        "y": 24.75,
+        "bottom": 44.25
+      },
+      {
+        "text": "PMS",
+        "x": 632.828125,
+        "y": 24.75,
+        "bottom": 44.25
+      },
+      {
+        "text": "AIF",
+        "x": 773.40625,
+        "y": 24.75,
+        "bottom": 44.25
+      },
+      {
+        "text": "Our Approach",
+        "x": 370.375,
+        "y": 64.75,
+        "bottom": 84.25
+      },
+      {
+        "text": "Client Login",
+        "x": 567.171875,
+        "y": 64.09375,
+        "bottom": 84.890625
+      },
+      {
+        "text": "Get Started",
+        "x": 686.625,
+        "y": 54.5,
+        "bottom": 94.5
+      }
+    ],
+    "logoRight": 208,
+    "linksLeft": 370.375
+  },
+  {
+    "width": 899,
+    "overflow": false,
+    "headerHeight": 113,
+    "links": [
+      {
+        "text": "PMS",
+        "x": 489.78125,
+        "y": 46.75,
+        "bottom": 66.25
+      },
+      {
+        "text": "AIF",
+        "x": 535.578125,
+        "y": 46.75,
+        "bottom": 66.25
+      },
+      {
+        "text": "Client Login",
+        "x": 574.171875,
+        "y": 46.09375,
+        "bottom": 66.890625
+      },
+      {
+        "text": "Get Started",
+        "x": 685.625,
+        "y": 36.5,
+        "bottom": 76.5
+      }
+    ],
+    "logoRight": 208,
+    "linksLeft": 489.78125
+  },
+  {
+    "width": 768,
+    "overflow": false,
+    "headerHeight": 113,
+    "links": [
+      {
+        "text": "PMS",
+        "x": 358.78125,
+        "y": 46.75,
+        "bottom": 66.25
+      },
+      {
+        "text": "AIF",
+        "x": 404.578125,
+        "y": 46.75,
+        "bottom": 66.25
+      },
+      {
+        "text": "Client Login",
+        "x": 443.171875,
+        "y": 46.09375,
+        "bottom": 66.890625
+      },
+      {
+        "text": "Get Started",
+        "x": 554.625,
+        "y": 36.5,
+        "bottom": 76.5
+      }
+    ],
+    "logoRight": 208,
+    "linksLeft": 358.78125
+  },
+  {
+    "width": 390,
+    "overflow": false,
+    "headerHeight": 75,
+    "links": [
+      {
+        "text": "PMS",
+        "x": 177.734375,
+        "y": 29.25,
+        "bottom": 45.75
+      },
+      {
+        "text": "AIF",
+        "x": 213.5625,
+        "y": 29.25,
+        "bottom": 45.75
+      },
+      {
+        "text": "Get Started",
+        "x": 243.296875,
+        "y": 21.5,
+        "bottom": 53.5
+      }
+    ],
+    "logoRight": 135,
+    "linksLeft": 177.734375
+  },
+  {
+    "width": 320,
+    "overflow": false,
+    "headerHeight": 75,
+    "links": [
+      {
+        "text": "PMS",
+        "x": 135,
+        "y": 29.25,
+        "bottom": 45.75
+      },
+      {
+        "text": "AIF",
+        "x": 170.828125,
+        "y": 29.25,
+        "bottom": 45.75
+      },
+      {
+        "text": "Get Started",
+        "x": 200.5625,
+        "y": 21.5,
+        "bottom": 53.5
+      }
+    ],
+    "logoRight": 135,
+    "linksLeft": 135
+  }
+]

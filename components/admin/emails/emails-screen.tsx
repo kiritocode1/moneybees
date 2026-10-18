@@ -4,17 +4,20 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useRef, useState, useTransition } from "react";
 import { TextArea, TextInput } from "@/components/admin/fields";
+import { type Attachments, FileDrop, FileRow, useAttachments } from "@/components/admin/files/file-row";
 import { Badge } from "@/components/fluid/badge";
 import { Button } from "@/components/fluid/button";
 import { TabsSubtle, TabsSubtleItem } from "@/components/fluid/tabs-subtle";
 import type { Channel, Field, MergeField } from "@/emails";
-import { drawEmail, findPeople, type PersonHit, saveEmailWords, sendEmailTest, sendEmailTo } from "@/lib/crm/email-desk";
+import { drawEmail, findPeople, type PersonHit, saveEmailWords, saveGoesWith, sendEmailTest, sendEmailTo } from "@/lib/crm/email-desk";
+import type { FileItem } from "@/lib/files/library";
 
 /*
  * The Emails page (emails-view.tsx): every email by who reads it; the chosen
  * one as the reader gets it, with the words staff may change outlined in the
  * email itself; those words beside it, redrawing the email as they change;
- * and, for letters sent from here, the person and the facts. Light and Dark
+ * the files it always carries (Goes with); and, for letters sent from here,
+ * the person, the facts and the files. Light and Dark
  * show the email in that scheme whatever this screen's own theme.
  */
 
@@ -30,6 +33,10 @@ export type SelectedEmail = EntrySummary & {
   words: { subject: string; body: string; designed: boolean } | null;
   canEdit: boolean;
   canSend: boolean;
+  /** The files it always carries, as saved: files and "latest fact sheet" rules. */
+  goesWith: FileItem[];
+  /** Those as today's files, attached to a send from here to start with. */
+  goesWithFiles: FileItem[];
 };
 
 type Result = { ok: true } | { ok: false; error: string };
@@ -76,6 +83,9 @@ export function EmailsScreen({ entries, selected, subject: firstSubject, html: f
   const stage = useRef<HTMLDivElement>(null);
   const wordsBox = useRef<HTMLTextAreaElement>(null);
   const [room, setRoom] = useState(680);
+  const sendFiles = useAttachments(selected.goesWithFiles);
+  const goes = useAttachments(selected.goesWith);
+  const goesChanged = goes.refs.join() !== selected.goesWith.map((file) => file.ref).join();
 
   const editable = selected.canEdit || selected.channel === "here";
   const changed = selected.words ? subject !== selected.words.subject || body !== selected.words.body : false;
@@ -292,9 +302,41 @@ export function EmailsScreen({ entries, selected, subject: firstSubject, html: f
           </section>
         )}
 
+        {selected.words ? (
+          <section className="rounded-xl border bg-card p-4" aria-labelledby="goes-heading">
+            <h2 id="goes-heading" className="text-title font-semibold text-foreground">
+              Goes with
+            </h2>
+            <p className="mt-0.5 text-caption text-muted-foreground">Attached whenever this letter is picked. Staff can still remove or add files for one email.</p>
+            <div className="mt-3 grid gap-3">
+              {selected.canEdit ? (
+                <>
+                  <FileRow attach={goes} rules />
+                  {goesChanged ? (
+                    <div>
+                      <Button type="button" loading={busy} onClick={() => act(() => saveGoesWith(selected.id, goes.refs), "Saved. The letter now goes with these files.", true)}>
+                        Save files
+                      </Button>
+                    </div>
+                  ) : null}
+                </>
+              ) : selected.goesWith.length ? (
+                <ul className="m-0 grid list-none gap-1 p-0 text-body text-foreground">
+                  {selected.goesWith.map((file) => (
+                    <li key={file.ref}>{file.name}</li>
+                  ))}
+                </ul>
+              ) : (
+                <p className="text-body text-muted-foreground">No files.</p>
+              )}
+            </div>
+          </section>
+        ) : null}
+
         {selected.channel === "here" ? (
           <SendPanel
             selected={selected}
+            files={sendFiles}
             person={person}
             onPerson={(next) => (setPerson(next), touched())}
             values={values}
@@ -302,7 +344,7 @@ export function EmailsScreen({ entries, selected, subject: firstSubject, html: f
             busy={busy}
             onSend={() =>
               act(async () => {
-                const result = await sendEmailTo(selected.id, draft());
+                const result = await sendEmailTo(selected.id, { ...draft(), attachments: sendFiles.refs });
                 if (!result.ok) return result;
                 setNote({ tone: "ok", text: result.status === "sent" ? `Sent to ${person?.name}. It is on their timeline.` : result.status === "logged" ? `Saved on ${person?.name}'s timeline. Not sent: email is not connected.` : "Resend refused it. Check their address and try again." });
                 return { ok: true };
@@ -318,7 +360,7 @@ export function EmailsScreen({ entries, selected, subject: firstSubject, html: f
 }
 
 /** Who a "Send here" letter goes to, and its facts. Only the desk roles can send. */
-function SendPanel({ selected, person, onPerson, values, onValue, busy, onSend }: { selected: SelectedEmail; person: PersonHit | null; onPerson: (person: PersonHit | null) => void; values: Record<string, string>; onValue: (key: string, value: string) => void; busy: boolean; onSend: () => void }) {
+function SendPanel({ selected, files, person, onPerson, values, onValue, busy, onSend }: { selected: SelectedEmail; files: Attachments; person: PersonHit | null; onPerson: (person: PersonHit | null) => void; values: Record<string, string>; onValue: (key: string, value: string) => void; busy: boolean; onSend: () => void }) {
   const [query, setQuery] = useState("");
   const [hits, setHits] = useState<PersonHit[]>([]);
 
@@ -339,7 +381,8 @@ function SendPanel({ selected, person, onPerson, values, onValue, busy, onSend }
 
   const ready = Boolean(person) && selected.fields.every((field) => field.optional || values[field.key]?.trim());
   return (
-    <section className="rounded-xl border bg-card p-4" aria-labelledby="send-heading">
+    <FileDrop attach={files} className="rounded-xl border bg-card p-4">
+    <section aria-labelledby="send-heading">
       <h2 id="send-heading" className="text-title font-semibold text-foreground">
         Send to a client
       </h2>
@@ -398,11 +441,13 @@ function SendPanel({ selected, person, onPerson, values, onValue, busy, onSend }
             ),
           )}
         </div>
+        <FileRow attach={files} letter={{ entryId: selected.id }} />
         <Button type="button" loading={busy} disabled={!ready} onClick={onSend}>
           {person ? `Send to ${person.name}` : "Send"}
         </Button>
       </div>
     </section>
+    </FileDrop>
   );
 }
 

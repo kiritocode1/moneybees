@@ -11,6 +11,7 @@ import { siteOf } from "@/emails/request";
 import { CRM_ROLES, hasRole } from "@/lib/backend/roles";
 import { sendCrmEmail } from "@/lib/crm/mail";
 import { STARTER_TEMPLATES } from "@/lib/crm/starter-content";
+import { isFileRef, resolveAttachments } from "@/lib/files/library";
 import { siteDetails } from "@/lib/site/load-details";
 import type { User } from "@/payload-types";
 
@@ -25,7 +26,7 @@ import type { User } from "@/payload-types";
 type Fail = { ok: false; error: string };
 const fail = (error: string): Fail => ({ ok: false, error });
 
-const Draft = type({ "subject?": "string <= 200", "body?": "string <= 20000", "values?": "Record<string, string>", "personId?": "number.integer > 0" });
+const Draft = type({ "subject?": "string <= 200", "body?": "string <= 20000", "values?": "Record<string, string>", "personId?": "number.integer > 0", "attachments?": "string[] <= 10" });
 type DraftInput = typeof Draft.infer;
 
 async function signedIn() {
@@ -79,6 +80,23 @@ export async function saveEmailWords(id: string, input: { subject: string; body:
   return { ok: true };
 }
 
+const GoesWith = type("string[] <= 10");
+
+/** Saves the files a letter always carries (its Goes with). Email templates' access decides who may (compliance and HR). */
+export async function saveGoesWith(id: string, refs: string[]): Promise<{ ok: true } | Fail> {
+  const entry = catalogueEntry(id);
+  const parsed = GoesWith(refs);
+  if (!entry?.template) return fail("This email carries no files.");
+  if (parsed instanceof type.errors || !parsed.every(isFileRef)) return fail("One of those files cannot be used.");
+  const { payload, user } = await signedIn();
+  if (!hasRole(user, "compliance", "hr")) return fail("Only compliance or HR can change what a letter goes with.");
+  const row = await templateRow(payload, entry);
+  const starter = STARTER_TEMPLATES[entry.template];
+  if (row) await payload.update({ collection: "email-templates", id: row.id, user, overrideAccess: false, data: { goesWith: parsed } });
+  else await payload.create({ collection: "email-templates", user, overrideAccess: false, data: { name: starter.name, purpose: starter.purpose as never, subject: starter.subject, body: starter.body, goesWith: parsed } });
+  return { ok: true };
+}
+
 /** The email as it stands, to the signed-in staff member, subject marked [Test]. */
 export async function sendEmailTest(id: string, input: DraftInput): Promise<{ ok: true; to: string } | Fail> {
   const drawn = await drawEmail(id, input);
@@ -115,7 +133,7 @@ const PLACEHOLDER = /\[[^\]]{3,}\]/;
 
 /**
  * Sends a "Send here" letter to one person from the signed-in staff member,
- * with the words and facts on screen. It goes on their timeline like a reply.
+ * with the words, facts and files on screen. It goes on their timeline like a reply.
  * Refused while a [placeholder] or a required fact is left.
  */
 export async function sendEmailTo(id: string, input: DraftInput): Promise<{ ok: true; status: "sent" | "logged" | "failed" } | Fail> {
@@ -134,8 +152,11 @@ export async function sendEmailTo(id: string, input: DraftInput): Promise<{ ok: 
   const left = [words?.body ?? "", ...Object.values(values)].find((text) => PLACEHOLDER.test(text));
   if (left) return fail(`Replace the part in square brackets first: ${PLACEHOLDER.exec(left)?.[0]}`);
 
+  const files = await resolveAttachments(payload, user, draft.attachments, origin ?? "");
+  if (!files.ok) return files;
+
   const email = compose(entry, { template: words, values, name: person.name, site: await siteDetails() });
   const rendered = await renderEmail(email.element, origin);
-  const sent = await sendCrmEmail(payload, { to: person.email, subject: email.subject, ...rendered, words: email.words.text, contact: person.id, sentBy: user, summary: entry.name });
+  const sent = await sendCrmEmail(payload, { to: person.email, subject: email.subject, ...rendered, words: email.words.text, contact: person.id, sentBy: user, summary: entry.name, attachments: files.attachments });
   return { ok: true, status: sent.status };
 }

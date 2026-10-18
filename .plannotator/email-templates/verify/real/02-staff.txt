@@ -1,0 +1,52 @@
+To: ["asha.sales@moneybee.local","qa.admin@moneybee.local"]
+Subject: [High] PMS enquiry from Check Enquirer, reply by 5:15 pm
+
+16 October 2026
+Ref. ENQ-00009
+
+New enquiry
+
+PMS enquiry from Check Enquirer
+
+High · Reply due by 5:15 pm today, in 4 hours
+
+Reference
+ENQ-00009
+
+Received
+16 Oct 2026, 1:15 pm
+
+Email
+check.enquirer@moneybee.local
+
+Phone
++91 98200 00000
+
+Investment amount
+Above 5 crore
+
+City
+Pune
+
+Existing relationship
+None. First contact, from /pms.
+
+Checking the new emails: how often do you report, and can I see the stocks in my own demat?
+
+Why it is rated High
+
+•
+
+PMS ticket above Rs. 5 crore.
+
+Playbook: Large PMS investor
+
+1. Call within the reply time; email only if they don't pick up.
+
+2. Offer a meeting with the fund manager.
+
+3. Open a deal once a meeting is set.
+
+Open ENQ-00009 https://moneybees.localhost:1355/admin/inbox/9
+
+You receive these alerts because you hold the Sales role in Moneybee's admin.

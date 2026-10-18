@@ -32,6 +32,12 @@ export const Emails: CollectionConfig = {
     { name: "sentBy", type: "relationship", relationTo: "users" },
     { name: "inReplyTo", type: "relationship", relationTo: "emails" },
     { name: "resendId", type: "text", index: true, admin: { readOnly: true } },
+    // The files it carried, by lib/files/library.ts ref, so a file can list every email it went with.
+    { name: "attachments", type: "array", admin: { readOnly: true }, fields: [
+      { name: "ref", type: "text", required: true, index: true },
+      { name: "name", type: "text", required: true },
+      { name: "size", type: "number" },
+    ] },
     { name: "events", type: "array", admin: { readOnly: true }, fields: [
       { name: "type", type: "text", required: true },
       { name: "at", type: "date", required: true },

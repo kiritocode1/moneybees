@@ -1,7 +1,7 @@
 import type { CollectionBeforeChangeHook, CollectionConfig } from "payload";
 import { auditChange } from "@/lib/backend/audit";
 import { allow, CRM_ROLES } from "@/lib/backend/roles";
-import { DEAL_STAGES } from "@/lib/crm/vocabulary";
+import { DEAL_STAGES, LOST_REASONS } from "@/lib/crm/vocabulary";
 import { screenIntro } from "@/lib/admin/screens";
 
 /** Records when a deal last moved, so the board can show how long it has sat in a stage. */
@@ -11,7 +11,9 @@ const stampStage: CollectionBeforeChangeHook = ({ data, originalDoc, operation }
 /**
  * One person or entity considering one product. PMS and AIF deals sit on
  * separate boards because the product decides the pipeline; the ticket size
- * is what the board adds up, in Rs. crore.
+ * is what the board adds up, in Rs. crore. Moving one on the board
+ * (/admin/deals) asks what that stage needs: the meeting's time, the
+ * documents sent, the amount invested and when, or why it was lost.
  */
 export const Deals: CollectionConfig = {
   slug: "deals",
@@ -32,7 +34,11 @@ export const Deals: CollectionConfig = {
       { name: "ticketSize", type: "number", min: 0, label: "Ticket size (Rs. crore)" },
       { name: "expectedClose", type: "date", admin: { date: { pickerAppearance: "dayOnly" } } },
     ] },
-    { name: "lostReason", type: "text", admin: { condition: (data) => data.stage === "lost" } },
+    { type: "row", fields: [
+      { name: "lostWhy", type: "select", options: [...LOST_REASONS], label: "Why it was lost", admin: { condition: (data) => data.stage === "lost" } },
+      { name: "lostReason", type: "text", label: "In a line", admin: { condition: (data) => data.stage === "lost" } },
+    ] },
+    { name: "investedOn", type: "date", admin: { condition: (data) => data.stage === "invested", date: { pickerAppearance: "dayOnly" } } },
     { name: "owner", type: "relationship", relationTo: "users", admin: { position: "sidebar" } },
     { name: "enquiry", type: "relationship", relationTo: "enquiries", admin: { position: "sidebar" } },
     { name: "stageChangedAt", type: "date", admin: { position: "sidebar", readOnly: true } },

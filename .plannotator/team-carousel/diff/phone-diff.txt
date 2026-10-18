@@ -1,0 +1,18 @@
+phone 390: 37 of 44 equal (boxes within 1px)
+  h2.lineHeight            ref=normal  ours=28.56px
+  active.box               ref=[0, 145, 315, 785]  ours=[0, 145, 315, 765]
+  active.info              ref=[16, 560, 299, 370]  ours=[16, 559, 299, 351]
+  next.box                 ref=[315, 145, 315, 751]  ours=[315, 145, 315, 730]
+  name.lineHeight          ref=normal  ours=23.8px
+  role.lineHeight          ref=normal  ours=16.66px
+  body.lineHeight          ref=normal  ours=16.66px
+phone 768: 35 of 44 equal (boxes within 1px)
+  h2.lineHeight            ref=normal  ours=28.56px
+  active.box               ref=[11, 145, 630, 1190]  ours=[0, 145, 630, 1136]
+  active.media             ref=[27, 145, 614, 819]  ours=[16, 145, 614, 819]
+  active.info              ref=[27, 980, 614, 355]  ours=[16, 979, 614, 301]
+  next.box                 ref=[641, 145, 630, 1137]  ours=[630, 145, 630, 1100]
+  next.media               ref=[657, 318, 484, 645]  ours=[646, 318, 484, 645]
+  name.lineHeight          ref=normal  ours=23.8px
+  role.lineHeight          ref=normal  ours=16.66px
+  body.lineHeight          ref=normal  ours=16.66px

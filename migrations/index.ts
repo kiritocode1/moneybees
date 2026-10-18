@@ -11,11 +11,18 @@ import * as migration_20261013_111455_about_page_and_team from './20261013_11145
 import * as migration_20261013_112654_investor_centre_contact_documents from './20261013_112654_investor_centre_contact_documents';
 import * as migration_20261013_115823_remaining_pages from './20261013_115823_remaining_pages';
 import * as migration_20261014_062217_ai_switches_in_admin from './20261014_062217_ai_switches_in_admin';
+import * as migration_20261014_151508_columns_for_seeds from './20261014_151508_columns_for_seeds';
 import * as migration_20261014_151509_hiring from './20261014_151509_hiring';
 import * as migration_20261016_071849_email_letters from './20261016_071849_email_letters';
 import * as migration_20261016_072000_email_letters_words from './20261016_072000_email_letters_words';
 import * as migration_20261016_154424_email_desk from './20261016_154424_email_desk';
 import * as migration_20261016_154500_email_desk_words from './20261016_154500_email_desk_words';
+import * as migration_20261016_184252_files_and_tasks from './20261016_184252_files_and_tasks';
+import * as migration_20261016_184300_letters_go_with from './20261016_184300_letters_go_with';
+import * as migration_20261017_054250_playbook_step_tasks from './20261017_054250_playbook_step_tasks';
+import * as migration_20261017_054300_playbook_step_timing from './20261017_054300_playbook_step_timing';
+import * as migration_20261017_060832_investor_invitations from './20261017_060832_investor_invitations';
+import * as migration_20261017_061857_deal_moves from './20261017_061857_deal_moves';
 
 export const migrations = [
   {
@@ -84,6 +91,11 @@ export const migrations = [
     name: '20261014_062217_ai_switches_in_admin',
   },
   {
+    up: migration_20261014_151508_columns_for_seeds.up,
+    down: migration_20261014_151508_columns_for_seeds.down,
+    name: '20261014_151508_columns_for_seeds',
+  },
+  {
     up: migration_20261014_151509_hiring.up,
     down: migration_20261014_151509_hiring.down,
     name: '20261014_151509_hiring',
@@ -106,6 +118,36 @@ export const migrations = [
   {
     up: migration_20261016_154500_email_desk_words.up,
     down: migration_20261016_154500_email_desk_words.down,
-    name: '20261016_154500_email_desk_words'
+    name: '20261016_154500_email_desk_words',
+  },
+  {
+    up: migration_20261016_184252_files_and_tasks.up,
+    down: migration_20261016_184252_files_and_tasks.down,
+    name: '20261016_184252_files_and_tasks',
+  },
+  {
+    up: migration_20261016_184300_letters_go_with.up,
+    down: migration_20261016_184300_letters_go_with.down,
+    name: '20261016_184300_letters_go_with',
+  },
+  {
+    up: migration_20261017_054250_playbook_step_tasks.up,
+    down: migration_20261017_054250_playbook_step_tasks.down,
+    name: '20261017_054250_playbook_step_tasks',
+  },
+  {
+    up: migration_20261017_054300_playbook_step_timing.up,
+    down: migration_20261017_054300_playbook_step_timing.down,
+    name: '20261017_054300_playbook_step_timing',
+  },
+  {
+    up: migration_20261017_060832_investor_invitations.up,
+    down: migration_20261017_060832_investor_invitations.down,
+    name: '20261017_060832_investor_invitations',
+  },
+  {
+    up: migration_20261017_061857_deal_moves.up,
+    down: migration_20261017_061857_deal_moves.down,
+    name: '20261017_061857_deal_moves'
   },
 ];
