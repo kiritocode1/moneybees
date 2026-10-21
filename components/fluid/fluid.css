@@ -2,13 +2,15 @@
  * Fluid Functionalism's tokens (components/fluid), with the light-theme
  * values from fluidfunctionalism.com's own stylesheet (read 2026-10-08), so
  * the components look as they do there. The values live on `.fluid`, so they
- * apply only inside an element that opts in: a portal page's card, or a form
- * embedded in a marketing page. The @theme block maps them to the utilities
+ * apply to opted-in forms and their portalled popup menus. Radix mounts
+ * popups under body, outside the form's `.fluid` element.
+ * The @theme block maps them to the utilities
  * the components use (bg-card, ring-border, text-muted-foreground, text-body).
  * Imported by app/(frontend)/globals.css.
  */
 
-.fluid {
+.fluid,
+[data-radix-popper-content-wrapper] {
   --background: #fafafa;
   --foreground: #171717;
   --card: #ffffff;
@@ -27,6 +29,25 @@
   --info: #3b82f6;
   --success: #22c55e;
   --warning: #f59e0b;
+
+  /* Same light surfaces and elevation as the admin's Fluid theme. */
+  --surface-1: #fafafa;
+  --surface-2: #fcfcfc;
+  --surface-3: #ffffff;
+  --surface-4: #ffffff;
+  --surface-5: #ffffff;
+  --surface-6: #ffffff;
+  --surface-7: #ffffff;
+  --surface-8: #ffffff;
+  --shadow-color: rgb(0 0 0 / 0.06);
+  --shadow-1: 0 0 0 1px var(--shadow-color);
+  --shadow-2: var(--shadow-1), 0 1px 1px -0.5px var(--shadow-color);
+  --shadow-3: var(--shadow-2), 0 3px 3px -1.5px var(--shadow-color);
+  --shadow-4: var(--shadow-3), 0 6px 6px -3px var(--shadow-color);
+  --shadow-5: var(--shadow-4), 0 12px 12px -6px var(--shadow-color);
+  --shadow-6: var(--shadow-5), 0 24px 24px -12px var(--shadow-color);
+  --shadow-7: var(--shadow-6), 0 48px 48px -24px var(--shadow-color);
+  --shadow-8: var(--shadow-7), 0 96px 96px -48px var(--shadow-color);
 
   /* Type scale. */
   --fs-display: 28px;
@@ -56,6 +77,22 @@
 }
 
 @theme inline {
+  --color-surface-1: var(--surface-1);
+  --color-surface-2: var(--surface-2);
+  --color-surface-3: var(--surface-3);
+  --color-surface-4: var(--surface-4);
+  --color-surface-5: var(--surface-5);
+  --color-surface-6: var(--surface-6);
+  --color-surface-7: var(--surface-7);
+  --color-surface-8: var(--surface-8);
+  --shadow-surface-1: var(--shadow-1);
+  --shadow-surface-2: var(--shadow-2);
+  --shadow-surface-3: var(--shadow-3);
+  --shadow-surface-4: var(--shadow-4);
+  --shadow-surface-5: var(--shadow-5);
+  --shadow-surface-6: var(--shadow-6);
+  --shadow-surface-7: var(--shadow-7);
+  --shadow-surface-8: var(--shadow-8);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
