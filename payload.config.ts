@@ -40,8 +40,37 @@ import { PicksPage } from "./globals/PicksPage";
 import { PmsVsAifPage } from "./globals/PmsVsAifPage";
 import { InvestorCentrePage } from "./globals/InvestorCentrePage";
 import { SiteDetails } from "./globals/SiteDetails";
+import { withDeleteGuard } from "./lib/backend/delete-guard";
 
 const dirname = path.dirname(fileURLToPath(import.meta.url));
+
+// Sidebar order follows this list: Publishing (fact sheets first), then Settings.
+// The CRM and hiring collections are out of the sidebar (group: false); the Desk links reach them.
+const collections = [
+  FactSheets,
+  Products,
+  Metrics,
+  Media,
+  PrivateFiles,
+  TeamMembers,
+  Documents,
+  CaseStudies,
+  Openings,
+  Playbooks,
+  EmailTemplates,
+  Investors,
+  Users,
+  AuditLog,
+  Enquiries,
+  Contacts,
+  Entities,
+  Deals,
+  Activities,
+  Tasks,
+  Emails,
+  Applications,
+  LoginChallenges,
+].map((collection) => withDeleteGuard(collection));
 
 /*
  * The Moneybee backend (.plannotator/backend-plan/plan.md). While the platform
@@ -82,33 +111,7 @@ export default buildConfig({
       },
     },
   },
-  // Sidebar order follows this list: Publishing (fact sheets first), then Settings.
-  // The CRM and hiring collections are out of the sidebar (group: false); the Desk links reach them.
-  collections: [
-    FactSheets,
-    Products,
-    Metrics,
-    Media,
-    PrivateFiles,
-    TeamMembers,
-    Documents,
-    CaseStudies,
-    Openings,
-    Playbooks,
-    EmailTemplates,
-    Investors,
-    Users,
-    AuditLog,
-    Enquiries,
-    Contacts,
-    Entities,
-    Deals,
-    Activities,
-    Tasks,
-    Emails,
-    Applications,
-    LoginChallenges,
-  ],
+  collections,
   globals: [HomePage, PmsPage, AifPage, PmsVsAifPage, OurPhilosophyPage, AboutPage, CaseStudiesPage, PicksPage, InvestorCentrePage, ContactPage, CareersPage, SiteDetails, CrmSettings],
   // The one place Payload's name appears in its interface text, and the
   // section picker on editable pages, which Payload calls blocks.
