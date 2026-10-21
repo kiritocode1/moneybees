@@ -108,3 +108,15 @@
 .status[data-mb-state="changed"] .status__value::after {
   content: "Unpublished changes";
 }
+
+/*
+ * The Guide's videos (components/admin/guide/guide-video.tsx): captions sit
+ * over the picture in the admin's own sans, so they read at any window size.
+ */
+.fluid video::cue {
+  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-size: 17px;
+  line-height: 1.4;
+  color: #fff;
+  background: rgb(0 0 0 / 0.78);
+}

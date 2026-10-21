@@ -2,6 +2,7 @@ import type { AdminViewServerProps } from "payload";
 import { AdminView } from "@/components/admin/admin-view";
 import { Badge } from "@/components/fluid/badge";
 import { LinkButton } from "@/components/admin/link-button";
+import { GUIDE_VIDEOS, type GuideVideo as GuideVideoEntry } from "@/lib/admin/guide-videos";
 import { ROLES } from "@/lib/backend/roles";
 import { JOURNEY, KEPT, NOT_CONNECTED, NOT_KEPT, ROW_KINDS, WHY_MONTHLY } from "@/lib/pages/fact-sheet-guide";
 import { ANY_SECTION_NOTE, GATE_LABELS, HOME_GUIDE, type Gate, type GuideSection } from "@/lib/pages/home-guide";
@@ -19,9 +20,29 @@ import { GROUPS, SCREENS, type ScreenKey } from "@/lib/admin/screens";
 import { HOW_TO, RULES } from "@/lib/admin/guide-how-to";
 import { AnnotatedShot, Marker } from "./annotated-shot";
 import { GuideRail, type GuidePart } from "./guide-rail";
+import { GuideVideo, WatchFirst } from "./guide-video";
 
 /** Every screen in the Guide, in the sidebar's order. */
 const SCREEN_KEYS = Object.keys(SCREENS) as ScreenKey[];
+
+/** The start-to-finish stories recorded for Watch first. */
+const WATCH_FIRST = GUIDE_VIDEOS.filter((video) => video.watchFirst);
+
+/** The videos recorded for each screen, and for each How to, in the order they were written. */
+function videosFor(field: "screens" | "howTo") {
+  const found = new Map<string, GuideVideoEntry[]>();
+  for (const video of GUIDE_VIDEOS) {
+    for (const key of video[field] ?? []) {
+      const list = found.get(key) ?? [];
+      list.push(video);
+      found.set(key, list);
+    }
+  }
+  return found;
+}
+
+const SCREEN_VIDEOS = videosFor("screens");
+const HOW_TO_VIDEOS = videosFor("howTo");
 
 /*
  * /admin/guide (payload.config.ts admin.components.views.guide): how the admin
@@ -36,6 +57,7 @@ const SCREEN_KEYS = Object.keys(SCREENS) as ScreenKey[];
 /** The Guide's parts, in reading order, each with what it is for. */
 const PARTS: readonly GuidePart[] = [
   { id: "start", title: "Start here", purpose: "What the sidebar holds and where each part leads" },
+  { id: "watch", title: "Watch first", purpose: "Each kind of work, start to finish, filmed in the admin" },
   { id: "what", title: "What changes what", purpose: "Each page of the site, part by part, with where to change it" },
   { id: "screens", title: "Every screen", purpose: "What each screen is for and how to use it well" },
   { id: "how", title: "How to", purpose: "The jobs people do most, step by step" },
@@ -233,6 +255,18 @@ export async function GuideView(props: AdminViewServerProps) {
                 </div>
               </section>
 
+              {WATCH_FIRST.length ? (
+                <section id="watch" className="mt-16 scroll-mt-24 border-t pt-10">
+                  <PartHeading id="watch" />
+                  <p className="mt-4 max-w-[70ch] text-[15px] leading-6 text-foreground">
+                    Start with the story closest to the work in front of you. Every step is captioned, and the chapter list jumps to any one.
+                  </p>
+                  <div className="mt-5">
+                    <WatchFirst videos={WATCH_FIRST} />
+                  </div>
+                </section>
+              ) : null}
+
               <section id="what" className="mt-16 scroll-mt-24 border-t pt-10">
                 <PartHeading id="what" />
                 <div className="mt-4 flex flex-wrap items-center gap-3">
@@ -290,6 +324,9 @@ export async function GuideView(props: AdminViewServerProps) {
                           <p className="mt-3 max-w-[80ch] rounded-xl border bg-card px-4 py-3 text-[15px] leading-6 text-muted-foreground">
                             <b className="font-semibold text-foreground">For example:</b> {screen.example}
                           </p>
+                          {(SCREEN_VIDEOS.get(key) ?? []).map((video) => (
+                            <GuideVideo key={video.id} video={video} className="mt-5" />
+                          ))}
                           <AnnotatedShot id={`screen-${key}`} alt={`The ${screen.name} screen with its controls numbered`} className="mt-5" />
                           <ol className="mt-5 grid list-none grid-cols-1 gap-x-8 gap-y-4 p-0 xl:grid-cols-2">
                             {screen.controls.map((control, index) => (
@@ -315,6 +352,9 @@ export async function GuideView(props: AdminViewServerProps) {
                   <article key={task.key} id={`how-${task.key}`} className="mt-8 scroll-mt-24 border-t pt-6">
                     <h3 className="text-[20px] leading-7 font-semibold text-foreground">{task.title}</h3>
                     <p className="mt-1 text-[15px] leading-6 text-muted-foreground">{task.when}</p>
+                    {(HOW_TO_VIDEOS.get(task.key) ?? []).map((video) => (
+                      <GuideVideo key={video.id} video={video} className="mt-5" />
+                    ))}
                     <ol className="mt-5 grid list-none gap-8 p-0">
                       {task.steps.map((step, index) => (
                         <li key={index} className="grid grid-cols-[24px_minmax(0,1fr)] gap-3">
