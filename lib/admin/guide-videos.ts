@@ -33,6 +33,8 @@ export type GuideVideo = {
   howTo?: readonly string[];
   /** Where the recording starts. */
   start: string;
+  /** Set up the view before recording, without changing other people's data. */
+  prepare?: readonly Command[];
   /** Seconds in for the poster picture. */
   poster?: number;
   steps: readonly VideoStep[];
@@ -47,6 +49,7 @@ const press = (key: string): Command => ["press", key];
 const open = (path: string): Command => ["open", path];
 const settle: readonly Command[] = [["wait", "--load", "networkidle"], ["wait", "600"]];
 const toPerson: readonly Command[] = [["wait", "--url", "**/admin/people/**"], ...settle];
+const demoDeals: readonly Command[] = [role("combobox", "Whose deals"), role("option", "Asha Rao"), ...settle];
 const card = (name: string) => `article[aria-label^='${name}']`;
 const move = (name: string) => `button[aria-label='Move ${name}']`;
 
@@ -97,6 +100,7 @@ export const GUIDE_VIDEOS: readonly GuideVideo[] = [
     watchFirst: true,
     screens: ["deals"],
     start: "/admin/deals",
+    prepare: demoDeals,
     poster: 2.5,
     steps: [
       { caption: "Deals shows every prospective investment by stage. This is the PMS board.", hold: 3500 },
@@ -106,7 +110,7 @@ export const GUIDE_VIDEOS: readonly GuideVideo[] = [
       { caption: "Pick the stage it has reached. Meeting asks one thing first.", run: [role("menuitemradio", "Meeting", "hover")], hold: 2000, then: [role("menuitemradio", "Meeting")] },
       { caption: "When and where. The time starts on the next working day at 11:00.", run: [click("input[placeholder^='At the office']"), type("input[placeholder^='At the office']", "At the office, Lower Parel")], hold: 2500 },
       { caption: "Leave Then write the Meeting confirmation ticked, and press Move to Meeting.", run: [role("button", "Move to Meeting", "hover")], hold: 2500, then: [role("button", "Move to Meeting"), ...toPerson] },
-      { caption: "Her page opens with the Meeting confirmation written, the time and place filled in.", run: [text("Our meeting on")], hold: 4500 },
+      { caption: "Her page opens with the Meeting confirmation written, the time and place filled in.", run: [role("textbox", "Subject", "hover")], hold: 4500 },
       { caption: "The meeting is in her tasks now, so the deal has a next step.", run: [text("Meeting, At the office")], hold: 3500, then: [["back"], ...settle] },
       { caption: "Back on the board, her card shows the meeting where No next step was.", run: [hover(card("Ananya Bose"))], hold: 4000 },
       { caption: "When the money lands, move her to Invested. It asks the amount and the date.", run: [click(move("Ananya Bose")), role("menuitemradio", "Invested")], hold: 3500 },
@@ -121,6 +125,7 @@ export const GUIDE_VIDEOS: readonly GuideVideo[] = [
     role: "sales",
     screens: ["deals"],
     start: "/admin/deals",
+    prepare: demoDeals,
     poster: 1.5,
     steps: [
       { caption: "Kunal Shah met the team, then chose another manager. His card shows the meeting still planned.", run: [hover(card("Kunal Shah"))], hold: 4000 },
@@ -139,10 +144,11 @@ export const GUIDE_VIDEOS: readonly GuideVideo[] = [
     watchFirst: true,
     screens: ["clientAccounts"],
     start: "/admin/deals",
+    prepare: demoDeals,
     poster: 2,
     steps: [
       { caption: "Deepa Iyer has invested. Operations open her portal account from her page.", run: [hover(card("Deepa Iyer"))], hold: 3500, then: [click(card("Deepa Iyer")), ...toPerson] },
-      { caption: "Her Account panel says she has no account yet.", run: [text("No account yet")], hold: 3500 },
+      { caption: "Her Account panel says she has no account yet.", run: [role("heading", "Account", "hover")], hold: 3500 },
       { caption: "Invite to the portal makes the account and emails her a link to set her own password. Nobody at Moneybee sees it.", run: [role("button", "Invite to the portal", "hover")], hold: 4500, then: [role("button", "Invite to the portal"), ...settle] },
       { caption: "The link works once, for seven days. Her timeline says it went, and until when.", run: [text("The link works until")], hold: 4500 },
       { caption: "This is the email she receives.", run: [open("/admin/emails?email=portal-invitation"), ...settle, text("Set your password")], hold: 4500 },
@@ -157,7 +163,7 @@ export const GUIDE_VIDEOS: readonly GuideVideo[] = [
     start: "/admin/tasks",
     poster: 1.5,
     steps: [
-      { caption: "Mine shows what you owe, overdue first, then today, tomorrow and later.", run: [text("Overdue")], hold: 4000 },
+      { caption: "Mine shows what you owe, overdue first, then today, tomorrow and later.", run: [role("heading", "Overdue", "hover")], hold: 4000 },
       { caption: "Each task is done from its row. A call shows the number to ring.", run: [text("+919820077777")], hold: 3500 },
       { caption: "An email has Write. It opens her page on the letter, and sending it ticks the task.", run: [role("link", "Write", "hover")], hold: 4000 },
       { caption: "Tick a task when it is done.", run: [role("button", "Done: Call Priya Menon about the fees", "hover")], hold: 2000, then: [role("button", "Done: Call Priya Menon about the fees")] },
@@ -191,7 +197,7 @@ export const GUIDE_VIDEOS: readonly GuideVideo[] = [
     poster: 2,
     steps: [
       { caption: "Priya Menon is due the fee illustration today. Write opens her page on the letter.", run: [role("link", "Write", "hover")], hold: 3500, then: [role("link", "Write"), ...toPerson] },
-      { caption: "Write your words. Dear Priya Menon and your signature are added for you.", run: [click("input[aria-label='Subject'], input[name='subject']"), type("input[aria-label='Subject'], input[name='subject']", "Your PMS fee illustration")], hold: 2500 },
+      { caption: "Write your words. Dear Priya Menon and your signature are added for you.", run: [["find", "role", "textbox", "fill", "--name", "Subject", "Your PMS fee illustration"]], hold: 2500 },
       { caption: "Attach adds any file Moneybee keeps, or a new one from your computer.", run: [click("textarea"), type("textarea", "As promised, here is how the fees would work on a Rs. 1 crore portfolio."), role("button", "Attach")], hold: 4000 },
       { caption: "Pick the file. It goes with this one email only.", run: [text("PMS fee illustration", "click")], hold: 3500, then: [press("Escape")] },
       { caption: "Save it. Sending ticks the task, since this was the letter it asked for.", run: [role("button", "Save without sending", "hover")], hold: 3000, then: [role("button", "Save without sending"), ...settle] },

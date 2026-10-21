@@ -69,6 +69,7 @@ async function record(video) {
   signIn(session, video.role);
   browser(session, ["open", video.start]);
   browser(session, ["wait", "--load", "networkidle"]);
+  for (const command of video.prepare ?? []) browser(session, command);
   browser(session, ["mouse", "move", "720", "40"]);
   await wait(800);
 

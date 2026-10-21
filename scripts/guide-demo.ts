@@ -84,7 +84,7 @@ async function reset(payload: Payload, owner: User) {
 
   // Ananya Bose: met nobody yet; her PMS deal sits at Contacted with nothing planned (A deal, from meeting to invested).
   const ananya = await person("ananya");
-  await line(ananya, { type: "form", summary: "Sent the PMS form", body: "I would like to understand how the PMS works before investing about 2 crore." }, -4);
+  await enquiry("pms", { ...PEOPLE.ananya, amount: "1 crore to 5 crore", message: "I would like to understand how the PMS works before investing about 2 crore." });
   await deal(ananya, { product: pms.id, stage: "contacted", amount: 2, days: 3 });
 
   // Kunal Shah: a meeting is set, and the checklist is due today (When a deal is lost).
