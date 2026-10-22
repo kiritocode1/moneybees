@@ -23,6 +23,8 @@ import * as migration_20261017_054250_playbook_step_tasks from './20261017_05425
 import * as migration_20261017_054300_playbook_step_timing from './20261017_054300_playbook_step_timing';
 import * as migration_20261017_060832_investor_invitations from './20261017_060832_investor_invitations';
 import * as migration_20261017_061857_deal_moves from './20261017_061857_deal_moves';
+import * as migration_20261022_101500_wealth_in_lakhs from './20261022_101500_wealth_in_lakhs';
+import * as migration_20261022_123622_home_returns_block from './20261022_123622_home_returns_block';
 
 export const migrations = [
   {
@@ -148,6 +150,16 @@ export const migrations = [
   {
     up: migration_20261017_061857_deal_moves.up,
     down: migration_20261017_061857_deal_moves.down,
-    name: '20261017_061857_deal_moves'
+    name: '20261017_061857_deal_moves',
+  },
+  {
+    up: migration_20261022_101500_wealth_in_lakhs.up,
+    down: migration_20261022_101500_wealth_in_lakhs.down,
+    name: '20261022_101500_wealth_in_lakhs',
+  },
+  {
+    up: migration_20261022_123622_home_returns_block.up,
+    down: migration_20261022_123622_home_returns_block.down,
+    name: '20261022_123622_home_returns_block'
   },
 ];

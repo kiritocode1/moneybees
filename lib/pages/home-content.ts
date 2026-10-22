@@ -20,7 +20,10 @@ export type HeroContent = {
   figures?: { figure: string; label: string }[] | null;
 };
 
-export type RecordContent = { eyebrow?: string | null; heading: string; lead?: string | null; more?: Action };
+export type RecordContent = { eyebrow?: string | null; heading: string; lead?: string | null };
+
+/** The long-period return bars under Performance. The link sits under the bars. */
+export type ReturnsContent = { more?: Action };
 
 export type Way = { kind: "pms" | "aif"; label: string; name: string; lead?: string | null; facts?: { fact: string }[] | null; link: string };
 
@@ -59,8 +62,11 @@ export const HERO: HeroContent = {
 export const RECORD: RecordContent = {
   eyebrow: "Performance",
   heading: HEADINGS.record,
-  // RECORD_LEAD (AIF presentation p12) with its figures as tokens, so it prints the same until a fact sheet replaces them.
-  lead: "Rs. 1 Mn put into Moneybee PMS in August 2007 was worth {wealthOurs} by {asOfMonth}. The same amount in the S&P BSE 500 TRI grew to {wealthBenchmark}.",
+  // The deck's wealth sentence (AIF presentation p12) with its figures as tokens. The deck says Rs. 1 Mn; the site says Rs. 10 Lakh.
+  lead: "Rs. 10 Lakh put into Moneybee PMS in August 2007 was worth {wealthOurs} by {asOfMonth}. The same amount in the S&P BSE 500 TRI grew to {wealthBenchmark}.",
+};
+
+export const RETURNS: ReturnsContent = {
   more: { label: "Performance", link: "/pms#performance" },
 };
 
@@ -111,6 +117,7 @@ export const TEXT: TextContent = { label: "", heading: "A heading for this secti
 export const HOME_SECTIONS = [
   { blockType: "hero", hidden: false, ...HERO },
   { blockType: "record", hidden: false, ...RECORD },
+  { blockType: "returns", hidden: false, ...RETURNS },
   { blockType: "twoWays", hidden: false, ...TWO_WAYS },
   { blockType: "founder", hidden: false, ...FOUNDER_WORDS },
   { blockType: "getStarted", hidden: false, ...GET_STARTED },

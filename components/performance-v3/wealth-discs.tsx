@@ -7,7 +7,7 @@ import { BracketLabel } from "@/components/fact-sections/fact-section";
 import { BODY, COLUMN, EYEBROW, SUBHEAD } from "@/components/hero/tokens";
 import { PMS_WEALTH, type WealthContent } from "@/lib/pages/pms-content";
 import { GROWTH, PMS_NAMES } from "@/lib/performance";
-import { DECK_FIGURES, dayMonthYear, type PmsFigures, shortMonth } from "@/lib/site/tokens";
+import { DECK_FIGURES, dayMonthYear, type PmsFigures, rupees, shortMonth } from "@/lib/site/tokens";
 
 /*
  * Wealth growth (content plan §7, "Wealth-growth illustration") in study 08's
@@ -17,10 +17,10 @@ import { DECK_FIGURES, dayMonthYear, type PmsFigures, shortMonth } from "@/lib/s
  * result, its shadow cast right and clipped to the disc, and a text column
  * under each disc starting 0.9 of the first radius left of that disc's centre.
  *
- * Unlike the reference, sizes are area-true: Rs. 1 Mn, and what it became in
+ * Unlike the reference, sizes are area-true: Rs. 10 Lakh, and what it became in
  * the S&P BSE 500 TRI and in Moneybee PMS by July 2026 (lib/insights WEALTH).
- * They are two outcomes of the same Rs. 1 Mn, so they are two progressions on
- * one axis, each starting from its own Rs. 1 Mn disc, and never one chain.
+ * They are two outcomes of the same Rs. 10 Lakh, so they are two progressions on
+ * one axis, each starting from its own Rs. 10 Lakh disc, and never one chain.
  * The values and the end date come from the latest published PMS fact sheet
  * (lib/site/figures.ts); the words from the PMS page in /admin.
  */
@@ -35,13 +35,13 @@ const ORANGE = "#F6A11A";
 
 type Disc = { key: string; x: number; r: number; fill: string; value: number; name: string; date: string };
 
-/** What the discs draw: Rs. 1 Mn at inception and what it became in each, with the two dates. */
+/** What the discs draw: Rs. 10 Lakh at inception and what it became in each, with the two dates. Values are stored in millions. */
 type Growth = { start: number; ours: number; benchmark: number; from: string; to: string };
 
 /** The two progressions, laid out once for desktop (one axis) and once for phones (one per row). */
 function layout(growth: Growth) {
   const radius = (value: number) => (D0 / 2) * Math.sqrt(value / growth.start);
-  /** A Rs. 1 Mn disc at `left`, then its outcome beside it. */
+  /** A Rs. 10 Lakh disc at `left`, then its outcome beside it. */
   const progression = (key: string, left: number, value: number, name: string, fill: string): Disc[] => {
     const r = radius(value);
     return [
@@ -55,7 +55,7 @@ function layout(growth: Growth) {
   return { wide: [...benchmark, ...ours(benchmark[1].x + benchmark[1].r + BETWEEN)], narrow, narrowWidth: Math.max(...narrow.map((discs) => frame(discs).w)) };
 }
 
-const label = (disc: Disc) => `Rs. ${disc.value} Mn`;
+const label = (disc: Disc) => rupees(disc.value);
 
 function frame(discs: Disc[]) {
   const right = Math.max(...discs.map((disc) => disc.x + disc.r));
@@ -154,7 +154,7 @@ export function WealthDiscs({ content = PMS_WEALTH, figures = DECK_FIGURES }: { 
         <div
           ref={ref}
           role="img"
-          aria-label={`Rs. ${growth.start} Mn invested in ${growth.from} was worth Rs. ${growth.ours} Mn in ${PMS_NAMES.ours} and Rs. ${growth.benchmark} Mn in the ${PMS_NAMES.benchmark} by ${growth.to}.`}
+          aria-label={`${rupees(growth.start)} invested in ${growth.from} was worth ${rupees(growth.ours)} in ${PMS_NAMES.ours} and ${rupees(growth.benchmark)} in the ${PMS_NAMES.benchmark} by ${growth.to}.`}
           className="mt-16"
         >
           <div className="mx-auto max-w-[940px] max-md:hidden">

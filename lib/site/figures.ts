@@ -7,7 +7,7 @@ import { AIF_DECK_FIGURES, type AifFigures, DECK_FIGURES, type PmsFigures } from
 /**
  * Moneybee PMS's figures from its latest published fact sheet, cleared for
  * the public site. A sheet counts only when it carries the since-inception
- * return and both Rs. 1 Mn values, because the homepage draws all three;
+ * return and both growth values, because the homepage draws all three;
  * otherwise, or without a database, the deck's figures stand.
  */
 export async function pmsFigures(): Promise<PmsFigures> {

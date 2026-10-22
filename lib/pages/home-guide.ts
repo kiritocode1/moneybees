@@ -43,11 +43,16 @@ export const HOME_GUIDE: Partial<Record<SectionKind, GuideSection>> = {
   record: {
     picture: "/site-sections/guide/record.png",
     parts: [
-      { label: "Small label and heading", where: "Performance › Heading", x: 8.3, y: 14.2 },
-      { label: "Paragraph", where: "Performance › Paragraph. It states returns, so only compliance can change it.", gate: "compliance", x: 8.3, y: 30.9 },
-      { label: "The discs", where: "Fact sheets › Rs. 1 Mn since inception", gate: "factSheet", x: 51.7, y: 6.9 },
-      { label: "Returns table", where: "Fact sheets › Returns, for 1 Year, 3 Years, 5 Years and Since Inception", gate: "factSheet", x: 8.3, y: 54.5 },
-      { label: "Link under the table", where: "Performance › Link under the table", x: 8.3, y: 91.6 },
+      { label: "Small label and heading", where: "Performance › Heading", x: 8.3, y: 23 },
+      { label: "Paragraph", where: "Performance › Paragraph. It states returns, so only compliance can change it.", gate: "compliance", x: 8.3, y: 64.7 },
+      { label: "The discs", where: "Fact sheets › Rs. 10 Lakh grew to", gate: "factSheet", x: 51.7, y: 14.5 },
+    ],
+  },
+  returns: {
+    picture: "/site-sections/guide/returns.png",
+    parts: [
+      { label: "Returns", where: "Fact sheets › Returns, for 1 Year, 3 Years, 5 Years and Since Inception", gate: "factSheet", x: 8.3, y: 13.1 },
+      { label: "Link under the table", where: "Returns › Link under the table", x: 8.3, y: 83.9 },
     ],
   },
   twoWays: {

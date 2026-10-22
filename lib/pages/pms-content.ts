@@ -8,8 +8,8 @@ import { type MarkKind, PMS_HERO, PMS_RISKS, type ProductHeroData } from "@/lib/
  * What each /pms section says, in the shape the PMS page record in /admin
  * stores it: today's words, so the first migration writes them and the page
  * reads the same. Lorem lines move over as they are, marked LOREM, until the
- * client supplies the copy. Returns, the as-of date and the growth of Rs. 1
- * Mn are not here: they come from the latest PMS fact sheet.
+ * client supplies the copy. Returns, the as-of date and the growth of Rs. 10
+ * Lakh are not here: they come from the latest PMS fact sheet.
  */
 
 const LOREM_SHORT = "Lorem ipsum dolor sit amet, consectetur adipiscing elit.";

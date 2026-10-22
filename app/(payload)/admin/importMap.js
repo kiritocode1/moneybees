@@ -9,6 +9,8 @@ import { InvestorStatusCell as InvestorStatusCell_be203baf76600e10d6ffd30b9fae3d
 import { ContactNameCell as ContactNameCell_be203baf76600e10d6ffd30b9fae3d01 } from '../../../components/admin/cells/cells'
 import { PreviewBridge as PreviewBridge_42d21390ffe440979752f7114bdd8b7a } from '../../../components/admin/site-editor/preview-bridge'
 import { SectionLabel as SectionLabel_7669d1767e9f58d7b9fb6fd7b0312c58 } from '../../../components/admin/site-editor/section-label'
+import { WealthSource as WealthSource_68876d0fa8202cff4fcaf5103cc0dd60 } from '../../../components/admin/site-editor/performance-source'
+import { ReturnsSource as ReturnsSource_68876d0fa8202cff4fcaf5103cc0dd60 } from '../../../components/admin/site-editor/performance-source'
 import { PerformanceSource as PerformanceSource_68876d0fa8202cff4fcaf5103cc0dd60 } from '../../../components/admin/site-editor/performance-source'
 import { ClosingDoorsNote as ClosingDoorsNote_efc1298ee57476d66f35fa7f953a6f55 } from '../../../components/admin/site-editor/page-notes'
 import { AifPerformanceNote as AifPerformanceNote_efc1298ee57476d66f35fa7f953a6f55 } from '../../../components/admin/site-editor/page-notes'
@@ -52,6 +54,8 @@ export const importMap = {
   "/components/admin/cells/cells#ContactNameCell": ContactNameCell_be203baf76600e10d6ffd30b9fae3d01,
   "/components/admin/site-editor/preview-bridge#PreviewBridge": PreviewBridge_42d21390ffe440979752f7114bdd8b7a,
   "/components/admin/site-editor/section-label#SectionLabel": SectionLabel_7669d1767e9f58d7b9fb6fd7b0312c58,
+  "/components/admin/site-editor/performance-source#WealthSource": WealthSource_68876d0fa8202cff4fcaf5103cc0dd60,
+  "/components/admin/site-editor/performance-source#ReturnsSource": ReturnsSource_68876d0fa8202cff4fcaf5103cc0dd60,
   "/components/admin/site-editor/performance-source#PerformanceSource": PerformanceSource_68876d0fa8202cff4fcaf5103cc0dd60,
   "/components/admin/site-editor/page-notes#ClosingDoorsNote": ClosingDoorsNote_efc1298ee57476d66f35fa7f953a6f55,
   "/components/admin/site-editor/page-notes#AifPerformanceNote": AifPerformanceNote_efc1298ee57476d66f35fa7f953a6f55,

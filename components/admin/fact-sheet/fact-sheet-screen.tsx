@@ -9,6 +9,7 @@ import { Button } from "@/components/fluid/button";
 import { correctSheet, moveSheet, saveSheet, type SheetInput, type SheetResult } from "@/lib/fact-sheets/actions";
 import { lastDay, type Month, shiftMonth } from "@/lib/fact-sheets/month";
 import { type Period, RETURN, WEALTH } from "@/lib/figure-limits";
+import { lakhsToMillions, millionsToLakhs, type RupeeUnit, wealthDisplay, wealthToMillions } from "@/lib/site/tokens";
 
 export type ScreenMode = "edit" | "waiting" | "review" | "published" | "superseded";
 
@@ -24,6 +25,8 @@ export type ScreenData = {
   monthName: string;
   rows: Row[];
   wealth: { ours: string; benchmark: string };
+  /** The unit beside each growth box. 100 lakh and above is crore. */
+  wealthUnit: { ours: RupeeUnit; benchmark: RupeeUnit };
   sectors: { name: string; weight: string }[];
   pdf: { id: number; url: string; filename: string } | null;
   correctionReason: string;
@@ -64,21 +67,26 @@ function checkReturn(value: string, before: number | null | undefined): Check {
   return typeof before === "number" && Math.abs(n - before) > FAR ? "far" : null;
 }
 
-function checkWealth(value: string, before: number | null | undefined): Check {
+/** `before` is the comparison month in lakhs, whatever unit the box is showing now. */
+function checkWealth(value: string, unit: RupeeUnit, before: number | null | undefined): Check {
   const n = parse(value);
   if (n === null) return null;
-  if (!Number.isFinite(n) || n < WEALTH.min || n > WEALTH.max) return "bad";
-  return typeof before === "number" && before > 0 && Math.abs(n - before) / before > 0.2 ? "far" : null;
+  const millions = wealthToMillions(n, unit);
+  const lakhs = millionsToLakhs(millions);
+  if (!Number.isFinite(n) || millions < WEALTH.min || millions > WEALTH.max) return "bad";
+  return typeof before === "number" && before > 0 && Math.abs(lakhs - before) / before > 0.2 ? "far" : null;
 }
 
 const ARROW = "h-9 w-9 cursor-pointer rounded-lg border-0 bg-transparent text-title text-foreground hover:bg-hover";
-const BOX = "h-9 w-[7.5rem] rounded-lg border bg-background pr-7 pl-2.5 text-right text-body tabular-nums text-foreground outline-none focus:border-[#F6A11A] disabled:opacity-100";
+const BOX = "h-9 rounded-lg border bg-background pl-2.5 text-right text-body tabular-nums text-foreground outline-none focus:border-[#F6A11A] disabled:opacity-100";
+const boxWidth = (unit: string) => (unit.length > 4 ? "w-[10.5rem] pr-16" : unit.length > 3 ? "w-[9.5rem] pr-14" : unit.length > 1 ? "w-[7.5rem] pr-10" : "w-[7.5rem] pr-7");
 const TONE: Record<Exclude<Check, null>, string> = { bad: "border-[#e5484d]", far: "border-[#f2b441]" };
 
 /** One box of the grid, with the unit inside it and the comparison month's number under it. */
-function Box({ value, onChange, onPaste, check, unit, before, beforeLabel, readOnly, label }: {
+function Box({ value, onChange, onBlur, onPaste, check, unit, before, beforeLabel, readOnly, label }: {
   value: string;
   onChange?: (value: string) => void;
+  onBlur?: () => void;
   onPaste?: (event: ClipboardEvent<HTMLInputElement>) => void;
   check: Check;
   unit: string;
@@ -96,8 +104,9 @@ function Box({ value, onChange, onPaste, check, unit, before, beforeLabel, readO
           inputMode="decimal"
           readOnly={readOnly}
           onChange={(event) => onChange?.(event.target.value)}
+          onBlur={onBlur}
           onPaste={onPaste}
-          className={`${BOX} ${unit.length > 1 ? "pr-10" : ""} ${check ? TONE[check] : "border-border"} ${readOnly ? "cursor-default bg-transparent" : ""}`}
+          className={`${BOX} ${boxWidth(unit)} ${check ? TONE[check] : "border-border"} ${readOnly ? "cursor-default bg-transparent" : ""}`}
         />
         <span className="pointer-events-none absolute top-1/2 right-2.5 -translate-y-1/2 text-caption text-muted-foreground">{unit}</span>
       </label>
@@ -130,6 +139,7 @@ export function FactSheetScreen({ data }: { data: ScreenData }) {
   const router = useRouter();
   const [rows, setRows] = useState(data.rows);
   const [wealth, setWealth] = useState(data.wealth);
+  const [wealthUnit, setWealthUnit] = useState(data.wealthUnit);
   const [sectors, setSectors] = useState(data.sectors);
   const [pdf, setPdf] = useState(data.pdf);
   const [reason, setReason] = useState(data.correctionReason);
@@ -176,7 +186,7 @@ export function FactSheetScreen({ data }: { data: ScreenData }) {
     );
   };
 
-  const checks = rows.flatMap((row) => [checkReturn(row.ours, compare?.rows[row.period]?.ours), checkReturn(row.benchmark, compare?.rows[row.period]?.benchmark)]).concat([checkWealth(wealth.ours, compare?.wealth.ours), checkWealth(wealth.benchmark, compare?.wealth.benchmark)]);
+  const checks = rows.flatMap((row) => [checkReturn(row.ours, compare?.rows[row.period]?.ours), checkReturn(row.benchmark, compare?.rows[row.period]?.benchmark)]).concat([checkWealth(wealth.ours, wealthUnit.ours, compare?.wealth.ours), checkWealth(wealth.benchmark, wealthUnit.benchmark, compare?.wealth.benchmark)]);
   const bad = checks.filter((check) => check === "bad").length;
   const far = checks.filter((check) => check === "far").length;
   const empty = rows.flatMap((row) => [row.ours, row.benchmark]).filter((value) => value.trim() === "").length;
@@ -188,12 +198,16 @@ export function FactSheetScreen({ data }: { data: ScreenData }) {
       const n = parse(text);
       return n !== null && Number.isFinite(n) ? n : null;
     };
+    const millions = (text: string, unit: RupeeUnit) => {
+      const n = value(text);
+      return n === null ? 0 : wealthToMillions(n, unit);
+    };
     return {
       rows: rows.map((row) => ({ period: row.label, short: row.period, ours: value(row.ours), benchmark: value(row.benchmark) })),
-      wealth: { start: 1, ours: value(wealth.ours) ?? 0, benchmark: value(wealth.benchmark) ?? 0 },
+      wealth: { start: 1, ours: millions(wealth.ours, wealthUnit.ours), benchmark: millions(wealth.benchmark, wealthUnit.benchmark) },
       asOf: lastDay(data.month),
     };
-  }, [rows, wealth, data.month]);
+  }, [rows, wealth, wealthUnit, data.month]);
 
   // The preview frame asks for the figures once loaded; after that each change is posted.
   const post = useCallback(() => {
@@ -232,6 +246,20 @@ export function FactSheetScreen({ data }: { data: ScreenData }) {
       else router.push(`${SHEETS}/${result.id}`);
     });
 
+  const storedMillions = (text: string, unit: RupeeUnit) => {
+    const n = parse(text);
+    return n !== null && Number.isFinite(n) ? wealthToMillions(n, unit) : null;
+  };
+
+  /** Leave the typed text alone until the box loses focus, then snap 100 lakh and above over to crore. */
+  const settleWealth = (column: Column) => {
+    const n = parse(wealth[column]);
+    if (n === null || !Number.isFinite(n)) return;
+    const shown = wealthDisplay(wealthToMillions(n, wealthUnit[column]));
+    setWealth((current) => ({ ...current, [column]: String(shown.amount) }));
+    setWealthUnit((current) => ({ ...current, [column]: shown.unit }));
+  };
+
   const input = (): SheetInput => ({
     id: data.id,
     product: product.id,
@@ -241,7 +269,10 @@ export function FactSheetScreen({ data }: { data: ScreenData }) {
       const benchmark = parse(row.benchmark);
       return { period: row.period, ours: Number.isFinite(ours) ? ours : null, benchmark: Number.isFinite(benchmark) ? benchmark : null };
     }),
-    wealth: { ours: parse(wealth.ours), benchmark: parse(wealth.benchmark) },
+    wealth: {
+      ours: storedMillions(wealth.ours, wealthUnit.ours),
+      benchmark: storedMillions(wealth.benchmark, wealthUnit.benchmark),
+    },
     sectors: sectors.filter((s) => s.name.trim() !== "" && Number.isFinite(parse(s.weight))).map((s) => ({ name: s.name.trim(), weight: parse(s.weight) ?? 0 })),
     pdf: pdf?.id ?? null,
     correctionReason: reason.trim(),
@@ -250,6 +281,11 @@ export function FactSheetScreen({ data }: { data: ScreenData }) {
   const pick = (productId: number, month: Month) => router.push(`${SHEETS}/create?product=${productId}&month=${month}`);
   const title = data.id ? `${product.name}, ${data.monthName}` : "Add a month's numbers";
   const before = (value: number | null | undefined) => (compare ? shown(value) : null);
+  const wealthBefore = (lakhs: number | null | undefined) => {
+    if (!compare || typeof lakhs !== "number") return null;
+    const shownWealth = wealthDisplay(lakhsToMillions(lakhs));
+    return `${shownWealth.amount} ${shownWealth.unit}`;
+  };
   const beforeLabel = compare?.monthName.split(" ")[0] ?? "";
 
   return (
@@ -381,17 +417,18 @@ export function FactSheetScreen({ data }: { data: ScreenData }) {
               ))}
               <tr className="border-t border-border">
                 <td className="py-2 pr-2 align-top text-caption text-muted-foreground">
-                  <span className="inline-block pt-2">Rs. 1 Mn grew to</span>
+                  <span className="inline-block pt-2">Rs. 10 Lakh grew to</span>
                 </td>
                 {(["ours", "benchmark"] as const).map((column) => (
                   <td key={column} className="py-2 pl-2 align-top">
                     <Box
-                      label={`Rs. 1 Mn grew to, ${column === "ours" ? product.name : product.benchmark}`}
+                      label={`Rs. 10 Lakh grew to, ${column === "ours" ? product.name : product.benchmark}`}
                       value={wealth[column]}
                       onChange={(value) => setWealth((current) => ({ ...current, [column]: value }))}
-                      check={editable || data.mode === "review" ? checkWealth(wealth[column], compare?.wealth[column]) : null}
-                      unit="Mn"
-                      before={before(compare?.wealth[column])}
+                      onBlur={() => settleWealth(column)}
+                      check={editable || data.mode === "review" ? checkWealth(wealth[column], wealthUnit[column], compare?.wealth[column]) : null}
+                      unit={wealthUnit[column]}
+                      before={wealthBefore(compare?.wealth[column])}
                       beforeLabel={beforeLabel}
                       readOnly={!editable}
                     />
@@ -406,7 +443,11 @@ export function FactSheetScreen({ data }: { data: ScreenData }) {
             </p>
           ) : null}
           {editable && bad > 0 ? <p className="mt-3 rounded-lg bg-[#e5484d]/10 px-3 py-2 text-caption text-[#e5484d]">A box has something that is not a possible number.</p> : null}
-          {editable ? <p className="mt-3 text-caption text-muted-foreground">Leave a box empty if the period has not run; the site prints N/A. You can paste a whole column from the PDF.</p> : null}
+          {editable ? (
+            <p className="mt-3 text-caption text-muted-foreground">
+              Leave a box empty if the period has not run; the site prints N/A. You can paste a whole column from the PDF. The growth row is in lakhs until it reaches 100 lakh, then it shows crore. The PDF writes millions: Rs. 1 Mn is Rs. 10 Lakh, and Rs. 28.85 Mn is Rs. 2.885 Crore.
+            </p>
+          ) : null}
           <Sectors sectors={sectors} editable={editable} onChange={setSectors} />
         </section>
 

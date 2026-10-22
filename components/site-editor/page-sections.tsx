@@ -21,7 +21,7 @@ import { PageEndDoors } from "@/components/cta/page-end-doors";
 import FounderSection from "@/components/fact-sections/founder-section";
 import PicksSection from "@/components/fact-sections/picks-section";
 import TeamCarousel from "@/components/fact-sections/team-carousel";
-import RecordSection from "@/components/fact-sections/record-section";
+import RecordSection, { ReturnsSection } from "@/components/fact-sections/record-section";
 import { HeroSection } from "@/components/hero/hero-sections";
 import { LoginsSection } from "@/components/investor-centre/investor-sections";
 import { DocumentCards } from "@/components/investor-v3/document-cards";
@@ -81,6 +81,8 @@ function Section({ section, figures, aif, team, documents, studies, roles, login
           <RecordSection content={section} figures={figures} />
         </div>
       );
+    case "returns":
+      return <ReturnsSection content={section} figures={figures} />;
     case "twoWays":
       return <TwoWaysSection content={section} />;
     case "founder":

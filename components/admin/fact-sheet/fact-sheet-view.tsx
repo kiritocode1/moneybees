@@ -4,12 +4,20 @@ import type { DocumentViewServerProps, Where } from "payload";
 import { hasRole } from "@/lib/backend/roles";
 import { lastDay, lastMonth, type Month, monthName, monthOf, parseMonth } from "@/lib/fact-sheets/month";
 import { PERIODS } from "@/lib/figure-limits";
+import { millionsToLakhs, wealthDisplay, type RupeeUnit } from "@/lib/site/tokens";
 import type { FactSheet, Media } from "@/payload-types";
 import { FactSheetScreen, type ScreenData, type ScreenMode } from "./fact-sheet-screen";
 
 const SHEETS = "/admin/collections/fact-sheets";
 const idOf = (value: unknown) => (typeof value === "object" && value !== null && "id" in value ? (value as { id: number }).id : (value as number | null | undefined));
 const text = (value: number | null | undefined) => (typeof value === "number" ? value.toFixed(2) : "");
+/** Wealth is stored in millions. The grid shows lakhs, and crore from 100 lakh up. */
+const wealthFields = (value: number | null | undefined): { text: string; unit: RupeeUnit } => {
+  if (typeof value !== "number") return { text: "", unit: "Lakh" };
+  const shown = wealthDisplay(value);
+  return { text: String(shown.amount), unit: shown.unit };
+};
+const lakhValue = (value: number | null | undefined) => (typeof value === "number" ? millionsToLakhs(value) : null);
 
 /**
  * Payload's create and edit view for fact sheets, replaced
@@ -73,7 +81,8 @@ export async function FactSheetView(props: DocumentViewServerProps) {
       const row = doc?.returns?.find((r) => r.period === value);
       return { period: value, label, ours: text(row?.ours), benchmark: text(row?.benchmark) };
     }),
-    wealth: { ours: text(doc?.wealth?.ours), benchmark: text(doc?.wealth?.benchmark) },
+    wealth: { ours: wealthFields(doc?.wealth?.ours).text, benchmark: wealthFields(doc?.wealth?.benchmark).text },
+    wealthUnit: { ours: wealthFields(doc?.wealth?.ours).unit, benchmark: wealthFields(doc?.wealth?.benchmark).unit },
     sectors: doc?.sectors?.map(({ name, weight }) => ({ name, weight: String(weight) })) ?? [],
     pdf: pdf?.url ? { id: pdf.id, url: pdf.url, filename: pdf.filename ?? "Fact sheet PDF" } : null,
     correctionReason: doc?.correctionReason ?? "",
@@ -83,7 +92,7 @@ export async function FactSheetView(props: DocumentViewServerProps) {
       ? {
           monthName: monthName(monthOf(compare.asOf)),
           rows: Object.fromEntries((compare.returns ?? []).map((r) => [r.period, { ours: r.ours ?? null, benchmark: r.benchmark ?? null }])),
-          wealth: { ours: compare.wealth?.ours ?? null, benchmark: compare.wealth?.benchmark ?? null },
+          wealth: { ours: lakhValue(compare.wealth?.ours), benchmark: lakhValue(compare.wealth?.benchmark) },
         }
       : null,
     submittedBy: submitter?.name ?? null,

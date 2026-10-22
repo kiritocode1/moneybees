@@ -20,7 +20,7 @@ export type Period = (typeof PERIODS)[number]["value"];
 /** A return, in percent. Below -100% is impossible; the bars scale to whatever else arrives. */
 export const RETURN = { min: -99.99, max: 999.99 } as const;
 
-/** Rs. 1 Mn grown to a value in Rs. Mn. The homepage stack changes its disc size for large values. */
+/** Growth of Rs. 10 Lakh, stored in Rs. Mn. One stored unit is one disc. The homepage stack changes its disc size for large values. */
 export const WEALTH = { min: 0.01, max: 100_000 } as const;
 
 /** One sector's share of the portfolio, in percent; the five together cannot pass 100. */

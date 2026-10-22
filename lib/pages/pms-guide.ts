@@ -33,8 +33,8 @@ export const PMS_GUIDE: Partial<Record<SectionKind, GuideSection>> = {
   wealthGrowth: {
     picture: "/site-sections/guide/wealth-growth.png",
     parts: [
-      { label: "Small label, heading and paragraph", where: "Growth of Rs. 1 Mn › Heading and Paragraph" },
-      { label: "The discs and their values", where: "Fact sheets › Rs. 1 Mn since inception. The discs resize to the numbers.", gate: "factSheet" },
+      { label: "Small label, heading and paragraph", where: "Growth of Rs. 10 Lakh › Heading and Paragraph" },
+      { label: "The discs and their values", where: "Fact sheets › Rs. 10 Lakh grew to. The discs resize to the numbers.", gate: "factSheet" },
     ],
   },
   whyPms: {

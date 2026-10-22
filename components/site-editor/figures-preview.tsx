@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import RecordSection from "@/components/fact-sections/record-section";
+import RecordSection, { ReturnsSection } from "@/components/fact-sections/record-section";
 import { COLUMN } from "@/components/hero/editorial";
 import LitRows from "@/components/motion/lit-rows";
 import { AIF_NAMES } from "@/lib/performance";
@@ -15,7 +15,7 @@ const isFiguresMessage = (value: unknown): value is FiguresMessage =>
 
 /**
  * Renders the returns graphs a product's numbers feed, as visitors see them:
- * the homepage Performance section for PMS (discs and lit rows), the lit rows
+ * the homepage Performance and Returns sections for PMS, the lit rows
  * for an AIF scheme. Waits for the first message; the parent re-posts on
  * every keystroke.
  */
@@ -30,7 +30,14 @@ export function FiguresPreview() {
     return () => window.removeEventListener("message", onMessage);
   }, []);
   if (!message) return null;
-  if (message.kind === "pms") return <RecordSection figures={message.figures} />;
+  if (message.kind === "pms") {
+    return (
+      <>
+        <RecordSection figures={message.figures} />
+        <ReturnsSection figures={message.figures} />
+      </>
+    );
+  }
   return (
     <section className="bg-white py-[100px] text-black">
       <div className={COLUMN}>

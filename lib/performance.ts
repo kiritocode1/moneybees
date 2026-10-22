@@ -61,7 +61,7 @@ export const PMS_NAMES = { ours: "Moneybee PMS", benchmark: "S&P BSE 500 TRI" } 
  */
 export const AIF_NAMES = { ours: "Flyingbee Investment Fund", benchmark: "S&P BSE 500" } as const;
 
-/** Rs. 1 Mn at inception (August 2007) and its value on 31 July 2026, in Rs. Mn. */
+/** Rs. 10 Lakh at inception (August 2007) and its value on 31 July 2026, stored in Rs. Mn. */
 export const GROWTH = {
   start: WEALTH.start,
   ours: WEALTH.queenbee,

@@ -45,3 +45,7 @@ next-env.d.ts
 
 # Resumes kept on a laptop without the private Blob store (lib/hiring/resume-store.ts)
 /.data/
+
+# local verification shots and plan-review scratch
+/.artifacts/
+/.plannotator/

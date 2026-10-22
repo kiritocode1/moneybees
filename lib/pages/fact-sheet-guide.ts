@@ -37,10 +37,10 @@ export const ROW_KINDS: { title: string; text: string }[] = [
 /** What happens, in order, from the PDF to the site. */
 export const JOURNEY: { who: string; text: string }[] = [
   { who: "Editor", text: "Opens Publishing › Fact sheets › Create New. The screen starts on last month and shows the previous sheet's number under every box." },
-  { who: "Editor", text: "Drops in the PDF and copies the numbers into the grid. A number that moved more than 8 points turns amber; an impossible one turns red. The site's graphs redraw on the right as they type. Nothing is public yet." },
+  { who: "Editor", text: "Drops in the PDF and copies the numbers into the grid. Returns copy across as they are. The growth row is in lakhs until the amount reaches 100 lakh, then crore. The PDF's Rs. 1 Mn is entered as Rs. 10 Lakh, and Rs. 28.85 Mn as Rs. 2.885 Crore. A number that moved more than 8 points turns amber; an impossible one turns red. The site's graphs redraw on the right as they type. Nothing is public yet." },
   { who: "Editor", text: "Presses Send to compliance. Compliance is told, and Today counts it. The editor cannot approve their own sheet." },
   { who: "Compliance", text: "Opens the same screen, read-only, and checks every number against the PDF. Approves it, or sends it back with a note the editor sees." },
-  { who: "The site", text: "Once approved, the new month goes live and the old one is marked Replaced. On the Home page the discs, the returns table, the numbers in the Performance paragraph and the since-inception figure at the top change. On the PMS page the bars, the full table, the growth discs and the date change. The method note in the footer takes the new date." },
+  { who: "The site", text: "Once approved, the new month goes live and the old one is marked Replaced. On the Home page the Performance discs and paragraph change, and so do the Returns bars and the since-inception figure at the top. On the PMS page the bars, the full table, the growth discs and the date change. The method note in the footer takes the new date." },
   { who: "Later", text: "If a published month turns out wrong, Correct this month opens a copy, asks what was wrong, and goes through compliance again. Approving it replaces the month." },
 ];
 
@@ -48,7 +48,7 @@ export const JOURNEY: { who: string; text: string }[] = [
 export const KEPT: string[] = [
   "The fund and the month.",
   "All eight returns, for the fund and its benchmark.",
-  "What Rs. 1 Mn grew to since the fund began.",
+  "What Rs. 10 Lakh grew to since the fund began.",
   "The top sectors.",
   "The PDF itself.",
   "Who entered it, who approved it, and when.",

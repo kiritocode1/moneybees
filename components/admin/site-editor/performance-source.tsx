@@ -6,12 +6,12 @@ import { PerformanceSourcePanel, type SheetSummary } from "./performance-source-
 const SHOWN = ["1Y", "3Y", "5Y", "SI"] as const;
 
 /**
- * The top of the Performance section's fields. Its discs and returns table
- * are not typed here: they draw from the latest published Moneybee PMS fact
- * sheet. This shows those numbers and where to change them, and a newer
- * sheet still waiting for approval. Rendered on the server by Payload.
+ * The numbers a performance section draws, from the latest published Moneybee
+ * PMS fact sheet, and a newer sheet still waiting for approval. Rendered on
+ * the server by Payload. Home splits this: discs on Performance, bars on Returns.
+ * The PMS page still shows both.
  */
-export async function PerformanceSource({ payload }: { payload: Payload }) {
+async function source(payload: Payload, show: "all" | "wealth" | "returns") {
   const { docs } = await payload.find({
     collection: "fact-sheets",
     where: { "product.slug": { equals: "moneybee-pms" }, status: { in: ["published", "in_review", "draft"] } },
@@ -35,8 +35,24 @@ export async function PerformanceSource({ payload }: { payload: Payload }) {
     : null;
   return (
     <PerformanceSourcePanel
+      show={show}
       live={summary}
       waiting={waiting ? { id: waiting.id, title: waiting.title ?? "", inReview: waiting.status === "in_review" } : null}
     />
   );
+}
+
+/** Discs and return rows, for the PMS page. */
+export async function PerformanceSource({ payload }: { payload: Payload }) {
+  return source(payload, "all");
+}
+
+/** The growth discs on the Home page's Performance block. */
+export async function WealthSource({ payload }: { payload: Payload }) {
+  return source(payload, "wealth");
+}
+
+/** The long-period bars on the Home page's Returns block. */
+export async function ReturnsSource({ payload }: { payload: Payload }) {
+  return source(payload, "returns");
 }

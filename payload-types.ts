@@ -245,7 +245,7 @@ export interface FactSheet {
       }[]
     | null;
   /**
-   * What Rs. 1 Mn invested at inception is worth on the as-of date, in Rs. Mn. Leave empty if the deck does not give it.
+   * What Rs. 10 Lakh invested at inception is worth on the as-of date. The editing screen shows lakhs, and crore from 100 lakh up. Stored here in Rs. Mn, so one disc on the site stays Rs. 10 Lakh. The PDF writes millions: Rs. 1 Mn is Rs. 10 Lakh. Leave empty if the deck does not give it.
    */
   wealth?: {
     ours?: number | null;
@@ -1844,7 +1844,16 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
 export interface HomePage {
   id: number;
   sections?:
-    | (SectionHero | SectionRecord | SectionTwoWays | SectionFounder | SectionGetStarted | SectionFaq | SectionText)[]
+    | (
+        | SectionHero
+        | SectionRecord
+        | SectionReturns
+        | SectionTwoWays
+        | SectionFounder
+        | SectionGetStarted
+        | SectionFaq
+        | SectionText
+      )[]
     | null;
   _status?: ('draft' | 'published') | null;
   updatedAt?: string | null;
@@ -1876,7 +1885,7 @@ export interface SectionHero {
     link?: string | null;
   };
   /**
-   * Words in braces print the latest fact sheet's figures: {sinceInception} is Moneybee PMS's yearly return since inception; {benchmarkSinceInception} is the benchmark's yearly return since inception; {wealthOurs} is what Rs. 1 Mn in Moneybee PMS grew to; {wealthBenchmark} is what Rs. 1 Mn in the benchmark grew to; {asOfMonth} is the month the figures run to; {asOfDay} is the day the figures run to, such as 31 July 2026.
+   * Words in braces print the latest fact sheet's figures: {sinceInception} is Moneybee PMS's yearly return since inception; {benchmarkSinceInception} is the benchmark's yearly return since inception; {wealthOurs} is what Rs. 10 Lakh in Moneybee PMS grew to; {wealthBenchmark} is what Rs. 10 Lakh in the benchmark grew to; {asOfMonth} is the month the figures run to; {asOfDay} is the day the figures run to, such as 31 July 2026.
    */
   figures?:
     | {
@@ -1901,9 +1910,22 @@ export interface SectionRecord {
   eyebrow?: string | null;
   heading: string;
   /**
-   * It states returns, so only compliance can change it. Words in braces print the latest fact sheet's figures: {sinceInception} is Moneybee PMS's yearly return since inception; {benchmarkSinceInception} is the benchmark's yearly return since inception; {wealthOurs} is what Rs. 1 Mn in Moneybee PMS grew to; {wealthBenchmark} is what Rs. 1 Mn in the benchmark grew to; {asOfMonth} is the month the figures run to; {asOfDay} is the day the figures run to, such as 31 July 2026.
+   * It states returns, so only compliance can change it. Words in braces print the latest fact sheet's figures: {sinceInception} is Moneybee PMS's yearly return since inception; {benchmarkSinceInception} is the benchmark's yearly return since inception; {wealthOurs} is what Rs. 10 Lakh in Moneybee PMS grew to; {wealthBenchmark} is what Rs. 10 Lakh in the benchmark grew to; {asOfMonth} is the month the figures run to; {asOfDay} is the day the figures run to, such as 31 July 2026.
    */
   lead?: string | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'record';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SectionReturns".
+ */
+export interface SectionReturns {
+  /**
+   * The section stays here, and greyed out in the preview, until you show it again.
+   */
+  hidden?: boolean | null;
   more?: {
     label?: string | null;
     /**
@@ -1913,7 +1935,7 @@ export interface SectionRecord {
   };
   id?: string | null;
   blockName?: string | null;
-  blockType: 'record';
+  blockType: 'returns';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -2110,7 +2132,7 @@ export interface SectionPmsPerformance {
   lead?: string | null;
   note?: string | null;
   /**
-   * How the returns are worked out and the disclaimer SEBI requires beside them. Only compliance can change it. Words in braces print the latest fact sheet's figures: {sinceInception} is Moneybee PMS's yearly return since inception; {benchmarkSinceInception} is the benchmark's yearly return since inception; {wealthOurs} is what Rs. 1 Mn in Moneybee PMS grew to; {wealthBenchmark} is what Rs. 1 Mn in the benchmark grew to; {asOfMonth} is the month the figures run to; {asOfDay} is the day the figures run to, such as 31 July 2026.
+   * How the returns are worked out and the disclaimer SEBI requires beside them. Only compliance can change it. Words in braces print the latest fact sheet's figures: {sinceInception} is Moneybee PMS's yearly return since inception; {benchmarkSinceInception} is the benchmark's yearly return since inception; {wealthOurs} is what Rs. 10 Lakh in Moneybee PMS grew to; {wealthBenchmark} is what Rs. 10 Lakh in the benchmark grew to; {asOfMonth} is the month the figures run to; {asOfDay} is the day the figures run to, such as 31 July 2026.
    */
   method?: string | null;
   id?: string | null;
@@ -3221,6 +3243,7 @@ export interface HomePageSelect<T extends boolean = true> {
     | {
         hero?: T | SectionHeroSelect<T>;
         record?: T | SectionRecordSelect<T>;
+        returns?: T | SectionReturnsSelect<T>;
         twoWays?: T | SectionTwoWaysSelect<T>;
         founder?: T | SectionFounderSelect<T>;
         getStarted?: T | SectionGetStartedSelect<T>;
@@ -3271,6 +3294,15 @@ export interface SectionRecordSelect<T extends boolean = true> {
   eyebrow?: T;
   heading?: T;
   lead?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SectionReturns_select".
+ */
+export interface SectionReturnsSelect<T extends boolean = true> {
+  hidden?: T;
   more?:
     | T
     | {

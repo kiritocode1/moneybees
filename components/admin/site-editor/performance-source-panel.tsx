@@ -3,6 +3,7 @@
 import { Badge } from "@/components/fluid/badge";
 import { Button } from "@/components/fluid/button";
 import { formatReturn } from "@/lib/performance";
+import { rupees } from "@/lib/site/tokens";
 
 export type SheetSummary = {
   id: number;
@@ -12,13 +13,25 @@ export type SheetSummary = {
 };
 
 const SHEETS = "/admin/collections/fact-sheets";
-const mn = (value: number | null) => (value === null ? "N/A" : `Rs. ${value} Mn`);
+const money = (value: number | null) => (value === null ? "N/A" : rupees(value));
+
+/** Which of the fact sheet's rows this section draws. */
+export type PerformanceFocus = "all" | "wealth" | "returns";
 
 /** Drawn by performance-source.tsx: the numbers behind the section's graphs, and the way to change them. */
-export function PerformanceSourcePanel({ live, waiting }: { live: SheetSummary | null; waiting: { id: number; title: string; inReview: boolean } | null }) {
+export function PerformanceSourcePanel({
+  live,
+  waiting,
+  show = "all",
+}: {
+  live: SheetSummary | null;
+  waiting: { id: number; title: string; inReview: boolean } | null;
+  show?: PerformanceFocus;
+}) {
+  const title = show === "wealth" ? "The discs in this section" : show === "returns" ? "The returns in this section" : "The graphs in this section";
   return (
     <div className="mb-6 rounded-xl border border-border bg-card p-4">
-      <p className="text-body font-semibold text-foreground">The graphs in this section</p>
+      <p className="text-body font-semibold text-foreground">{title}</p>
       <p className="mt-1 text-caption text-muted-foreground">
         {live
           ? `They draw from the ${live.title} fact sheet. To change them, add next month's fact sheet. They change once compliance approves it.`
@@ -34,18 +47,22 @@ export function PerformanceSourcePanel({ live, waiting }: { live: SheetSummary |
             </tr>
           </thead>
           <tbody>
-            {live.rows.map((row) => (
-              <tr key={row.label} className="border-t border-border">
-                <td className="py-1.5 text-muted-foreground">{row.label}</td>
-                <td className="py-1.5 text-right text-foreground">{formatReturn(row.ours)}</td>
-                <td className="py-1.5 text-right text-foreground">{formatReturn(row.benchmark)}</td>
+            {show === "wealth"
+              ? null
+              : live.rows.map((row) => (
+                  <tr key={row.label} className="border-t border-border">
+                    <td className="py-1.5 text-muted-foreground">{row.label}</td>
+                    <td className="py-1.5 text-right text-foreground">{formatReturn(row.ours)}</td>
+                    <td className="py-1.5 text-right text-foreground">{formatReturn(row.benchmark)}</td>
+                  </tr>
+                ))}
+            {show === "returns" ? null : (
+              <tr className="border-t border-border">
+                <td className="py-1.5 text-muted-foreground">Rs. 10 Lakh grew to</td>
+                <td className="py-1.5 text-right text-foreground">{money(live.wealth.ours)}</td>
+                <td className="py-1.5 text-right text-foreground">{money(live.wealth.benchmark)}</td>
               </tr>
-            ))}
-            <tr className="border-t border-border">
-              <td className="py-1.5 text-muted-foreground">Rs. 1 Mn grew to</td>
-              <td className="py-1.5 text-right text-foreground">{mn(live.wealth.ours)}</td>
-              <td className="py-1.5 text-right text-foreground">{mn(live.wealth.benchmark)}</td>
-            </tr>
+            )}
           </tbody>
         </table>
       ) : null}

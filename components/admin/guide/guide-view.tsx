@@ -11,7 +11,7 @@ import { CONTACT_GUIDE } from "@/lib/pages/contact-guide";
 import { INVESTOR_CENTRE_GUIDE } from "@/lib/pages/investor-centre-guide";
 import { AIF_GUIDE, CAREERS_GUIDE, CASE_STUDIES_GUIDE, COMPARE_GUIDE, PHILOSOPHY_GUIDE, PICKS_GUIDE } from "@/lib/pages/more-guides";
 import { PMS_GUIDE } from "@/lib/pages/pms-guide";
-import { monthYear } from "@/lib/site/tokens";
+import { monthYear, rupees } from "@/lib/site/tokens";
 import { SECTION_KINDS, type SectionKind } from "@/lib/pages/sections";
 import { editorHref, SITE_PAGES, type SitePage } from "@/lib/pages/site-pages";
 import { PagePicker } from "./page-picker";
@@ -150,12 +150,9 @@ function MapRow({ source, where, targets }: { source: string; where: string; tar
   );
 }
 
-/** Rs. Mn as Indians say it: 1 is "₹10 lakh", 28.85 is "₹2.89 crore". */
-const indian = (millions: number) => (millions < 10 ? `₹${+(millions * 10).toFixed(1)} lakh` : `₹${+(millions / 10).toFixed(2)} crore`);
-
 /**
  * The worked example for "Fact sheets, explained", from the live Moneybee PMS
- * sheet: what Rs. 1 Mn grew to, over how many years, and the since-inception
+ * sheet: what Rs. 10 Lakh grew to, over how many years, and the since-inception
  * return that is the same growth as a steady yearly rate.
  */
 async function liveExample(payload: AdminViewServerProps["initPageResult"]["req"]["payload"]) {
@@ -166,7 +163,7 @@ async function liveExample(payload: AdminViewServerProps["initPageResult"]["req"
   if (!sheet || !product || typeof sheet.wealth?.ours !== "number" || typeof since?.ours !== "number") return null;
   const years = Math.round((new Date(sheet.asOf).getTime() - new Date(product.inception).getTime()) / (365.25 * 24 * 3600 * 1000));
   const started = new Date(product.inception).toLocaleDateString("en-IN", { month: "long", year: "numeric", timeZone: "Asia/Kolkata" });
-  return `Rs. 1 Mn (${indian(1)}) put into ${product.name} in ${started} was worth Rs. ${sheet.wealth.ours} Mn (${indian(sheet.wealth.ours)}) by ${monthYear(sheet.asOf)}, about ${years} years later. Growing ${since.ours.toFixed(2)}% every year for those ${years} years gives that same result, so the sheet's since-inception row says ${since.ours.toFixed(2)}%.`;
+  return `${rupees(1)} put into ${product.name} in ${started} was worth ${rupees(sheet.wealth.ours)} by ${monthYear(sheet.asOf)}, about ${years} years later. Growing ${since.ours.toFixed(2)}% every year for those ${years} years gives that same result, so the sheet's since-inception row says ${since.ours.toFixed(2)}%.`;
 }
 
 /** Each page's "what changes what", by its key in lib/pages/site-pages.ts. */

@@ -6,6 +6,7 @@
 export const SECTION_KINDS = {
   hero: { name: "Top of the page", picture: "/site-sections/hero.png" },
   record: { name: "Performance", picture: "/site-sections/record.png" },
+  returns: { name: "Returns", picture: "/site-sections/returns.png" },
   twoWays: { name: "Two ways to invest", picture: "/site-sections/two-ways.png" },
   founder: { name: "Founder's words", picture: "/site-sections/founder.png" },
   getStarted: { name: "Get started", picture: "/site-sections/get-started.png" },
@@ -14,7 +15,7 @@ export const SECTION_KINDS = {
   // Internal pages (rollout plan, 2026-10-12): the hero they open on, then /pms's sections.
   productHero: { name: "Page top", picture: "/site-sections/product-hero.png" },
   pmsPerformance: { name: "Returns chart and table", picture: "/site-sections/pms-performance.png" },
-  wealthGrowth: { name: "Growth of Rs. 1 Mn", picture: "/site-sections/wealth-growth.png" },
+  wealthGrowth: { name: "Growth of Rs. 10 Lakh", picture: "/site-sections/wealth-growth.png" },
   whyPms: { name: "Why points with drawings", picture: "/site-sections/why-pms.png" },
   philosophy: { name: "Three words and points", picture: "/site-sections/philosophy.png" },
   selection: { name: "Four selection steps", picture: "/site-sections/selection.png" },

@@ -21,7 +21,7 @@ export const metadata: Metadata = {
 /**
  * /pms, built to the Content & Visual Plan §3 and approved in
  * .plannotator/pms-v3/plan.md: the Tres Mares product hero, then the PMS
- * performance chart with every period's table and the growth of Rs. 1 Mn,
+ * performance chart with every period's table and the growth of Rs. 10 Lakh,
  * which investors see first (user, 2026-10-08; /performance was folded in
  * here and into /aif), then why
  * Moneybee PMS as a sticky split, the philosophy, stock selection as

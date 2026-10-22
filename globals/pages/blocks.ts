@@ -1,7 +1,7 @@
 import type { Field } from "payload";
 import { allowField } from "@/lib/backend/roles";
 import { ABOUT_HERO, ABOUT_STORY, FOUNDER_PROFILE, GROUP_AREAS, RECOGNITION, TEAM_SECTION, TIMELINE } from "@/lib/pages/about-content";
-import { FAQ, FOUNDER_WORDS, GET_STARTED, HERO, RECORD, TEXT, TWO_WAYS } from "@/lib/pages/home-content";
+import { FAQ, FOUNDER_WORDS, GET_STARTED, HERO, RECORD, RETURNS, TEXT, TWO_WAYS } from "@/lib/pages/home-content";
 import { AIF_APPROACH, AIF_KEY_TERMS, AIF_OPPORTUNITY, AIF_PERFORMANCE, AIF_POOLING, AIF_STRUCTURE } from "@/lib/pages/aif-content";
 import { CAREERS_INTRO, CAREERS_OFFICE, CAREERS_RESUME, JOB_BOARD } from "@/lib/pages/careers-content";
 import { CASE_TIMELINE } from "@/lib/pages/case-studies-content";
@@ -55,8 +55,8 @@ export const hero = section("hero", [
 ]);
 
 export const record = section("record", [
-  // The numbers behind the discs and the returns table, and where to change them.
-  { name: "graphs", type: "ui", admin: { components: { Field: "/components/admin/site-editor/performance-source#PerformanceSource" } } },
+  // The discs, and where to change the amount they draw.
+  { name: "graphs", type: "ui", admin: { components: { Field: "/components/admin/site-editor/performance-source#WealthSource" } } },
   { name: "eyebrow", type: "text", label: "Small label above", defaultValue: RECORD.eyebrow ?? undefined },
   heading(RECORD.heading, "textarea"),
   {
@@ -68,7 +68,12 @@ export const record = section("record", [
     access: complianceOnly,
     admin: { description: `It states returns, so only compliance can change it. ${TOKEN_HELP}` },
   },
-  action("more", "Link under the table", RECORD.more ?? {}),
+]);
+
+/** The long-period bars under Performance. The percentages come from the fact sheet. */
+export const returns = section("returns", [
+  { name: "graphs", type: "ui", admin: { components: { Field: "/components/admin/site-editor/performance-source#ReturnsSource" } } },
+  action("more", "Link under the table", RETURNS.more ?? {}),
 ]);
 
 export const twoWays = section("twoWays", [

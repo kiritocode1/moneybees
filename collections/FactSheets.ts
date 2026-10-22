@@ -9,7 +9,7 @@ import { screenIntro } from "@/lib/admin/screens";
 const PUBLIC: Where = { status: { equals: "published" }, "product.showPerformancePublicly": { equals: true } };
 
 /**
- * One product's figures for one month: the returns table, the Rs. 1 Mn growth
+ * One product's figures for one month: the returns table, the Rs. 10 Lakh growth
  * and the sector weights, plus the month's PDF. Every illustration that shows
  * performance reads the latest published sheet. Approval rules live in
  * lib/backend/fact-sheet-workflow.ts.
@@ -71,11 +71,11 @@ export const FactSheets: CollectionConfig = {
     {
       name: "wealth",
       type: "group",
-      label: "Rs. 1 Mn since inception",
-      admin: { description: "What Rs. 1 Mn invested at inception is worth on the as-of date, in Rs. Mn. Leave empty if the deck does not give it." },
+      label: "Rs. 10 Lakh since inception",
+      admin: { description: "What Rs. 10 Lakh invested at inception is worth on the as-of date. The editing screen shows lakhs, and crore from 100 lakh up. Stored here in Rs. Mn, so one disc on the site stays Rs. 10 Lakh. The PDF writes millions: Rs. 1 Mn is Rs. 10 Lakh. Leave empty if the deck does not give it." },
       fields: [
-        { name: "ours", type: "number", label: "In this product (Rs. Mn)", validate: numberWithin(WEALTH, "The value") },
-        { name: "benchmark", type: "number", label: "In the benchmark (Rs. Mn)", validate: numberWithin(WEALTH, "The value") },
+        { name: "ours", type: "number", label: "In this product (Rs. Mn, stored)", validate: numberWithin(WEALTH, "The value") },
+        { name: "benchmark", type: "number", label: "In the benchmark (Rs. Mn, stored)", validate: numberWithin(WEALTH, "The value") },
       ],
     },
     {

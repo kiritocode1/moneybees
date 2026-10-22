@@ -6,7 +6,7 @@ import { BODY, COLUMN, DashedRule, EYEBROW, Rise, SUBHEAD } from "@/components/h
 import { useReducedMotion } from "@/lib/use-reduced-motion";
 import Link from "@/components/transition/transition-link";
 import LitRows from "@/components/motion/lit-rows";
-import { RECORD, type RecordContent } from "@/lib/pages/home-content";
+import { RECORD, RETURNS, type RecordContent, type ReturnsContent } from "@/lib/pages/home-content";
 import { PMS_NAMES } from "@/lib/performance";
 import { DECK_FIGURES, fillContent, monthYear, type PmsFigures, rupees } from "@/lib/site/tokens";
 import { FRONT_FROM, FRONT_TO, onCircle, path, type Point } from "@/components/iso/geometry";
@@ -15,15 +15,16 @@ import { FRONT_FROM, FRONT_TO, onCircle, path, type Point } from "@/components/i
  * Wealth creation, set like the intro under the hero: paragraphs beside a
  * figure, alternating sides row by row. Each figure draws itself when it
  * comes into view. The TWRR method note that used to sit under this section is
- * in the footer's legal lines. The words come from the Home page in /admin
- * and the figures from the latest published PMS fact sheet (lib/site/figures.ts);
- * without them, today's words and the deck's figures.
+ * in the footer's legal lines. The words come from the Home page in /admin.
+ * Performance holds the sentence and the discs. Returns, the next block, holds
+ * the bars. The figures come from the latest published PMS fact sheet
+ * (lib/site/figures.ts); without them, today's words and the deck's figures.
  */
 
 /** The long periods, as the homepage shows them. */
 const LONG_PERIODS = ["1 Year", "3 Years", "5 Years", "Since Inception"];
 
-/** Disc size in figure space. Every disc is Rs. 1 Mn; the top disc of a stack is cut to its fraction. */
+/** Disc size in figure space. Every disc is Rs. 10 Lakh (one stored million); the top disc of a stack is cut to its fraction. */
 const DISC_R = 62;
 const DISC_H = 8.4;
 const DROP = 0.05;
@@ -49,9 +50,10 @@ function discHeights(value: number) {
 }
 
 /**
- * Rs. 1 Mn from August 2007 as two stacks of discs, one disc per Rs. 1 Mn, in
- * the picks pyramid's projection: Moneybee PMS in orange (28.85 in the deck),
- * the S&P BSE 500 TRI in grey (5.97). Once in view the discs drop in one at a
+ * Rs. 10 Lakh from August 2007 as two stacks of discs, one disc per Rs. 10 Lakh, in
+ * the picks pyramid's projection: Moneybee PMS in orange (2.885 crore in the deck),
+ * the S&P BSE 500 TRI in grey (59.7 lakh). The values are stored in millions, so the
+ * disc count is that number. Once in view the discs drop in one at a
  * time at the same pace, so the index's stack finishes early and Moneybee's
  * keeps climbing.
  */
@@ -70,7 +72,7 @@ function WealthStacks({ wealth, asOf }: { wealth: PmsFigures["wealth"]; asOf: st
       <svg
         viewBox="0 0 640 520"
         role="img"
-        aria-label={`Rs. 1 Mn invested in August 2007: ${rupees(wealth.ours)} in Moneybee PMS by ${monthYear(asOf)}, against ${rupees(wealth.benchmark)} in the S&P BSE 500 TRI. One disc is Rs. 1 Mn.`}
+        aria-label={`${rupees(wealth.start)} invested in August 2007: ${rupees(wealth.ours)} in Moneybee PMS by ${monthYear(asOf)}, against ${rupees(wealth.benchmark)} in the S&P BSE 500 TRI. One disc is ${rupees(wealth.start)}.`}
         className="block h-auto w-full overflow-visible"
       >
         {stacks.map((stack) => {
@@ -134,7 +136,7 @@ function WealthStacks({ wealth, asOf }: { wealth: PmsFigures["wealth"]; asOf: st
   );
 }
 
-/** Wealth creation by Moneybee PMS: two rows, text and figure trading sides. */
+/** Wealth creation by Moneybee PMS: the sentence beside the disc stacks. */
 export default function RecordSection({
   figures = DECK_FIGURES,
   content = fillContent(RECORD, figures),
@@ -142,7 +144,6 @@ export default function RecordSection({
   figures?: PmsFigures;
   content?: RecordContent;
 }) {
-  const { more = {} } = content;
   return (
     <section id="record" aria-labelledby="record-heading" className="bg-white text-black">
       <DashedRule />
@@ -159,7 +160,21 @@ export default function RecordSection({
         <WealthStacks wealth={figures.wealth} asOf={figures.asOf} />
       </div>
       <DashedRule />
-      {/* The plan's performance highlight: the lit rows /pms opens with, for the long periods. */}
+    </section>
+  );
+}
+
+/** The long-period bars that follow Performance on the home page. */
+export function ReturnsSection({
+  figures = DECK_FIGURES,
+  content = RETURNS,
+}: {
+  figures?: PmsFigures;
+  content?: ReturnsContent;
+}) {
+  const { more = {} } = content;
+  return (
+    <section id="returns" aria-label="Returns" className="bg-white text-black">
       <div className={`${COLUMN} py-[100px]`}>
         <LitRows rows={figures.rows.filter((row) => LONG_PERIODS.includes(row.period))} names={PMS_NAMES} />
         {more.label && more.link ? (
