@@ -6,7 +6,6 @@ import { telHref } from "@/lib/site/details";
 import { pmsFigures } from "@/lib/site/figures";
 import { siteDetails } from "@/lib/site/load-details";
 import { fillTokens } from "@/lib/site/tokens";
-import DotMarquee from "./dot-marquee";
 import DotWordmark from "./dot-wordmark";
 import MumbaiClock from "./mumbai-clock";
 
@@ -33,9 +32,9 @@ const LABEL = "text-[11px] uppercase tracking-[.08em] text-[rgba(0,0,0,.55)]";
 const LINK = `text-[16px] leading-[1.35] tracking-[-.015em] text-[#000] no-underline decoration-[#F6A11A] decoration-2 underline-offset-[5px] hover:underline ${FOCUS}`;
 
 /**
- * The footer, after footer.design and Aspen Search: the brand line as a dot
- * marquee, four columns on the page's own
- * gutter, the legal lines, and United Carriers' dot-matrix wordmark to end on.
+ * The footer, after footer.design and Aspen Search: four columns on the page's
+ * own gutter, the legal lines, and the quote in orange dots to end on. The
+ * quote is fitted to the width and does not travel.
  * Everything shares one left edge. The office clock sits with the office
  * address it belongs to. The contact details, registrations and disclaimer
  * come from Office details in /admin (lib/site/load-details.ts).
@@ -50,13 +49,8 @@ export default async function SiteFooter({ explore }: { explore: readonly Footer
 
   return (
     <footer id="contact" className="border-t border-t-[#000] bg-white text-[#000000]">
-      {/* The brand line as a marquee in orange dots, the wordmark's lattice set moving. */}
-      <div className="pt-[64px] pb-[48px]">
-        <DotMarquee text="Know Venture. Know Gain." />
-      </div>
-
       {/* Four columns on the page gutter: two of links, then how to write to us and where to find us. */}
-      <div className={`grid grid-cols-[1fr_1fr_1.3fr_1.3fr] gap-x-[48px] gap-y-[56px] border-t border-t-[#000] pt-[64px] pb-[72px] max-[1000px]:grid-cols-2 max-[600px]:grid-cols-1 ${GUTTER}`}>
+      <div className={`grid grid-cols-[1fr_1fr_1.3fr_1.3fr] gap-x-[48px] gap-y-[56px] pt-[64px] pb-[72px] max-[1000px]:grid-cols-2 max-[600px]:grid-cols-1 ${GUTTER}`}>
         {columns.map(([heading, links]) => (
           <nav key={heading} aria-label={heading}>
             <BracketLabel>{heading}</BracketLabel>
@@ -133,7 +127,7 @@ export default async function SiteFooter({ explore }: { explore: readonly Footer
         </div>
       </div>
 
-      <DotWordmark />
+      <DotWordmark word="Know Venture. Know Gain." tone="orange" />
     </footer>
   );
 }
